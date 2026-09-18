@@ -18,3 +18,10 @@ wheels/
 # pytest / caches
 .pytest_cache/
 .ruff_cache/
+
+# Downloaded telemetry corpora — pulled on demand, not committed.
+# Curated samples for tests live in tests/fixtures/ instead.
+data/raw/
+
+# Personal day-by-day learning notes — not shared with the team.
+TAKEAWAYS.md

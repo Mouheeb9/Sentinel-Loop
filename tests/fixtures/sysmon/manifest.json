@@ -1,0 +1,52 @@
+[
+  {
+    "file": "t1059_001_powershell_httplistener.json",
+    "technique_id": "T1059.001",
+    "event_id": 13
+  },
+  {
+    "file": "t1059_005_vbs_launcher.json",
+    "technique_id": "T1059.005",
+    "event_id": 3
+  },
+  {
+    "file": "t1003_001_lsass_dump.json",
+    "technique_id": "T1003.001",
+    "event_id": 1
+  },
+  {
+    "file": "t1003_002_sam_copy.json",
+    "technique_id": "T1003.002",
+    "event_id": 1
+  },
+  {
+    "file": "t1218_005_mshta.json",
+    "technique_id": "T1218.005",
+    "event_id": 1
+  },
+  {
+    "file": "t1562_002_disable_eventlog.json",
+    "technique_id": "T1562.002",
+    "event_id": 13
+  },
+  {
+    "file": "t1547_001_registry_run_key.json",
+    "technique_id": "T1547.001",
+    "event_id": 13
+  },
+  {
+    "file": "t1053_005_scheduled_task.json",
+    "technique_id": "T1053.005",
+    "event_id": 1
+  },
+  {
+    "file": "t1069_001_local_admins_discovery.json",
+    "technique_id": "T1069.001",
+    "event_id": 1
+  },
+  {
+    "file": "t1548_002_uac_bypass_fodhelper.json",
+    "technique_id": "T1548.002",
+    "event_id": 1
+  }
+]

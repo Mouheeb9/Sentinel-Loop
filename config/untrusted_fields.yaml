@@ -1,0 +1,38 @@
+# Per source, the raw JSON fields an attacker can influence, and where the
+# ingest normalizer (src/sentinel/ingest/*.py) maps each one on the
+# normalized Event (Event.untrusted_fields holds the normalized_path values
+# below, per event actually seen). Entries with no normalized_path document
+# a known attack-surface field for a source/event type we don't ingest yet.
+#
+# Reviewed and extended by Partner — this is the seed of docs/threat-model.md.
+
+windows_sysmon:
+  - raw_field: CommandLine
+    normalized_path: process.command_line
+    event_ids: [1]
+    note: Full command line of the created process.
+  - raw_field: Image
+    normalized_path: process.image
+    event_ids: [1, 3, 13]
+    note: >-
+      Path to the process image binary. Attacker-controlled via renaming or
+      relocating a binary (masquerading).
+  - raw_field: ParentCommandLine
+    normalized_path: process.parent.command_line
+    event_ids: [1]
+    note: Command line of the parent process.
+  - raw_field: Details
+    normalized_path: registry.details
+    event_ids: [13]
+    note: Registry value data written by the process.
+  - raw_field: TargetFilename
+    normalized_path: null
+    event_ids: [11]
+    note: >-
+      File path on FileCreate. Not ingested this week — Event has no File
+      sub-model yet.
+
+# Not ingested this week; added when that source lands.
+linux_auditd: []
+aws_cloudtrail: []
+guardduty: []
