@@ -1,0 +1,22 @@
+{
+  "SourceName": "Microsoft-Windows-Sysmon",
+  "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+  "Level": "4",
+  "Keywords": "0x8000000000000000",
+  "Channel": "Microsoft-Windows-Sysmon/Operational",
+  "Hostname": "Pedro01",
+  "TimeCreated": "2022-08-04T07:51:04.772Z",
+  "@timestamp": "2022-08-04T07:51:04.772Z",
+  "EventID": 13,
+  "Message": "Registry value set:\r\nRuleName: -\r\nEventType: SetValue\r\nUtcTime: 2022-08-04 14:51:04.726\r\nProcessGuid: {625b42a0-dcd0-62eb-4207-000000000900}\r\nProcessId: 7836\r\nImage: C:\\Users\\IT01-Pedro\\Downloads\\payload.exe\r\nTargetObject: HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start\r\nDetails: DWORD (0x00000004)\r\nUser: PEDRO01\\pedro",
+  "Task": "13",
+  "RuleName": "-",
+  "EventType": "SetValue",
+  "UtcTime": "2022-08-04 14:51:04.726",
+  "ProcessGuid": "{625b42a0-dcd0-62eb-4207-000000000900}",
+  "ProcessId": "7836",
+  "Image": "C:\\Users\\IT01-Pedro\\Downloads\\payload.exe",
+  "TargetObject": "HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start",
+  "Details": "DWORD (0x00000004)",
+  "User": "PEDRO01\\pedro"
+}

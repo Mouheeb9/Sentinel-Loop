@@ -29,6 +29,11 @@ class NetworkInfo(StrictModel):
     protocol: str | None = None
 
 
+class RegistryInfo(StrictModel):
+    target_object: str | None = None
+    details: str | None = None
+
+
 class Event(StrictModel):
     """One normalized log event. Every source flattens into this."""
 
@@ -39,6 +44,7 @@ class Event(StrictModel):
     user: str | None = None
     process: ProcessInfo | None = None
     network: NetworkInfo | None = None
+    registry: RegistryInfo | None = None
     raw: dict[str, Any]
     # Dot-paths into THIS model (e.g. "process.command_line"), not into `raw`.
     # Set by the ingest normalizer from config/untrusted_fields.yaml so the prompt
