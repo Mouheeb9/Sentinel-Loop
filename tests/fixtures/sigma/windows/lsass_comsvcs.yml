@@ -1,0 +1,18 @@
+title: Lsass Memory Dump via Comsvcs DLL
+id: a49fa4d5-11db-418c-8473-1e014a8dd462
+status: test
+description: Detects MiniDump export from comsvcs.dll via rundll32.
+tags:
+    - attack.credential-access
+    - attack.t1003.001
+logsource:
+    category: process_access
+    product: windows
+detection:
+    selection:
+        TargetImage|endswith: '\lsass.exe'
+        CallTrace|contains: 'comsvcs.dll'
+    condition: selection
+falsepositives:
+    - Unknown
+level: high

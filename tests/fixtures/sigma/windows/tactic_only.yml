@@ -1,0 +1,12 @@
+title: Some Rule With Only A Tactic Tag
+id: 11111111-1111-1111-1111-111111111111
+status: experimental
+tags:
+    - attack.discovery
+logsource:
+    product: windows
+    service: security
+detection:
+    selection:
+        EventID: 4688
+    condition: selection
