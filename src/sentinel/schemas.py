@@ -67,7 +67,7 @@ class Alert(StrictModel):
 
 
 class TriageVerdict(StrictModel):
-    verdict: Literal["true_positive", "false_positive", "needs_review"]
+    verdict: Literal["true_positive", "benign_noisy", "needs_review"]
     confidence: float = Field(ge=0, le=1)
     technique_ids: list[str]
     reasoning: str

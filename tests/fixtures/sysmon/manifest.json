@@ -26,7 +26,7 @@
   },
   {
     "file": "t1562_002_disable_eventlog.json",
-    "technique_id": "T1562.002",
+    "technique_id": "T1685.001",
     "event_id": 13
   },
   {
