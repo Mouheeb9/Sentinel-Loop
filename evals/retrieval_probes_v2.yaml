@@ -1,0 +1,91 @@
+# Retrieval probe set v2 — held-out set for tuning the lexical leg.
+#
+# FROZEN BEFORE THE LEXICAL-LEG CHANGE and before any retrieval was run on it. The v1 set
+# (retrieval_probes.yaml) was "spent" once its failures were diagnosed, so any tuning that is
+# judged on v1 alone would be circular. v2 shares no queries with v1. Same scoring rules
+# (primary / lenient / mixed), same scope (Windows / Sysmon-style behaviours).
+# Only lookup done beforehand: checking that each expected ID is a live technique. Successors
+# were used where this ATT&CK release renumbered: T1562.001 -> T1685, T1562.004 -> T1686.
+# Do not edit queries or expected IDs after seeing results.
+
+probes:
+  - id: q01
+    query: A new local user account is created with net user and then added to the Administrators group
+    expected: [T1136.001]
+    tag: id
+  - id: q02
+    query: One source address fails to log in against hundreds of different accounts using the same common password
+    expected: [T1110.003]
+    tag: behaviour
+  - id: q03
+    query: A domain user requests Kerberos service tickets for many service accounts in a short time so they can be cracked offline
+    expected: [T1558.003]
+    tag: behaviour
+  - id: q04
+    query: A VBA macro in a spreadsheet launches a shell command as soon as the file is opened
+    expected: [T1059.005, T1204.002]
+    tag: multi
+  - id: q05
+    query: bitsadmin creates a transfer job that downloads a file from an external URL
+    expected: [T1197]
+    tag: id
+  - id: q06
+    query: A debugger value is set in the Image File Execution Options registry key so another program runs when a system tool starts
+    expected: [T1546.012, T1546.008]
+    tag: multi
+  - id: q07
+    query: The InprocServer32 default value of a COM class is changed to point at a DLL in a user writable folder
+    expected: [T1546.015]
+    tag: id
+  - id: q08
+    query: Documents are compressed into a password protected archive before being sent out of the network
+    expected: [T1560.001]
+    tag: behaviour
+  - id: q09
+    query: Thousands of files are rewritten with a new extension and a ransom note is dropped in every folder
+    expected: [T1486]
+    tag: behaviour
+  - id: q10
+    query: Antivirus real time protection is switched off from a PowerShell command
+    expected: [T1685]
+    tag: behaviour
+  - id: q11
+    query: A firewall rule is added with netsh so that a program can accept inbound connections
+    expected: [T1686]
+    tag: id
+  - id: q12
+    query: An interactive remote desktop session is opened from a workstation to a server using stolen credentials
+    expected: [T1021.001]
+    tag: behaviour
+  - id: q13
+    query: ntdsutil is used to create a copy of the Active Directory database on a domain controller
+    expected: [T1003.003]
+    tag: id
+  - id: q14
+    query: A tool takes screenshots of the desktop at regular intervals and saves them to a temp folder
+    expected: [T1113]
+    tag: behaviour
+  - id: q15
+    query: A hidden process records every key the user types into a log file
+    expected: [T1056.001]
+    tag: behaviour
+  - id: q16
+    query: A legitimate process is started suspended, its memory is unmapped and replaced with different code, then resumed
+    expected: [T1055.012]
+    tag: behaviour
+  - id: q17
+    query: The timestamps of a dropped file are changed to match older system files
+    expected: [T1070.006]
+    tag: behaviour
+  - id: q18
+    query: One host connects to many internal addresses on port 445 within a few seconds
+    expected: [T1046]
+    tag: behaviour
+  - id: q19
+    query: A host makes many DNS requests with long random looking subdomain labels to a single domain
+    expected: [T1071.004]
+    tag: behaviour
+  - id: q20
+    query: A command searches the disk for files named password or with key file extensions
+    expected: [T1552.001, T1083]
+    tag: multi
