@@ -1,0 +1,767 @@
+{
+  "probes_file": "retrieval_probes.yaml",
+  "probes_sha256": "d1920168e0343ff0a1715b7e199dc9ff427717e28e229686a2aea90562af2026",
+  "k": 5,
+  "hybrid": {
+    "recall_at_5": {
+      "primary": 0.75,
+      "lenient": 0.8,
+      "mixed": 0.9
+    },
+    "primary_by_tag": {
+      "behaviour": 0.625,
+      "id": 1.0,
+      "multi": 0.6666666666666666
+    },
+    "rows": [
+      {
+        "id": "p01",
+        "tag": "id",
+        "query": "A process opens a handle to lsass.exe with full access and writes a memory dump of it to disk",
+        "expected": [
+          "T1003.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1003.001",
+          "T1547.002",
+          "T1547.008",
+          "T1547.005",
+          "T1556"
+        ]
+      },
+      {
+        "id": "p02",
+        "tag": "multi",
+        "query": "PowerShell started with a long base64 encoded argument and a hidden window",
+        "expected": [
+          "T1059.001",
+          "T1027.010"
+        ],
+        "primary_rank": 8,
+        "lenient_rank": 6,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1564.010",
+          "T1036.011",
+          "T1132.001",
+          "T1137.002",
+          "T1140"
+        ]
+      },
+      {
+        "id": "p03",
+        "tag": "behaviour",
+        "query": "A new value is written under the CurrentVersion Run registry key so a program starts at every user logon",
+        "expected": [
+          "T1547.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 4,
+        "top5_techniques": [
+          "T1547.001",
+          "T1546.010",
+          "T1547.004",
+          "T1546.012",
+          "T1564.002"
+        ]
+      },
+      {
+        "id": "p04",
+        "tag": "behaviour",
+        "query": "A scheduled task is created from the command line that runs a script every few minutes",
+        "expected": [
+          "T1053.005"
+        ],
+        "primary_rank": 4,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1053",
+          "T1548.003",
+          "T1037.004",
+          "T1053.005",
+          "T1053.003"
+        ]
+      },
+      {
+        "id": "p05",
+        "tag": "behaviour",
+        "query": "A new Windows service is installed whose binary sits in a user writable temp folder",
+        "expected": [
+          "T1543.003"
+        ],
+        "primary_rank": 7,
+        "lenient_rank": 7,
+        "mixed_rank": 6,
+        "top5_techniques": [
+          "T1129",
+          "T1037.005",
+          "T1036.008",
+          "T1574.010",
+          "T1036.010"
+        ]
+      },
+      {
+        "id": "p06",
+        "tag": "behaviour",
+        "query": "A registry change turns off the Windows event log service so activity is no longer recorded",
+        "expected": [
+          "T1685.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1685.001",
+          "T1690",
+          "T1027.005",
+          "T1566.002",
+          "T1685.005"
+        ]
+      },
+      {
+        "id": "p07",
+        "tag": "id",
+        "query": "wevtutil is run to clear the Security event log",
+        "expected": [
+          "T1685.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1685.005",
+          "T1685.001",
+          "T1070.007",
+          "T1070.003",
+          "T1685.006"
+        ]
+      },
+      {
+        "id": "p08",
+        "tag": "id",
+        "query": "vssadmin deletes all volume shadow copies so files cannot be restored",
+        "expected": [
+          "T1490"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1490",
+          "T1006",
+          "T1003.003",
+          "T1485",
+          "T1486"
+        ]
+      },
+      {
+        "id": "p09",
+        "tag": "multi",
+        "query": "whoami and net group commands run in quick succession by a normal user to see who is an administrator",
+        "expected": [
+          "T1033",
+          "T1069.002",
+          "T1069.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1033",
+          "T1087",
+          "T1098.007",
+          "T1497.001",
+          "T1667"
+        ]
+      },
+      {
+        "id": "p10",
+        "tag": "id",
+        "query": "rundll32 executes a function exported by a DLL dropped in a user profile folder",
+        "expected": [
+          "T1218.011"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1218.011",
+          "T1574.011",
+          "T1553.003",
+          "T1127.002",
+          "T1548.002"
+        ]
+      },
+      {
+        "id": "p11",
+        "tag": "id",
+        "query": "mshta launched to run a script fetched from a remote web server",
+        "expected": [
+          "T1218.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1218.005",
+          "T1218.001",
+          "T1129",
+          "T1216.002",
+          "T1221"
+        ]
+      },
+      {
+        "id": "p12",
+        "tag": "multi",
+        "query": "A Word document opened by the user spawns cmd.exe which then starts PowerShell",
+        "expected": [
+          "T1204.002",
+          "T1566.001"
+        ],
+        "primary_rank": 5,
+        "lenient_rank": 5,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1137.001",
+          "T1221",
+          "T1137.002",
+          "T1137.006",
+          "T1204.002"
+        ]
+      },
+      {
+        "id": "p13",
+        "tag": "behaviour",
+        "query": "A program running from a user temp folder makes an outbound connection to an external address on TCP port 4444",
+        "expected": [
+          "T1571"
+        ],
+        "primary_rank": null,
+        "lenient_rank": null,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1187",
+          "T1205",
+          "T1021.005",
+          "T1090.002",
+          "T1049"
+        ]
+      },
+      {
+        "id": "p14",
+        "tag": "multi",
+        "query": "Commands are executed on another host by copying a file to its admin share and starting a service remotely",
+        "expected": [
+          "T1021.002",
+          "T1569.002"
+        ],
+        "primary_rank": 9,
+        "lenient_rank": 9,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1204.004",
+          "T1039",
+          "T1053.006",
+          "T1021.005",
+          "T1105"
+        ]
+      },
+      {
+        "id": "p15",
+        "tag": "id",
+        "query": "reg save is used to export the SAM and SYSTEM hives to a file",
+        "expected": [
+          "T1003.002"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1003.002",
+          "T1003.004",
+          "T1012",
+          "T1552.002",
+          "T1112"
+        ]
+      },
+      {
+        "id": "p16",
+        "tag": "behaviour",
+        "query": "Code is written into the memory of another running process and executed there to hide inside it",
+        "expected": [
+          "T1055"
+        ],
+        "primary_rank": 6,
+        "lenient_rank": 1,
+        "mixed_rank": 16,
+        "top5_techniques": [
+          "T1055.003",
+          "T1055.012",
+          "T1055.009",
+          "T1055.011",
+          "T1055.002"
+        ]
+      },
+      {
+        "id": "p17",
+        "tag": "behaviour",
+        "query": "A signed legitimate executable loads an unsigned DLL sitting in the same folder",
+        "expected": [
+          "T1574.001"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1546.008",
+          "T1574.001",
+          "T1553.003",
+          "T1055.001",
+          "T1218.011"
+        ]
+      },
+      {
+        "id": "p18",
+        "tag": "behaviour",
+        "query": "A WMI event filter and consumer are registered so a command runs automatically when the trigger fires",
+        "expected": [
+          "T1546.003"
+        ],
+        "primary_rank": 3,
+        "lenient_rank": 3,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1205.002",
+          "T1195",
+          "T1546.003",
+          "T1195.001",
+          "T1546"
+        ]
+      },
+      {
+        "id": "p19",
+        "tag": "multi",
+        "query": "certutil is used to download a file from a URL and decode it",
+        "expected": [
+          "T1105",
+          "T1140"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1140",
+          "T1027.013",
+          "T1132.001",
+          "T1560.001",
+          "T1027.018"
+        ]
+      },
+      {
+        "id": "p20",
+        "tag": "multi",
+        "query": "A copy of a built-in system utility is renamed and run from an unusual directory",
+        "expected": [
+          "T1036.003",
+          "T1036.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1036.003",
+          "T1036.006",
+          "T1036.005",
+          "T1036",
+          "T1218.002"
+        ]
+      }
+    ]
+  },
+  "vector_only": {
+    "recall_at_5": {
+      "primary": 0.9,
+      "lenient": 0.95,
+      "mixed": 0.9
+    },
+    "primary_by_tag": {
+      "behaviour": 0.75,
+      "id": 1.0,
+      "multi": 1.0
+    },
+    "rows": [
+      {
+        "id": "p01",
+        "tag": "id",
+        "query": "A process opens a handle to lsass.exe with full access and writes a memory dump of it to disk",
+        "expected": [
+          "T1003.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1003.001",
+          "T1055.014",
+          "T1204.002",
+          "T1546.012",
+          "T1055.013"
+        ]
+      },
+      {
+        "id": "p02",
+        "tag": "multi",
+        "query": "PowerShell started with a long base64 encoded argument and a hidden window",
+        "expected": [
+          "T1059.001",
+          "T1027.010"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1059.001",
+          "T1564.010",
+          "T1546.013",
+          "T1134.004",
+          "T1027.003"
+        ]
+      },
+      {
+        "id": "p03",
+        "tag": "behaviour",
+        "query": "A new value is written under the CurrentVersion Run registry key so a program starts at every user logon",
+        "expected": [
+          "T1547.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1547.001",
+          "T1037.001",
+          "T1547.014",
+          "T1547",
+          "T1037.003"
+        ]
+      },
+      {
+        "id": "p04",
+        "tag": "behaviour",
+        "query": "A scheduled task is created from the command line that runs a script every few minutes",
+        "expected": [
+          "T1053.005"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1053",
+          "T1053.005",
+          "T1053.003",
+          "T1053.006",
+          "T1053.002"
+        ]
+      },
+      {
+        "id": "p05",
+        "tag": "behaviour",
+        "query": "A new Windows service is installed whose binary sits in a user writable temp folder",
+        "expected": [
+          "T1543.003"
+        ],
+        "primary_rank": 3,
+        "lenient_rank": 3,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1574.010",
+          "T1574.005",
+          "T1543.003",
+          "T1546.016",
+          "T1547.012"
+        ]
+      },
+      {
+        "id": "p06",
+        "tag": "behaviour",
+        "query": "A registry change turns off the Windows event log service so activity is no longer recorded",
+        "expected": [
+          "T1685.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1685.001",
+          "T1685.005",
+          "T1112",
+          "T1547.004",
+          "T1546.001"
+        ]
+      },
+      {
+        "id": "p07",
+        "tag": "id",
+        "query": "wevtutil is run to clear the Security event log",
+        "expected": [
+          "T1685.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1685.005",
+          "T1685.004",
+          "T1070.007",
+          "T1685.001",
+          "T1685.006"
+        ]
+      },
+      {
+        "id": "p08",
+        "tag": "id",
+        "query": "vssadmin deletes all volume shadow copies so files cannot be restored",
+        "expected": [
+          "T1490"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1490",
+          "T1003.003",
+          "T1006",
+          "T1485",
+          "T1070.009"
+        ]
+      },
+      {
+        "id": "p09",
+        "tag": "multi",
+        "query": "whoami and net group commands run in quick succession by a normal user to see who is an administrator",
+        "expected": [
+          "T1033",
+          "T1069.002",
+          "T1069.001"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1098.007",
+          "T1033",
+          "T1201",
+          "T1037.003",
+          "T1204"
+        ]
+      },
+      {
+        "id": "p10",
+        "tag": "id",
+        "query": "rundll32 executes a function exported by a DLL dropped in a user profile folder",
+        "expected": [
+          "T1218.011"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1218.011",
+          "T1574.012",
+          "T1546.009",
+          "T1129",
+          "T1546.010"
+        ]
+      },
+      {
+        "id": "p11",
+        "tag": "id",
+        "query": "mshta launched to run a script fetched from a remote web server",
+        "expected": [
+          "T1218.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1218.005",
+          "T1216.002",
+          "T1218.001",
+          "T1216.001",
+          "T1059.005"
+        ]
+      },
+      {
+        "id": "p12",
+        "tag": "multi",
+        "query": "A Word document opened by the user spawns cmd.exe which then starts PowerShell",
+        "expected": [
+          "T1204.002",
+          "T1566.001"
+        ],
+        "primary_rank": 4,
+        "lenient_rank": 4,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1221",
+          "T1137.001",
+          "T1137.002",
+          "T1204.002",
+          "T1218.014"
+        ]
+      },
+      {
+        "id": "p13",
+        "tag": "behaviour",
+        "query": "A program running from a user temp folder makes an outbound connection to an external address on TCP port 4444",
+        "expected": [
+          "T1571"
+        ],
+        "primary_rank": null,
+        "lenient_rank": null,
+        "mixed_rank": null,
+        "top5_techniques": [
+          "T1090.002",
+          "T1204",
+          "T1080",
+          "T1090.001",
+          "T1204.002"
+        ]
+      },
+      {
+        "id": "p14",
+        "tag": "multi",
+        "query": "Commands are executed on another host by copying a file to its admin share and starting a service remotely",
+        "expected": [
+          "T1021.002",
+          "T1569.002"
+        ],
+        "primary_rank": 4,
+        "lenient_rank": 4,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1204.004",
+          "T1105",
+          "T1219",
+          "T1569.002",
+          "T1204.002"
+        ]
+      },
+      {
+        "id": "p15",
+        "tag": "id",
+        "query": "reg save is used to export the SAM and SYSTEM hives to a file",
+        "expected": [
+          "T1003.002"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1003.002",
+          "T1003.004",
+          "T1552.002",
+          "T1218.010",
+          "T1012"
+        ]
+      },
+      {
+        "id": "p16",
+        "tag": "behaviour",
+        "query": "Code is written into the memory of another running process and executed there to hide inside it",
+        "expected": [
+          "T1055"
+        ],
+        "primary_rank": 6,
+        "lenient_rank": 1,
+        "mixed_rank": 6,
+        "top5_techniques": [
+          "T1055.003",
+          "T1055.012",
+          "T1055.009",
+          "T1055.011",
+          "T1055.002"
+        ]
+      },
+      {
+        "id": "p17",
+        "tag": "behaviour",
+        "query": "A signed legitimate executable loads an unsigned DLL sitting in the same folder",
+        "expected": [
+          "T1574.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1574.001",
+          "T1553.003",
+          "T1055.001",
+          "T1218.011",
+          "T1036.001"
+        ]
+      },
+      {
+        "id": "p18",
+        "tag": "behaviour",
+        "query": "A WMI event filter and consumer are registered so a command runs automatically when the trigger fires",
+        "expected": [
+          "T1546.003"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1546.003",
+          "T1546",
+          "T1205.002",
+          "T1047",
+          "T1547.010"
+        ]
+      },
+      {
+        "id": "p19",
+        "tag": "multi",
+        "query": "certutil is used to download a file from a URL and decode it",
+        "expected": [
+          "T1105",
+          "T1140"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1140",
+          "T1555.003",
+          "T1649",
+          "T1553.004",
+          "T1588.004"
+        ]
+      },
+      {
+        "id": "p20",
+        "tag": "multi",
+        "query": "A copy of a built-in system utility is renamed and run from an unusual directory",
+        "expected": [
+          "T1036.003",
+          "T1036.005"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1036.003",
+          "T1036.006",
+          "T1574.008",
+          "T1574.005",
+          "T1218.004"
+        ]
+      }
+    ]
+  }
+}

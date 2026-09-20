@@ -1,0 +1,759 @@
+{
+  "probes_file": "retrieval_probes_v2.yaml",
+  "probes_sha256": "5e6a0737eb0e4a07f5f68aaf10dccf8aace8716440034b1f9120848755df8980",
+  "k": 5,
+  "hybrid": {
+    "recall_at_5": {
+      "primary": 0.9,
+      "lenient": 0.9,
+      "mixed": 0.8
+    },
+    "primary_by_tag": {
+      "behaviour": 0.9166666666666666,
+      "id": 0.8,
+      "multi": 1.0
+    },
+    "rows": [
+      {
+        "id": "q01",
+        "tag": "id",
+        "query": "A new local user account is created with net user and then added to the Administrators group",
+        "expected": [
+          "T1136.001"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1098.007",
+          "T1136.001",
+          "T1078.003",
+          "T1136.002",
+          "T1037.003"
+        ]
+      },
+      {
+        "id": "q02",
+        "tag": "behaviour",
+        "query": "One source address fails to log in against hundreds of different accounts using the same common password",
+        "expected": [
+          "T1110.003"
+        ],
+        "primary_rank": 5,
+        "lenient_rank": 1,
+        "mixed_rank": 4,
+        "top5_techniques": [
+          "T1110",
+          "T1187",
+          "T1110.001",
+          "T1600.001",
+          "T1110.003"
+        ]
+      },
+      {
+        "id": "q03",
+        "tag": "behaviour",
+        "query": "A domain user requests Kerberos service tickets for many service accounts in a short time so they can be cracked offline",
+        "expected": [
+          "T1558.003"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1558.003",
+          "T1558.004",
+          "T1558",
+          "T1550.003",
+          "T1558.001"
+        ]
+      },
+      {
+        "id": "q04",
+        "tag": "multi",
+        "query": "A VBA macro in a spreadsheet launches a shell command as soon as the file is opened",
+        "expected": [
+          "T1059.005",
+          "T1204.002"
+        ],
+        "primary_rank": 4,
+        "lenient_rank": 4,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1137.001",
+          "T1564.007",
+          "T1559.002",
+          "T1059.005",
+          "T1221"
+        ]
+      },
+      {
+        "id": "q05",
+        "tag": "id",
+        "query": "bitsadmin creates a transfer job that downloads a file from an external URL",
+        "expected": [
+          "T1197"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1197",
+          "T1027.006",
+          "T1048",
+          "T1537",
+          "T1570"
+        ]
+      },
+      {
+        "id": "q06",
+        "tag": "multi",
+        "query": "A debugger value is set in the Image File Execution Options registry key so another program runs when a system tool starts",
+        "expected": [
+          "T1546.012",
+          "T1546.008"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1546.012",
+          "T1546.008",
+          "T1622",
+          "T1547.001",
+          "T1574.011"
+        ]
+      },
+      {
+        "id": "q07",
+        "tag": "id",
+        "query": "The InprocServer32 default value of a COM class is changed to point at a DLL in a user writable folder",
+        "expected": [
+          "T1546.015"
+        ],
+        "primary_rank": 8,
+        "lenient_rank": 8,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1218.014",
+          "T1574.011",
+          "T1547.003",
+          "T1218.004",
+          "T1574.014"
+        ]
+      },
+      {
+        "id": "q08",
+        "tag": "behaviour",
+        "query": "Documents are compressed into a password protected archive before being sent out of the network",
+        "expected": [
+          "T1560.001"
+        ],
+        "primary_rank": 5,
+        "lenient_rank": 2,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1027.015",
+          "T1560",
+          "T1027",
+          "T1560.002",
+          "T1560.001"
+        ]
+      },
+      {
+        "id": "q09",
+        "tag": "behaviour",
+        "query": "Thousands of files are rewritten with a new extension and a ransom note is dropped in every folder",
+        "expected": [
+          "T1486"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1486",
+          "T1679",
+          "T1036.006",
+          "T1027.006",
+          "T1070.004"
+        ]
+      },
+      {
+        "id": "q10",
+        "tag": "behaviour",
+        "query": "Antivirus real time protection is switched off from a PowerShell command",
+        "expected": [
+          "T1685"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1685",
+          "T1080",
+          "T1553.003",
+          "T1679",
+          "T1036.007"
+        ]
+      },
+      {
+        "id": "q11",
+        "tag": "id",
+        "query": "A firewall rule is added with netsh so that a program can accept inbound connections",
+        "expected": [
+          "T1686"
+        ],
+        "primary_rank": 3,
+        "lenient_rank": 2,
+        "mixed_rank": 7,
+        "top5_techniques": [
+          "T1546.007",
+          "T1686.003",
+          "T1686",
+          "T1090",
+          "T1021"
+        ]
+      },
+      {
+        "id": "q12",
+        "tag": "behaviour",
+        "query": "An interactive remote desktop session is opened from a workstation to a server using stolen credentials",
+        "expected": [
+          "T1021.001"
+        ],
+        "primary_rank": 5,
+        "lenient_rank": 5,
+        "mixed_rank": 7,
+        "top5_techniques": [
+          "T1556.008",
+          "T1563.002",
+          "T1563",
+          "T1673",
+          "T1021.001"
+        ]
+      },
+      {
+        "id": "q13",
+        "tag": "id",
+        "query": "ntdsutil is used to create a copy of the Active Directory database on a domain controller",
+        "expected": [
+          "T1003.003"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1003.003",
+          "T1207",
+          "T1003.006",
+          "T1136.002",
+          "T1087.002"
+        ]
+      },
+      {
+        "id": "q14",
+        "tag": "behaviour",
+        "query": "A tool takes screenshots of the desktop at regular intervals and saves them to a temp folder",
+        "expected": [
+          "T1113"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1113",
+          "T1125",
+          "T1053",
+          "T1119",
+          "T1053.003"
+        ]
+      },
+      {
+        "id": "q15",
+        "tag": "behaviour",
+        "query": "A hidden process records every key the user types into a log file",
+        "expected": [
+          "T1056.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 11,
+        "top5_techniques": [
+          "T1056.001",
+          "T1564.001",
+          "T1552.003",
+          "T1552.004",
+          "T1564.002"
+        ]
+      },
+      {
+        "id": "q16",
+        "tag": "behaviour",
+        "query": "A legitimate process is started suspended, its memory is unmapped and replaced with different code, then resumed",
+        "expected": [
+          "T1055.012"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1055.012",
+          "T1055.003",
+          "T1564.010",
+          "T1055.004",
+          "T1622"
+        ]
+      },
+      {
+        "id": "q17",
+        "tag": "behaviour",
+        "query": "The timestamps of a dropped file are changed to match older system files",
+        "expected": [
+          "T1070.006"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1070.006",
+          "T1601.002",
+          "T1036.006",
+          "T1102.001",
+          "T1070.004"
+        ]
+      },
+      {
+        "id": "q18",
+        "tag": "behaviour",
+        "query": "One host connects to many internal addresses on port 445 within a few seconds",
+        "expected": [
+          "T1046"
+        ],
+        "primary_rank": 17,
+        "lenient_rank": 17,
+        "mixed_rank": null,
+        "top5_techniques": [
+          "T1090.002",
+          "T1195.002",
+          "T1568.001",
+          "T1090.003",
+          "T1199"
+        ]
+      },
+      {
+        "id": "q19",
+        "tag": "behaviour",
+        "query": "A host makes many DNS requests with long random looking subdomain labels to a single domain",
+        "expected": [
+          "T1071.004"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 4,
+        "top5_techniques": [
+          "T1584.001",
+          "T1071.004",
+          "T1568.002",
+          "T1568",
+          "T1001.001"
+        ]
+      },
+      {
+        "id": "q20",
+        "tag": "multi",
+        "query": "A command searches the disk for files named password or with key file extensions",
+        "expected": [
+          "T1552.001",
+          "T1083"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 5,
+        "top5_techniques": [
+          "T1083",
+          "T1105",
+          "T1114.002",
+          "T1680",
+          "T1565.001"
+        ]
+      }
+    ]
+  },
+  "vector_only": {
+    "recall_at_5": {
+      "primary": 0.95,
+      "lenient": 0.95,
+      "mixed": 0.9
+    },
+    "primary_by_tag": {
+      "behaviour": 0.9166666666666666,
+      "id": 1.0,
+      "multi": 1.0
+    },
+    "rows": [
+      {
+        "id": "q01",
+        "tag": "id",
+        "query": "A new local user account is created with net user and then added to the Administrators group",
+        "expected": [
+          "T1136.001"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1098.007",
+          "T1136.001",
+          "T1078.003",
+          "T1136.002",
+          "T1037.003"
+        ]
+      },
+      {
+        "id": "q02",
+        "tag": "behaviour",
+        "query": "One source address fails to log in against hundreds of different accounts using the same common password",
+        "expected": [
+          "T1110.003"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1110.001",
+          "T1110.003",
+          "T1110.004",
+          "T1110",
+          "T1078"
+        ]
+      },
+      {
+        "id": "q03",
+        "tag": "behaviour",
+        "query": "A domain user requests Kerberos service tickets for many service accounts in a short time so they can be cracked offline",
+        "expected": [
+          "T1558.003"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 1,
+        "mixed_rank": 2,
+        "top5_techniques": [
+          "T1558",
+          "T1558.003",
+          "T1550.003",
+          "T1558.001",
+          "T1136.002"
+        ]
+      },
+      {
+        "id": "q04",
+        "tag": "multi",
+        "query": "A VBA macro in a spreadsheet launches a shell command as soon as the file is opened",
+        "expected": [
+          "T1059.005",
+          "T1204.002"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1059.005",
+          "T1564.007",
+          "T1137.001",
+          "T1204.004",
+          "T1204.002"
+        ]
+      },
+      {
+        "id": "q05",
+        "tag": "id",
+        "query": "bitsadmin creates a transfer job that downloads a file from an external URL",
+        "expected": [
+          "T1197"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1197",
+          "T1027.006",
+          "T1048",
+          "T1537",
+          "T1570"
+        ]
+      },
+      {
+        "id": "q06",
+        "tag": "multi",
+        "query": "A debugger value is set in the Image File Execution Options registry key so another program runs when a system tool starts",
+        "expected": [
+          "T1546.012",
+          "T1546.008"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1546.012",
+          "T1547.001",
+          "T1574.011",
+          "T1546.001",
+          "T1547"
+        ]
+      },
+      {
+        "id": "q07",
+        "tag": "id",
+        "query": "The InprocServer32 default value of a COM class is changed to point at a DLL in a user writable folder",
+        "expected": [
+          "T1546.015"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1546.015",
+          "T1546.001",
+          "T1559.001",
+          "T1021.003",
+          "T1574.011"
+        ]
+      },
+      {
+        "id": "q08",
+        "tag": "behaviour",
+        "query": "Documents are compressed into a password protected archive before being sent out of the network",
+        "expected": [
+          "T1560.001"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1560",
+          "T1560.001",
+          "T1027.015",
+          "T1560.002",
+          "T1027.013"
+        ]
+      },
+      {
+        "id": "q09",
+        "tag": "behaviour",
+        "query": "Thousands of files are rewritten with a new extension and a ransom note is dropped in every folder",
+        "expected": [
+          "T1486"
+        ],
+        "primary_rank": 2,
+        "lenient_rank": 2,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1036.006",
+          "T1486",
+          "T1036.007",
+          "T1204.002",
+          "T1485"
+        ]
+      },
+      {
+        "id": "q10",
+        "tag": "behaviour",
+        "query": "Antivirus real time protection is switched off from a PowerShell command",
+        "expected": [
+          "T1685"
+        ],
+        "primary_rank": 3,
+        "lenient_rank": 3,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1690",
+          "T1546.013",
+          "T1685",
+          "T1059.001",
+          "T1216.002"
+        ]
+      },
+      {
+        "id": "q11",
+        "tag": "id",
+        "query": "A firewall rule is added with netsh so that a program can accept inbound connections",
+        "expected": [
+          "T1686"
+        ],
+        "primary_rank": 4,
+        "lenient_rank": 1,
+        "mixed_rank": 18,
+        "top5_techniques": [
+          "T1686.003",
+          "T1546.007",
+          "T1205.001",
+          "T1686",
+          "T1205.002"
+        ]
+      },
+      {
+        "id": "q12",
+        "tag": "behaviour",
+        "query": "An interactive remote desktop session is opened from a workstation to a server using stolen credentials",
+        "expected": [
+          "T1021.001"
+        ],
+        "primary_rank": 3,
+        "lenient_rank": 3,
+        "mixed_rank": 3,
+        "top5_techniques": [
+          "T1563.002",
+          "T1563",
+          "T1021.001",
+          "T1219",
+          "T1187"
+        ]
+      },
+      {
+        "id": "q13",
+        "tag": "id",
+        "query": "ntdsutil is used to create a copy of the Active Directory database on a domain controller",
+        "expected": [
+          "T1003.003"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1003.003",
+          "T1207",
+          "T1003.006",
+          "T1136.002",
+          "T1087.002"
+        ]
+      },
+      {
+        "id": "q14",
+        "tag": "behaviour",
+        "query": "A tool takes screenshots of the desktop at regular intervals and saves them to a temp folder",
+        "expected": [
+          "T1113"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1113",
+          "T1546.002",
+          "T1125",
+          "T1204.002",
+          "T1564.012"
+        ]
+      },
+      {
+        "id": "q15",
+        "tag": "behaviour",
+        "query": "A hidden process records every key the user types into a log file",
+        "expected": [
+          "T1056.001"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 5,
+        "top5_techniques": [
+          "T1056.001",
+          "T1564.001",
+          "T1552.003",
+          "T1552.004",
+          "T1564.002"
+        ]
+      },
+      {
+        "id": "q16",
+        "tag": "behaviour",
+        "query": "A legitimate process is started suspended, its memory is unmapped and replaced with different code, then resumed",
+        "expected": [
+          "T1055.012"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1055.012",
+          "T1055.003",
+          "T1055.009",
+          "T1564.010",
+          "T1055.013"
+        ]
+      },
+      {
+        "id": "q17",
+        "tag": "behaviour",
+        "query": "The timestamps of a dropped file are changed to match older system files",
+        "expected": [
+          "T1070.006"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1070.006",
+          "T1036.006",
+          "T1129",
+          "T1070.004",
+          "T1053.006"
+        ]
+      },
+      {
+        "id": "q18",
+        "tag": "behaviour",
+        "query": "One host connects to many internal addresses on port 445 within a few seconds",
+        "expected": [
+          "T1046"
+        ],
+        "primary_rank": 11,
+        "lenient_rank": 11,
+        "mixed_rank": null,
+        "top5_techniques": [
+          "T1568.001",
+          "T1090.003",
+          "T1090.001",
+          "T1205",
+          "T1090.002"
+        ]
+      },
+      {
+        "id": "q19",
+        "tag": "behaviour",
+        "query": "A host makes many DNS requests with long random looking subdomain labels to a single domain",
+        "expected": [
+          "T1071.004"
+        ],
+        "primary_rank": 5,
+        "lenient_rank": 5,
+        "mixed_rank": 5,
+        "top5_techniques": [
+          "T1568.002",
+          "T1584.001",
+          "T1568.001",
+          "T1583.001",
+          "T1071.004"
+        ]
+      },
+      {
+        "id": "q20",
+        "tag": "multi",
+        "query": "A command searches the disk for files named password or with key file extensions",
+        "expected": [
+          "T1552.001",
+          "T1083"
+        ],
+        "primary_rank": 1,
+        "lenient_rank": 1,
+        "mixed_rank": 1,
+        "top5_techniques": [
+          "T1083",
+          "T1680",
+          "T1565.001",
+          "T1039",
+          "T1552.001"
+        ]
+      }
+    ]
+  }
+}

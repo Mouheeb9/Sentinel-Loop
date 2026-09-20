@@ -1,0 +1,104 @@
+# Retrieval probe set — Day 3 mini-eval (recall@5).
+#
+# FROZEN BEFORE ANY RETRIEVAL WAS RUN. Written from ATT&CK knowledge only; the only lookup done
+# beforehand was checking that each expected ID is a live technique in the bundle (three IDs I
+# first wrote were revoked in this ATT&CK release and were replaced by their successors:
+# T1562.002 -> T1685.001, T1070.001 -> T1685.005, T1574.002 -> T1574.001).
+# Do not edit queries or expected IDs after seeing results — that would fit the eval to the
+# retriever. If a probe is genuinely wrong, add a dated note below instead of changing it.
+#
+# Scoring rules (pre-registered):
+#   primary   recall@5, technique chunks only. A probe is a hit if ANY expected ID is among the
+#             top 5 returned technique chunks. Exact ID match, no credit for parent/child.
+#   lenient   same, but a returned ID also counts if it is the parent or a sub-technique of an
+#             expected ID (T1059 <-> T1059.001).
+#   mixed     recall@5 over all chunk kinds; a Sigma rule counts through its technique_ids.
+# Target: primary >= 0.80. Below that, document why and what changed.
+#
+# Scope: Windows / Sysmon-style behaviours (process create, network connect, registry set,
+# image load, WMI), matching the golden alerts. Queries describe behaviour the way an analyst
+# would; they do not paste technique names.
+# tag: id = contains a literal identifier (tool/file name), behaviour = purely descriptive,
+#      multi = more than one technique is a defensible answer.
+
+probes:
+  - id: p01
+    query: A process opens a handle to lsass.exe with full access and writes a memory dump of it to disk
+    expected: [T1003.001]
+    tag: id
+  - id: p02
+    query: PowerShell started with a long base64 encoded argument and a hidden window
+    expected: [T1059.001, T1027.010]
+    tag: multi
+  - id: p03
+    query: A new value is written under the CurrentVersion Run registry key so a program starts at every user logon
+    expected: [T1547.001]
+    tag: behaviour
+  - id: p04
+    query: A scheduled task is created from the command line that runs a script every few minutes
+    expected: [T1053.005]
+    tag: behaviour
+  - id: p05
+    query: A new Windows service is installed whose binary sits in a user writable temp folder
+    expected: [T1543.003]
+    tag: behaviour
+  - id: p06
+    query: A registry change turns off the Windows event log service so activity is no longer recorded
+    expected: [T1685.001]
+    tag: behaviour
+  - id: p07
+    query: wevtutil is run to clear the Security event log
+    expected: [T1685.005]
+    tag: id
+  - id: p08
+    query: vssadmin deletes all volume shadow copies so files cannot be restored
+    expected: [T1490]
+    tag: id
+  - id: p09
+    query: whoami and net group commands run in quick succession by a normal user to see who is an administrator
+    expected: [T1033, T1069.002, T1069.001]
+    tag: multi
+  - id: p10
+    query: rundll32 executes a function exported by a DLL dropped in a user profile folder
+    expected: [T1218.011]
+    tag: id
+  - id: p11
+    query: mshta launched to run a script fetched from a remote web server
+    expected: [T1218.005]
+    tag: id
+  - id: p12
+    query: A Word document opened by the user spawns cmd.exe which then starts PowerShell
+    expected: [T1204.002, T1566.001]
+    tag: multi
+  - id: p13
+    query: A program running from a user temp folder makes an outbound connection to an external address on TCP port 4444
+    expected: [T1571]
+    tag: behaviour
+  - id: p14
+    query: Commands are executed on another host by copying a file to its admin share and starting a service remotely
+    expected: [T1021.002, T1569.002]
+    tag: multi
+  - id: p15
+    query: reg save is used to export the SAM and SYSTEM hives to a file
+    expected: [T1003.002]
+    tag: id
+  - id: p16
+    query: Code is written into the memory of another running process and executed there to hide inside it
+    expected: [T1055]
+    tag: behaviour
+  - id: p17
+    query: A signed legitimate executable loads an unsigned DLL sitting in the same folder
+    expected: [T1574.001]
+    tag: behaviour
+  - id: p18
+    query: A WMI event filter and consumer are registered so a command runs automatically when the trigger fires
+    expected: [T1546.003]
+    tag: behaviour
+  - id: p19
+    query: certutil is used to download a file from a URL and decode it
+    expected: [T1105, T1140]
+    tag: multi
+  - id: p20
+    query: A copy of a built-in system utility is renamed and run from an unusual directory
+    expected: [T1036.003, T1036.005]
+    tag: multi
