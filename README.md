@@ -25,7 +25,10 @@ independently by two people (one AI engineer, one detection engineer) before com
   nearby activity is `benign_noisy`; a bare "program was launched" record with no follow-on
   evidence is `needs_review`, not a guess either way.
 - Final composition of the first 40: 10 `true_positive`, 24 `benign_noisy`, 6 `needs_review`.
-  The full set will be 150 (100 true positives across 20+ techniques, 50 benign-but-noisy).
+- Batch 2 (138 more alerts, mined from 56 further OTRF captures by `evals/mine_candidates.py`) brings
+  the set to 178: 104 `true_positive` across 45 distinct techniques, 55 `benign_noisy`,
+  19 `needs_review`. These rows are drafts (`labeler: claude-draft`) pending human review, and
+  the set is not frozen (`golden-v1`) until that review is done.
 
 The three labels are `true_positive`, `benign_noisy` (an actor doing its normal job that still
 looks suspicious) and `needs_review` (no evidence either way).
