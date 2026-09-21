@@ -274,7 +274,7 @@ datasets:
   # ---------------------------------------------------------------- batch 2b: 56 further captures
   - name: cmd_dumping_ntds_dit_file_volume_shadow_copy
     items:
-      - {label: true_positive, technique: [T1003], match: {kind: process, image: '(^|\\)reg\.exe$', cmd: 'save HKLM.SYSTEM'}, why: "reg save HKLM/SYSTEM to C:/Windows/Temp/SYSTEM_HIVE exports the boot-key hive used to decrypt stolen credential databases; the exact target database is not shown, so parent technique."}
+      - {label: true_positive, technique: [T1003.002], match: {kind: process, image: '(^|\\)reg\.exe$', cmd: 'save HKLM.SYSTEM'}, why: "reg save HKLM/SYSTEM to C:/Windows/Temp/SYSTEM_HIVE exports the boot-key hive used to decrypt stolen credential databases; per ATT&CK the SYSTEM hive save is filed under SAM (T1003.002)."}
       - {label: needs_review, match: {kind: process, image: 'vssadmin\.exe$', cmd: 'create shadow'}, why: "vssadmin create shadow is what backup admins run and also how ntds.dit is copied; this event alone cannot tell which."}
 
   - name: empire_shell_reg_dump_sam
@@ -322,11 +322,11 @@ datasets:
 
   - name: empire_shell_rpc_samr_smb_group_domain_admins_standard_user
     items:
-      - {label: true_positive, technique: [T1069.002], match: {kind: process, image: '(^|\\)net\.exe$'}, why: "net group 'Domain Admins' /domain run from PowerShell enumerates the domain admin group."}
+      - {label: needs_review, match: {kind: process, image: '(^|\\)net\.exe$'}, why: "net group 'Domain Admins' /domain run from PowerShell enumerates the domain admin group, but admins run it routinely and the event alone shows no malicious behavior."}
 
   - name: empire_shell_samr_EnumDomainUsers
     items:
-      - {label: true_positive, technique: [T1087.002], match: {kind: process, image: '(^|\\)net\.exe$'}, why: "net user /domain run from PowerShell enumerates domain accounts."}
+      - {label: needs_review, match: {kind: process, image: '(^|\\)net\.exe$'}, why: "net user /domain run from PowerShell enumerates domain accounts, but admins run it routinely and the event alone shows no malicious behavior."}
 
   - name: cmd_sharpview_pcre_net
     items:
@@ -352,7 +352,7 @@ datasets:
   - name: covenant_wmi_wbemcomn_dll_hijack
     items:
       - {label: true_positive, technique: [T1059.003], match: {kind: process, image: '(^|\\)cmd\.exe$', parent: 'GruntHTTP'}, why: "cmd.exe /c wmic /node:WORKSTATION6 os get spawned by GruntHTTP.exe, a Covenant C2 implant."}
-      - {label: true_positive, technique: [T1047], match: {kind: process, image: 'WMIC\.exe$', cmd: '/node'}, why: "wmic /node:WORKSTATION6 os get queries a remote host over WMI."}
+      - {label: needs_review, match: {kind: process, image: 'WMIC\.exe$', cmd: '/node'}, why: "wmic /node:WORKSTATION6 os get queries a remote host over WMI, which admins also do; the event alone shows no malicious behavior."}
 
   - name: empire_psremoting_stager
     items:
@@ -361,7 +361,7 @@ datasets:
   - name: mimikatz_CVE-2020-1472_Unauthenticated_NetrServerAuthenticate2
     items:
       - {label: true_positive, technique: [T1210], match: {kind: process, image: 'mimikatz\.exe$'}, why: "mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller."}
-      - {label: true_positive, technique: [T1059.003], match: {kind: process, image: '(^|\\)cmd\.exe$', parent: 'GruntHTTP'}, why: "cmd.exe /c mimikatz.exe spawned by GruntHTTP.exe, a Covenant C2 implant."}
+      - {label: true_positive, technique: [T1003], match: {kind: process, image: '(^|\\)cmd\.exe$', parent: 'GruntHTTP'}, why: "cmd.exe /c mimikatz.exe spawned by GruntHTTP.exe, a Covenant C2 implant, launching a credential-dumping tool (parent technique, no dump mechanism shown)."}
 
   - name: purplesharp_ad_playbook_I
     items:
@@ -393,7 +393,7 @@ datasets:
   - name: empire_wmic_add_user_backdoor_network
     dataset: empire_wmic_add_user_backdoor
     items:
-      - {label: true_positive, technique: [T1047], match: {kind: network, image: 'WMIC\.exe$'}, why: "WMIC.exe opening a connection to another host is remote WMI execution (process call create)."}
+      - {label: needs_review, match: {kind: network, image: 'WMIC\.exe$'}, why: "WMIC.exe opening a connection to another host is remote WMI activity, which admins also do; the network event alone shows no malicious behavior."}
 
   - name: covenant_dcom_registerxll_network
     dataset: covenant_dcom_registerxll

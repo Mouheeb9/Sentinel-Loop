@@ -6942,7 +6942,7 @@
   },
   {
     "candidate_id": "day3-127",
-    "kind": "attack_capture",
+    "kind": "background",
     "source_dataset": "empire_shell_rpc_samr_smb_group_domain_admins_standard_user.zip",
     "alert": {
       "alert_id": "day3-127",
@@ -7107,7 +7107,7 @@
   },
   {
     "candidate_id": "day3-129",
-    "kind": "attack_capture",
+    "kind": "background",
     "source_dataset": "covenant_wmi_wbemcomn_dll_hijack.zip",
     "alert": {
       "alert_id": "day3-129",
@@ -7413,7 +7413,7 @@
   },
   {
     "candidate_id": "day3-133",
-    "kind": "attack_capture",
+    "kind": "background",
     "source_dataset": "empire_shell_samr_EnumDomainUsers.zip",
     "alert": {
       "alert_id": "day3-133",
@@ -7832,7 +7832,7 @@
   },
   {
     "candidate_id": "day3-138",
-    "kind": "attack_capture",
+    "kind": "background",
     "source_dataset": "empire_wmic_add_user_backdoor.zip",
     "alert": {
       "alert_id": "day3-138",
