@@ -40,10 +40,17 @@ def after_validate(state: SentinelState) -> Literal["repair", "output"]:
     return "repair"
 
 
-def build_graph():
+LIVE_NODES = ("enrich", "triage")  # nodes with a real implementation so far
+
+
+def build_graph(live: bool = False):
+    """live=False: every node is a stub (tests). live=True: LIVE_NODES run for real."""
     g = StateGraph(SentinelState)
     for name in ("ingest", "enrich", "triage", "route", "rule_gen", "validate", "repair", "output"):
-        g.add_node(name, getattr(nodes, name))
+        impl = (
+            getattr(nodes, f"{name}_live") if live and name in LIVE_NODES else getattr(nodes, name)
+        )
+        g.add_node(name, impl)
 
     g.add_edge(START, "ingest")
     g.add_edge("ingest", "enrich")

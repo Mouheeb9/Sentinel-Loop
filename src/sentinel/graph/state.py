@@ -34,8 +34,9 @@ class SentinelState(TypedDict):
     techniques: NotRequired[list[Hit]]
     sigma_rules: NotRequired[list[Hit]]
 
-    # triage
+    # triage (schema_retries: 1 if the model needed its one retry to produce a valid verdict)
     verdict: NotRequired[TriageVerdict]
+    triage_schema_retries: NotRequired[int]
 
     # route: id of an existing Sigma rule that already covers this alert, None if no coverage.
     covering_rule_id: NotRequired[str | None]

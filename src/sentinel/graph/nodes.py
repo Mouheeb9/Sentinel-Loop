@@ -1,9 +1,9 @@
-"""The pipeline's nodes, stubbed for Day 4.
+"""The pipeline's nodes.
 
-Every node has its real signature (state in, partial update out) but returns fake values, so any
-wrong path through the graph is a wiring bug and nothing else. What the fakes return is set by a
-`StubScript` passed in the run config (`{"configurable": {"stub": StubScript(...)}}`), which lets
-a test force any path. Nodes are replaced by real implementations one at a time from Day 5.
+Stubs have the real signature (state in, partial update out) but return fake values, steered by
+a `StubScript` in the run config (`{"configurable": {"stub": StubScript(...)}}`), so tests can
+force any path. Real implementations (`*_live`) replace them one at a time: enrich and triage
+since Day 5; route, rule_gen, validate and repair are still stubs.
 """
 
 from __future__ import annotations
@@ -12,7 +12,10 @@ from dataclasses import dataclass
 
 from langchain_core.runnables import RunnableConfig
 
+from sentinel.agents.enrich import enrich_alert
+from sentinel.agents.triage import triage_alert
 from sentinel.graph.state import Outcome, SentinelState
+from sentinel.llm import triage_model
 from sentinel.schemas import TriageVerdict, ValidationResult
 
 
@@ -40,6 +43,22 @@ def ingest(state: SentinelState) -> dict:
 
 def enrich(state: SentinelState) -> dict:
     return {"techniques": [], "sigma_rules": []}
+
+
+def enrich_live(state: SentinelState) -> dict:
+    techniques, sigma_rules = enrich_alert(state["alert"])
+    return {"techniques": techniques, "sigma_rules": sigma_rules}
+
+
+def triage_live(state: SentinelState, config: RunnableConfig) -> dict:
+    result = triage_alert(
+        state["alert"],
+        state.get("techniques", []),
+        state.get("sigma_rules", []),
+        triage_model(),
+        config,
+    )
+    return {"verdict": result.verdict, "triage_schema_retries": result.schema_retries}
 
 
 def triage(state: SentinelState, config: RunnableConfig) -> dict:

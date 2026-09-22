@@ -41,7 +41,7 @@ class TraceRun:
 
 @contextmanager
 def trace_run(
-    alert: Alert, *, config_name: str, owner: str, enabled: bool = True
+    alert: Alert, *, config_name: str, owner: str, model: str = "stub", enabled: bool = True
 ) -> Iterator[TraceRun]:
     if not (enabled and tracing_configured()):
         yield TraceRun()
@@ -60,7 +60,7 @@ def trace_run(
             propagate_attributes(
                 trace_name=TRACE_NAME,
                 tags=[f"config:{config_name}", f"owner:{owner}"],
-                metadata={"alert_id": alert.alert_id, "config": config_name},
+                metadata={"alert_id": alert.alert_id, "config": config_name, "model": model},
             ),
         ):
             url = client.get_trace_url(trace_id=client.get_current_trace_id())
