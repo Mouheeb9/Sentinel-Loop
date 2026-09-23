@@ -1666,6 +1666,7 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "fastembed" },
+    { name = "httpx" },
     { name = "langchain" },
     { name = "langchain-anthropic" },
     { name = "langchain-openrouter" },
@@ -1688,6 +1689,7 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "fastembed", specifier = ">=0.8.0" },
+    { name = "httpx", specifier = ">=0.28" },
     { name = "langchain", specifier = ">=1.4.2" },
     { name = "langchain-anthropic", specifier = ">=1.7.2" },
     { name = "langchain-openrouter", specifier = ">=0.2.9" },

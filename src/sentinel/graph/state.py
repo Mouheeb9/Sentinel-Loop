@@ -37,6 +37,12 @@ class SentinelState(TypedDict):
     # triage (schema_retries: 1 if the model needed its one retry to produce a valid verdict)
     verdict: NotRequired[TriageVerdict]
     triage_schema_retries: NotRequired[int]
+    # Two-tier routing: which tier's verdict is final, why tier 2 ran (None: it didn't), one
+    # dict per tier run (model, tokens, cost, lookups), total cost (None if a price is unknown).
+    triage_tier: NotRequired[int]
+    triage_escalation: NotRequired[str | None]
+    triage_runs: NotRequired[list[dict]]
+    triage_cost_usd: NotRequired[float | None]
 
     # route: id of an existing Sigma rule that already covers this alert, None if no coverage.
     covering_rule_id: NotRequired[str | None]

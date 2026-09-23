@@ -13,9 +13,8 @@ from dataclasses import dataclass
 from langchain_core.runnables import RunnableConfig
 
 from sentinel.agents.enrich import enrich_alert
-from sentinel.agents.triage import triage_alert
+from sentinel.agents.routing import triage_routed
 from sentinel.graph.state import Outcome, SentinelState
-from sentinel.llm import triage_model
 from sentinel.schemas import TriageVerdict, ValidationResult
 
 
@@ -51,14 +50,17 @@ def enrich_live(state: SentinelState) -> dict:
 
 
 def triage_live(state: SentinelState, config: RunnableConfig) -> dict:
-    result = triage_alert(
-        state["alert"],
-        state.get("techniques", []),
-        state.get("sigma_rules", []),
-        triage_model(),
-        config,
+    result = triage_routed(
+        state["alert"], state.get("techniques", []), state.get("sigma_rules", []), config
     )
-    return {"verdict": result.verdict, "triage_schema_retries": result.schema_retries}
+    return {
+        "verdict": result.verdict,
+        "triage_schema_retries": result.schema_retries,
+        "triage_tier": result.tier,
+        "triage_escalation": result.escalation,
+        "triage_runs": result.runs_as_dicts(),
+        "triage_cost_usd": result.cost_usd,
+    }
 
 
 def triage(state: SentinelState, config: RunnableConfig) -> dict:

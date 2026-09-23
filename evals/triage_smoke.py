@@ -1,4 +1,5 @@
-"""Day 5 smoke run: triage v0 on 20 golden-v1 alerts, written out for reading by hand.
+"""Smoke run: the current triage config (CONFIG_NAME in run.py) on 20 golden-v1 alerts, written
+out for reading by hand.
 
     uv run python -m evals.triage_smoke [--n 20] [--seed 5] [--no-trace] [--fresh]
 
@@ -24,8 +25,7 @@ from dotenv import load_dotenv
 
 from sentinel.agents.triage import TriageError
 from sentinel.graph.nodes import StubScript
-from sentinel.llm import triage_model_name
-from sentinel.run import default_owner, run_alert
+from sentinel.run import CONFIG_NAME, default_owner, models_label, run_alert
 from sentinel.schemas import Alert
 
 ROOT = Path(__file__).parent.parent
@@ -65,9 +65,9 @@ def main() -> None:
     args = p.parse_args()
 
     labels, alerts = load_golden()
-    model = triage_model_name()
-    slug = model.replace(":", "_").replace("/", "_")
-    out = RESULTS / f"triage_v0_smoke_{slug}.jsonl"
+    model = models_label()
+    slug = model.replace(" -> ", "__").replace(":", "_").replace("/", "_")
+    out = RESULTS / f"{CONFIG_NAME.replace('-', '_')}_smoke_{slug}.jsonl"
     RESULTS.mkdir(exist_ok=True)
     done: dict[str, dict] = {}
     if out.exists() and not args.fresh:
@@ -95,7 +95,7 @@ def main() -> None:
                 alert,
                 live=True,
                 stub=StubScript(),
-                config_name="triage-v0-smoke",
+                config_name=f"{CONFIG_NAME}-smoke",
                 owner=default_owner(),
                 trace=not args.no_trace,
             )
@@ -109,6 +109,10 @@ def main() -> None:
                 "ioc_refs": v.ioc_refs,
                 "schema_retries": res.final.get("triage_schema_retries", 0),
                 "retrieved_techniques": [h.id for h in res.final.get("techniques", [])],
+                "tier": res.final.get("triage_tier"),
+                "escalation": res.final.get("triage_escalation"),
+                "cost_usd": res.final.get("triage_cost_usd"),
+                "lookups": [x for r in res.final.get("triage_runs", []) for x in r["lookups"]],
                 "trace": res.trace_url,
                 "error": None,
             }
@@ -134,10 +138,14 @@ def main() -> None:
     transport_fail = sum(str(r["error"]).startswith("transport") for r in rows)
     retried = sum(r.get("schema_retries", 0) for r in rows if r["error"] is None)
     agree = sum(r.get("verdict") == r["label"] for r in rows)
+    escalated = sum(r.get("escalation") is not None for r in rows if r["error"] is None)
+    costs = [r.get("cost_usd") for r in rows if r["error"] is None]
+    cost = "unknown" if None in costs else f"${sum(costs):.4f}"
     print(
         f"\nschema-valid: {valid}/{len(rows)}  schema failures: {schema_fail}  "
         f"transport failures (re-run to retry): {transport_fail}  needed retry: {retried}\n"
-        f"verdict == label: {agree}/{len(rows)} (not a score, just orientation)"
+        f"verdict == label: {agree}/{len(rows)} (not a score, just orientation)\n"
+        f"escalated to tier 2: {escalated}/{valid}  total cost: {cost}"
     )
     print(f"written: {out.relative_to(ROOT)} and .md")
 
@@ -148,7 +156,7 @@ def _line(row: dict) -> str:
 
 def _report(rows: list[dict], alerts: dict[str, Alert], model: str) -> str:
     lines = [
-        f"# Triage v0 smoke run ({model})",
+        f"# {CONFIG_NAME} smoke run ({model})",
         "",
         "Read every row. Look for failure shapes, not a score.",
         "",
@@ -167,6 +175,8 @@ def _report(rows: list[dict], alerts: dict[str, Alert], model: str) -> str:
             f"- iocs: {r.get('ioc_refs')}  evidence: {r.get('evidence_refs')}  "
             f"retries: {r.get('schema_retries')}",
             f"- retrieved: {r.get('retrieved_techniques')}",
+            f"- tier: {r.get('tier')} (escalation: {r.get('escalation')})  "
+            f"lookups: {r.get('lookups')}",
             f"- trace: {r.get('trace')}",
             "",
         ]

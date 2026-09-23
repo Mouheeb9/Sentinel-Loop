@@ -3,7 +3,8 @@
     uv run python -m sentinel.run --alert tests/fixtures/alerts/day2-001.json
     uv run python -m sentinel.run --alert ... --stub --verdict benign_noisy   # all nodes fake
 
-By default enrich and triage are real (Postgres + the model in SENTINEL_TRIAGE_MODEL); the later
+By default enrich and triage are real (Postgres + the two triage tiers from SENTINEL_TRIAGE_MODEL
+and SENTINEL_ESCALATION_MODEL, with NVD/ThreatFox lookups); the later
 nodes are still stubs, steered by --covered / --passes. --stub makes every node fake.
 Traces go to Langfuse when LANGFUSE_* keys are set in .env (see .env.example).
 """
@@ -21,9 +22,17 @@ from dotenv import load_dotenv
 
 from sentinel.graph.build import build_graph
 from sentinel.graph.nodes import StubScript
-from sentinel.llm import triage_model_name
+from sentinel.llm import escalation_model_name, triage_model_name
 from sentinel.schemas import Alert
 from sentinel.tracing import trace_run
+
+CONFIG_NAME = "triage-v1"  # v1 = Day 6: enrichment tools + two-tier routing
+
+
+def models_label() -> str:
+    """'tier1 -> tier2', or just tier1 when escalation is off. Goes into trace metadata."""
+    t2 = escalation_model_name()
+    return f"{triage_model_name()} -> {t2}" if t2 else triage_model_name()
 
 
 @dataclass
@@ -58,7 +67,7 @@ def run_alert(
     graph = build_graph(live=live)
     path: list[str] = []
     final: dict = {}
-    model = triage_model_name() if live else "stub"
+    model = models_label() if live else "stub"
     with trace_run(alert, config_name=config_name, owner=owner, model=model, enabled=trace) as tr:
         config = {
             "configurable": {"stub": stub},
@@ -84,7 +93,9 @@ def main(argv: list[str] | None = None) -> dict:
     p = argparse.ArgumentParser(prog="python -m sentinel.run")
     p.add_argument("--alert", required=True, type=Path, help="Alert JSON file")
     p.add_argument("--stub", action="store_true", help="fake every node (no DB, no model)")
-    p.add_argument("--config-name", default=None, help="Langfuse tag; default triage-v0 / stub")
+    p.add_argument(
+        "--config-name", default=None, help=f"Langfuse tag; default {CONFIG_NAME} / stub"
+    )
     p.add_argument("--owner", default=None, help="default: SENTINEL_OWNER or git user.name")
     p.add_argument("--no-trace", action="store_true", help="never send a Langfuse trace")
     p.add_argument(
@@ -109,7 +120,7 @@ def main(argv: list[str] | None = None) -> dict:
         alert,
         live=not args.stub,
         stub=stub,
-        config_name=args.config_name or ("stub" if args.stub else "triage-v0"),
+        config_name=args.config_name or ("stub" if args.stub else CONFIG_NAME),
         owner=args.owner or default_owner(),
         trace=not args.no_trace,
     )
@@ -122,6 +133,22 @@ def main(argv: list[str] | None = None) -> dict:
     print(f"verdict:   {verdict.verdict} (confidence {verdict.confidence})")
     print(f"techniques:{' ' + ', '.join(verdict.technique_ids) if verdict.technique_ids else ' -'}")
     print(f"reasoning: {verdict.reasoning.encode('ascii', 'replace').decode()}")
+    if "triage_tier" in final:
+        cost = final.get("triage_cost_usd")
+        print(
+            f"tier:      {final['triage_tier']}"
+            f"  (escalation: {final.get('triage_escalation') or 'no'})"
+            f"  cost: {'unknown' if cost is None else f'${cost:.6f}'}"
+        )
+        for r in final.get("triage_runs", []):
+            looked = ", ".join(
+                f"{x['name']}({next(iter(x['args'].values()), '')})" for x in r["lookups"]
+            )
+            print(
+                f"  tier {r['tier']}: {r['model']}  tokens {r['input_tokens']}+"
+                f"{r['output_tokens']}  lookups: {looked or '-'}"
+                + (f"  FAILED: {r['error'][:120]}" if r["error"] else "")
+            )
     print(f"outcome:   {final['outcome']}  (validations: {len(final.get('validations', []))})")
     print(f"trace:     {result.trace_url or 'off (no LANGFUSE keys, or --no-trace)'}")
     print(json.dumps({"outcome": final["outcome"]}))

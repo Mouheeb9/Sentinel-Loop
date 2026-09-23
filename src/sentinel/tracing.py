@@ -3,8 +3,10 @@
 One alert = one trace, named `triage-alert`. The root observation (type `agent`) carries a
 readable input (the normalized alert, no raw payload) and output (verdict + outcome). Under it,
 the LangChain callback handler records every graph node, and from Day 5 every LLM call with
-model, tokens and cost. Tags `config:<name>` and `owner:<name>` let the Week 2 eval runs be
-compared per config and per person.
+model, tokens and cost. From Day 6 every tool call too, each LLM/tool observation carries its
+triage tier in metadata, and the trace gets scores triage_tier, triage_tokens and cost_usd.
+Tags `config:<name>` and `owner:<name>` let the Week 2 eval runs be compared per config and per
+person.
 
 Log fields are attacker-controlled; in a trace they are only displayed, never executed, so they
 are recorded as-is. Keep secrets out of state, since the handler records node inputs/outputs.
@@ -35,8 +37,21 @@ class TraceRun:
     _root: Any = None
 
     def finish(self, state: SentinelState) -> None:
-        if self._root is not None:
-            self._root.update(output=_summary(state))
+        if self._root is None:
+            return
+        self._root.update(output=_summary(state))
+        # Trace-level scores: filterable and chartable per config/owner tag in the Langfuse UI.
+        if tier := state.get("triage_tier"):
+            self._root.score_trace(name="triage_tier", value=tier, data_type="NUMERIC")
+        runs = state.get("triage_runs") or []
+        if runs:
+            self._root.score_trace(
+                name="triage_tokens",
+                value=sum(r["input_tokens"] + r["output_tokens"] for r in runs),
+                data_type="NUMERIC",
+            )
+        if (cost := state.get("triage_cost_usd")) is not None:
+            self._root.score_trace(name="cost_usd", value=cost, data_type="NUMERIC")
 
 
 @contextmanager
@@ -81,6 +96,10 @@ def _summary(state: SentinelState) -> dict:
         "verdict": verdict.verdict if verdict else None,
         "confidence": verdict.confidence if verdict else None,
         "technique_ids": verdict.technique_ids if verdict else [],
+        "triage_tier": state.get("triage_tier"),
+        "triage_escalation": state.get("triage_escalation"),
+        "triage_cost_usd": state.get("triage_cost_usd"),
+        "triage_runs": state.get("triage_runs", []),
         "covering_rule_id": state.get("covering_rule_id"),
         "attempts": state.get("attempts", 0),
         "draft_rule": state.get("draft_rule"),
