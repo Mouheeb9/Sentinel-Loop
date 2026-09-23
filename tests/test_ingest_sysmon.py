@@ -10,7 +10,7 @@ FIXTURES_DIR = Path(__file__).parent / "fixtures" / "sysmon"
 MANIFEST = json.loads((FIXTURES_DIR / "manifest.json").read_text())
 
 
-@pytest.mark.parametrize("entry", MANIFEST, ids=[e["technique_id"] for e in MANIFEST])
+@pytest.mark.parametrize("entry", MANIFEST, ids=[e["file"] for e in MANIFEST])
 def test_fixture_normalizes_to_schema_valid_event(entry):
     raw = json.loads((FIXTURES_DIR / entry["file"]).read_text())
 
@@ -28,7 +28,7 @@ def test_fixture_normalizes_to_schema_valid_event(entry):
             assert event.registry is not None
 
 
-@pytest.mark.parametrize("entry", MANIFEST, ids=[e["technique_id"] for e in MANIFEST])
+@pytest.mark.parametrize("entry", MANIFEST, ids=[e["file"] for e in MANIFEST])
 def test_normalization_is_stable(entry):
     raw = json.loads((FIXTURES_DIR / entry["file"]).read_text())
 
@@ -39,6 +39,20 @@ def test_normalization_is_stable(entry):
     assert first.event_id == second.event_id
 
 
-def test_manifest_covers_ten_distinct_techniques():
-    technique_ids = {e["technique_id"] for e in MANIFEST}
-    assert len(technique_ids) == 10
+def test_manifest_covers_every_supported_event_id():
+    assert {e["event_id"] for e in MANIFEST} == {1, 3, 13}
+
+
+def test_fixture_names_match_their_contents():
+    # A file named after a technique must be labeled with it; background events are "bg_".
+    for e in MANIFEST:
+        if e["technique_id"] is None:
+            assert e["file"].startswith(f"bg_eid{e['event_id']}_"), e["file"]
+        else:
+            prefix = e["technique_id"].lower().replace(".", "_") + "_"
+            assert e["file"].startswith(prefix), e["file"]
+
+
+def test_manifest_lists_every_fixture_file():
+    on_disk = {p.name for p in FIXTURES_DIR.glob("*.json")} - {"manifest.json"}
+    assert on_disk == {e["file"] for e in MANIFEST}

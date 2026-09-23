@@ -36,7 +36,7 @@ def test_selector_matches_on_kind_and_case_insensitive_regex():
 
 
 def test_selector_can_match_registry_keys_and_needs_every_field_to_match():
-    eventlog_key = _event("t1562_002_disable_eventlog.json")
+    eventlog_key = _event("t1685_001_disable_eventlog.json")
     assert kind_of(eventlog_key) == "registry"
     assert matches(eventlog_key, {"kind": "registry", "key": r"EventLog.Start"})
     assert not matches(eventlog_key, {"kind": "registry", "key": r"EventLog.Start", "image": "x$"})

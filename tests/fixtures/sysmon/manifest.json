@@ -1,15 +1,5 @@
 [
   {
-    "file": "t1059_001_powershell_httplistener.json",
-    "technique_id": "T1059.001",
-    "event_id": 13
-  },
-  {
-    "file": "t1059_005_vbs_launcher.json",
-    "technique_id": "T1059.005",
-    "event_id": 3
-  },
-  {
     "file": "t1003_001_lsass_dump.json",
     "technique_id": "T1003.001",
     "event_id": 1
@@ -25,13 +15,8 @@
     "event_id": 1
   },
   {
-    "file": "t1562_002_disable_eventlog.json",
+    "file": "t1685_001_disable_eventlog.json",
     "technique_id": "T1685.001",
-    "event_id": 13
-  },
-  {
-    "file": "t1547_001_registry_run_key.json",
-    "technique_id": "T1547.001",
     "event_id": 13
   },
   {
@@ -45,8 +30,27 @@
     "event_id": 1
   },
   {
-    "file": "t1548_002_uac_bypass_fodhelper.json",
-    "technique_id": "T1548.002",
-    "event_id": 1
+    "file": "bg_eid1_whoami_groups.json",
+    "technique_id": null,
+    "event_id": 1,
+    "note": "background event from the UAC-bypass (fodhelper) capture; not the attack"
+  },
+  {
+    "file": "bg_eid3_adws_ldap_loopback.json",
+    "technique_id": null,
+    "event_id": 3,
+    "note": "background ADWS LDAP loopback traffic from the VBS-launcher capture"
+  },
+  {
+    "file": "bg_eid13_explorer_userassist.json",
+    "technique_id": null,
+    "event_id": 13,
+    "note": "background UserAssist write from the PowerShell HttpListener capture"
+  },
+  {
+    "file": "bg_eid13_lsass_w32time.json",
+    "technique_id": null,
+    "event_id": 13,
+    "note": "background W32Time registry write from the registry-run-key capture"
   }
 ]
