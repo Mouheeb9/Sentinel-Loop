@@ -4,6 +4,9 @@ Stubs have the real signature (state in, partial update out) but return fake val
 a `StubScript` in the run config (`{"configurable": {"stub": StubScript(...)}}`), so tests can
 force any path. Real implementations (`*_live`) replace them one at a time: enrich and triage
 since Day 5; route, rule_gen, validate and repair are still stubs.
+
+`PipelineOptions` in `config["configurable"]["pipeline"]` switches retrieval and enrichment tools
+off for the eval baselines (evals/run.py); the default is everything on.
 """
 
 from __future__ import annotations
@@ -27,8 +30,18 @@ class StubScript:
     validation_passes: tuple[bool, ...] = (True,)
 
 
+@dataclass(frozen=True)
+class PipelineOptions:
+    retrieval: bool = True  # ATT&CK + Sigma context from pgvector
+    tools: bool = True  # NVD / ThreatFox lookups during triage
+
+
 def _script(config: RunnableConfig) -> StubScript:
     return config.get("configurable", {}).get("stub") or StubScript()
+
+
+def _options(config: RunnableConfig | None) -> PipelineOptions:
+    return (config or {}).get("configurable", {}).get("pipeline") or PipelineOptions()
 
 
 def rule_passed(result: ValidationResult) -> bool:
@@ -44,14 +57,20 @@ def enrich(state: SentinelState) -> dict:
     return {"techniques": [], "sigma_rules": []}
 
 
-def enrich_live(state: SentinelState) -> dict:
+def enrich_live(state: SentinelState, config: RunnableConfig) -> dict:
+    if not _options(config).retrieval:
+        return {"techniques": [], "sigma_rules": []}
     techniques, sigma_rules = enrich_alert(state["alert"])
     return {"techniques": techniques, "sigma_rules": sigma_rules}
 
 
 def triage_live(state: SentinelState, config: RunnableConfig) -> dict:
     result = triage_routed(
-        state["alert"], state.get("techniques", []), state.get("sigma_rules", []), config
+        state["alert"],
+        state.get("techniques", []),
+        state.get("sigma_rules", []),
+        config,
+        use_tools=_options(config).tools,
     )
     return {
         "verdict": result.verdict,

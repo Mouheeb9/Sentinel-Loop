@@ -12,7 +12,8 @@ Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / 
 
 ## Status
 
-Week 1, Day 3 — retrieval corpus (ATT&CK + Sigma) and the golden-dataset labeling grind.
+Week 1, Day 7 — golden-v1 frozen (150 alerts), triage agent with tools and two-tier routing,
+first attack-success rate (20%, 2/10 payloads), eval runner + scorers; baseline run pending.
 
 ## Golden dataset: how we measured labeling quality
 
@@ -85,4 +86,6 @@ git -C data/raw/sigma/repo sparse-checkout set rules
 uv run python -m sentinel.retrieval.index   # embeds 3,841 chunks; ~45 min on CPU, resumable
 uv run python -m evals.retrieval_eval --probes evals/retrieval_probes_v2.yaml
 uv run python -m evals.check_labels         # golden labels must use live ATT&CK technique IDs
+uv run python -m evals.run                  # baseline: 3 configs x golden-v1, resumable
+                                            # -> results/<config>.json, results/charts/
 ```

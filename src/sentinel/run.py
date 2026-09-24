@@ -21,7 +21,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from sentinel.graph.build import build_graph
-from sentinel.graph.nodes import StubScript
+from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.llm import escalation_model_name, triage_model_name
 from sentinel.schemas import Alert
 from sentinel.tracing import trace_run
@@ -63,6 +63,7 @@ def run_alert(
     config_name: str,
     owner: str,
     trace: bool = True,
+    pipeline: PipelineOptions | None = None,
 ) -> RunResult:
     graph = build_graph(live=live)
     path: list[str] = []
@@ -70,7 +71,7 @@ def run_alert(
     model = models_label() if live else "stub"
     with trace_run(alert, config_name=config_name, owner=owner, model=model, enabled=trace) as tr:
         config = {
-            "configurable": {"stub": stub},
+            "configurable": {"stub": stub, "pipeline": pipeline or PipelineOptions()},
             "callbacks": tr.callbacks,
             "run_name": "sentinel-pipeline",
         }
