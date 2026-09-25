@@ -2,7 +2,11 @@
 
     uv run python -m evals.run                                  # all 3 configs, all 150 alerts
     uv run python -m evals.run --configs rag-tools --n 30       # stratified sample
+    uv run python -m evals.run --split dev                      # the frozen dev split (tune here)
     uv run python -m evals.run --score-only                     # rebuild scores + charts, no calls
+
+Tune on dev, report on test: `--split test` is sealed until Day 13-14 (needs --unseal-test) and
+writes to results/test/ so it never mixes with dev rows.
 
 Configs (the Week 1 baseline):
     single-prompt  no retrieval, no tools: the model and the alert alone
@@ -16,9 +20,10 @@ Outputs, per config:
     results/charts/baseline.png   every config side by side
 
 Reproducibility: every run records the models, a prompt hash (system prompt + answer schema +
-offered tool schemas + retrieval k), the git SHA (and whether the tree was dirty), the golden
-file's hash and timestamps. The first line of the rows file is that fingerprint; a re-run with a
-different fingerprint starts over instead of mixing two setups into one number.
+offered tool schemas + retrieval k), the input alerts' hash, the git SHA (and whether the tree was
+dirty) and timestamps. The first line of the rows file is that fingerprint; a re-run with a
+different fingerprint starts over instead of mixing two setups into one number. Labels are scored
+from the current golden file (its hash goes in meta), so a label fix re-scores without re-running.
 
 Resuming: a re-run keeps finished rows (valid verdicts AND schema errors, which are real
 outcomes) and retries transport errors. The run stops early on a provider's daily quota, or after
@@ -43,7 +48,8 @@ from dotenv import load_dotenv
 
 from evals.eval_row import EvalRow
 from evals.scorers import AttackMap, score_all
-from evals.triage_smoke import GOLDEN, load_golden, sample
+from evals.split import SPLITS, load_split
+from evals.triage_smoke import CANDIDATES, GOLDEN, load_golden, sample
 from sentinel.agents.enrich import K
 from sentinel.agents.routing import escalate_below
 from sentinel.agents.triage import CONTEXT_TEXT_CHARS, SYSTEM_PROMPT, TriageError
@@ -100,7 +106,8 @@ def git_state() -> dict[str, Any]:
 
 
 def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
-    """What must match for two rows to belong to the same run."""
+    """What must match for two rows to belong to the same run: everything that shapes the model
+    input. Labels are not part of it: a fixed label re-scores old rows, it doesn't re-run them."""
     return {
         "config": config,
         "retrieval": options.retrieval,
@@ -109,7 +116,7 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
         "tier2_model": escalation_model_name(),
         "escalate_below": escalate_below(),
         "prompt_sha": prompt_hash(options),
-        "golden_sha": _sha(GOLDEN.read_bytes())[:12],
+        "alerts_sha": _sha(b"".join(c.read_bytes() for c in CANDIDATES))[:12],
         "tool_cache": os.environ.get("SENTINEL_TOOL_CACHE") or "ttl",
     }
 
@@ -256,9 +263,14 @@ def _now() -> str:
 
 
 def write_results(
-    config: str, labels: list[dict], alerts: dict[str, Alert], attack: AttackMap
+    config: str,
+    labels: list[dict],
+    alerts: dict[str, Alert],
+    attack: AttackMap,
+    split: dict[str, str] | None = None,
 ) -> dict | None:
-    """results/<config>.json from the rows file. Only the alerts in `labels` count."""
+    """results/<config>.json from the rows file. Only the alerts in `labels` count, and the
+    truth always comes from `labels` (the current golden file), not from when the row ran."""
     path = rows_path(config)
     if not path.exists():
         return None
@@ -266,13 +278,25 @@ def write_results(
     fp, by_id = lines[0]["fingerprint"], {x["row"]["alert_id"]: x for x in lines[1:]}
     wanted = [lab["alert_id"] for lab in labels]
     entries = [by_id[a] for a in wanted if a in by_id]
-    rows = [EvalRow.model_validate(x["row"]) for x in entries]
+    truth = {lab["alert_id"]: lab for lab in labels}
+    rows = [
+        EvalRow.model_validate(
+            x["row"]
+            | {
+                "label": truth[x["row"]["alert_id"]]["label"],
+                "label_techniques": truth[x["row"]["alert_id"]]["technique_ids"],
+            }
+        )
+        for x in entries
+    ]
     if not rows:
         return None
     transport = sum(str(r.error).startswith("transport") for r in rows)
     shas = sorted({x["detail"].get("git_sha") for x in entries if x["detail"].get("git_sha")})
     stamps = sorted(x["detail"]["at"] for x in entries if "at" in x["detail"])
     meta = fp | {
+        "golden_sha": _sha(GOLDEN.read_bytes())[:12],  # the labels these scores used
+        "split": split,  # {"name", "sha"} of the frozen split, or None for an ad-hoc sample
         "git_shas": shas,  # more than one = code changed mid-run
         "git_dirty": any(x["detail"].get("git_dirty") for x in entries),
         "started_at": stamps[0] if stamps else None,
@@ -364,15 +388,32 @@ def main(argv: list[str] | None = None) -> None:
 
     p = argparse.ArgumentParser(prog="python -m evals.run")
     p.add_argument("--configs", nargs="+", choices=list(CONFIGS), default=list(CONFIGS))
-    p.add_argument("--n", type=int, default=None, help="stratified sample size (default: all)")
+    sel = p.add_mutually_exclusive_group()
+    sel.add_argument(
+        "--split", choices=SPLITS, help="a frozen split from data/golden/split-v1.json"
+    )
+    sel.add_argument("--n", type=int, default=None, help="stratified sample size (default: all)")
+    p.add_argument("--unseal-test", action="store_true", help="allow --split test (Day 13-14)")
     p.add_argument("--seed", type=int, default=5)
     p.add_argument("--no-trace", action="store_true")
     p.add_argument("--fresh", action="store_true", help="drop earlier rows for these configs")
     p.add_argument("--score-only", action="store_true", help="no model calls; rescore + chart")
     args = p.parse_args(argv)
 
+    global RESULTS, CHARTS
     labels, alerts = load_golden()
-    if args.n:
+    split = None
+    if args.split:
+        if args.split == "test" and not args.unseal_test:
+            p.error("the test split is sealed until Day 13-14: add --unseal-test to run it")
+        ids, sha = load_split(args.split)
+        split = {"name": args.split, "sha": sha}
+        wanted = set(ids)
+        labels = [lab for lab in labels if lab["alert_id"] in wanted]
+        if args.split == "test":
+            RESULTS = RESULTS / "test"
+            CHARTS = RESULTS / "charts"
+    elif args.n:
         labels = sample(labels, args.n, args.seed)
     labels = sorted(labels, key=lambda r: r["alert_id"])
 
@@ -386,7 +427,7 @@ def main(argv: list[str] | None = None) -> None:
     attack = AttackMap.from_bundle()
     results = {}
     for config in CONFIGS:
-        if (r := write_results(config, labels, alerts, attack)) is not None:
+        if (r := write_results(config, labels, alerts, attack, split)) is not None:
             results[config] = r
     if not results:
         print("no results yet")

@@ -158,3 +158,20 @@ def test_tools_off_reaches_triage(monkeypatch):
     with pytest.raises(StopIteration):
         nodes.triage_live({"alert": None}, config)
     assert seen == {"use_tools": False}
+
+
+def test_label_fix_rescores_without_rerunning(tmp_results, monkeypatch):
+    monkeypatch.setattr(ev, "run_alert", _ok)
+    labels, alerts = _alerts(1)
+    ev.run_config("rag", labels, alerts, trace=False, fresh=False)
+    attack = AttackMap(tactics={"T1033": frozenset({"discovery"})})
+    assert ev.write_results("rag", labels, alerts, attack)["scores"]["triage"]["accuracy"] == 1.0
+
+    fixed = [lab | {"label": "benign_noisy", "technique_ids": []} for lab in labels]
+    calls = []
+    monkeypatch.setattr(ev, "run_alert", lambda alert, **kw: calls.append(1) or _ok(alert))
+    ev.run_config("rag", fixed, alerts, trace=False, fresh=False)
+    assert calls == []  # labels are not part of the fingerprint
+    result = ev.write_results("rag", fixed, alerts, attack)
+    assert result["scores"]["triage"]["accuracy"] == 0.0
+    assert result["rows"][0]["label"] == "benign_noisy"
