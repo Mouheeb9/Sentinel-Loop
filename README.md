@@ -91,6 +91,7 @@ uv run python -m evals.check_labels         # golden labels must use live ATT&CK
 uv run python -m evals.run --split dev      # baseline: 3 configs x the dev split, resumable
                                             # -> results/<config>.json, results/charts/
 uv run python -m evals.split --check        # the frozen dev/test split is untouched
+uv run python -m evals.failures             # one card per failure -> results/failures-<config>.md
 ```
 
 **Tune on dev, report on test.** `data/golden/split-v1.json` freezes 30 dev alerts (the ones we
