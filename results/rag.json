@@ -1,0 +1,413 @@
+{
+  "meta": {
+    "config": "rag",
+    "retrieval": true,
+    "tools": false,
+    "tier1_model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "tier2_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "escalate_below": 0.7,
+    "prompt_sha": "2edd88418b70",
+    "alerts_sha": "0afbdf00aef8",
+    "tool_cache": "frozen",
+    "golden_sha": "b9ec2d319642",
+    "split": {
+      "name": "dev",
+      "sha": "f1ee9a08ce2a"
+    },
+    "git_shas": [
+      "79c0a0d2d9d9848003fbc626115894cdb579dffb"
+    ],
+    "git_dirty": true,
+    "started_at": "2026-09-25T06:13:42+00:00",
+    "finished_at": "2026-09-25T06:43:53+00:00",
+    "alerts_planned": 30,
+    "alerts_run": 7,
+    "transport_errors": 1,
+    "complete": false
+  },
+  "scores": {
+    "triage": {
+      "accuracy": 0.7142857142857143,
+      "n": 7,
+      "confusion": {
+        "true_positive": {
+          "true_positive": 1,
+          "benign_noisy": 0,
+          "needs_review": 1,
+          "error": 0
+        },
+        "benign_noisy": {
+          "true_positive": 0,
+          "benign_noisy": 4,
+          "needs_review": 0,
+          "error": 1
+        },
+        "needs_review": {
+          "true_positive": 0,
+          "benign_noisy": 0,
+          "needs_review": 0,
+          "error": 0
+        }
+      },
+      "per_class_recall": {
+        "true_positive": 0.5,
+        "benign_noisy": 0.8,
+        "needs_review": null
+      },
+      "missed_attacks": 0
+    },
+    "techniques": {
+      "precision": 0.75,
+      "recall": 0.75,
+      "f1": 0.75,
+      "primary_exact_rate": 0.5,
+      "alerts_with_gold": 2,
+      "alerts_with_pred": 2
+    },
+    "iocs": {
+      "hallucinated_ioc_rate": 0.0,
+      "iocs_total": 12,
+      "iocs_hallucinated": 0,
+      "alerts_with_hallucination": 0,
+      "examples": []
+    },
+    "schema": {
+      "schema_valid_rate": 0.8571428571428571,
+      "first_try_rate": 0.8571428571428571,
+      "errors": 1
+    },
+    "cost_latency": {
+      "cost_per_alert_usd": 0.0,
+      "cost_known_rows": 6,
+      "latency_p95_s": 69.61
+    }
+  },
+  "rows": [
+    {
+      "config": "rag",
+      "alert_id": "day2-002",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/Windows/ADWS/Microsoft.ActiveDirectory.WebServices.exe",
+        "0:0:0:0:0:0:0:1"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_port",
+        "events[0].network.dst_ip",
+        "events[0].network.src_ip",
+        "events[0].host",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 14.35,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/dfbea41475e4c5eafe7531c39cec8b71"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-006",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1562.001"
+      ],
+      "ioc_refs": [
+        "C:/Users/IT01-Pedro/Downloads/payload.exe",
+        "HKLM/System/CurrentControlSet/Services/EventLog/Start",
+        "DWORD (0x00000004)"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 9.31,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/cc4cceb5d8bd983c83935d24835aeefc"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-013",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.85,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/windows/Explorer.EXE",
+        "HKU/S-1-5-21-2079883792-3656946353-945924832-1104/Software/Microsoft/Windows/CurrentVersion/ApplicationAssociationToasts/VBSFile_.vbs"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].user",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 30.53,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/9e100f544b7f14ac0580f402450c7bde"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-014",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.005"
+      ],
+      "verdict": "needs_review",
+      "confidence": 0.4,
+      "technique_ids": [
+        "T1059.005"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Desktop/launcher.vbs"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 31.47,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/a791fcfd49ba05f2c5f38100081f823a"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-020",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/windows/Explorer.EXE",
+        "HKU/S-1-5-21-3940915590-64593676-1414006259-500/Software/Microsoft/Windows/CurrentVersion/Explorer/UserAssist/{CEBFF5CD-ACE2-4F4F-9178-9926F41749EA}/Count/HRZR_PGYFRFFVBA"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.37,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/12d1629440ef4c534d4068de52a2bc5e"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-022",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.78,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/windows/system32/svchost.exe",
+        "HKLM/SOFTWARE/Microsoft/Windows NT/CurrentVersion/Schedule/TaskCache/Tasks/{E4AEB720-7F18-419F-A20E-6E0B5C4ED968}/DynamicInfo"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.41,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/26089c4f4b0bb81782b3e28a53e846c0"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-024",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": null,
+      "confidence": null,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [],
+      "error": "transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day",
+      "schema_retries": 0,
+      "cost_usd": null,
+      "latency_s": 69.61,
+      "tier": null,
+      "trace": null
+    }
+  ],
+  "details": {
+    "day2-002": {
+      "label_rationale": "Known AD service (ADWS) doing routine LDAP loopback traffic on a domain controller.",
+      "reasoning": "The event shows the legitimate ADWS process (Microsoft.ActiveDirectory.WebServices.exe) making a loopback TCP connection to port 389 (LDAP) on the same domain controller, which is normal intra-service communication for ADWS to interact with Active Directory. No malicious indicators are present.",
+      "retrieved_techniques": [
+        "T1049",
+        "T1016.001",
+        "T1102.001",
+        "T1071.001",
+        "T1046"
+      ],
+      "retrieved_rules": [
+        "b3ad3c0f-c949-47a1-a30e-b0491ccae876",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3852,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:13:42+00:00"
+    },
+    "day2-006": {
+      "label_rationale": "Process named payload.exe (from Downloads) sets the EventLog service Start value to Disabled.",
+      "reasoning": "The event shows a user-level process payload.exe from the Downloads directory modifying the EventLog service start type to disabled (DWORD 0x00000004), which is an attempt to impair defensive logging capabilities.",
+      "retrieved_techniques": [
+        "T1547.002",
+        "T1547.001",
+        "T1543.003",
+        "T1547.010",
+        "T1218.011"
+      ],
+      "retrieved_rules": [
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "07743f65-7ec9-404a-a519-913db7118a8d",
+        "46490193-1b22-4c29-bdd6-5bf63907216f",
+        "dc5c24af-6995-49b2-86eb-a9ff62199e82",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4126,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:13:54+00:00"
+    },
+    "day2-013": {
+      "label_rationale": "Explorer recording a file-association notification setting; side effect of any .vbs execution, not the attack itself.",
+      "reasoning": "The event shows Windows Explorer (C:/windows/Explorer.EXE) running as SYSTEM modifying a user-specific registry key under HKU/.../Software/Microsoft/Windows/CurrentVersion/ApplicationAssociationToasts/VBSFile_.vbs with a DWORD value of 0. This is a legitimate Windows shell operation managing toast notification settings for .vbs file associations, not an autorun/persistence key. The process, user context, registry path, and value type all align with normal OS behavior.",
+      "retrieved_techniques": [
+        "T1546.001",
+        "T1137.002",
+        "T1564.007",
+        "T1555.004",
+        "T1547.001"
+      ],
+      "retrieved_rules": [
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "b7916c2a-fa2f-4795-9477-32b731f70f11",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "46490193-1b22-4c29-bdd6-5bf63907216f"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 8554,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:14:28+00:00"
+    },
+    "day2-014": {
+      "label_rationale": "wscript.exe executing a script named launcher.vbs from the user's Desktop.",
+      "reasoning": "A user (pgustavo) launched wscript.exe from the legitimate system path to run a VBScript file (launcher.vbs) on their Desktop, with explorer.exe as parent — typical of a user double-clicking a script. The Desktop is a common location for both legitimate user scripts and malware delivered via phishing; no obfuscation, suspicious arguments, or follow-on activity are visible in this single event.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1218.011",
+        "T1037.001",
+        "T1059.005",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "438025f9-5856-4663-83f7-52f878a70a50"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 8302,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:15:02+00:00"
+    },
+    "day2-020": {
+      "label_rationale": "UserAssist UEME_CTLSESSION is a generic UI session counter, not a program-launch record.",
+      "reasoning": "The event shows Explorer.EXE writing binary data to a UserAssist registry key, which is normal Windows tracking of program execution and not indicative of adversary behavior.",
+      "retrieved_techniques": [
+        "T1555.004",
+        "T1546.001",
+        "T1555.003",
+        "T1003.002",
+        "T1027.012"
+      ],
+      "retrieved_rules": [
+        "b7916c2a-fa2f-4795-9477-32b731f70f11",
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4341,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:15:21+00:00"
+    },
+    "day2-022": {
+      "label_rationale": "svchost writing Task Scheduler's own DynamicInfo cache for a task; routine Task Scheduler bookkeeping.",
+      "reasoning": "The event shows the legitimate Windows host process svchost.exe writing binary data to a scheduled task's DynamicInfo registry key, which is consistent with normal task scheduling activity performed by Windows services. No additional indicators of malicious behavior (such as unusual command line, known malicious hash, or network activity) are present.",
+      "retrieved_techniques": [
+        "T1053.005",
+        "T1218.002",
+        "T1053",
+        "T1197",
+        "T1546.009"
+      ],
+      "retrieved_rules": [
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "480421f9-417f-4d3b-9552-fd2728443ec8",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4571,
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:15:39+00:00"
+    },
+    "day2-024": {
+      "label_rationale": "Explorer writing UI app-switch usage telemetry; unrelated OS bookkeeping.",
+      "git_sha": "79c0a0d2d9d9848003fbc626115894cdb579dffb",
+      "git_dirty": true,
+      "at": "2026-09-25T06:43:53+00:00"
+    }
+  }
+}

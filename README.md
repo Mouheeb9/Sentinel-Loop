@@ -12,7 +12,10 @@ Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / 
 
 ## Status
 
-Week 1, Day 3 — retrieval corpus (ATT&CK + Sigma) and the golden-dataset labeling grind.
+Week 2, Day 8 — golden-v1 frozen (150 alerts) and split into a dev set (30, used for tuning)
+and a sealed test set (30, run once at the end of Week 2); CI runs lint + tests on every PR.
+Baseline in progress on the free model tier: single-prompt done (dev, n=30: triage accuracy
+0.87, technique F1 0.47); rag and rag-tools resume daily. First attack-success rate: 20% (2/10).
 
 ## Golden dataset: how we measured labeling quality
 
@@ -25,7 +28,9 @@ independently by two people (one AI engineer, one detection engineer) before com
   nearby activity is `benign_noisy`; a bare "program was launched" record with no follow-on
   evidence is `needs_review`, not a guess either way.
 - Final composition of the first 40: 10 `true_positive`, 24 `benign_noisy`, 6 `needs_review`.
-  The full set will be 150 (100 true positives across 20+ techniques, 50 benign-but-noisy).
+- Batch 2 was mined from further OTRF captures by `evals/mine_candidates.py`. The frozen set
+  (`golden-v1`) is 150 alerts: 100 `true_positive`, 50 `benign_noisy`. 77 of the 150 rows are
+  still drafts (`labeler: claude-draft`) pending human review (see `data/golden/CHANGELOG.md`).
 
 The three labels are `true_positive`, `benign_noisy` (an actor doing its normal job that still
 looks suspicious) and `needs_review` (no evidence either way).
@@ -83,4 +88,11 @@ git -C data/raw/sigma/repo sparse-checkout set rules
 uv run python -m sentinel.retrieval.index   # embeds 3,841 chunks; ~45 min on CPU, resumable
 uv run python -m evals.retrieval_eval --probes evals/retrieval_probes_v2.yaml
 uv run python -m evals.check_labels         # golden labels must use live ATT&CK technique IDs
+uv run python -m evals.run --split dev      # baseline: 3 configs x the dev split, resumable
+                                            # -> results/<config>.json, results/charts/
+uv run python -m evals.split --check        # the frozen dev/test split is untouched
 ```
+
+**Tune on dev, report on test.** `data/golden/split-v1.json` freezes 30 dev alerts (the ones we
+read failures on) and 30 test alerts nobody looks at; `--split test` refuses to run without
+`--unseal-test` and writes to `results/test/`, so the final number can't leak into tuning.

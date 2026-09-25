@@ -25,6 +25,12 @@ windows_sysmon:
     normalized_path: registry.details
     event_ids: [13]
     note: Registry value data written by the process.
+  - raw_field: TargetObject
+    normalized_path: registry.target_object
+    event_ids: [13]
+    note: >-
+      Registry key path. Attacker-influenced: they can choose an obscure or
+      misleading sub-key name (short, but chosen by them).
   - raw_field: TargetFilename
     normalized_path: null
     event_ids: [11]

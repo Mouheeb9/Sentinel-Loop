@@ -83,4 +83,4 @@ Track every time this guide changes because of a real labeling disagreement.
 
 | Date | Change | Reason |
 |---|---|---|
-| _(fill in as you go)_ | | |
+| 2026-09-18 | Recorded initial disagreement rate: 7/40 (17.5%) on first labeling session | Day 2 evening session with Mouheb |
