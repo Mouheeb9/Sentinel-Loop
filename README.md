@@ -92,6 +92,7 @@ uv run python -m evals.run --split dev      # baseline: 3 configs x the dev spli
                                             # -> results/<config>.json, results/charts/
 uv run python -m evals.split --check        # the frozen dev/test split is untouched
 uv run python -m evals.failures             # one card per failure -> results/failures-<config>.md
+uv run python -m evals.coverage             # share of golden attacks an existing Sigma rule catches
 ```
 
 **Tune on dev, report on test.** `data/golden/split-v1.json` freezes 30 dev alerts (the ones we

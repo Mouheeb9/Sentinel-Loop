@@ -3,7 +3,8 @@
 Stubs have the real signature (state in, partial update out) but return fake values, steered by
 a `StubScript` in the run config (`{"configurable": {"stub": StubScript(...)}}`), so tests can
 force any path. Real implementations (`*_live`) replace them one at a time: enrich and triage
-since Day 5; route, rule_gen, validate and repair are still stubs.
+since Day 5, route since Day 11 (matcher injectable via `config["configurable"]["matcher"]`);
+rule_gen, validate and repair are still stubs.
 
 `PipelineOptions` in `config["configurable"]["pipeline"]` switches retrieval and enrichment tools
 off for the eval baselines (evals/run.py); the default is everything on.
@@ -11,7 +12,7 @@ off for the eval baselines (evals/run.py); the default is everything on.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from langchain_core.runnables import RunnableConfig
 
@@ -19,6 +20,7 @@ from sentinel.agents.enrich import enrich_alert
 from sentinel.agents.routing import triage_routed
 from sentinel.graph.state import Outcome, SentinelState
 from sentinel.schemas import TriageVerdict, ValidationResult
+from sentinel.validation.coverage import check_coverage
 
 
 @dataclass(frozen=True)
@@ -96,6 +98,16 @@ def triage(state: SentinelState, config: RunnableConfig) -> dict:
 
 def route(state: SentinelState, config: RunnableConfig) -> dict:
     return {"covering_rule_id": _script(config).covering_rule_id}
+
+
+def route_live(state: SentinelState, config: RunnableConfig) -> dict:
+    """A true positive is covered when one of the retrieved Sigma rules fires on its events."""
+    if state["verdict"].verdict != "true_positive":
+        return {"covering_rule_id": None}
+    matcher = (config or {}).get("configurable", {}).get("matcher")
+    rule_ids = [h.id for h in state.get("sigma_rules", [])]
+    result = check_coverage(state["alert"].events, rule_ids, matcher)
+    return {"covering_rule_id": result.covering_rule_id, "coverage": asdict(result)}
 
 
 def rule_gen(state: SentinelState) -> dict:
