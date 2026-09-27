@@ -11,3 +11,18 @@ Frozen versions are never edited. Any change is a new version plus a line here.
   118 -> T1003.002, 113 -> T1003).
 - NOT yet human-reviewed: 77 day3 rows outside 101..150 (45 true_positive, 32 benign_noisy), still
   `labeler: claude-draft`. Reviewed on 2026-09-21 by reading the rationales; kept as drafted. Corrections go to v2.
+
+## v1.1 (in progress, built from v1 + review-log.yaml)
+
+- `v1.1.jsonl` is `v1.jsonl` plus `data/golden/review-log.yaml`; `v1.jsonl` is untouched. Rebuild with
+  `uv run python -m evals.build_v11 --write` (also syncs `labels.jsonl`). A row counts as human-reviewed
+  ONLY if it is in the log; its `labeler` becomes the reviewer and `labeled_at` the review date.
+- 2026-09-26/27, Mouadh reviewed 83 rows. First 22 (the 21 dev-split drafts + day3-163) checked against the raw
+  events in session: 19 confirmed, 3 corrected: day3-048 T1134.001 -> T1134, day3-163 T1134.001 -> T1134
+  because the event shows the pipe, not the impersonation, and day3-113 T1003 -> T1210 for
+  `lsadump::zerologon /exploit`), then the other 61 unreviewed drafts, confirmed unchanged on his
+  attestation (not re-checked row by row in session).
+- The last 33 (day3-101..150, reviewed with Mouadh on 2026-09-21 per the v1 notes, `labeler` never updated) are
+  stamped `Mouadh` / 2026-09-21 on his confirmation of 2026-09-27; no label changed.
+- v1.1: 150 rows, 116 human-labeled by Mouadh (83 + 33), 34 by `Mouheb+Partner`, 0 `claude-draft`. 3 labels
+  changed in total (048, 163, 113). Not tagged yet.

@@ -27,6 +27,8 @@ Following the Palantir ADS framework's convention: **always tag both the tactic 
 
 - Every `true_positive` alert gets exactly **one primary technique**, with its tactic.
 - **Sub-technique vs. parent:** ATT&CK techniques like T1003 (OS Credential Dumping) or T1055 (Process Injection) have many sub-techniques underneath them (T1003.001 LSASS Memory, T1055.012 Process Hollowing, etc.). Tag the **specific sub-technique** only if the evidence clearly shows the exact mechanism (e.g. you see LSASS memory being read → `T1003.001`). If the evidence only shows "something dumped credentials" without revealing how, stop at the parent technique (`T1003`).
+- **Tag what the event shows, not what the tool is known for (v1.1).** A tool name, or a pipe name that matches a known framework pattern (e.g. `MSSE-1337-server` = Cobalt Strike getsystem), shows the tool is running, not the technique it performs. If the event does not show the mechanism itself (the token impersonation, the injection), tag the parent (`T1134`, not `T1134.001`).
+- **Wrapper events (v1.1).** `cmd.exe /c <something>` started by an implant: if the command line shows one specific attack action, label that action (`cmd.exe /c mimikatz.exe "lsadump::zerologon ... /exploit"` → `T1210`). If it only launches a tool or command with no visible action, label the shell (`T1059.003`).
 - Additional **secondary technique IDs** may be added only if the alert genuinely reflects more than one distinct technique — not because two seem plausible.
 
 ---
@@ -84,3 +86,4 @@ Track every time this guide changes because of a real labeling disagreement.
 | Date | Change | Reason |
 |---|---|---|
 | 2026-09-18 | Recorded initial disagreement rate: 7/40 (17.5%) on first labeling session | Day 2 evening session with Mouheb |
+| 2026-09-27 | Section 2: added "tag what the event shows" (tool or pipe name is not the mechanism -> parent) and "wrapper events" (label the visible action, else the shell). Drove day3-048 and 163 T1134.001 -> T1134, day3-113 T1003 -> T1210 | Day 8 review of the 77 drafted rows (Mouadh) |

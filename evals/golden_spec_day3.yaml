@@ -245,8 +245,8 @@ datasets:
 
   - name: aptsimulator_cobaltstrike
     items:
-      - {label: true_positive, technique: [T1134.001], match: {kind: process, image: 'CreateNamedPipe\.exe$', cmd: 'MSSE-1337'}, why: "CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern."}
-      - {label: true_positive, technique: [T1134.001], match: {kind: process, image: 'CreateNamedPipe\.exe$', cmd: 'msagent_'}, why: "A pipe named msagent_<hex> is a default Cobalt Strike named-pipe name used for token impersonation and beacon IPC."}
+      - {label: true_positive, technique: [T1134], match: {kind: process, image: 'CreateNamedPipe\.exe$', cmd: 'MSSE-1337'}, why: "CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern; the event shows the pipe, not the impersonation, so the parent technique."}
+      - {label: true_positive, technique: [T1134], match: {kind: process, image: 'CreateNamedPipe\.exe$', cmd: 'msagent_'}, why: "A pipe named msagent_<hex> is a default Cobalt Strike named-pipe name used for token impersonation and beacon IPC; the event shows the pipe, not the impersonation, so the parent technique."}
       - {label: needs_review, match: {kind: process, image: '7z\.exe$'}, why: "7z extracting a password-protected archive is ordinary for admins and for attackers, and this event alone cannot tell which."}
 
   - name: psh_python_webserver
@@ -361,7 +361,7 @@ datasets:
   - name: mimikatz_CVE-2020-1472_Unauthenticated_NetrServerAuthenticate2
     items:
       - {label: true_positive, technique: [T1210], match: {kind: process, image: 'mimikatz\.exe$'}, why: "mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller."}
-      - {label: true_positive, technique: [T1003], match: {kind: process, image: '(^|\\)cmd\.exe$', parent: 'GruntHTTP'}, why: "cmd.exe /c mimikatz.exe spawned by GruntHTTP.exe, a Covenant C2 implant, launching a credential-dumping tool (parent technique, no dump mechanism shown)."}
+      - {label: true_positive, technique: [T1210], match: {kind: process, image: '(^|\\)cmd\.exe$', parent: 'GruntHTTP'}, why: "cmd.exe /c mimikatz.exe \"lsadump::zerologon ... /exploit\" spawned by GruntHTTP.exe, a Covenant C2 implant: the command line shows the Zerologon (CVE-2020-1472) exploit against a domain controller."}
 
   - name: purplesharp_ad_playbook_I
     items:
