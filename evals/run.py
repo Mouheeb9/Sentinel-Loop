@@ -3,6 +3,7 @@
     uv run python -m evals.run                                  # all 3 configs, all 150 alerts
     uv run python -m evals.run --configs rag-tools --n 30       # stratified sample
     uv run python -m evals.run --split dev                      # the frozen dev split (tune here)
+    uv run python -m evals.run --split dev --configs rag --run bm25   # a new run in results/bm25/
     uv run python -m evals.run --score-only                     # rebuild scores + charts, no calls
 
 Tune on dev, report on test: `--split test` is sealed until Day 13-14 (needs --unseal-test) and
@@ -55,6 +56,7 @@ from sentinel.agents.routing import escalate_below
 from sentinel.agents.triage import CONTEXT_TEXT_CHARS, SYSTEM_PROMPT, TriageError
 from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.llm import escalation_model_name, triage_model_name
+from sentinel.retrieval import search
 from sentinel.run import default_owner, run_alert
 from sentinel.schemas import Alert, TriageVerdict
 from sentinel.tools import ALLOWED_TOOLS
@@ -108,7 +110,7 @@ def git_state() -> dict[str, Any]:
 def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
     """What must match for two rows to belong to the same run: everything that shapes the model
     input. Labels are not part of it: a fixed label re-scores old rows, it doesn't re-run them."""
-    return {
+    fp = {
         "config": config,
         "retrieval": options.retrieval,
         "tools": options.tools,
@@ -119,6 +121,11 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
         "alerts_sha": _sha(b"".join(c.read_bytes() for c in CANDIDATES))[:12],
         "tool_cache": os.environ.get("SENTINEL_TOOL_CACHE") or "ttl",
     }
+    # The search method changes what triage is shown. Added only when BM25 is on, so the
+    # vector-only baseline keeps its original fingerprint (and its rows stay valid).
+    if options.retrieval and search.USE_BM25:
+        fp["search"] = "vector+bm25"
+    return fp
 
 
 def _sha(data: str | bytes) -> str:
@@ -398,9 +405,13 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--no-trace", action="store_true")
     p.add_argument("--fresh", action="store_true", help="drop earlier rows for these configs")
     p.add_argument("--score-only", action="store_true", help="no model calls; rescore + chart")
+    p.add_argument("--run", default=None, help="write to results/<RUN>/ (keeps other runs intact)")
     args = p.parse_args(argv)
 
     global RESULTS, CHARTS
+    if args.run:
+        RESULTS = RESULTS / args.run
+        CHARTS = RESULTS / "charts"
     labels, alerts = load_golden()
     split = None
     if args.split:

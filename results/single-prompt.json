@@ -9,7 +9,7 @@
     "prompt_sha": "ee4e8b177422",
     "alerts_sha": "0afbdf00aef8",
     "tool_cache": "frozen",
-    "golden_sha": "b9ec2d319642",
+    "golden_sha": "b0695a44d0d4",
     "split": {
       "name": "dev",
       "sha": "f1ee9a08ce2a"
@@ -57,10 +57,10 @@
       "missed_attacks": 0
     },
     "techniques": {
-      "precision": 0.4652777777777778,
-      "recall": 0.475,
-      "f1": 0.4700886262924667,
-      "primary_exact_rate": 0.3,
+      "precision": 0.4097222222222222,
+      "recall": 0.425,
+      "f1": 0.41722129783693845,
+      "primary_exact_rate": 0.25,
       "alerts_with_gold": 20,
       "alerts_with_pred": 18
     },
@@ -417,7 +417,7 @@
       "alert_id": "day3-048",
       "label": "true_positive",
       "label_techniques": [
-        "T1134.001"
+        "T1134"
       ],
       "verdict": "true_positive",
       "confidence": 0.85,
@@ -650,7 +650,7 @@
       "alert_id": "day3-113",
       "label": "true_positive",
       "label_techniques": [
-        "T1003"
+        "T1210"
       ],
       "verdict": "true_positive",
       "confidence": 0.95,

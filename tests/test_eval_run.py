@@ -175,3 +175,21 @@ def test_label_fix_rescores_without_rerunning(tmp_results, monkeypatch):
     result = ev.write_results("rag", fixed, alerts, attack)
     assert result["scores"]["triage"]["accuracy"] == 0.0
     assert result["rows"][0]["label"] == "benign_noisy"
+
+
+def test_search_method_is_part_of_the_fingerprint(monkeypatch):
+    """Rows from the vector-only search can't be reused once BM25 is on, and the no-retrieval
+    config (unaffected by the search method) keeps its fingerprint."""
+    monkeypatch.setattr(ev.search, "USE_BM25", False)
+    old_rag = ev.fingerprint("rag", ev.CONFIGS["rag"])
+    old_single = ev.fingerprint("single-prompt", ev.CONFIGS["single-prompt"])
+    monkeypatch.setattr(ev.search, "USE_BM25", True)
+    assert ev.fingerprint("rag", ev.CONFIGS["rag"]) == old_rag | {"search": "vector+bm25"}
+    assert ev.fingerprint("single-prompt", ev.CONFIGS["single-prompt"]) == old_single
+
+
+def test_run_option_writes_to_its_own_folder(tmp_results, monkeypatch):
+    monkeypatch.setattr(ev, "load_golden", lambda: _alerts(0))
+    monkeypatch.setattr(ev, "CHARTS", ev.CHARTS)  # main() rebinds it: restore after the test
+    ev.main(["--run", "bm25", "--score-only", "--configs", "rag"])
+    assert ev.RESULTS == tmp_results / "bm25"

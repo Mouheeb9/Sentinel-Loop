@@ -14,8 +14,11 @@ Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / 
 
 Week 2, Day 8 — golden-v1 frozen (150 alerts) and split into a dev set (30, used for tuning)
 and a sealed test set (30, run once at the end of Week 2); CI runs lint + tests on every PR.
-Baseline in progress on the free model tier: single-prompt done (dev, n=30: triage accuracy
-0.87, technique F1 0.47); rag and rag-tools resume daily. First attack-success rate: 20% (2/10).
+Baseline done on the dev split (n=30, golden-v1.1 labels): triage accuracy / technique F1 =
+single-prompt 0.87 / 0.42, rag 0.83 / 0.58, rag-tools 0.93 / 0.57 (`results/charts/baseline.png`;
+one alert = 0.033, so gaps under ~0.07 are noise). Retrieval now merges BM25 keyword search
+with the vector search: on real dev alerts the right technique is in the top 5 for 60% of
+attacks, up from 35% (`docs/experiments.md`). First attack-success rate: 20% (2/10).
 
 ## Golden dataset: how we measured labeling quality
 
@@ -29,8 +32,8 @@ independently by two people (one AI engineer, one detection engineer) before com
   evidence is `needs_review`, not a guess either way.
 - Final composition of the first 40: 10 `true_positive`, 24 `benign_noisy`, 6 `needs_review`.
 - Batch 2 was mined from further OTRF captures by `evals/mine_candidates.py`. The frozen set
-  (`golden-v1`) is 150 alerts: 100 `true_positive`, 50 `benign_noisy`. 77 of the 150 rows are
-  still drafts (`labeler: claude-draft`) pending human review (see `data/golden/CHANGELOG.md`).
+  (`golden-v1`) is 150 alerts: 100 `true_positive`, 50 `benign_noisy`. Since golden-v1.1
+  all 150 rows are human-reviewed (`data/golden/v1.1.jsonl`, see `data/golden/CHANGELOG.md`).
 
 The three labels are `true_positive`, `benign_noisy` (an actor doing its normal job that still
 looks suspicious) and `needs_review` (no evidence either way).
@@ -93,6 +96,7 @@ uv run python -m evals.run --split dev      # baseline: 3 configs x the dev spli
 uv run python -m evals.split --check        # the frozen dev/test split is untouched
 uv run python -m evals.failures             # one card per failure -> results/failures-<config>.md
 uv run python -m evals.coverage             # share of golden attacks an existing Sigma rule catches
+uv run python -m evals.retrieval_golden     # retrieval recall@k on real dev alerts, no model calls
 ```
 
 **Tune on dev, report on test.** `data/golden/split-v1.json` freezes 30 dev alerts (the ones we
