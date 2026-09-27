@@ -29,8 +29,7 @@ Observations from R2:
 - So the mismatch is between the query and the corpus: the query is raw telemetry (paths,
   command lines, registry keys), the corpus is prose. Next candidates, one at a time: a corpus
   closer to telemetry (ATT&CK procedure examples), or a different embedding model.
-- Parts stay in the index (flag `search.TECHNIQUE_PARTS = False`, off by default) so R2 can be
-  re-run with another embedding model without re-writing code.
+- The parts code was removed on 2026-09-27 (it didn't help any model either, see B/C).
 
 ## Retrieval A/B by question type (from 2026-09-27)
 
@@ -57,14 +56,30 @@ Reading B and C (2026-09-27): both SecEmbed models lose to Jina on almost every 
 including plain-English descriptions (0.53-0.72 vs 0.93). Checked it isn't a setup error: vectors
 are normalized, and a brute-force ranking in numpy gives exactly the database's order (10/10).
 The model card's 0.97 recall@5 was measured on the author's own test set; it doesn't carry over
-to our questions. Their indexes stay in schemas emb_secembed_small / emb_secembed_base.
+to our questions. Removed on 2026-09-27 (code, PyTorch dependency, model files, indexes).
 
 Reading D (2026-09-27): first real gain. alert->attack recall@5 0.35 -> 0.60 (+5 of 20 alerts, well
 above the ~0.10 noise), command->attack 0.42 -> 0.53, text questions unchanged (0.90-0.93). BM25
 alone is already better than Jina alone on alerts (0.40): exact words like `comsvcs.dll` matter,
-and the two searches find different right answers, so merging them helps. Not yet the pipeline
-default (`search.USE_BM25 = False`) until the triage run confirms it.
+and the two searches find different right answers, so merging them helps. Made the pipeline
+default on 2026-09-27 (`search.USE_BM25 = True`); triage re-measured on dev with
+`uv run python -m evals.run --split dev --configs rag --run bm25` (results/bm25/).
 
 Reading F (2026-09-27): the reranker undoes most of D's gain on alerts (alert->attack 0.60 -> 0.40,
 command->attack 0.53 -> 0.37) and is slow on CPU (~12,000 question/candidate pairs took over 10
-minutes; about 2-3 s added per alert). Not kept. D stays the best setup.
+minutes; about 2-3 s added per alert). Not kept; code removed. D stays the best setup.
+
+Flags in the table above are from the time of each run. Today `evals/retrieval_golden.py` runs D
+by default; `--no-bm25` gives A, `--no-vector` gives BM25 alone.
+
+## Triage with BM25 + vector search (dev, 30 alerts, `results/bm25/`)
+
+| Config | Search | Accuracy | Technique F1 | Exact primary technique | Hallucinated-IOC rate |
+|---|---|---|---|---|---|
+| rag (baseline, `results/`) | vector only | 0.83 | 0.58 | 0.60 | 0.15 |
+| rag (`results/bm25/`) | vector + BM25 | 0.90 | 0.62 | 0.60 | 0.12 |
+
+3 verdicts fixed (day2-014, day3-071, day3-095), 1 broken (day3-048). Every number moved the right
+way, but on 30 alerts one alert = 0.033: +0.07 accuracy is 2 alerts net, at the edge of noise.
+The retrieval gain (0.35 -> 0.60) is the solid result; the triage gain is consistent with it but
+small. Kept.

@@ -33,11 +33,11 @@ Draft by Mouheb on Day 8; Mouadh adds his side before it is merged.
 
 ## Known debts moved to Week 2
 
-- 77 golden rows are still `labeler: claude-draft` (not human-reviewed): Mouadh, Day 8-9 ->
-  `golden-v1.1`. Risk: a Claude-drafted label scoring a model's answer.
+- 77 golden rows were still `labeler: claude-draft` (not human-reviewed). Done 2026-09-27:
+  Mouadh reviewed them all -> `golden-v1.1` (3 technique fixes).
 - Retrieval probe sets v1 and v2 are spent (tuned against); v3 from real alert behavior needed
   before any more retrieval tuning (Day 11).
-- Baseline incomplete (quota); chart in README once all three configs finish on dev.
+- Baseline incomplete (quota). Done 2026-09-27: all three configs finished on dev.
 - Day 6 ASR is on 10 payloads only; corpus grows to 40 on Day 10.
 
 ## Mouadh
