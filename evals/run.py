@@ -450,7 +450,10 @@ def main(argv: list[str] | None = None) -> None:
         cells = " ".join("  n/a" if v is None else f"{v:5.2f}" for v in h.values())
         print(f"{config:14} {r['meta']['alerts_run']:4} {cells}  {r['meta']['complete']}")
     chart = render_chart(results, CHARTS / "baseline.png")
-    print(f"written: results/<config>.json, {chart.relative_to(ROOT).as_posix()}")
+    print(
+        f"written: {chart.parent.parent.relative_to(ROOT).as_posix()}/<config>.json, "
+        f"{chart.relative_to(ROOT).as_posix()}"
+    )
     if stopped:
         print("run stopped early: re-run the same command to resume")
 

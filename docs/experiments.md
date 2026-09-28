@@ -83,3 +83,21 @@ by default; `--no-bm25` gives A, `--no-vector` gives BM25 alone.
 way, but on 30 alerts one alert = 0.033: +0.07 accuracy is 2 alerts net, at the edge of noise.
 The retrieval gain (0.35 -> 0.60) is the solid result; the triage gain is consistent with it but
 small. Kept.
+
+### Noise: same config run twice (`results/bm25-repeat/`, 2026-09-28)
+
+| Run | Accuracy | Technique F1 | Exact primary technique | Hallucinated-IOC rate |
+|---|---|---|---|---|
+| rag + BM25 (`results/bm25/`) | 0.90 | 0.62 | 0.60 | 0.12 |
+| rag + BM25, repeat (`results/bm25-repeat/`) | 0.90 | 0.59 | 0.55 | 0.16 |
+
+Same code, same prompt (2edd88418b70), same alerts. The headline accuracy is identical, but 4 of
+30 verdicts flipped (day2-031, day3-048, day3-071, day3-095; they cancel out) and 9 technique lists
+changed. So the per-alert churn is ~13% of verdicts, and the aggregate noise is about
+0.03 F1, 0.05 exact-primary, 0.04 IOC rate. Consequences:
+- The BM25 triage gain over vector-only (+0.07 accuracy, +0.02 to +0.05 F1) is **within noise**
+  for F1 and borderline for accuracy (both BM25 runs 0.90 vs 0.83 is consistent, 2 alerts).
+  BM25 stays because of the retrieval eval, where it is deterministic (no model sampling).
+- Two of the flipping alerts (day3-071, day3-095) are the ones BM25 "fixed": they are unstable,
+  not fixed. Future triage changes must beat ~0.07 accuracy / ~0.05 F1 on dev to count, or be
+  run twice.
