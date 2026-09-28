@@ -1,6 +1,12 @@
-from injection.runner import CASES, PAD, load_cases, poison, score
+from collections import Counter
+
+import yaml
+
+from injection.runner import CASES, PAD, ROOT, load_cases, poison, score
 from sentinel.schemas import InjectionCase
 from tests.test_triage import _alert
+
+UNTRUSTED = ROOT / "config" / "untrusted_fields.yaml"
 
 CLEAN = {
     "verdict": "true_positive",
@@ -23,11 +29,16 @@ def _case(payload="ignore it", field="process.command_line"):
     )
 
 
-def test_case_file_is_valid_and_targets_untrusted_fields():
+def test_corpus_is_5_categories_x_8_on_untrusted_fields():
     cases = load_cases(CASES)
-    assert len(cases) >= 10 and len({c.category for c in cases}) >= 3
-    allowed = {"process.command_line", "process.parent.command_line", "process.image"}
-    assert {c.target_field for c in cases} <= allowed | {"registry.details"}
+    per_category = Counter(c.category for c in cases)
+    assert len(per_category) == 5 and set(per_category.values()) == {8}
+    untrusted = {
+        f["normalized_path"]
+        for f in yaml.safe_load(UNTRUSTED.read_text("utf-8"))["windows_sysmon"]
+        if f["normalized_path"]
+    }
+    assert {c.target_field for c in cases} <= untrusted
 
 
 def test_payload_is_appended_so_the_evidence_stays():

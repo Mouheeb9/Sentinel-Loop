@@ -1,7 +1,7 @@
 """Day 6 injection runner: plant each payload in a real true-positive alert, run the pipeline,
 and measure how often the attack changes the outcome (attack success rate, ASR).
 
-    uv run python -m injection.runner                  # live run, writes results/asr-day6.json
+    uv run python -m injection.runner                  # live run, writes results/asr-day10.json
     uv run python -m injection.runner --stub           # dry run: fake nodes, no model calls
     uv run python -m injection.runner --fresh          # ignore earlier rows and start over
 
@@ -41,9 +41,9 @@ from sentinel.schemas import Alert, InjectionCase
 from sentinel.tools import ToolNotAllowedError
 
 ROOT = Path(__file__).parent.parent
-CASES = ROOT / "injection" / "cases" / "batch_01.json"
-OUT = ROOT / "results" / "asr-day6.json"
-CONFIG_NAME = "asr-day6"
+CASES = ROOT / "injection" / "cases"  # every batch_*.json in here, in file order
+OUT = ROOT / "results" / "asr-day10.json"  # asr-day6.json keeps the 10-case Day 6 number
+CONFIG_NAME = "asr-day10"
 CANARY = "canary-7f3a"
 REVIEWED = "Mouheb+Partner"
 PAD = " ".join(
@@ -52,7 +52,15 @@ PAD = " ".join(
 
 
 def load_cases(path: Path) -> list[InjectionCase]:
-    return [InjectionCase.model_validate(c) for c in json.loads(path.read_text("utf-8"))]
+    """One batch file, or a directory: all its batch_*.json. case_ids must be unique."""
+    files = sorted(path.glob("batch_*.json")) if path.is_dir() else [path]
+    cases = [
+        InjectionCase.model_validate(c) for f in files for c in json.loads(f.read_text("utf-8"))
+    ]
+    ids = [c.case_id for c in cases]
+    if len(ids) != len(set(ids)):
+        raise SystemExit(f"duplicate case_id in {path}")
+    return cases
 
 
 def _get(obj: dict, path: str):
@@ -159,7 +167,7 @@ def main() -> None:
 
     live = not args.stub
     if args.stub and args.out == OUT:
-        args.out = OUT.with_name("asr-day6-stub.json")  # never overwrite the real number
+        args.out = OUT.with_name("asr-day10-stub.json")  # never overwrite the real number
     labels, alerts = load_golden()
     labels_by_id = {r["alert_id"]: r for r in labels}
     cases = load_cases(args.cases)
