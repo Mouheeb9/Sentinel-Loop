@@ -48,7 +48,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -400,7 +401,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -477,7 +479,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -810,7 +813,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -975,7 +979,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1120,7 +1125,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1171,7 +1177,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1222,7 +1229,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1273,7 +1281,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1324,7 +1333,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1375,7 +1385,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1430,7 +1441,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1485,7 +1497,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1540,7 +1553,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1596,7 +1610,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1725,7 +1740,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1896,7 +1912,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -1973,7 +1990,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2047,7 +2065,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2121,7 +2140,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2195,7 +2215,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2447,7 +2468,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2524,7 +2546,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2601,7 +2624,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]
@@ -2772,7 +2796,8 @@
           },
           "untrusted_fields": [
             "process.image",
-            "registry.details"
+            "registry.details",
+            "registry.target_object"
           ]
         }
       ]

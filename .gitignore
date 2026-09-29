@@ -25,3 +25,11 @@ data/raw/
 
 # Personal day-by-day learning notes — not shared with the team.
 TAKEAWAYS.md
+
+# Scratch clones used for validation setup (docs/validation-setup.md), and
+# Zircolite's own run output. Not project code; re-clone/re-run as needed.
+/sigma-rules-tmp/
+/zircolite/
+/EVTX-ATTACK-SAMPLES/
+detected_events.json
+zircolite.log

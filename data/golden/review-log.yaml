@@ -1,0 +1,64 @@
+# Human review log for claude-draft golden rows (feeds golden-v1.1; v1 stays frozen).
+# One entry per review session. `confirmed` = reviewer checked the row against the raw event and
+# kept the label as drafted; `changed` = label/technique edited (the spec evals/golden_spec_day3.yaml
+# carries the same edit). A row is human-reviewed ONLY if it appears here. Do not bulk-edit
+# `labeler` in labels.jsonl. Do not run `mine_candidates --write` before the v1.1 build is decided:
+# it regenerates every day3 row from the spec and would drop hand edits made in labels.jsonl.
+
+- reviewer: Mouadh
+  date: 2026-09-26
+  scope: dev-split benign_noisy drafts
+  confirmed: [day3-044, day3-047, day3-165]
+  changed: {}
+
+- reviewer: Mouadh
+  date: 2026-09-27
+  scope: dev-split fragile technique choices (048, 113) plus 163, same capture and same reasoning as 048
+  confirmed: [day3-093, day3-128, day3-136, day3-176]
+  changed:
+    day3-048:
+      technique_ids: [T1134]
+      was: [T1134.001]
+      why: "event shows the pipe, not the token impersonation -> parent"
+      rationale: "CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern; the event shows the pipe, not the impersonation, so the parent technique."
+    day3-163:
+      technique_ids: [T1134]
+      was: [T1134.001]
+      why: "same as day3-048 (msagent_ pipe)"
+      rationale: "A pipe named msagent_<hex> is a default Cobalt Strike named-pipe name used for token impersonation and beacon IPC; the event shows the pipe, not the impersonation, so the parent technique."
+    day3-113:
+      technique_ids: [T1210]
+      was: [T1003]
+      why: "command line is lsadump::zerologon /exploit, not a credential dump"
+      rationale: "cmd.exe /c mimikatz.exe \"lsadump::zerologon ... /exploit\" spawned by GruntHTTP.exe, a Covenant C2 implant: the command line shows the Zerologon (CVE-2020-1472) exploit against a domain controller."
+
+- reviewer: Mouadh
+  date: 2026-09-27
+  scope: dev-split remaining true_positive drafts
+  confirmed: [day3-045, day3-056, day3-070, day3-071, day3-095, day3-096, day3-112, day3-123, day3-145, day3-151, day3-158, day3-166]
+  changed: {}
+
+- reviewer: Mouadh
+  date: 2026-09-27
+  scope: "all remaining unreviewed drafts (61 = 16 benign_noisy + 45 true_positive); reviewer
+    attested he checked every one, no change; not re-checked row by row in the Claude session"
+  confirmed: [day3-041, day3-042, day3-043, day3-046, day3-050, day3-051, day3-052, day3-053,
+              day3-054, day3-057, day3-058, day3-059, day3-060, day3-061, day3-062, day3-063,
+              day3-064, day3-065, day3-066, day3-067, day3-068, day3-069, day3-072, day3-073,
+              day3-074, day3-075, day3-077, day3-078, day3-079, day3-081, day3-082, day3-083,
+              day3-084, day3-085, day3-086, day3-087, day3-089, day3-090, day3-091, day3-092,
+              day3-094, day3-097, day3-098, day3-099, day3-100, day3-152, day3-153, day3-154,
+              day3-155, day3-157, day3-159, day3-160, day3-161, day3-164, day3-168, day3-169,
+              day3-170, day3-171, day3-173, day3-174, day3-175]
+  changed: {}
+
+- reviewer: Mouadh
+  date: 2026-09-21
+  scope: "day3-101..150 rows reviewed with Mouadh on 2026-09-21 (v1 CHANGELOG) but never
+    re-stamped; Mouadh confirmed on 2026-09-27 that they were reviewed, no change"
+  confirmed: [day3-101, day3-102, day3-103, day3-104, day3-105, day3-106, day3-107, day3-108,
+              day3-109, day3-110, day3-116, day3-117, day3-118, day3-119, day3-120, day3-121,
+              day3-122, day3-125, day3-126, day3-131, day3-132, day3-134, day3-135, day3-137,
+              day3-139, day3-140, day3-141, day3-143, day3-144, day3-146, day3-148, day3-149,
+              day3-150]
+  changed: {}
