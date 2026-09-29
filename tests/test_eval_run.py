@@ -191,5 +191,7 @@ def test_search_method_is_part_of_the_fingerprint(monkeypatch):
 def test_run_option_writes_to_its_own_folder(tmp_results, monkeypatch):
     monkeypatch.setattr(ev, "load_golden", lambda: _alerts(0))
     monkeypatch.setattr(ev, "CHARTS", ev.CHARTS)  # main() rebinds it: restore after the test
+    # the ATT&CK bundle is gitignored raw data: absent on CI
+    monkeypatch.setattr(ev.AttackMap, "from_bundle", staticmethod(lambda *a, **kw: AttackMap({})))
     ev.main(["--run", "bm25", "--score-only", "--configs", "rag"])
     assert ev.RESULTS == tmp_results / "bm25"
