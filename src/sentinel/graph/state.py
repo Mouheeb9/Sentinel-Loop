@@ -46,6 +46,9 @@ class SentinelState(TypedDict):
 
     # route: id of an existing Sigma rule that already covers this alert, None if no coverage.
     covering_rule_id: NotRequired[str | None]
+    # route_live: which rules were matched / missing / broken, and `unavailable` when matching
+    # couldn't run (no matcher yet): then "not covered" means unknown, not "no rule exists".
+    coverage: NotRequired[dict]
 
     # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair).
     draft_rule: NotRequired[str]

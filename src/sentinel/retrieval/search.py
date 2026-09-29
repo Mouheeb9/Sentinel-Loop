@@ -1,18 +1,26 @@
-"""Hybrid retrieval over the chunk index: exact IDs + vector similarity + lexical, with filters.
+"""Hybrid retrieval over the chunk index: exact IDs + vector similarity + BM25, with filters.
 
 Pure semantic search over security text is mediocre because half the signal is exact
 identifiers (`T1003.001`, `lsass.exe`, `vssadmin`). So results come from three sources:
 
 1. exact ATT&CK IDs found in the query (pinned first),
 2. vector similarity over the embeddings,
-3. full-text match on the query's *rare* words, weighted by rarity (IDF). This leg exists to
+3. (off) full-text match on the query's *rare* words, weighted by rarity (IDF). This leg exists to
    catch exact identifiers the embedding blurs, so it only fires on words present in at most
    LEXICAL_MAX_DF of the chunks being searched, plus identifier-shaped tokens (`lsass.exe`,
    `rundll32`, `445`) at any frequency. Ordinary words ("started", "windows") stay out: they add
    noise that pushes right answers the vector search had already found down the list.
 
-Vector and lexical rankings are merged with reciprocal rank fusion (RRF), which needs no
-score calibration between the two very different scales.
+4. BM25 keyword search (bm25.py): a chunk scores higher when it contains the query's words
+   often and when those words are rare overall. ON by default (USE_BM25).
+
+The rankings are merged with reciprocal rank fusion (RRF: each chunk gets points for how high it
+ranks in each list), which needs no score calibration between the very different scales.
+
+BM25 + vector is the default since 2026-09-27: on the 20 dev attacks (evals/retrieval_golden.py,
+docs/experiments.md) alert->technique recall@5 went 0.35 -> 0.60, command->technique 0.42 ->
+0.53, with plain-English questions unchanged (~0.90). Tried and dropped the same day: splitting
+techniques into small parts, the SecEmbed embedding models, the SecReranker cross-encoder.
 
 The lexical leg is OFF by default (`use_lexical=False`). Measured on 40 hand-written probes
 (evals/results/v1_after.json, v2_after.json), vector-only beat hybrid on both sets — 0.90 vs
@@ -25,16 +33,29 @@ from __future__ import annotations
 
 import math
 import re
+from dataclasses import dataclass
 from typing import Literal
 
 import psycopg
 from pydantic import BaseModel
 
-from sentinel.retrieval import store
+from sentinel.retrieval import bm25, store
 from sentinel.retrieval.embed import embed_texts
 
 POOL = 50  # candidates taken from each ranked list before fusion
 RRF_K = 60  # standard RRF damping constant
+USE_BM25 = True  # BM25 keyword ranking next to the vector search (see module docstring)
+
+
+@dataclass(frozen=True)
+class _Legs:
+    """Which rankings are merged: vector search, the old IDF keyword leg, BM25."""
+
+    vector: bool = True
+    lexical: bool = False
+    bm25: bool = USE_BM25
+
+
 LEXICAL_MAX_DF = 0.02  # a plain word is "rare" if it is in at most 2% of the searched chunks
 
 _TECHNIQUE_ID = re.compile(r"\bT\d{4}(?:\.\d{3})?\b", re.IGNORECASE)
@@ -82,7 +103,7 @@ class Hit(BaseModel):
     logsource: str | None
     technique_ids: list[str]
     score: float
-    matched_by: list[str]  # any of "id", "vector", "lexical"
+    matched_by: list[str]  # any of "id", "vector", "lexical", "bm25"
 
 
 def _filters(
@@ -150,11 +171,16 @@ def retrieve(
     kind: Literal["technique", "sigma_rule"] | None = None,
     conn: psycopg.Connection | None = None,
     use_lexical: bool = False,
+    use_bm25: bool = USE_BM25,
+    use_vector: bool = True,
 ) -> list[Hit]:
+    """use_vector=False turns the vector search off (to measure BM25 alone). BM25 needs a
+    kind: its index is built per chunk kind; without one it is skipped."""
+    legs = _Legs(vector=use_vector, lexical=use_lexical, bm25=use_bm25 and kind is not None)
     owns_conn = conn is None
     conn = conn or store.connect()
     try:
-        return _retrieve(conn, query, k, logsource, platform, kind, use_lexical)
+        return _retrieve(conn, query, k, logsource, platform, kind, legs)
     finally:
         if owns_conn:
             conn.close()
@@ -167,7 +193,7 @@ def _retrieve(
     logsource: str | None,
     platform: str | None,
     kind: str | None,
-    use_lexical: bool,
+    legs: _Legs,
 ) -> list[Hit]:
     where, params = _filters(kind, platform, logsource)
 
@@ -185,24 +211,32 @@ def _retrieve(
         ]
 
     # 2. vector similarity (iterative scan keeps filtered HNSW queries from returning too few)
-    conn.execute("SET hnsw.iterative_scan = strict_order")
-    qvec = embed_texts([query])[0]
-    vector = [
-        r[0]
-        for r in conn.execute(
-            f"SELECT id FROM chunks WHERE {where} ORDER BY embedding <=> %s LIMIT %s",
-            [*params, qvec, POOL],
-        )
-    ]
+    vector: list[str] = []
+    if legs.vector:
+        conn.execute("SET hnsw.iterative_scan = strict_order")
+        qvec = embed_texts([query])[0]
+        vector = [
+            r[0]
+            for r in conn.execute(
+                f"SELECT id FROM chunks WHERE {where} ORDER BY embedding <=> %s LIMIT %s",
+                [*params, qvec, POOL],
+            )
+        ]
 
     # 3. lexical match on discriminating words
     lexical: list[str] = []
-    terms = _lexical_terms(conn, query, where, params) if use_lexical else []
+    terms = _lexical_terms(conn, query, where, params) if legs.lexical else []
     if terms:
         lexical = _lexical_ranking(conn, terms, where, params)
 
+    # 4. BM25 keyword ranking, restricted to the chunks the filters allow
+    keyword: list[str] = []
+    if legs.bm25:
+        allowed = {r[0] for r in conn.execute(f"SELECT id FROM chunks WHERE {where}", params)}
+        keyword = bm25.index_for(conn, kind).search(query, allowed, POOL)
+
     scores: dict[str, float] = {}
-    for ranking in (vector, lexical):
+    for ranking in (vector, lexical, keyword):
         for rank, cid in enumerate(ranking):
             scores[cid] = scores.get(cid, 0.0) + 1.0 / (RRF_K + rank + 1)
     fused = sorted(scores, key=lambda cid: (-scores[cid], cid))
@@ -219,7 +253,12 @@ def _retrieve(
             (top,),
         )
     }
-    sources = {"id": set(exact), "vector": set(vector), "lexical": set(lexical)}
+    sources = {
+        "id": set(exact),
+        "vector": set(vector),
+        "lexical": set(lexical),
+        "bm25": set(keyword),
+    }
     hits = []
     for cid in top:
         r = rows[cid]

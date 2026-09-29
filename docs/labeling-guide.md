@@ -83,5 +83,7 @@ This defines what the eventual accuracy number actually means.
 
 Track every time this guide changes because of a real labeling disagreement.
 
+| Date | Change | Reason |
+|---|---|---|
 | 2026-09-18 | Recorded initial disagreement rate: 7/40 (17.5%) on first labeling session | Day 2 evening session with Mouheb |
 | 2026-09-27 | Section 2: added "tag what the event shows" (tool or pipe name is not the mechanism -> parent) and "wrapper events" (label the visible action, else the shell). Drove day3-048 and 163 T1134.001 -> T1134, day3-113 T1003 -> T1210 | Day 8 review of the 77 drafted rows (Mouadh) |

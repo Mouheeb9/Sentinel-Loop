@@ -29,7 +29,7 @@ from sentinel.run import CONFIG_NAME, default_owner, models_label, run_alert
 from sentinel.schemas import Alert
 
 ROOT = Path(__file__).parent.parent
-GOLDEN = ROOT / "data" / "golden" / "v1.jsonl"
+GOLDEN = ROOT / "data" / "golden" / "v1.1.jsonl"  # human-reviewed (Mouadh, 2026-09-27)
 CANDIDATES = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (2, 3)]
 RESULTS = ROOT / "evals" / "results"
 PAUSE_S = 3  # free-tier models are rate limited per minute

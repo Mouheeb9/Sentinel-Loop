@@ -86,6 +86,7 @@ def triage_routed(
     tier1: tuple[str, BaseChatModel] | None = None,
     tier2: tuple[str, BaseChatModel] | None = None,
     threshold: float | None = None,
+    use_tools: bool = True,
 ) -> RoutedTriage:
     """tier1/tier2: (model name, model). Default: from SENTINEL_TRIAGE_MODEL /
     SENTINEL_ESCALATION_MODEL. Pass tier2=None with SENTINEL_ESCALATION_MODEL=none for one tier."""
@@ -95,7 +96,7 @@ def triage_routed(
     if tier2 is None and (name := escalation_model_name()):
         tier2 = (name, chat_model(name))
 
-    run1, result1 = _run(1, tier1, alert, techniques, sigma_rules, config)
+    run1, result1 = _run(1, tier1, alert, techniques, sigma_rules, config, use_tools)
     if result1 is not None:
         reason = escalation_reason(result1.verdict, threshold)
     else:
@@ -105,7 +106,7 @@ def triage_routed(
             raise TriageError(run1.error or "tier 1 failed")
         return RoutedTriage(result1.verdict, 1, None, (run1,))
 
-    run2, result2 = _run(2, tier2, alert, techniques, sigma_rules, config)
+    run2, result2 = _run(2, tier2, alert, techniques, sigma_rules, config, use_tools)
     if result2 is not None:
         return RoutedTriage(result2.verdict, 2, reason, (run1, run2))
     if result1 is not None:
@@ -120,12 +121,13 @@ def _run(
     techniques: list[Hit],
     sigma_rules: list[Hit],
     config: RunnableConfig | None,
+    use_tools: bool = True,
 ) -> tuple[TierRun, TriageResult | None]:
     name, model = named_model
     # Shows up on every LLM and tool observation of this tier in the Langfuse trace.
     tier_config = merge_configs(config, {"metadata": {"triage_tier": tier, "triage_model": name}})
     try:
-        r = triage_alert(alert, techniques, sigma_rules, model, tier_config)
+        r = triage_alert(alert, techniques, sigma_rules, model, tier_config, use_tools=use_tools)
     except TriageError as e:
         run = TierRun(
             tier=tier,

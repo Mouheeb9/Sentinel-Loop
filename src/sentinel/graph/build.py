@@ -40,7 +40,7 @@ def after_validate(state: SentinelState) -> Literal["repair", "output"]:
     return "repair"
 
 
-LIVE_NODES = ("enrich", "triage")  # nodes with a real implementation so far
+LIVE_NODES = ("enrich", "triage", "route")  # nodes with a real implementation so far
 
 
 def build_graph(live: bool = False):
