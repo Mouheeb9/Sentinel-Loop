@@ -1,0 +1,1673 @@
+{
+  "meta": {
+    "config": "rag",
+    "retrieval": true,
+    "tools": false,
+    "tier1_model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "tier2_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "escalate_below": 0.7,
+    "prompt_sha": "2edd88418b70",
+    "alerts_sha": "0afbdf00aef8",
+    "tool_cache": "frozen",
+    "search": "vector+bm25",
+    "golden_sha": "b0695a44d0d4",
+    "split": {
+      "name": "dev",
+      "sha": "f1ee9a08ce2a"
+    },
+    "git_shas": [
+      "0e720e4504faeed0038695386f059b8dd84702a2",
+      "884b7a54b925f68c80bac203bf139949795dbace"
+    ],
+    "git_dirty": true,
+    "started_at": "2026-09-27T18:03:52+00:00",
+    "finished_at": "2026-09-28T18:18:45+00:00",
+    "alerts_planned": 30,
+    "alerts_run": 30,
+    "transport_errors": 0,
+    "complete": true
+  },
+  "scores": {
+    "triage": {
+      "accuracy": 0.9,
+      "n": 30,
+      "confusion": {
+        "true_positive": {
+          "true_positive": 17,
+          "benign_noisy": 0,
+          "needs_review": 3,
+          "error": 0
+        },
+        "benign_noisy": {
+          "true_positive": 0,
+          "benign_noisy": 10,
+          "needs_review": 0,
+          "error": 0
+        },
+        "needs_review": {
+          "true_positive": 0,
+          "benign_noisy": 0,
+          "needs_review": 0,
+          "error": 0
+        }
+      },
+      "per_class_recall": {
+        "true_positive": 0.85,
+        "benign_noisy": 1.0,
+        "needs_review": null
+      },
+      "missed_attacks": 0
+    },
+    "techniques": {
+      "precision": 0.53125,
+      "recall": 0.675,
+      "f1": 0.594559585492228,
+      "primary_exact_rate": 0.55,
+      "alerts_with_gold": 20,
+      "alerts_with_pred": 20
+    },
+    "iocs": {
+      "hallucinated_ioc_rate": 0.16129032258064516,
+      "iocs_total": 62,
+      "iocs_hallucinated": 10,
+      "alerts_with_hallucination": 7,
+      "examples": [
+        {
+          "alert_id": "day2-013",
+          "iocs": [
+            "C:windowsExplorer.EXE",
+            "HKUS-1-5-21-2079883792-3656946353-945924832-1104SoftwareMicrosoftWindowsCurrentVersionApplicationAssociationToastsVBSFile_.vbs"
+          ]
+        },
+        {
+          "alert_id": "day3-044",
+          "iocs": [
+            "C://Program Files (x86)//Microsoft Office//root//Office16//SDXHelper.exe"
+          ]
+        },
+        {
+          "alert_id": "day3-093",
+          "iocs": [
+            "HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Services_EventLog"
+          ]
+        },
+        {
+          "alert_id": "day3-096",
+          "iocs": [
+            "HKCUEnvironmentUserInitMprLogonScript",
+            "C:UserswardogAppDataLocalTempart.bat"
+          ]
+        },
+        {
+          "alert_id": "day3-128",
+          "iocs": [
+            "wevtutil  set-log Security /logfilename:C:/Windows/System32/winevt/Not-Important-Log.evtx"
+          ]
+        },
+        {
+          "alert_id": "day3-136",
+          "iocs": [
+            "HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Control_MiniNt",
+            "REG ADD HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Control_MiniNt"
+          ]
+        },
+        {
+          "alert_id": "day3-151",
+          "iocs": [
+            "cmd.exe /c C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit exit"
+          ]
+        }
+      ]
+    },
+    "schema": {
+      "schema_valid_rate": 1.0,
+      "first_try_rate": 1.0,
+      "errors": 0
+    },
+    "cost_latency": {
+      "cost_per_alert_usd": 0.0,
+      "cost_known_rows": 30,
+      "latency_p95_s": 80.8
+    }
+  },
+  "rows": [
+    {
+      "config": "rag",
+      "alert_id": "day2-002",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/Windows/ADWS/Microsoft.ActiveDirectory.WebServices.exe",
+        "0:0:0:0:0:0:0:1"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_port",
+        "events[0].network.src_ip",
+        "events[0].network.dst_ip",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 22.73,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/ee20e257379e0b73035b9fb8a662a8cd"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-006",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "ioc_refs": [
+        "C:/Users/IT01-Pedro/Downloads/payload.exe",
+        "DWORD (0x00000004)",
+        "HKLM/System/CurrentControlSet/Services/EventLog/Start"
+      ],
+      "evidence_refs": [
+        "events[0].registry.target_object",
+        "events[0].registry.details",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 24.51,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/3397a2e002d5a2ccd37934b736c2c2fc"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-013",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:windowsExplorer.EXE",
+        "HKUS-1-5-21-2079883792-3656946353-945924832-1104SoftwareMicrosoftWindowsCurrentVersionApplicationAssociationToastsVBSFile_.vbs"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].user",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 35.53,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7552904a2e0fc7fbb2e8d9f6d085132b"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-014",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.005"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.82,
+      "technique_ids": [
+        "T1059.005"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Desktop/launcher.vbs"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 9.4,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/002a932fef0a44f71f1e420207943411"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-020",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].registry.target_object",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 14.42,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/d9328efc640be691e457926ee6668d05"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-022",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.8,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/windows/system32/svchost.exe",
+        "HKLM/SOFTWARE/Microsoft/Windows NT/CurrentVersion/Schedule/TaskCache/Tasks/{E4AEB720-7F18-419F-A20E-6E0B5C4ED968}/DynamicInfo"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 13.33,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/3e808a463a09d2329c1fc01b6043c4b1"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-024",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 12.95,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/48ecdf764e539350ec38ff34630de924"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-026",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.8,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/Windows/system32/svchost.exe",
+        "HKU/S-1-5-21-968647429-258479840-2507984072-1002/Software/Microsoft/IdentityCRL/ExtendedProperties/LID",
+        "00180009508D358C"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 23.69,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/60dc6c01c0f86d95ba830a63d233fb23"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-031",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:/windows/system32/svchost.exe",
+        "HKLM/SOFTWARE/Microsoft/Windows NT/CurrentVersion/Schedule/TaskCache/Tree/MordorSchtask/SD"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 80.8,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/d4208294b0e883aec1f3dc4f5fdaa59d"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-044",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.85,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C://Program Files (x86)//Microsoft Office//root//Office16//SDXHelper.exe",
+        "52.113.194.132"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 18.38,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e52c8b218b41e154fb695ec2a9d0ecf4"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-045",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1003.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1003.002",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:/Windows/System32/reg.exe",
+        "HKLM/sam",
+        "sam"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 19.85,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/b503dc3dd766f05bcb375aec1c8597be"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-047",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].user",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 16.42,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c479d98e45111d296318693abd41384f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-048",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1134"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "ioc_refs": [
+        "C:/TMP/CreateNamedPipe.exe",
+        "MSSE-1337-server",
+        "C:/Windows/System32/cmd.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.parent.image",
+        "events[0].process.command_line",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 24.37,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/48a106b4d2897831c9cb4b4f74ca975f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-056",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1127.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.8,
+      "technique_ids": [
+        "T1127.001"
+      ],
+      "ioc_refs": [
+        "C:/Windows/Tasks/pshell.xml"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 11.34,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c6948b1c58d93486c4c3f0c55a9a4270"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-070",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.85,
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "ioc_refs": [
+        "172.18.39.6",
+        "C:/Users/pgustavo/Desktop/MoveExcel4.exe",
+        "C:/Users/pgustavo/Desktop/GruntHTTP.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 19.56,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e0a17b1efb1bd84c098a458f11400a51"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-071",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1021.003"
+      ],
+      "verdict": "needs_review",
+      "confidence": 0.65,
+      "technique_ids": [
+        "T1204.002",
+        "T1570"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Desktop/MoveExcel4.exe",
+        "172.18.39.6"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].user",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 43.51,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/68a091a8e54d9f9e3b8d4489a6fb8643"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-093",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.92,
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "ioc_refs": [
+        "HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Services_EventLog",
+        "Start",
+        "4"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 10.44,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/bcb65e2a61139c28a1cdcb4e9c4e6edd"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-095",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1190"
+      ],
+      "verdict": "needs_review",
+      "confidence": 0.55,
+      "technique_ids": [
+        "T1059.003",
+        "T1069.001"
+      ],
+      "ioc_refs": [
+        "C:/Windows/System32/cmd.exe",
+        "C:/Windows/System32/inetsrv/w3wp.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 87.89,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/31f447cc12d6f536d144e36322bd38c2"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-096",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1037.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1037.001"
+      ],
+      "ioc_refs": [
+        "HKCUEnvironmentUserInitMprLogonScript",
+        "C:UserswardogAppDataLocalTempart.bat"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 17.12,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/df05462df0501f5ff7a2bcf02dcd933d"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-112",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1059.001",
+        "T1216"
+      ],
+      "ioc_refs": [
+        "C:/Windows/System32/WindowsPowerShell/v1.0/powershell.exe",
+        "C:/Windows/System32/wscript.exe",
+        "C:/Users/pgustavo/Desktop/launcher.vbs"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 25.39,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8b20e24dc2e965068cee75c409acd0b1"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-113",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1210"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1003.001"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe",
+        "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit",
+        "MORDORDC.theshire.local",
+        "MORDORDC$"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 38.6,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2c3c2b57cae5793ab6c678aef663eb82"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-123",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1220"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1220",
+        "T1047"
+      ],
+      "ioc_refs": [
+        "https://raw.githubusercontent.com/redcanaryco/atomic-red-team/master/atomics/T1220/src/wmicscript.xsl"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 23.84,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/898c4e828833ab327274bb8086d1d7d9"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-128",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "ioc_refs": [
+        "wevtutil  set-log Security /logfilename:C:/Windows/System32/winevt/Not-Important-Log.evtx",
+        "C:/Windows/System32/wevtutil.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 10.93,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/fa88f9f294fb8ebcbe599f4ed92f5f2f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-136",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.92,
+      "technique_ids": [
+        "T1685.001",
+        "T1112"
+      ],
+      "ioc_refs": [
+        "HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Control_MiniNt",
+        "REG ADD HKEY_LOCAL_MACHINE_SYSTEM_CurrentControlSet_Control_MiniNt"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.36,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/03b800513c746ca158235d3d9f137c7f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-145",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1550.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1558.001"
+      ],
+      "ioc_refs": [
+        "C:/Users/sbeavers/Desktop/Rubeus.exe",
+        "pgustavo",
+        "81d310fa34e6a56a31145445891bb7b8"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 17.38,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/84c62bf027e9e8b33827978cc328eafb"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-151",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1210"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1003"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe",
+        "lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit",
+        "cmd.exe /c C:/Users/pgustavo/Downloads/mimikatz_trunk/x64/mimikatz.exe lsadump::zerologon /target:MORDORDC.theshire.local /account:MORDORDC$ /exploit exit"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 60.87,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2989d6edbfcc685b866b576e6858919d"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-158",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1047"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1136.001",
+        "T1047"
+      ],
+      "ioc_refs": [
+        "C:/Windows/System32/wbem/WMIC.exe",
+        "WORKSTATION6",
+        "net user /add backdoor paw0rd1",
+        ""
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 23.4,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f73759dfa25702ca41d5e0806058e455"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-165",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 8.28,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/da1c577742139629c215aee2352ae35a"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-166",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1021.003"
+      ],
+      "verdict": "needs_review",
+      "confidence": 0.65,
+      "technique_ids": [
+        "T1570",
+        "T1021.003"
+      ],
+      "ioc_refs": [
+        "C:/Users/pgustavo/Desktop/MoveExcel4.exe",
+        "172.18.39.6"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 57.7,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f470ea888908f04e26b5c8087072cc04"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-176",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1569.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1059.003",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:/Windows/System32/cmd.exe",
+        "C:/Windows/System32/WindowsPowershell/v1.0/powershell",
+        "C:/Windows/System32/services.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 32.52,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/b2c04c19c6995c01baa74ee344227cf7"
+    }
+  ],
+  "details": {
+    "day2-002": {
+      "label_rationale": "Known AD service (ADWS) doing routine LDAP loopback traffic on a domain controller.",
+      "reasoning": "The event shows the legitimate Windows service Microsoft.ActiveDirectory.WebServices.exe (ADWS) making a loopback TCP connection on port 389 (LDAP) from ::1 to ::1, which is expected internal behavior for ADWS on a domain controller. No malicious indicators or anomalous patterns are present.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1049",
+        "T1205",
+        "T1046",
+        "T1070.007"
+      ],
+      "retrieved_rules": [
+        "b3ad3c0f-c949-47a1-a30e-b0491ccae876",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "0531e43a-d77d-47c2-b89f-5fe50321c805",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3839,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:03:52+00:00"
+    },
+    "day2-006": {
+      "label_rationale": "Process named payload.exe (from Downloads) sets the EventLog service Start value to Disabled.",
+      "reasoning": "The event shows a registry modification that sets the Start value of the Windows EventLog service to 4 (disabled) via an executable located in the user's Downloads folder, indicating an attempt to impair defensive logging capabilities.",
+      "retrieved_techniques": [
+        "T1547.002",
+        "T1685.001",
+        "T1547.010",
+        "T1543.003",
+        "T1547.001"
+      ],
+      "retrieved_rules": [
+        "a07f0359-4c90-4dc4-a681-8ffea40b4f47",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "ba226dcf-d390-4642-b9af-b534872f1156",
+        "f2485272-a156-4773-82d7-1d178bc4905b"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3922,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:04:19+00:00"
+    },
+    "day2-013": {
+      "label_rationale": "Explorer recording a file-association notification setting; side effect of any .vbs execution, not the attack itself.",
+      "reasoning": "The event shows Explorer.exe (legitimate Windows shell) running as SYSTEM modifying a user-specific registry key under ApplicationAssociationToasts for VBS file association toast notifications (HKU...ApplicationAssociationToastsVBSFile_.vbs), which is normal Windows behavior for tracking file association prompts, not a persistence mechanism. The referenced Sigma rules target Run/RunOnce autorun keys (T1547.001), but this registry path is unrelated to any autorun location.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1216.002",
+        "T1546.012",
+        "T1036.007",
+        "T1059.005"
+      ],
+      "retrieved_rules": [
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "1c3121ed-041b-4d97-a075-07f54f20fb4a",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 8339,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:04:58+00:00"
+    },
+    "day2-014": {
+      "label_rationale": "wscript.exe executing a script named launcher.vbs from the user's Desktop.",
+      "reasoning": "The event shows wscript.exe executing a VBS script located in the user's Desktop directory, which is a suspicious folder for script execution. This matches behavior of adversaries using Visual Basic for execution (T1059.005) and aligns with Sigma rules flagging script interpreters from user profile directories.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1059.005",
+        "T1547.001",
+        "T1546.008",
+        "T1204.002"
+      ],
+      "retrieved_rules": [
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "cea72823-df4d-4567-950c-0b579eaf0846",
+        "28c8f68b-098d-45af-8d43-8089f3e35403",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3845,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:05:10+00:00"
+    },
+    "day2-020": {
+      "label_rationale": "UserAssist UEME_CTLSESSION is a generic UI session counter, not a program-launch record.",
+      "reasoning": "The registry target is a UserAssist key that logs program execution counts, which is normal telemetry and not a persistence or adversarial mechanism. The process involved is the legitimate Explorer.exe binary.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1547.004",
+        "T1546.008",
+        "T1036.007",
+        "T1555.004"
+      ],
+      "retrieved_rules": [
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4008,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:05:28+00:00"
+    },
+    "day2-022": {
+      "label_rationale": "svchost writing Task Scheduler's own DynamicInfo cache for a task; routine Task Scheduler bookkeeping.",
+      "reasoning": "The event shows the legitimate Windows process svchost.exe modifying a scheduled task registry key under TaskCache, which is typical for legitimate system maintenance and not indicative of adversary behavior.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1053.005",
+        "T1197",
+        "T1036.005",
+        "T1218.002"
+      ],
+      "retrieved_rules": [
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "480421f9-417f-4d3b-9552-fd2728443ec8",
+        "5b16df71-8615-4f7f-ac9b-6c43c0509e61",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3812,
+      "git_sha": "884b7a54b925f68c80bac203bf139949795dbace",
+      "git_dirty": true,
+      "at": "2026-09-27T18:05:44+00:00"
+    },
+    "day2-024": {
+      "label_rationale": "Explorer writing UI app-switch usage telemetry; unrelated OS bookkeeping.",
+      "reasoning": "The event shows Explorer.exe writing a DWORD value 0x0000000b under the user-specific FeatureUsage/AppSwitched registry key, which is normal telemetry for app switching and not associated with persistence, privilege escalation, or other adversary techniques.",
+      "retrieved_techniques": [
+        "T1546.010",
+        "T1547.001",
+        "T1547.004",
+        "T1564.003",
+        "T1546.012"
+      ],
+      "retrieved_rules": [
+        "1c3121ed-041b-4d97-a075-07f54f20fb4a",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "5df86130-4e95-4a54-90f7-26541b40aec2"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3763,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:06:34+00:00"
+    },
+    "day2-026": {
+      "label_rationale": "svchost writing an identity/account-linking cache value; routine OS housekeeping.",
+      "reasoning": "The event shows a legitimate Windows system process (svchost.exe) writing a registry value under a normal user-specific IdentityCRL key, which is typical behavior for credential roaming or locale settings and not indicative of masquerading or persistence abuse.",
+      "retrieved_techniques": [
+        "T1036.005",
+        "T1547.004",
+        "T1547.010",
+        "T1546.008",
+        "T1003.001"
+      ],
+      "retrieved_rules": [
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "9b0f8a61-91b2-464f-aceb-0527e0a45020",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4050,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:06:11+00:00"
+    },
+    "day2-031": {
+      "label_rationale": "Task Scheduler recording metadata for a newly created task; fires the same way for any task regardless of intent.",
+      "reasoning": "The event shows svchost.exe (running as SYSTEM) writing a security descriptor (SD) value to the TaskCache registry tree for a scheduled task named 'MordorSchtask'. This is normal Windows Task Scheduler behavior — the Task Scheduler service runs inside svchost.exe and creates these registry entries when any scheduled task is registered (via Group Policy, admin action, software installer, etc.). The retrieved Sigma rule 'Scheduled TaskCache Change by Uncommon Program' explicitly filters out svchost.exe as the expected legitimate writer, confirming this is benign system activity.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1053.005",
+        "T1218.002",
+        "T1003.001",
+        "T1197"
+      ],
+      "retrieved_rules": [
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "480421f9-417f-4d3b-9552-fd2728443ec8",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 8515,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:07:58+00:00"
+    },
+    "day3-044": {
+      "label_rationale": "Microsoft Office SDX helper connecting to Microsoft cloud on 443, telemetry and content refresh.",
+      "reasoning": "The event shows SDXHelper.exe, a legitimate Microsoft Office component, establishing an outbound TCP connection to IP 52.113.194.132 on port 443 (standard HTTPS), consistent with normal Office telemetry or update traffic. No anomalous command-line arguments, known malicious indicators, or unusual ports are present.",
+      "retrieved_techniques": [
+        "T1218.003",
+        "T1571",
+        "T1137.001",
+        "T1559.002",
+        "T1049"
+      ],
+      "retrieved_rules": [
+        "3b5ba899-9842-4bc2-acc2-12308498bf42",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "7e9cf7b6-e827-11ed-a05b-15959c120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "75e33ce3-ae32-4dcc-9aa8-a2a3029d6f84"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4300,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:08:19+00:00"
+    },
+    "day3-045": {
+      "label_rationale": "reg save HKLM/sam writes the SAM hive to disk from PowerShell, dumping local account password hashes.",
+      "reasoning": "The event shows reg.exe saving the HKLM SAM hive to a file, which is a classic credential‑access action targeting the Security Account Manager (T1003.002). The parent PowerShell process runs an encoded command, indicating malicious execution (T1059.001).",
+      "retrieved_techniques": [
+        "T1552.002",
+        "T1003.002",
+        "T1218.014",
+        "T1546.002",
+        "T1059.001"
+      ],
+      "retrieved_rules": [
+        "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+        "7c06ab9b-b1d2-4ba9-b06e-09491ded20d9",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 7566,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:08:42+00:00"
+    },
+    "day3-047": {
+      "label_rationale": "Microsoft Edge updater running its scheduled update-application check, an installed Microsoft component.",
+      "reasoning": "The event shows normal execution of Microsoft Edge Update (MicrosoftEdgeUpdate.exe) with typical update command line arguments (/ua /installsource core) launched from its parent EdgeUpdate process, running as SYSTEM on a domain controller, which is consistent with legitimate software update behavior.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1546.008",
+        "T1218.004",
+        "T1574.009",
+        "T1679"
+      ],
+      "retrieved_rules": [
+        "0e8cfe08-02c9-4815-a2f8-0d157b7ed33e",
+        "cd951fdc-4b2f-47f5-ba99-a33bf61e3770",
+        "4f2cd9b6-4a17-440f-bb2a-687abb65993a",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3787,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:09:02+00:00"
+    },
+    "day3-048": {
+      "label_rationale": "CreateNamedPipe.exe creating a pipe named MSSE-1337-server matches the Cobalt Strike getsystem named-pipe pattern; the event shows the pipe, not the impersonation, so the parent technique.",
+      "reasoning": "The event shows a process launched from the temporary directory (C:/TMP/CreateNamedPipe.exe) via cmd.exe, with a suspicious argument (MSSE-1337-server), executed by a user labeled APT-Simulator, indicating adversarial use of the Windows command shell for execution.",
+      "retrieved_techniques": [
+        "T1059.003",
+        "T1574.008",
+        "T1003.001",
+        "T1204.002",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "8e0bb260-d4b2-4fff-bb8d-3f82118e6892",
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "044ba588-dff4-4918-9808-3f95e8160606"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4197,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:09:29+00:00"
+    },
+    "day3-056": {
+      "label_rationale": "MSBuild.exe builds C:/Windows/Tasks/pshell.xml, a project with an inline task, to run code through a trusted developer tool.",
+      "reasoning": "The event shows MSBuild.exe being executed by cmd.exe with an argument pointing to an XML file in the Windows Tasks folder (C:/Windows/Tasks/pshell.xml), which is an atypical location for MSBuild project files and consistent with abuse of MSBuild to execute arbitrary code via inline tasks (T1127.001).",
+      "retrieved_techniques": [
+        "T1127.001",
+        "T1218.004",
+        "T1059.003",
+        "T1218.014",
+        "T1574.008"
+      ],
+      "retrieved_rules": [
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "cc4e02ba-9c06-48e2-b09e-2500cace9ae0",
+        "33be4333-2c6b-44f4-ae28-102cdbde0a31",
+        "9f50fe98-fe5c-4a2d-86c7-fad7f63ed622"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4051,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:09:43+00:00"
+    },
+    "day3-070": {
+      "label_rationale": "cmd.exe /c MoveExcel4.exe spawned by GruntHTTP.exe, a Covenant C2 implant.",
+      "reasoning": "The event shows cmd.exe being used to execute a binary from the user's Desktop with an IP address argument, indicating abuse of the Windows command shell for execution of a potentially malicious payload.",
+      "retrieved_techniques": [
+        "T1546.008",
+        "T1204.002",
+        "T1059.003",
+        "T1574.008",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4203,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:10:06+00:00"
+    },
+    "day3-071": {
+      "label_rationale": "MoveExcel4.exe <IP> uses DCOM to run an Excel 4.0 macro on a remote host.",
+      "reasoning": "A custom executable named MoveExcel4.exe runs from a user's Desktop with an internal IP address (172.18.39.6) as a command-line argument. The filename suggests Excel-related functionality but the IP argument implies network connectivity, which is atypical for legitimate desktop utilities. Parent process is cmd.exe. No hash or reputation data is available in the event. The behavior could represent a user-run admin script, a lateral-movement tool (T1570), or a malicious file executed by the user (T1204.002), but a single process creation without follow-on telemetry is insufficient to confirm adversary activity.",
+      "retrieved_techniques": [
+        "T1546.008",
+        "T1570",
+        "T1574.008",
+        "T1204.002",
+        "T1059.003"
+      ],
+      "retrieved_rules": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "10c14723-61c7-4c75-92ca-9af245723ad2"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 7897,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:10:53+00:00"
+    },
+    "day3-093": {
+      "label_rationale": "reg add sets the EventLog service Start value to 4 (disabled), so events stop being recorded after the next boot.",
+      "reasoning": "The event shows reg.exe adding a DWORD value Start with data 4 to the EventLog service registry key, which disables the Windows Event Log service. This matches the behavior of technique T1685.001 (Disable or Modify Windows Event Log) and is indicative of adversary defense‑impairment rather than benign administrative activity.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1685.001",
+        "T1574.011",
+        "T1547.010",
+        "T1552.002"
+      ],
+      "retrieved_rules": [
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "d7b81144-b866-48a4-9bcc-275dc69d870e",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "970007b7-ce32-49d0-a4a4-fbef016950bd"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3660,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:11:06+00:00"
+    },
+    "day3-095": {
+      "label_rationale": "cmd /c whoami spawned by the IIS worker process w3wp.exe means code execution inside the web server, the ProxyLogon result.",
+      "reasoning": "A single 'cmd /c whoami' executed by w3wp.exe (Exchange OWA app pool) running as SYSTEM is ambiguous: it could be legitimate diagnostics or post-exploitation reconnaissance. No follow-on commands, network activity, or file writes are present to confirm malicious intent.",
+      "retrieved_techniques": [
+        "T1559.002",
+        "T1218.014",
+        "T1505.002",
+        "T1574.014",
+        "T1218.003"
+      ],
+      "retrieved_rules": [
+        "797011dc-44f4-4e6f-9f10-a8ceefbe566b",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "2617e7ed-adb7-40ba-b0f3-8f9945fe6c09",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "a35f5a72-f347-4e36-8895-9869b0d5fc6d"
+      ],
+      "escalation": "confidence 0.55 < 0.7",
+      "lookups": [],
+      "tokens": 8680,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:12:37+00:00"
+    },
+    "day3-096": {
+      "label_rationale": "reg add HKCU/Environment UserInitMprLogonScript pointing at a .bat in Temp registers a logon script for persistence.",
+      "reasoning": "The event shows reg.exe adding a value UserInitMprLogonScript under HKCUEnvironment pointing to a batch file in the user's Temp directory, which is a known persistence mechanism for Windows logon scripts (T1037.001). The parent process is cmd.exe, indicating likely manual or scripted execution consistent with adversary behavior.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1037.001",
+        "T1552.002",
+        "T1546.002",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0",
+        "0fc35fc3-efe6-4898-8a37-0b233339524f",
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3822,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:12:57+00:00"
+    },
+    "day3-112": {
+      "label_rationale": "PowerShell -noP -sta -w 1 -enc (encoded stager) spawned by wscript.exe running launcher.vbs.",
+      "reasoning": "The PowerShell process is launched with an -enc flag and a lengthy Base64-encoded command, indicating obfuscated malicious script execution. It is spawned by wscript.exe running a user‑Desktop VBS launcher, which is a classic script‑proxy execution pattern.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1216",
+        "T1546.008",
+        "T1564.003",
+        "T1059.001"
+      ],
+      "retrieved_rules": [
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "c260b6db-48ba-4b4a-a76f-2f67644e99d2"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 7654,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:13:26+00:00"
+    },
+    "day3-113": {
+      "label_rationale": "cmd.exe /c mimikatz.exe \"lsadump::zerologon ... /exploit\" spawned by GruntHTTP.exe, a Covenant C2 implant: the command line shows the Zerologon (CVE-2020-1472) exploit against a domain controller.",
+      "reasoning": "The event shows cmd.exe executing mimikatz with the zerologon exploit to extract credentials from a domain controller, which is clear credential access behavior. The parent process GruntHTTP.exe suggests a malicious beacon launching the attack.",
+      "retrieved_techniques": [
+        "T1204.002",
+        "T1546.008",
+        "T1003.001",
+        "T1203",
+        "T1204"
+      ],
+      "retrieved_rules": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "631b22a4-70f4-4e2f-9ea8-42f84d9df6d8",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+        "1dd05363-104e-4b4a-b963-196a534b03a1"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4228,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:14:07+00:00"
+    },
+    "day3-123": {
+      "label_rationale": "wmic process list /FORMAT:<remote .xsl URL> downloads and executes JScript from a remote stylesheet.",
+      "reasoning": "The WMIC process is invoked with a /FORMAT parameter pointing to a remote XSL script hosted on GitHub, which matches the XSL Script Processing technique (T1220) and demonstrates WMI abuse (T1047) to execute arbitrary code.",
+      "retrieved_techniques": [
+        "T1220",
+        "T1047",
+        "T1204.002",
+        "T1218.014",
+        "T1059.003"
+      ],
+      "retrieved_rules": [
+        "05c36dd6-79d6-4a9a-97da-3db20298ab2d",
+        "75d0a94e-6252-448d-a7be-d953dff527bb",
+        "8d63dadf-b91b-4187-87b6-34a1114577ea",
+        "9e50a8b3-dd05-4eb8-9153-bdb6b79d50b0",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4134,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:14:34+00:00"
+    },
+    "day3-128": {
+      "label_rationale": "wevtutil set-log Security /logfilename points the Security log at a decoy file name, tampering with event logging.",
+      "reasoning": "The event shows wevtutil.exe being used with the 'set-log' subcommand to change the Security event log file path, which is a modification of Windows Event Log configuration indicative of defense evasion (T1685.001). This activity is not typical benign admin behavior and suggests an attempt to impair logging.",
+      "retrieved_techniques": [
+        "T1685.005",
+        "T1654",
+        "T1685.001",
+        "T1547.010",
+        "T1547.004"
+      ],
+      "retrieved_rules": [
+        "cc36992a-4671-4f21-a91d-6c2b72a2edf5",
+        "5394fcc7-aeb2-43b5-9a09-cac9fc5edcd5",
+        "79a87aa6-e4bd-42fc-a5bb-5e6fbdcd62f5",
+        "a238b5d0-ce2d-4414-a676-7a531b3d13d6",
+        "9ac94dc8-9042-493c-ba45-3b5e7c86b980"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3769,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:14:48+00:00"
+    },
+    "day3-136": {
+      "label_rationale": "reg add of a MiniNt key under CurrentControlSet is the same trick to keep the event log service from starting.",
+      "reasoning": "The event shows reg.exe adding the MiniNt registry key under HKLM/System/CurrentControlSet/Control, which is a known method to disable Windows Event Logging (defense impairment). This matches the Sigma rule for Security Event Logging Disabled via MiniNt Registry Key and corresponds to ATT&CK T1685.001.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1574.011",
+        "T1547.010",
+        "T1546.008",
+        "T1552.002"
+      ],
+      "retrieved_rules": [
+        "1a4bd6af-99ac-4466-b5b2-7b72b4a05462",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "d7662ff6-9e97-4596-a61d-9839e32dee8d",
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "24357373-078f-44ed-9ac4-6d334a668a11"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3713,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:15:06+00:00"
+    },
+    "day3-145": {
+      "label_rationale": "Rubeus asktgt with an RC4 hash and /ptt requests a Kerberos ticket and injects it into the session (pass-the-ticket).",
+      "reasoning": "The event shows execution of Rubeus.exe with asktgt /user:pgustavo /rc4:81d310fa34e6a56a31145445891bb7b8 /ptt, which requests a Kerberos TGT using a password hash and injects it, indicative of credential access via pass-the-ticket/overpass-the-hash.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1218.014",
+        "T1059.001",
+        "T1204.002",
+        "T1563.002"
+      ],
+      "retrieved_rules": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "3268b746-88d8-4cd3-bffc-30077d02c787",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 8038,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:15:27+00:00"
+    },
+    "day3-151": {
+      "label_rationale": "mimikatz lsadump::zerologon /target exploits CVE-2020-1472 (Zerologon) against a domain controller.",
+      "reasoning": "The event shows execution of Mimikatz from a user's Downloads directory with the lsadump::zerologon module targeting a domain controller, which is a clear adversarial credential‑access action using a known hacking tool.",
+      "retrieved_techniques": [
+        "T1204.002",
+        "T1003.001",
+        "T1546.008",
+        "T1203",
+        "T1574.008"
+      ],
+      "retrieved_rules": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+        "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+        "1dd05363-104e-4b4a-b963-196a534b03a1"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4787,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:16:31+00:00"
+    },
+    "day3-158": {
+      "label_rationale": "wmic /node:WORKSTATION6 process call create runs a command on a remote host over WMI.",
+      "reasoning": "The WMIC command line explicitly creates a local user account 'backdoor' with password 'paw0rd1', which matches T1136.001 (Local Account) for persistence. The use of WMIC to execute a remote process call demonstrates execution via Windows Management Instrumentation (T1047). The parent PowerShell process runs an encoded command, further indicating adversarial scripting.",
+      "retrieved_techniques": [
+        "T1047",
+        "T1136.001",
+        "T1059.001",
+        "T1546.008",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "b17ea6f7-6e90-447e-a799-e6c0a493d6ce",
+        "526be59f-a573-4eea-b5f7-f0973207634d",
+        "f4bbd493-b796-416e-bbf2-121235348529"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 7742,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:16:57+00:00"
+    },
+    "day3-165": {
+      "label_rationale": "RuntimeBroker.exe -Embedding is the signed Windows broker for app permissions, launched by svchost.",
+      "reasoning": "RuntimeBroker.exe is a legitimate Windows system process that is commonly launched by svchost.exe under the DcomLaunch service with the -Embedding argument for DCOM activation. The observed parent-child relationship and command line match normal behavior, showing no signs of malicious masquerading or abuse.",
+      "retrieved_techniques": [
+        "T1036.005",
+        "T1546.008",
+        "T1218.014",
+        "T1547.010",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "d06be4b9-8045-428b-a567-740a26d9db25"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3651,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:17:09+00:00"
+    },
+    "day3-166": {
+      "label_rationale": "MoveExcel4.exe <IP> attempts DCOM lateral movement by remote Excel 4.0 macro execution.",
+      "reasoning": "A custom-named executable (MoveExcel4.exe) on a user's Desktop is invoked via cmd.exe with a private IP address (172.18.39.6) as an argument. This pattern is consistent with a lateral movement tool transferring itself or connecting to another host, but the binary could also be a legitimate internal utility. No hash, network logs, or prior reputation are available to confirm malicious intent.",
+      "retrieved_techniques": [
+        "T1546.008",
+        "T1570",
+        "T1574.008",
+        "T1204.002",
+        "T1059.003"
+      ],
+      "retrieved_rules": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "10c14723-61c7-4c75-92ca-9af245723ad2"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [],
+      "tokens": 8585,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:18:09+00:00"
+    },
+    "day3-176": {
+      "label_rationale": "cmd.exe started by services.exe running 'start /b powershell -enc' is a remote service executing an encoded stager (PsExec-style).",
+      "reasoning": "The event shows cmd.exe (image: C:/Windows/System32/cmd.exe) launched by services.exe with a command line containing an encoded PowerShell payload (-enc ...), indicating adversarial use of the Windows command shell to execute obfuscated PowerShell, consistent with execution technique T1059.003 and PowerShell usage T1059.001.",
+      "retrieved_techniques": [
+        "T1059.003",
+        "T1543.003",
+        "T1543",
+        "T1569.002",
+        "T1202"
+      ],
+      "retrieved_rules": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+        "138d3531-8793-4f50-a2cd-f291b2863d78",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 8010,
+      "git_sha": "0e720e4504faeed0038695386f059b8dd84702a2",
+      "git_dirty": false,
+      "at": "2026-09-28T18:18:45+00:00"
+    }
+  }
+}

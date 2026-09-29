@@ -19,11 +19,15 @@ _PLATFORM = {"windows_sysmon": "windows", "linux_auditd": "linux", "aws_cloudtra
 _SYSMON_CATEGORY = {1: "process_creation", 3: "network_connection", 13: "registry_set"}
 
 
-def enrich_alert(alert: Alert, k: int = K) -> tuple[list[Hit], list[Hit]]:
-    query = enrichment_query(alert)
+def search_plan(alert: Alert) -> tuple[str, str | None, str | None]:
+    """(query, platform, logsource) the pipeline searches with; evals reuse it so they can't
+    drift from what triage is actually shown."""
     first = alert.events[0]
-    platform = _PLATFORM.get(first.source)
-    logsource = _logsource(first)
+    return enrichment_query(alert), _PLATFORM.get(first.source), _logsource(first)
+
+
+def enrich_alert(alert: Alert, k: int = K) -> tuple[list[Hit], list[Hit]]:
+    query, platform, logsource = search_plan(alert)
     with store.connect() as conn:
         techniques = retrieve(query, k, platform=platform, kind="technique", conn=conn)
         rules = retrieve(
