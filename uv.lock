@@ -2029,6 +2029,30 @@ wheels = [
 ]
 
 [[package]]
+name = "pysigma-backend-sqlite"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pysigma" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4f/39/a782807e8a59388ba1ac2280d9a95edd0ef2aca5bf19c0083af857619d44/pysigma_backend_sqlite-2.0.0.tar.gz", hash = "sha256:fbbdd8853e3ddd256016d7bd968c0e53f7cb83cab2a9d837beb8b87bec45f8fe", size = 35197, upload-time = "2026-09-26T13:58:42.075Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/b1/20/51f78076640b86ceec13ef943cc3d988c5e5718ec97703c599de6f5c6d92/pysigma_backend_sqlite-2.0.0-py3-none-any.whl", hash = "sha256:08b94d016912c3d14f80197d39c5e0b87a6f51c159f9aca3e06a377e753da67c", size = 32279, upload-time = "2026-09-26T13:58:40.734Z" },
+]
+
+[[package]]
+name = "pysigma-pipeline-sysmon"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "pysigma" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/50/63/6df00f93d61ba5585f80114f4def88e6a9984be91d2b2d80fed5dbc786eb/pysigma_pipeline_sysmon-2.0.0.tar.gz", hash = "sha256:a05c4f0d59602c4002bc0a1b9189508454f85ec397f5fd20294d3b56006bee54", size = 11503, upload-time = "2025-11-30T01:46:39.282Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/02/8a/f8d099ce50e0639bd5da7566834e14cd96a50e6d56b1f3143f93113d1f97/pysigma_pipeline_sysmon-2.0.0-py3-none-any.whl", hash = "sha256:84575bbde5dd891882306ca1f6ce16bdc592da2e511ac8960012af2efb9d120b", size = 12586, upload-time = "2025-11-30T01:46:38.052Z" },
+]
+
+[[package]]
 name = "pytest"
 version = "9.1.1"
 source = { registry = "https://pypi.org/simple" }
@@ -2190,6 +2214,8 @@ dependencies = [
     { name = "pgvector" },
     { name = "psycopg", extra = ["binary"] },
     { name = "pydantic" },
+    { name = "pysigma-backend-sqlite" },
+    { name = "pysigma-pipeline-sysmon" },
     { name = "python-dotenv" },
     { name = "pyyaml" },
 ]
@@ -2216,6 +2242,8 @@ requires-dist = [
     { name = "pgvector", specifier = ">=0.5.0" },
     { name = "psycopg", extras = ["binary"], specifier = ">=3.3.5" },
     { name = "pydantic", specifier = ">=2.13.5" },
+    { name = "pysigma-backend-sqlite", specifier = ">=2.0.0" },
+    { name = "pysigma-pipeline-sysmon", specifier = ">=2.0.0" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "pyyaml", specifier = ">=6.0.3" },
 ]
