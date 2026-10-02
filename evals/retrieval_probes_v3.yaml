@@ -11,11 +11,12 @@
 #   - No query repeats a v1/v2 behaviour (lsass handle dump, Run key, ntdsutil, netsh firewall,
 #     bitsadmin, net user /add, remote mshta were skipped for that reason).
 #
-# Status: DRAFTED 2026-10-03 (Mouadh with Claude). Mouadh reviews every query against its source
-# alert, then sets FROZEN below and records the sha256. NOTHING has been run on it: no retrieval,
-# no eval. After freezing, do not edit queries or expected IDs; a wrong probe gets a dated note.
+# Status: drafted 2026-10-03 by Mouadh with Claude. Reviewed against source events: v3-06 reworded
+# (task is created ON the remote host), v3-24 / v3-25 cut to what the event shows (the ms-settings
+# write and cmstp /au were context from the label rationale, not in the event). NOTHING was run on
+# it before freezing. Do not edit queries or expected IDs; a wrong probe gets a dated note below.
 #
-# FROZEN: no
+# FROZEN: 2026-10-03 (sha256 in retrieval_probes_v3.sha256)
 #
 # Scoring rules (pre-registered, same as v1/v2):
 #   primary   recall@5, technique chunks only, exact ID match.
@@ -52,7 +53,7 @@ probes:
     tag: behaviour
   - id: v3-06
     source: day3-159
-    query: schtasks creates a task whose name imitates a built-in Windows task folder but whose action runs cmd.exe on a remote host
+    query: schtasks creates a task on a remote workstation that runs cmd.exe at startup as SYSTEM, under a name that imitates a built-in Windows task
     expected: [T1053.005]
     tag: behaviour
   - id: v3-07
@@ -142,12 +143,12 @@ probes:
     tag: id
   - id: v3-24
     source: day3-102
-    query: PowerShell starts fodhelper.exe right after a value is written under the ms-settings shell open command key in HKCU
+    query: PowerShell starts fodhelper.exe with no arguments
     expected: [T1548.002]
     tag: behaviour
   - id: v3-25
     source: day3-161
-    query: dllhost.exe spawns an elevated cmd.exe shortly after cmstp was run with /au
+    query: dllhost.exe spawns cmd.exe with no command-line arguments
     expected: [T1548.002]
     tag: behaviour
   - id: v3-26

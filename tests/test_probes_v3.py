@@ -37,3 +37,13 @@ def test_expected_ids_are_the_golden_labels():
         row = LABELS[p["source"]]
         assert row["label"] == "true_positive", p["id"]
         assert sorted(p["expected"]) == sorted(row["technique_ids"]), p["id"]
+
+
+def test_probes_are_frozen():
+    """Content hash of the parsed probes (line endings can't break it). A failure means someone
+    edited a frozen query or expected ID: revert it and add a dated note instead."""
+    import hashlib
+
+    frozen = (ROOT / "evals" / "retrieval_probes_v3.sha256").read_text(encoding="utf-8").split()[0]
+    actual = hashlib.sha256(json.dumps(PROBES, sort_keys=True).encode()).hexdigest()
+    assert actual == frozen
