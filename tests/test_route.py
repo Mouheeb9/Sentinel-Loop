@@ -77,8 +77,12 @@ def test_broken_rule_is_recorded_not_treated_as_no_match(rules_dir):
     assert c.broken == [R1, R2] and c.checked == [] and not c.known
 
 
+def _unavailable(rule_yaml, events):
+    raise NotImplementedError("matcher not available")
+
+
 def test_missing_matcher_makes_coverage_unknown(rules_dir):
-    c = cov.check_coverage(ALERT.events, [R1, R2])  # the real matcher: not implemented yet
+    c = cov.check_coverage(ALERT.events, [R1, R2], _unavailable)
     assert c.unavailable and c.covering_rule_id is None and not c.known
 
 
@@ -131,6 +135,6 @@ def test_route_live_skips_non_attacks(rules_dir):
 
 
 def test_route_live_without_matcher_does_not_crash(rules_dir):
-    """Eval runs use the live graph: until the matcher lands, route must record 'unknown'."""
-    update = nodes.route_live(_state("true_positive"), {})
+    """Eval runs use the live graph: without a usable matcher, route must record 'unknown'."""
+    update = nodes.route_live(_state("true_positive"), {"configurable": {"matcher": _unavailable}})
     assert update["covering_rule_id"] is None and update["coverage"]["unavailable"]

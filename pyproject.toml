@@ -18,6 +18,8 @@ dependencies = [
     "pgvector>=0.5.0",
     "psycopg[binary]>=3.3.5",
     "pydantic>=2.13.5",
+    "pysigma-backend-sqlite>=2.0.0",
+    "pysigma-pipeline-sysmon>=2.0.0",
     "python-dotenv>=1.0",
     "pyyaml>=6.0.3",
 ]
