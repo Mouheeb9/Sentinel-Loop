@@ -386,7 +386,7 @@ def render_chart(results: dict[str, dict], out: Path) -> Path:
     meta = next(iter(results.values()))["meta"]
     n = {c: results[c]["meta"]["alerts_run"] for c in configs}
     fig.suptitle(
-        f"Triage baseline on golden-v1 (n={', '.join(str(v) for v in n.values())})  "
+        f"Triage on golden-{GOLDEN.stem} (n={', '.join(str(v) for v in n.values())})  "
         f"model: {meta['tier1_model'].split(':', 1)[-1]}"
         + ("  [INCOMPLETE]" if not all(results[c]["meta"]["complete"] for c in configs) else ""),
         fontsize=10,
