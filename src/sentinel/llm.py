@@ -6,6 +6,8 @@ re-runs the alert when the first answer is unsure.
     SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-super-120b-a12b:free       (tier 1, default)
     SENTINEL_ESCALATION_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free   (tier 2, default)
     SENTINEL_ESCALATION_MODEL=none                                                (tier 1 only)
+    SENTINEL_RULEGEN_MODEL=...      rule generation (default: the tier-2 model; writing a rule is
+                                    the harder task, and it runs only on uncovered attacks)
     later: anthropic:claude-haiku-4-5 (tier 1), anthropic:claude-sonnet-5 (tier 2)
 
 Format is LangChain's `provider:model`. Every eval number is only comparable to numbers from the
@@ -37,6 +39,10 @@ def escalation_model_name() -> str | None:
     """None when escalation is switched off."""
     name = os.environ.get("SENTINEL_ESCALATION_MODEL") or DEFAULT_ESCALATION_MODEL
     return None if name.lower() == "none" else name
+
+
+def rulegen_model_name() -> str:
+    return os.environ.get("SENTINEL_RULEGEN_MODEL") or DEFAULT_ESCALATION_MODEL
 
 
 def chat_model(name: str) -> BaseChatModel:

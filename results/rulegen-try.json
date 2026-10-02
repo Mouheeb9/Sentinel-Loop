@@ -1,0 +1,30 @@
+[
+  {
+    "alert_id": "day2-006",
+    "gold": [
+      "T1685.001"
+    ],
+    "rule_yaml": "title: Windows Event Log Service Disabled via Registry\nid: 224751aa-0dae-58dd-b3a9-31c30ee095cc\nstatus: experimental\ndescription: Detects modification of the Windows EventLog service Start registry value\n  to 0x4 (disabled), which impairs defense capabilities by preventing event logging.\n  This is commonly used by attackers to hide their activities.\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-02'\ntags:\n- attack.t1685.001\n- attack.t1562.002\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection1:\n    TargetObject|endswith:\n    - HKLM\\System\\CurrentControlSet\\Services\\EventLog\\Start\n    Details|contains:\n    - DWORD (0x00000004)\n  filter1:\n    Image|endswith:\n    - services.exe\n    - svchost.exe\n    - mmc.exe\n    - regedit.exe\n  condition: 1 of selection* and not 1 of filter*\nfalsepositives:\n- Legitimate administrative action to disable EventLog service (rare)\n- System maintenance scripts that temporarily disable EventLog\nlevel: high\n",
+    "schema_retries": 0,
+    "fires_on_own": true,
+    "same_technique_hits": [],
+    "same_technique_total": 9,
+    "benign_hits": [],
+    "benign_total": 50,
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+  },
+  {
+    "alert_id": "day3-056",
+    "gold": [
+      "T1127.001"
+    ],
+    "rule_yaml": "title: MSBuild Execution with Project File from Suspicious Directory\nid: 6c81e1a5-63ae-56c2-870c-6bbf5a4a073f\nstatus: experimental\ndescription: Detects MSBuild.exe executing an XML project file from suspicious directories\n  commonly abused for code execution, such as Windows Tasks folders, Temp directories,\n  or user profile locations.\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-02'\ntags:\n- attack.t1127.001\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - MSBuild.exe\n    CommandLine|contains:\n    - .xml\n    - Windows/Tasks/\n    - Windows/System32/Tasks/\n    - Windows/SysWow64/Tasks/\n    - Users/Public/\n    - AppData/Local/Temp/\n    - AppData/Local/Roaming/\n    - Windows/Temp/\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate build processes referencing project files in unusual locations (rare)\nlevel: high\n",
+    "schema_retries": 0,
+    "fires_on_own": true,
+    "same_technique_hits": [],
+    "same_technique_total": 0,
+    "benign_hits": [],
+    "benign_total": 50,
+    "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+  }
+]
