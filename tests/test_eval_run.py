@@ -131,8 +131,10 @@ def test_daily_quota_stops_the_run(tmp_results, monkeypatch):
 
 
 def test_configs_differ_only_in_what_they_switch_off():
-    assert ev.CONFIGS["single-prompt"] == nodes.PipelineOptions(retrieval=False, tools=False)
-    assert ev.CONFIGS["rag-tools"] == nodes.PipelineOptions()
+    off = {"rules": False}  # triage evals never spend quota on rule generation
+    assert ev.CONFIGS["single-prompt"] == nodes.PipelineOptions(retrieval=False, tools=False, **off)
+    assert ev.CONFIGS["rag-tools"] == nodes.PipelineOptions(**off)
+    assert not any(o.rules for o in ev.CONFIGS.values())
     hashes = {ev.prompt_hash(o) for o in ev.CONFIGS.values()}
     assert len(hashes) == 3
 
