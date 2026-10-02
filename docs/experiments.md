@@ -143,3 +143,24 @@ day3-095 gets T1505.003 (web shell: right mechanism family, gold is T1190, still
 new false positive on benign alerts with a context (day3-165 stays benign_noisy in all 4 runs).
 Kept: deterministic retrieval gain (alert->attack MRR 0.34 -> 0.43), fixes the prompt failure it
 was aimed at, no harm measured.
+
+## Rule generation v0, end to end (2026-10-02, `results/rulegen-v0.json`)
+
+`uv run python -m evals.rulegen`: the first 5 dev attacks with no covering rule, full live
+pipeline (triage -> route -> rule_gen -> validate). No validator yet, so no rule can pass.
+
+| Alert | Triage | Outcome | Rule |
+|---|---|---|---|
+| day2-006 (T1685.001) | true_positive, right technique | rule_unvalidated | registry `...\Services\EventLog\Start` set to 4: clean, no filter this time |
+| day2-014 (T1059.005) | needs_review | no rule | - (the open label question) |
+| day3-048 (T1134) | benign_noisy (wrong) | no rule | - |
+| day3-056 (T1127.001) | true_positive, right technique | rule_unvalidated, 1 retry | MSBuild + "Tasks" in the command line (the self-check sent the first draft back) |
+| day3-070 (T1059.003) | true_positive | rule_unvalidated | cmd.exe from a Desktop program, command line contains "/c" OR "Desktop" OR ".exe" |
+
+Rules generated 3/5 (the other 2 stopped at triage, as designed), compile rate 3/3, all fire on
+their own alert. Validation pass rate and FP rate: pending Mouadh's validator
+(`--validate-only` will grade these rules with no new model calls).
+
+Seen in the rules: the model writes several values in one field as if they must ALL match, but
+Sigma ORs them (day3-070: any `cmd /c` launched from a Desktop program). Candidate fix: an `all`
+option on a field test (Sigma's `|all` modifier).
