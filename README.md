@@ -34,7 +34,13 @@ setup run twice moves accuracy by ~0.03-0.07 and F1 by ~0.03):
 The search gain is solid (deterministic test, no model involved). The triage gain points the same
 way but is within run-to-run noise on 30 alerts; the sealed test split gives the final number.
 Tried and dropped: smaller technique chunks, two security embedding models (SecEmbed), a security
-reranker (SecReranker). Prompt-injection attack success rate on the unhardened agent: 20% (2/10;
+reranker (SecReranker).
+
+**Coverage:** 46 of the 100 golden attacks (46%) are already caught by a public SigmaHQ rule among
+the 5 our search returns (`uv run python -m evals.coverage`, run with Mouadh's matcher). A lower
+bound, since rules outside the top 5 are not tried. The other 54 are what rule generation is for.
+
+Prompt-injection attack success rate on the unhardened agent: 20% (2/10;
 the 40-payload corpus is ready, live run pending).
 
 ## Golden dataset: how we measured labeling quality

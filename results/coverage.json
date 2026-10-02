@@ -1,0 +1,1605 @@
+{
+  "summary": {
+    "k": 5,
+    "attacks": 100,
+    "covered": 46,
+    "coverage": 0.46,
+    "no_rule_matched": 0,
+    "top_covering_rules": [
+      [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        5
+      ],
+      [
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+        3
+      ],
+      [
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+        3
+      ],
+      [
+        "0a13e132-651d-11eb-ae93-0242ac130002",
+        2
+      ],
+      [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+        2
+      ],
+      [
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+        2
+      ],
+      [
+        "646ea171-dded-4578-8a4d-65e9822892e3",
+        1
+      ],
+      [
+        "e7be6119-fc37-43f0-ad4f-1f3f99be2f9f",
+        1
+      ],
+      [
+        "68c8acb4-1b60-4890-8e82-3ddf7a6dba84",
+        1
+      ],
+      [
+        "67f113fa-e23d-4271-befa-30113b3e08b1",
+        1
+      ]
+    ]
+  },
+  "rows": [
+    {
+      "alert_id": "day2-003",
+      "technique_ids": [
+        "T1003.001"
+      ],
+      "covering_rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+      "checked": [
+        "646ea171-dded-4578-8a4d-65e9822892e3"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-004",
+      "technique_ids": [
+        "T1003.002"
+      ],
+      "covering_rule_id": "e7be6119-fc37-43f0-ad4f-1f3f99be2f9f",
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "e7be6119-fc37-43f0-ad4f-1f3f99be2f9f"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-005",
+      "technique_ids": [
+        "T1218.005"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "03cc0c25-389f-4bf8-b48d-11878079f1ca",
+        "67f113fa-e23d-4271-befa-30113b3e08b1",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "b98d0db6-511d-45de-ad02-e82a98729620",
+        "cc7abbd0-762b-41e3-8a26-57ad50d2eea3"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-006",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a07f0359-4c90-4dc4-a681-8ffea40b4f47",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+        "790317c0-0a36-4a6a-a105-6e576bf99a14",
+        "ba226dcf-d390-4642-b9af-b534872f1156",
+        "f2485272-a156-4773-82d7-1d178bc4905b"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-008",
+      "technique_ids": [
+        "T1053.005"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "c4eeeeae-89f4-43a7-8b48-8d1bdfa66c78",
+        "86588b36-c6d3-465f-9cee-8f9093e07798",
+        "56c217c3-2de2-479b-990f-5c109ba8458f",
+        "f91e51c9-f344-4b32-969b-0b6f6b8537d4",
+        "89ca78fd-b37c-4310-b3d3-81a023f83936"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-009",
+      "technique_ids": [
+        "T1069.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "ad720b90-25ad-43ff-9b5e-5c841facc8e5",
+        "3268b746-88d8-4cd3-bffc-30077d02c787",
+        "b9f0e6f5-09b4-4358-bae4-08408705bd5c"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-014",
+      "technique_ids": [
+        "T1059.005"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "cea72823-df4d-4567-950c-0b579eaf0846",
+        "28c8f68b-098d-45af-8d43-8089f3e35403",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-028",
+      "technique_ids": [
+        "T1547.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "8d85cf08-bf97-4260-ba49-986a2a65129c",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-030",
+      "technique_ids": [
+        "T1053.005"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "8d85cf08-bf97-4260-ba49-986a2a65129c",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day2-033",
+      "technique_ids": [
+        "T1069.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "f117933c-980c-4f78-b384-e3d838111165",
+        "62510e69-616b-4078-b371-847da438cc03",
+        "3abd6094-7027-475f-9630-8ab9be7b9725",
+        "cd219ff3-fa99-45d4-8380-a7d15116c6dc",
+        "2a072a96-a086-49fa-bcb5-15cc5a619093"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-041",
+      "technique_ids": [
+        "T1190"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "899133d5-4d7c-4a7f-94ee-27355c879d90",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "480e7e51-e797-47e3-8d72-ebfce65b6d8d",
+        "26d3f0a2-f514-4a3f-a8a7-e7e48a8d9160",
+        "502b42de-4306-40b4-9596-6f590c81f073"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-042",
+      "technique_ids": [
+        "T1218.001"
+      ],
+      "covering_rule_id": "68c8acb4-1b60-4890-8e82-3ddf7a6dba84",
+      "checked": [
+        "52cad028-0ff0-4854-8f67-d25dfcbc78b4",
+        "68c8acb4-1b60-4890-8e82-3ddf7a6dba84"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-043",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "452bce90-6fb0-43cc-97a5-affc283139b3",
+        "24357373-078f-44ed-9ac4-6d334a668a11",
+        "de587dce-915e-4218-aac4-835ca6af6f70",
+        "9ec9fb1b-e059-4489-9642-f270c207923d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-045",
+      "technique_ids": [
+        "T1003.002"
+      ],
+      "covering_rule_id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+      "checked": [
+        "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+        "7c06ab9b-b1d2-4ba9-b06e-09491ded20d9",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-048",
+      "technique_ids": [
+        "T1134"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "8e0bb260-d4b2-4fff-bb8d-3f82118e6892",
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "044ba588-dff4-4918-9808-3f95e8160606"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-050",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "aa2efee7-34dd-446e-8a37-40790a66efd7",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "8202070f-edeb-4d31-a010-a26c72ac5600",
+        "138d3531-8793-4f50-a2cd-f291b2863d78"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-051",
+      "technique_ids": [
+        "T1021.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "7610a4ea-c06d-495f-a2ac-0a696abcfd3b",
+        "0531e43a-d77d-47c2-b89f-5fe50321c805",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583",
+        "992a6cae-db6a-43c8-9cec-76d7195c96fc"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-052",
+      "technique_ids": [
+        "T1047"
+      ],
+      "covering_rule_id": "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+      "checked": [
+        "692f0bec-83ba-4d04-af7e-e884a96059b6",
+        "4a2a2c3e-209f-4d01-b513-4155a540b469",
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-053",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "e2482f8d-3443-4237-b906-cc145d87a076",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588",
+        "46490193-1b22-4c29-bdd6-5bf63907216f"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-054",
+      "technique_ids": [
+        "T1204.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "534f2ef7-e8a2-4433-816d-c91bccde289b",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4",
+        "84232095-ecca-4015-b0d7-7726507ee793",
+        "39ed3c80-e6a1-431b-9df3-911ac53d08a7",
+        "4281cb20-2994-4580-aa63-c8b86d019934"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-056",
+      "technique_ids": [
+        "T1127.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "c27515df-97a9-4162-8a60-dc0eeb51b775",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "cc4e02ba-9c06-48e2-b09e-2500cace9ae0",
+        "33be4333-2c6b-44f4-ae28-102cdbde0a31",
+        "9f50fe98-fe5c-4a2d-86c7-fad7f63ed622"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-058",
+      "technique_ids": [
+        "T1087.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "b9f0e6f5-09b4-4358-bae4-08408705bd5c",
+        "fb843269-508c-4b76-8b8d-88679db22ce7",
+        "d4498716-1d52-438f-8084-4a603157d131",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-059",
+      "technique_ids": [
+        "T1218.005"
+      ],
+      "covering_rule_id": "67f113fa-e23d-4271-befa-30113b3e08b1",
+      "checked": [
+        "03cc0c25-389f-4bf8-b48d-11878079f1ca",
+        "67f113fa-e23d-4271-befa-30113b3e08b1"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-060",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": "0a13e132-651d-11eb-ae93-0242ac130002",
+      "checked": [
+        "0a13e132-651d-11eb-ae93-0242ac130002"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-061",
+      "technique_ids": [
+        "T1569.002"
+      ],
+      "covering_rule_id": "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+      "checked": [
+        "178e615d-e666-498b-9630-9ed363038101",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+        "138d3531-8793-4f50-a2cd-f291b2863d78",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-062",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "ac20ae82-8758-4f38-958e-b44a3140ca88",
+        "3a6586ad-127a-4d3b-a677-1e6eacdf8fde",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "18988e1b-9087-4f8a-82fe-0414dce49878",
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-063",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "1a4bd6af-99ac-4466-b5b2-7b72b4a05462",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "d7662ff6-9e97-4596-a61d-9839e32dee8d",
+        "0ba863e6-def5-4e50-9cea-4dd8c7dc46a4",
+        "62e0298b-e994-4189-bc87-bc699aa62d97"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-066",
+      "technique_ids": [
+        "T1548.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "8d85cf08-bf97-4260-ba49-986a2a65129c",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "9df5f547-c86a-433e-b533-f2794357e242",
+        "f59c3faf-50f3-464b-9f4c-1b67ab512d99",
+        "5b872a46-3b90-45c1-8419-f675db8053aa"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-067",
+      "technique_ids": [
+        "T1546.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "0531e43a-d77d-47c2-b89f-5fe50321c805",
+        "7610a4ea-c06d-495f-a2ac-0a696abcfd3b",
+        "c539afac-c12a-46ed-b1bd-5a5567c9f045",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-068",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": "52cad028-0ff0-4854-8f67-d25dfcbc78b4",
+      "checked": [
+        "52cad028-0ff0-4854-8f67-d25dfcbc78b4"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-069",
+      "technique_ids": [
+        "T1546.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5",
+        "d06be4b9-8045-428b-a567-740a26d9db25",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-070",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-071",
+      "technique_ids": [
+        "T1021.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "10c14723-61c7-4c75-92ca-9af245723ad2"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-074",
+      "technique_ids": [
+        "T1550"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "954f0af7-62dd-418f-b3df-a84bc2c7a774"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-075",
+      "technique_ids": [
+        "T1218.004"
+      ],
+      "covering_rule_id": "d042284c-a296-4988-9be5-f424fadcc28c",
+      "checked": [
+        "d042284c-a296-4988-9be5-f424fadcc28c"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-077",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "3268b746-88d8-4cd3-bffc-30077d02c787",
+      "checked": [
+        "3268b746-88d8-4cd3-bffc-30077d02c787"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-078",
+      "technique_ids": [
+        "T1547.001"
+      ],
+      "covering_rule_id": "8d85cf08-bf97-4260-ba49-986a2a65129c",
+      "checked": [
+        "8d85cf08-bf97-4260-ba49-986a2a65129c"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-079",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "84232095-ecca-4015-b0d7-7726507ee793",
+        "631b22a4-70f4-4e2f-9ea8-42f84d9df6d8",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "502b42de-4306-40b4-9596-6f590c81f073"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-081",
+      "technique_ids": [
+        "T1003.004"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "8834e2f7-6b4b-4f09-8906-d2276470ee23",
+        "efec536f-72e8-4656-8960-5e85d091345b",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-082",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-083",
+      "technique_ids": [
+        "T1218.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "e593cf51-88db-4ee1-b920-37e89012a3c9",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-085",
+      "technique_ids": [
+        "T1218.004"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "08249dc0-a28d-4555-8ba5-9255a198e08c",
+        "0531e43a-d77d-47c2-b89f-5fe50321c805"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-087",
+      "technique_ids": [
+        "T1569.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "138d3531-8793-4f50-a2cd-f291b2863d78",
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "3371f518-5fe3-4cf6-a14b-2a0ae3fd8a4f",
+        "38879043-7e1e-47a9-8d46-6bec88e201df",
+        "431a1fdb-4799-4f3b-91c3-a683b003fc49"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-091",
+      "technique_ids": [
+        "T1055"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "0a98a10c-685d-4ab0-bddc-b6bdd1d48458",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "534f2ef7-e8a2-4433-816d-c91bccde289b",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-092",
+      "technique_ids": [
+        "T1003.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+        "044ba588-dff4-4918-9808-3f95e8160606",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+        "8e0bb260-d4b2-4fff-bb8d-3f82118e6892"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-093",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "9b0b7ac3-6223-47aa-a3fd-e8f211e637db",
+        "d7b81144-b866-48a4-9bcc-275dc69d870e",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829",
+        "970007b7-ce32-49d0-a4a4-fbef016950bd"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-094",
+      "technique_ids": [
+        "T1218.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "01c42d3c-242d-4655-85b2-34f1739632f7",
+        "02b18447-ea83-4b1b-8805-714a8a34546a",
+        "04936b66-3915-43ad-a8e5-809eadfd1141",
+        "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+        "0bbc6369-43e3-453d-9944-cae58821c173"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-095",
+      "technique_ids": [
+        "T1190"
+      ],
+      "covering_rule_id": "8202070f-edeb-4d31-a010-a26c72ac5600",
+      "checked": [
+        "8202070f-edeb-4d31-a010-a26c72ac5600"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-096",
+      "technique_ids": [
+        "T1037.001"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0",
+        "0fc35fc3-efe6-4898-8a37-0b233339524f",
+        "5e95028c-5229-4214-afae-d653d573d0ec",
+        "b7e2a8d4-74bb-4b78-adc9-3f92af2d4829"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-097",
+      "technique_ids": [
+        "T1003.003"
+      ],
+      "covering_rule_id": "2afafd61-6aae-4df4-baed-139fa1f4c345",
+      "checked": [
+        "2afafd61-6aae-4df4-baed-139fa1f4c345"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-098",
+      "technique_ids": [
+        "T1059.001",
+        "T1021.006"
+      ],
+      "covering_rule_id": "734f8d9b-42b8-41b2-bcf5-abaf49d5a3c8",
+      "checked": [
+        "734f8d9b-42b8-41b2-bcf5-abaf49d5a3c8"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-101",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "fb843269-508c-4b76-8b8d-88679db22ce7",
+      "checked": [
+        "fb843269-508c-4b76-8b8d-88679db22ce7"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-102",
+      "technique_ids": [
+        "T1548.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "fb843269-508c-4b76-8b8d-88679db22ce7",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "30e92f50-bb5a-4884-98b5-d20aa80f3d7a",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-103",
+      "technique_ids": [
+        "T1136.001"
+      ],
+      "covering_rule_id": "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+      "checked": [
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-104",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-105",
+      "technique_ids": [
+        "T1021.003",
+        "T1137.006"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "737e618a-a410-49b5-bec3-9e55ff7fbc15",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-107",
+      "technique_ids": [
+        "T1550"
+      ],
+      "covering_rule_id": "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+      "checked": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-108",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "checked": [
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+        "27aec9c9-dbb0-4939-8422-1742242471d0",
+        "c260b6db-48ba-4b4a-a76f-2f67644e99d2",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-110",
+      "technique_ids": [
+        "T1069.002"
+      ],
+      "covering_rule_id": "b2317cfa-4a47-4ead-b3ff-297438c0bc2d",
+      "checked": [
+        "b2317cfa-4a47-4ead-b3ff-297438c0bc2d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-112",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "checked": [
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-113",
+      "technique_ids": [
+        "T1210"
+      ],
+      "covering_rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+      "checked": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "631b22a4-70f4-4e2f-9ea8-42f84d9df6d8",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-116",
+      "technique_ids": [
+        "T1197"
+      ],
+      "covering_rule_id": "2ddef153-167b-4e89-86b6-757a9e65dcac",
+      "checked": [
+        "2ddef153-167b-4e89-86b6-757a9e65dcac"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-118",
+      "technique_ids": [
+        "T1003.002"
+      ],
+      "covering_rule_id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+      "checked": [
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-119",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": "03cc0c25-389f-4bf8-b48d-11878079f1ca",
+      "checked": [
+        "03cc0c25-389f-4bf8-b48d-11878079f1ca"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-120",
+      "technique_ids": [
+        "T1218"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "af77cf95-c469-471c-b6a0-946c685c4798",
+        "52d097e2-063e-4c9c-8fbb-855c8948d135",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "4f2cd9b6-4a17-440f-bb2a-687abb65993a"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-121",
+      "technique_ids": [
+        "T1055.002"
+      ],
+      "covering_rule_id": "ff23ffbc-3378-435e-992f-0624dcf93ab4",
+      "checked": [
+        "ff23ffbc-3378-435e-992f-0624dcf93ab4"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-122",
+      "technique_ids": [
+        "T1055"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "0a98a10c-685d-4ab0-bddc-b6bdd1d48458",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "f91ed517-a6ba-471d-9910-b3b4a398c0f3",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-123",
+      "technique_ids": [
+        "T1220"
+      ],
+      "covering_rule_id": "8d63dadf-b91b-4187-87b6-34a1114577ea",
+      "checked": [
+        "05c36dd6-79d6-4a9a-97da-3db20298ab2d",
+        "75d0a94e-6252-448d-a7be-d953dff527bb",
+        "8d63dadf-b91b-4187-87b6-34a1114577ea"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-125",
+      "technique_ids": [
+        "T1047"
+      ],
+      "covering_rule_id": "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+      "checked": [
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-128",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": "cc36992a-4671-4f21-a91d-6c2b72a2edf5",
+      "checked": [
+        "cc36992a-4671-4f21-a91d-6c2b72a2edf5"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-131",
+      "technique_ids": [
+        "T1003.004"
+      ],
+      "covering_rule_id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+      "checked": [
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0",
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-132",
+      "technique_ids": [
+        "T1218.013"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "16c37b52-b141-42a5-a3ea-bbe098444397",
+        "1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd",
+        "396f6630-f3ac-44e3-bfc8-1b161bc00c4e",
+        "3c1b5fb0-c72f-45ba-abd1-4d4c353144ab",
+        "71158e3f-df67-472b-930e-7d287acaa3e1"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-135",
+      "technique_ids": [
+        "T1686.003"
+      ],
+      "covering_rule_id": "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c",
+      "checked": [
+        "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-136",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": "1a4bd6af-99ac-4466-b5b2-7b72b4a05462",
+      "checked": [
+        "1a4bd6af-99ac-4466-b5b2-7b72b4a05462"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-137",
+      "technique_ids": [
+        "T1110.003",
+        "T1558.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "12827a56-61a4-476a-a9cb-f3068f191073",
+        "1eeed653-dbc8-4187-ad0c-eeebb20e6599",
+        "54773c5f-f1cc-4703-9126-2f797d96a69d",
+        "734f8d9b-42b8-41b2-bcf5-abaf49d5a3c8",
+        "79df3f68-dccb-48e9-9171-b75cbc37c51d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-139",
+      "technique_ids": [
+        "T1055"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "8a8379b8-780b-4dbf-b1e9-31c8d112fefb",
+        "f91ed517-a6ba-471d-9910-b3b4a398c0f3",
+        "5cddf373-ef00-4112-ad72-960ac29bac34"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-140",
+      "technique_ids": [
+        "T1218.010"
+      ],
+      "covering_rule_id": "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+      "checked": [
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-141",
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "covering_rule_id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "checked": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-144",
+      "technique_ids": [
+        "T1059.001",
+        "T1021.006"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "9c0295ce-d60d-40bd-bd74-84673b7592b1",
+        "36210e0d-5b19-485d-a087-c096088885f0",
+        "2617e7ed-adb7-40ba-b0f3-8f9945fe6c09",
+        "cb5a2333-56cf-4562-8fcb-22ba1bca728d",
+        "42a993dd-bb3e-48c8-b372-4d6684c4106c"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-145",
+      "technique_ids": [
+        "T1550.003"
+      ],
+      "covering_rule_id": "7ec2c172-dceb-4c10-92c9-87c1881b7e18",
+      "checked": [
+        "7ec2c172-dceb-4c10-92c9-87c1881b7e18"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-146",
+      "technique_ids": [
+        "T1218"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "01c42d3c-242d-4655-85b2-34f1739632f7",
+        "02b18447-ea83-4b1b-8805-714a8a34546a",
+        "04936b66-3915-43ad-a8e5-809eadfd1141",
+        "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+        "0bbc6369-43e3-453d-9944-cae58821c173"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-148",
+      "technique_ids": [
+        "T1218.005"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "ac20ae82-8758-4f38-958e-b44a3140ca88",
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+        "3a6586ad-127a-4d3b-a677-1e6eacdf8fde",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba",
+        "59e938ff-0d6d-4dc3-b13f-36cc28734d4e"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-149",
+      "technique_ids": [
+        "T1112"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "c420410f-c2d8-4010-856b-dffe21866437",
+        "f674e36a-4b91-431e-8aef-f8a96c2aca35",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "d6a9b252-c666-4de6-8806-5561bbbd3bdc",
+        "e2482f8d-3443-4237-b906-cc145d87a076"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-151",
+      "technique_ids": [
+        "T1210"
+      ],
+      "covering_rule_id": "a642964e-bead-4bed-8910-1bb4d63e3b4d",
+      "checked": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "a642964e-bead-4bed-8910-1bb4d63e3b4d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-152",
+      "technique_ids": [
+        "T1546.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "0944e002-e3f6-4eb5-bf69-3a3067b53d73",
+        "fb843269-508c-4b76-8b8d-88679db22ce7"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-154",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "d042284c-a296-4988-9be5-f424fadcc28c",
+        "75edd216-1939-4c73-8d61-7f3a0d85b5cc",
+        "6120ac2a-a34b-42c0-a9bd-1fb9f459f348",
+        "3c1b5fb0-c72f-45ba-abd1-4d4c353144ab",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-155",
+      "technique_ids": [
+        "T1569.002"
+      ],
+      "covering_rule_id": "fdfcbd78-48f1-4a4b-90ac-d82241e368c5",
+      "checked": [
+        "fdfcbd78-48f1-4a4b-90ac-d82241e368c5"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-157",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-158",
+      "technique_ids": [
+        "T1047"
+      ],
+      "covering_rule_id": "526be59f-a573-4eea-b5f7-f0973207634d",
+      "checked": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "b17ea6f7-6e90-447e-a799-e6c0a493d6ce",
+        "526be59f-a573-4eea-b5f7-f0973207634d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-159",
+      "technique_ids": [
+        "T1053.005"
+      ],
+      "covering_rule_id": "89ca78fd-b37c-4310-b3d3-81a023f83936",
+      "checked": [
+        "89ca78fd-b37c-4310-b3d3-81a023f83936"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-160",
+      "technique_ids": [
+        "T1685.001"
+      ],
+      "covering_rule_id": "0a13e132-651d-11eb-ae93-0242ac130002",
+      "checked": [
+        "9ec9fb1b-e059-4489-9642-f270c207923d",
+        "534f2ef7-e8a2-4433-816d-c91bccde289b",
+        "0a13e132-651d-11eb-ae93-0242ac130002"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-161",
+      "technique_ids": [
+        "T1548.002"
+      ],
+      "covering_rule_id": "4b991083-3d0e-44ce-8fc4-b254025d8d4b",
+      "checked": [
+        "e7888eb1-13b0-4616-bd99-4bc0c2b054b9",
+        "4b991083-3d0e-44ce-8fc4-b254025d8d4b"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-163",
+      "technique_ids": [
+        "T1134"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "8e0bb260-d4b2-4fff-bb8d-3f82118e6892",
+        "f53714ec-5077-420e-ad20-907ff9bb2958",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-164",
+      "technique_ids": [
+        "T1059.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "7773b877-5abb-4a3e-b9c9-fd0369b59b00",
+        "241e802a-b65e-484f-88cd-c2dc10f9206d",
+        "5cddf373-ef00-4112-ad72-960ac29bac34",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-166",
+      "technique_ids": [
+        "T1021.003"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "10c14723-61c7-4c75-92ca-9af245723ad2"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-169",
+      "technique_ids": [
+        "T1047"
+      ],
+      "covering_rule_id": "692f0bec-83ba-4d04-af7e-e884a96059b6",
+      "checked": [
+        "692f0bec-83ba-4d04-af7e-e884a96059b6"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-171",
+      "technique_ids": [
+        "T1218.010"
+      ],
+      "covering_rule_id": "c7e91a02-d771-4a6d-a700-42587e0b1095",
+      "checked": [
+        "c7e91a02-d771-4a6d-a700-42587e0b1095"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-173",
+      "technique_ids": [
+        "T1055"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "3dfd06d2-eaf4-4532-9555-68aca59f57c4",
+        "961e0abb-1b1e-4c84-a453-aafe56ad0d34",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "8de89e52-f6e1-4b5b-afd1-41ecfa300d48"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-175",
+      "technique_ids": [
+        "T1543.003"
+      ],
+      "covering_rule_id": "138d3531-8793-4f50-a2cd-f291b2863d78",
+      "checked": [
+        "138d3531-8793-4f50-a2cd-f291b2863d78"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    },
+    {
+      "alert_id": "day3-176",
+      "technique_ids": [
+        "T1569.002"
+      ],
+      "covering_rule_id": null,
+      "checked": [
+        "17a1be64-8d88-40bf-b5ff-a4f7a50ebcc8",
+        "178e615d-e666-498b-9630-9ed363038101",
+        "05a2ab7e-ce11-4b63-86db-ab32e763e11d",
+        "138d3531-8793-4f50-a2cd-f291b2863d78",
+        "7f3a9c2d-4e8b-4a7f-9d3e-5c6f8a9b2e1d"
+      ],
+      "missing": [],
+      "broken": [],
+      "unavailable": null
+    }
+  ]
+}
