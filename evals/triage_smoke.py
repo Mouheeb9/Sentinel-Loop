@@ -24,7 +24,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from sentinel.agents.triage import TriageError
-from sentinel.graph.nodes import StubScript
+from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.run import CONFIG_NAME, default_owner, models_label, run_alert
 from sentinel.schemas import Alert
 
@@ -98,6 +98,7 @@ def main() -> None:
                 config_name=f"{CONFIG_NAME}-smoke",
                 owner=default_owner(),
                 trace=not args.no_trace,
+                pipeline=PipelineOptions(rules=False),  # triage only: no rule-gen quota
             )
             v = res.final["verdict"]
             row |= {

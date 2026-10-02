@@ -73,9 +73,10 @@ RESULTS = ROOT / "results"
 CHARTS = RESULTS / "charts"
 
 CONFIGS: dict[str, PipelineOptions] = {
-    "single-prompt": PipelineOptions(retrieval=False, tools=False),
-    "rag": PipelineOptions(retrieval=True, tools=False),
-    "rag-tools": PipelineOptions(retrieval=True, tools=True),
+    # rules=False: these runs measure triage; rule generation would spend quota for nothing.
+    "single-prompt": PipelineOptions(retrieval=False, tools=False, rules=False),
+    "rag": PipelineOptions(retrieval=True, tools=False, rules=False),
+    "rag-tools": PipelineOptions(retrieval=True, tools=True, rules=False),
 }
 PAUSE_S = 3  # free-tier models are rate limited per minute
 MAX_TRANSPORT_STREAK = 3
