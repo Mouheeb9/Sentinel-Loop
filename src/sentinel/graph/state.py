@@ -22,7 +22,9 @@ Outcome = Literal[
     "needs_review",  # triage unsure: hand to a human, no rule
     "covered",  # real threat, but an existing Sigma rule already detects it
     "rule_passed",  # new rule written and validated
-    "rule_failed",  # rule still failing after MAX_ATTEMPTS versions
+    "rule_failed",  # rule still failing after the last attempt, or no valid rule was generated
+    "rule_unvalidated",  # rule written (and fires on its own alert), but no validator ran yet
+    "rule_skipped",  # rule generation switched off (PipelineOptions.rules=False, e.g. evals)
 ]
 
 
@@ -51,10 +53,20 @@ class SentinelState(TypedDict):
     coverage: NotRequired[dict]
 
     # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair).
+    # Empty when rule generation failed or was skipped.
     draft_rule: NotRequired[str]
+    # rule_gen_live: title, technique_ids, schema_retries, tokens, llm_calls, model; or
+    # {"error": ...} when no valid rule came back; or {"skipped": True}.
+    rulegen: NotRequired[dict]
+    # How many rule versions this run may try. rule_gen_live sets 1 while repair is a stub
+    # (Day 13: "repair stays a stub, 1 attempt"); MAX_ATTEMPTS when unset.
+    max_attempts: NotRequired[int]
 
     # validate: one result per validation run, oldest first (appended, never overwritten).
     validations: NotRequired[Annotated[list[ValidationResult], operator.add]]
+    # validate_live: True when no validator is available yet. The ValidationResult then only
+    # says "compiles and fires on its own alert"; the outcome is rule_unvalidated, never passed.
+    validation_pending: NotRequired[bool]
 
     # rule_gen sets 1, each repair adds 1: the number of rule versions validated so far.
     # validate fails and attempts == MAX_ATTEMPTS -> give up (3 validations, 2 repairs).

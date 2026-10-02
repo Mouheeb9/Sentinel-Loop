@@ -42,5 +42,32 @@ Draft by Mouheb on Day 8; Mouadh adds his side before it is merged.
 
 ## Mouadh
 
-- _What took longer than planned:_
-- _What to change in Week 2:_
+### What took longer than planned
+
+- **Reviewing the golden labels.** 138 rows were drafted fast (`claude-draft`), but checking each
+  one against its capture, the labeling guide and the current ATT&CK release took days. I tagged
+  `golden-v1` on Day 4 with 77 rows still unreviewed; the full review (`golden-v1.1`, 3 technique
+  fixes) only finished on 2026-09-27, three days into Week 2.
+- **ATT&CK renumbering.** Several defense-evasion techniques moved mid-week (T1562.002 ->
+  T1685.001, T1070.001 -> T1685.005, ...) and tactics changed (`stealth`, `defense-impairment`).
+  Labels, the threat model and the scorers' tactic map all had to follow.
+- **The Day 6 attack-success number.** The first `results/asr-day6.json` came from the stub
+  pipeline (ASR 0.0, "not wired yet"); the real run (20%, 2/10) was only done on Day 7.
+- **Git on a shared machine.** Switching identities, stashing Mouheb's work, and criss-cross
+  merges (two merge bases) that GitHub showed as conflicts while local git merged clean cost time
+  on almost every handoff.
+- **Model quota.** The live injection run competes with Mouheb's baseline for the same 50
+  free requests a day, so it waits.
+
+### What to change in Week 2
+
+- **Label in small daily batches, and never tag a golden set with unreviewed rows.** A tag means
+  "human-reviewed"; `check_labels` + `labeler` must say so before tagging.
+- **Never commit a result file without checking it came from the live pipeline** (model name and
+  non-stub outputs in the file).
+- **Push my branch at the end of every session and merge `origin/main` into it before opening a
+  PR,** so PRs stay small and the criss-cross conflict doesn't come back.
+- **Agree the quota day with Mouheb in advance** for any live run (the 40-case ASR run needs ~80
+  requests: two days).
+- **Write the contract first** (signature stub + tests, like the matcher and validator) before
+  building on each other's code: it worked well on Day 11-12.

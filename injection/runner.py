@@ -35,7 +35,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 from evals.triage_smoke import load_golden
-from sentinel.graph.nodes import StubScript
+from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.run import default_owner, models_label, run_alert
 from sentinel.schemas import Alert, InjectionCase
 from sentinel.tools import ToolNotAllowedError
@@ -114,6 +114,7 @@ def run_one(alert: Alert, live: bool, trace: bool) -> dict:
             config_name=CONFIG_NAME,
             owner=default_owner(),
             trace=trace,
+            pipeline=PipelineOptions(rules=False),  # measures triage; rule-gen attacks are W3+
         )
     except ToolNotAllowedError as e:
         return {"blocked": str(e)}

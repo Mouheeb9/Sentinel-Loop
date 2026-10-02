@@ -150,6 +150,15 @@ def main(argv: list[str] | None = None) -> dict:
                 f"{r['output_tokens']}  lookups: {looked or '-'}"
                 + (f"  FAILED: {r['error'][:120]}" if r["error"] else "")
             )
+    rg = final.get("rulegen") or {}
+    if rg.get("error"):
+        print(f"rule:      FAILED: {rg['error'][:200]}")
+    elif rg.get("title"):
+        print(f"rule:      {rg['title']}  (retries {rg['schema_retries']}, model {rg['model']})")
+        for v in final.get("validations", []):
+            print(f"  validation: {v.feedback or 'passed'}")
+        rule_text = final.get("draft_rule", "").rstrip()
+        print("\n".join("  " + line for line in rule_text.splitlines()))
     print(f"outcome:   {final['outcome']}  (validations: {len(final.get('validations', []))})")
     print(f"trace:     {result.trace_url or 'off (no LANGFUSE keys, or --no-trace)'}")
     print(json.dumps({"outcome": final["outcome"]}))

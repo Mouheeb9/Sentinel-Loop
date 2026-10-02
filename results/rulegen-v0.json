@@ -1,0 +1,256 @@
+{
+  "meta": {
+    "triage_models": "openrouter:nvidia/nemotron-3-super-120b-a12b:free -> openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "rulegen_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "alert_ids": [
+      "day2-006",
+      "day2-014",
+      "day3-048",
+      "day3-056",
+      "day3-070"
+    ],
+    "written_at": "2026-10-02T22:59:40+00:00"
+  },
+  "summary": {
+    "alerts": 5,
+    "finished": 5,
+    "rules_generated": 3,
+    "generation_failures": 0,
+    "compile_rate": 1.0,
+    "validated": 3,
+    "validation_pass_rate": 0.3333333333333333,
+    "median_fp_rate": 0.0,
+    "outcomes": {
+      "rule_failed": 2,
+      "needs_review": 1,
+      "benign": 1,
+      "rule_passed": 1
+    },
+    "schema_retries": 1
+  },
+  "rows": [
+    {
+      "alert_id": "day2-006",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1685.001"
+      ],
+      "outcome": "rule_failed",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "rule_gen",
+        "validate",
+        "output"
+      ],
+      "verdict": "true_positive",
+      "triage_techniques": [
+        "T1685.001"
+      ],
+      "covering_rule_id": null,
+      "rulegen": {
+        "title": "Windows EventLog Service Disabled via Registry",
+        "technique_ids": [
+          "T1685.001"
+        ],
+        "schema_retries": 0,
+        "input_tokens": 3634,
+        "output_tokens": 534,
+        "llm_calls": 1,
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      "rule_yaml": "title: Windows EventLog Service Disabled via Registry\nid: bfa21068-559a-58fa-a946-36a0372122dc\nstatus: experimental\ndescription: Detects modification of the Windows EventLog service Start registry value\n  to 4 (disabled), which impairs defenses by disabling event logging. This is a technique\n  used by attackers to evade detection by preventing security events from being recorded.\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-02'\ntags:\n- attack.t1685.001\nlogsource:\n  category: registry_set\n  product: windows\ndetection:\n  selection1:\n    TargetObject|endswith:\n    - System\\CurrentControlSet\\Services\\EventLog\\Start\n    Details|contains:\n    - DWORD (0x00000004)\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative action to disable EventLog service (rare)\nlevel: high\n",
+      "validation": {
+        "rule_id": "bfa21068-559a-58fa-a946-36a0372122dc",
+        "compiled": true,
+        "compile_errors": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "fp_rate": 0.0,
+        "failed_samples": [
+          {
+            "sample_id": "day3-053",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-053/sysmon-b8c202795d297c50",
+            "note": "held-out T1685.001 attack, rule did not fire"
+          }
+        ],
+        "feedback": "TP: fires on 0/1 held-out T1685.001 attacks in registry_set; missed day3-053: compare their fields with the selection\nbenign: fires on 0/20 benign_noisy events in registry_set\nnoise: fires on 1/9779 held-out pool events in registry_set, 1 captures (unlabeled, may include real attacks)"
+      },
+      "validation_pending": false,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4d8c3e05e9550a9acfe390dacd46cd2c",
+      "at": "2026-10-02T20:08:59+00:00"
+    },
+    {
+      "alert_id": "day2-014",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.005"
+      ],
+      "outcome": "needs_review",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "output"
+      ],
+      "verdict": "needs_review",
+      "triage_techniques": [
+        "T1059.005"
+      ],
+      "covering_rule_id": null,
+      "rulegen": null,
+      "rule_yaml": null,
+      "validation": null,
+      "validation_pending": false,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6e16044b53eabb2885ae10b049b49e54",
+      "at": "2026-10-02T20:10:09+00:00"
+    },
+    {
+      "alert_id": "day3-048",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1134"
+      ],
+      "outcome": "benign",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "output"
+      ],
+      "verdict": "benign_noisy",
+      "triage_techniques": [],
+      "covering_rule_id": null,
+      "rulegen": null,
+      "rule_yaml": null,
+      "validation": null,
+      "validation_pending": false,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4c6bc6a03c5e6aec32cfec2150cbb7a5",
+      "at": "2026-10-02T20:10:36+00:00"
+    },
+    {
+      "alert_id": "day3-056",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1127.001"
+      ],
+      "outcome": "rule_passed",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "rule_gen",
+        "validate",
+        "output"
+      ],
+      "verdict": "true_positive",
+      "triage_techniques": [
+        "T1127.001"
+      ],
+      "covering_rule_id": null,
+      "rulegen": {
+        "title": "MSBuild Execution of Project File from Tasks Folder",
+        "technique_ids": [
+          "T1127.001"
+        ],
+        "schema_retries": 1,
+        "input_tokens": 7783,
+        "output_tokens": 1372,
+        "llm_calls": 2,
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      "rule_yaml": "title: MSBuild Execution of Project File from Tasks Folder\nid: 181069b1-c8a4-5db1-aa9d-e68795cb18ad\nstatus: experimental\ndescription: Detects MSBuild.exe executing a project file located in the Windows Tasks\n  folder (C:/Windows/Tasks or C:/Windows/System32/Tasks). This folder is globally\n  writable and commonly abused for defense evasion and execution via inline tasks\n  (T1127.001).\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-02'\ntags:\n- attack.t1127.001\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - MSBuild.exe\n    CommandLine|contains:\n    - Tasks\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate build scripts referencing project files in Tasks folder (unlikely)\nlevel: high\n",
+      "validation": {
+        "rule_id": "181069b1-c8a4-5db1-aa9d-e68795cb18ad",
+        "compiled": true,
+        "compile_errors": [],
+        "true_positives": 0,
+        "false_positives": 0,
+        "fp_rate": 0.0,
+        "failed_samples": [],
+        "feedback": "TP unknown: no held-out T1127.001 attack in process_creation outside the source capture (data gap, not a rule failure)\nbenign: fires on 0/22 benign_noisy events in process_creation\nnoise: 0/238 held-out pool events in process_creation fire"
+      },
+      "validation_pending": false,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8f0b278e158f449b8b82aee09006d99c",
+      "at": "2026-10-02T20:11:33+00:00"
+    },
+    {
+      "alert_id": "day3-070",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.003"
+      ],
+      "outcome": "rule_failed",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "rule_gen",
+        "validate",
+        "output"
+      ],
+      "verdict": "true_positive",
+      "triage_techniques": [
+        "T1059.003",
+        "T1204.002"
+      ],
+      "covering_rule_id": null,
+      "rulegen": {
+        "title": "Suspicious Desktop Executable Spawning Cmd to Execute Another Desktop Binary",
+        "technique_ids": [
+          "T1059.003",
+          "T1204.002"
+        ],
+        "schema_retries": 0,
+        "input_tokens": 3575,
+        "output_tokens": 1690,
+        "llm_calls": 1,
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      "rule_yaml": "title: Suspicious Desktop Executable Spawning Cmd to Execute Another Desktop Binary\nid: aa359567-e160-5c86-ae1d-f3a7a83275e0\nstatus: experimental\ndescription: Detects a non-standard executable in a user Desktop folder spawning cmd.exe\n  to execute another executable from Desktop, often with network arguments indicating\n  malicious payload execution.\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-02'\ntags:\n- attack.t1059.003\n- attack.t1204.002\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    ParentImage|contains:\n    - Desktop\n    Image|endswith:\n    - cmd.exe\n    CommandLine|contains:\n    - /c\n    - Desktop\n    - .exe\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate software installers or updaters running from Desktop\nlevel: high\n",
+      "validation": {
+        "rule_id": "aa359567-e160-5c86-ae1d-f3a7a83275e0",
+        "compiled": true,
+        "compile_errors": [],
+        "true_positives": 4,
+        "false_positives": 0,
+        "fp_rate": 0.0,
+        "failed_samples": [
+          {
+            "sample_id": "day3-054",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-054/sysmon-6a4fd1b04d394bc2",
+            "note": "held-out T1204.002 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-068",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-068/sysmon-45df3bb9ca01adcf",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-119",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-119/sysmon-675b133900ec672f",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          }
+        ],
+        "feedback": "TP: fires on 4/7 held-out T1059.003/T1204.002 attacks in process_creation; missed day3-054, day3-068, day3-119: compare their fields with the selection\nbenign: fires on 0/22 benign_noisy events in process_creation\nsiblings (info, not graded): fires on 0/11 same-parent attacks of another sub-technique\nnoise: 0/238 held-out pool events in process_creation fire"
+      },
+      "validation_pending": false,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0013a474557884a287023e5c0390aaa6",
+      "at": "2026-10-02T20:12:52+00:00"
+    }
+  ]
+}

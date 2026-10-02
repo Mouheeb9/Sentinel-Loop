@@ -101,3 +101,66 @@ changed. So the per-alert churn is ~13% of verdicts, and the aggregate noise is 
 - Two of the flipping alerts (day3-071, day3-095) are the ones BM25 "fixed": they are unstable,
   not fixed. Future triage changes must beat ~0.07 accuracy / ~0.05 F1 on dev to count, or be
   run twice.
+
+## Launch context: the parent -> child chain as a sentence (2026-09-29)
+
+Failure reading of the two BM25 runs: 6-7 of 8 failures were retrieval misses, and in the one
+prompt failure (day3-176) the right technique (T1569.002) was in the context but the model tagged
+the command (cmd/PowerShell) instead of how it was started (services.exe). The parent image and
+command line were already in the search query, but two file paths say nothing about the mechanism.
+
+Change (one idea, two places): `enrich.launch_context(event)` turns the parent -> child chain into
+one fixed sentence (services.exe = run as a service, w3wp.exe = web server worker, wmiprvse.exe =
+WMI, wsmprovhost.exe = WinRM, -Embedding / DcomLaunch = DCOM, Task Scheduler, Office parent).
+Fixed rules, no model call; services.exe only on its real System32 path (masquerading). It is
+put (1) at the start of the search query and (2) as a `LAUNCH CONTEXT` line in the prompt, plus
+one system-prompt rule: read the chain, the launch mechanism is often the primary technique.
+The run fingerprint now also hashes the user-message layout and the search query.
+
+Reach: 30 of 178 golden alerts get a context (16 TP, 14 benign_noisy, so it must not push
+benign service/DCOM/task activity to true_positive). On dev: day3-095 (w3wp -> T1190),
+day3-176 (services.exe -> T1569.002), day3-165 (benign, DCOM: watch for a false positive).
+
+Retrieval (deterministic, `results/retrieval/before-launch-dev.json` -> `launch-context-dev.json`):
+
+| Task | R@5 | R@10 | MRR | NDCG@5 |
+|---|---|---|---|---|
+| alert->attack | .60 -> **.65** | .65 -> .70 | .34 -> **.43** | .40 -> .48 |
+| alert->sigma | .70 -> **.75** | .75 -> .75 | .52 -> .56 | .31 -> .33 |
+| text / command / fields tasks | unchanged | | | |
+
+Triage (dev, run twice, must beat ~0.05 F1 / ~0.07 accuracy over rag+BM25 0.90 / 0.62 and 0.59):
+
+| Run | Accuracy | Technique F1 | Exact primary | Hallucinated-IOC rate |
+|---|---|---|---|---|
+| rag + BM25 (`bm25/`, `bm25-repeat/`) | 0.90 / 0.90 | 0.62 / 0.59 | 0.60 / 0.55 | 0.12 / 0.16 |
+| + launch context (`launch-context/`, `launch-context-repeat/`) | 0.90 / 0.93 | 0.63 / 0.57 | 0.65 / 0.60 | 0.16 / 0.11 |
+
+Averages: accuracy 0.90 -> 0.92, F1 0.61 -> 0.60, exact primary 0.58 -> 0.63, IOC 0.14 -> 0.14.
+All within noise, so the aggregate triage effect is not proven. The targeted alerts did change,
+the same way in both runs: day3-176 now gets T1569.002 (services.exe; before, T1059 in all runs),
+day3-095 gets T1505.003 (web shell: right mechanism family, gold is T1190, still no credit). No
+new false positive on benign alerts with a context (day3-165 stays benign_noisy in all 4 runs).
+Kept: deterministic retrieval gain (alert->attack MRR 0.34 -> 0.43), fixes the prompt failure it
+was aimed at, no harm measured.
+
+## Rule generation v0, end to end (2026-10-02, `results/rulegen-v0.json`)
+
+`uv run python -m evals.rulegen`: the first 5 dev attacks with no covering rule, full live
+pipeline (triage -> route -> rule_gen -> validate). No validator yet, so no rule can pass.
+
+| Alert | Triage | Outcome | Rule |
+|---|---|---|---|
+| day2-006 (T1685.001) | true_positive, right technique | rule_unvalidated | registry `...\Services\EventLog\Start` set to 4: clean, no filter this time |
+| day2-014 (T1059.005) | needs_review | no rule | - (the open label question) |
+| day3-048 (T1134) | benign_noisy (wrong) | no rule | - |
+| day3-056 (T1127.001) | true_positive, right technique | rule_unvalidated, 1 retry | MSBuild + "Tasks" in the command line (the self-check sent the first draft back) |
+| day3-070 (T1059.003) | true_positive | rule_unvalidated | cmd.exe from a Desktop program, command line contains "/c" OR "Desktop" OR ".exe" |
+
+Rules generated 3/5 (the other 2 stopped at triage, as designed), compile rate 3/3, all fire on
+their own alert. Validation pass rate and FP rate: pending Mouadh's validator
+(`--validate-only` will grade these rules with no new model calls).
+
+Seen in the rules: the model writes several values in one field as if they must ALL match, but
+Sigma ORs them (day3-070: any `cmd /c` launched from a Desktop program). Candidate fix: an `all`
+option on a field test (Sigma's `|all` modifier).
