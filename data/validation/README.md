@@ -28,7 +28,7 @@ Enforced by `tests/test_no_leakage.py`.
 | Set | Source | Graded? |
 |---|---|---|
 | **Positives** (must fire) | golden `true_positive` alerts (v1.1) with a technique the rule claims (a claimed parent covers its sub-techniques), same log source as the rule, **never from the source alert's capture** | yes: each miss is a `failed_sample` |
-| **Negatives** (must not fire) | golden `benign_noisy` alerts in the rule's log source | yes: each hit is a `failed_sample`, `fp_rate = hits / benign checked` |
+| **Negatives** (must not fire) | golden `benign_noisy` alerts + hand-checked background events (`tests/fixtures/sysmon/bg_*.json`), in the rule's log source | yes: each hit is a `failed_sample`, `fp_rate = hits / benign checked` |
 | **Noise check** | every Sysmon EID 1/3/13 event in the 44 held-out captures here (~10.8k events), same log source as the rule | no: reported in `feedback` only |
 
 Why positives come from golden and not from here: this pool has no event-level labels yet, so

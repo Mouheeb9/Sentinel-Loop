@@ -8,7 +8,8 @@ v0 corpus:
   (a claimed parent covers its sub-techniques), in the rule's log source, never from the capture
   the source alert came from (leakage rule: a rule can't prove itself on its own capture).
   Sibling sub-techniques (rule claims T1218.005, alert is T1218.011) are reported, not required.
-- Negatives (must not fire): golden benign_noisy alerts in the rule's log source.
+- Negatives (must not fire): golden benign_noisy alerts + the hand-checked background events
+  (tests/fixtures/sysmon/bg_*.json), in the rule's log source.
 - Noise check (reported, not graded): the held-out capture pool (data/validation/), about 10k
   unlabeled Sysmon events. Those captures contain attacks too, so a hit there is not a false
   positive, but hundreds of hits mean the rule is too broad. Skipped when data/raw/ is absent (CI).
@@ -40,6 +41,7 @@ GOLDEN_LABELS = ROOT / "data" / "golden" / "v1.1.jsonl"
 GOLDEN_ALERTS = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (2, 3)]
 POOL_LIST = ROOT / "data" / "validation" / "validation_datasets.txt"
 CAPTURES = ROOT / "data" / "raw" / "security-datasets"
+BACKGROUND = ROOT / "tests" / "fixtures" / "sysmon"  # hand-checked non-attack events (bg_*)
 
 # Sysmon EventIDs each rule_form category reads (the sysmon pipeline adds the same filter).
 CATEGORY_EVENT_IDS = {
@@ -179,6 +181,11 @@ def default_corpus() -> Corpus:
         if row["alert_id"] in alerts
         for e in alerts[row["alert_id"]].events
     ]
+    seen = {s.event.event_id for s in golden}
+    for path in sorted(BACKGROUND.glob("bg_*.json")):  # labeled background events (Day 2)
+        e = sysmon_to_event(json.loads(path.read_text(encoding="utf-8")))
+        if e and e.event_id not in seen:
+            golden.append(Sample(f"bg:{path.stem}", "benign_noisy", (), "background", e))
     pool, notes = _load_pool()
     return Corpus(golden=golden, pool=pool, notes=notes)
 
