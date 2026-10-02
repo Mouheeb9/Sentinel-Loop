@@ -37,6 +37,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import inspect
 import json
 import os
 import subprocess
@@ -51,9 +52,15 @@ from evals.eval_row import EvalRow
 from evals.scorers import AttackMap, score_all
 from evals.split import SPLITS, load_split
 from evals.triage_smoke import CANDIDATES, GOLDEN, load_golden, sample
+from sentinel.agents import enrich
 from sentinel.agents.enrich import K
 from sentinel.agents.routing import escalate_below
-from sentinel.agents.triage import CONTEXT_TEXT_CHARS, SYSTEM_PROMPT, TriageError
+from sentinel.agents.triage import (
+    CONTEXT_TEXT_CHARS,
+    SYSTEM_PROMPT,
+    TriageError,
+    build_user_message,
+)
 from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.llm import escalation_model_name, triage_model_name
 from sentinel.retrieval import search
@@ -80,7 +87,8 @@ DAILY_QUOTA_MARKERS = ("per-day", "per day")
 
 def prompt_hash(options: PipelineOptions) -> str:
     """Everything that shapes what the model is asked, hashed. Changes when the prompt, the
-    answer schema, the offered tools or the amount of retrieved context change."""
+    answer schema, the offered tools, the user-message layout, the search query or the amount
+    of retrieved context change."""
     tools = (
         {n: t.args_schema.model_json_schema() for n, t in sorted(ALLOWED_TOOLS.items())}
         if options.tools
@@ -92,6 +100,11 @@ def prompt_hash(options: PipelineOptions) -> str:
         "tools": tools,
         "retrieval_k": K if options.retrieval else 0,
         "context_chars": CONTEXT_TEXT_CHARS,
+        # the user message layout and the search query (incl. launch-context rules) are prompt too
+        "user_message": inspect.getsource(build_user_message),
+        "query": inspect.getsource(enrich.enrichment_query)
+        + inspect.getsource(enrich.launch_context)
+        + repr([text for _, text in enrich._LAUNCHERS]),
     }
     return _sha(json.dumps(material, sort_keys=True))[:12]
 
@@ -373,7 +386,7 @@ def render_chart(results: dict[str, dict], out: Path) -> Path:
     meta = next(iter(results.values()))["meta"]
     n = {c: results[c]["meta"]["alerts_run"] for c in configs}
     fig.suptitle(
-        f"Triage baseline on golden-v1 (n={', '.join(str(v) for v in n.values())})  "
+        f"Triage on golden-{GOLDEN.stem} (n={', '.join(str(v) for v in n.values())})  "
         f"model: {meta['tier1_model'].split(':', 1)[-1]}"
         + ("  [INCOMPLETE]" if not all(results[c]["meta"]["complete"] for c in configs) else ""),
         fontsize=10,

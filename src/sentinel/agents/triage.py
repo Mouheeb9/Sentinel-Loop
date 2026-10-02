@@ -33,6 +33,7 @@ from langchain_core.messages import (
 from langchain_core.runnables import RunnableConfig
 from pydantic import ValidationError
 
+from sentinel.agents.enrich import launch_context
 from sentinel.retrieval.search import Hit
 from sentinel.schemas import Alert, TriageVerdict
 from sentinel.tools import ALLOWED_TOOLS, check_allowed, lookup_targets, run_tool
@@ -63,6 +64,14 @@ context (MITRE ATT&CK techniques and existing Sigma rules retrieved for this ale
   primary technique first, then secondaries only if the event clearly shows another distinct
   technique. Use a sub-technique only when the evidence shows the exact mechanism; otherwise the
   parent. Empty list for benign_noisy. The reference context may be irrelevant: judge the event.
+  Read the process chain (parent -> child), not only the command line. How a process was
+  started is often the primary technique and the command it runs a secondary: a shell under
+  services.exe is service execution, under a web server worker (w3wp.exe) exploitation of a
+  public-facing application or a web shell, under wmiprvse.exe WMI, under wsmprovhost.exe
+  WinRM remoting, under an Office application a malicious document. Tag the interpreter
+  (cmd, PowerShell) as primary only when nothing more specific explains the event. A LAUNCH
+  CONTEXT line, when present, summarizes the chain; image names can be spoofed, so check it
+  against the paths.
 - confidence: 0 to 1, your probability that the verdict is correct.
 - reasoning: 1-3 sentences citing the specific field values that decided it.
 - evidence_refs: dot-paths to the fields you relied on, e.g. "events[0].process.command_line".
@@ -195,6 +204,8 @@ def build_user_message(alert: Alert, techniques: list[Hit], sigma_rules: list[Hi
     for i, event in enumerate(alert.events):
         trusted, untrusted = split_event(event.model_dump(mode="json"), event.untrusted_fields)
         sections += [f"## EVENT events[{i}] (trusted, normalized fields)", _json(trusted)]
+        if context := launch_context(event):
+            sections += [f"## LAUNCH CONTEXT events[{i}] (derived by fixed rules)", context]
         for path, value in untrusted.items():
             sections += [
                 f'<UNTRUSTED path="events[{i}].{path}">',

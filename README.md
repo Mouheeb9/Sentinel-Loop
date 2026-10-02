@@ -12,13 +12,30 @@ Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / 
 
 ## Status
 
-Week 2, Day 8 — golden-v1 frozen (150 alerts) and split into a dev set (30, used for tuning)
-and a sealed test set (30, run once at the end of Week 2); CI runs lint + tests on every PR.
-Baseline done on the dev split (n=30, golden-v1.1 labels): triage accuracy / technique F1 =
-single-prompt 0.87 / 0.42, rag 0.83 / 0.58, rag-tools 0.93 / 0.57 (`results/charts/baseline.png`;
-one alert = 0.033, so gaps under ~0.07 are noise). Retrieval now merges BM25 keyword search
-with the vector search: on real dev alerts the right technique is in the top 5 for 60% of
-attacks, up from 35% (`docs/experiments.md`). First attack-success rate: 20% (2/10).
+Week 2 (2026-10-02). Golden set: 150 alerts, all human-reviewed (golden-v1.1), split into a dev set
+(30, used for tuning) and a sealed test set (30, run once at the end). CI runs lint + tests on
+every PR; `main` is protected. Every change is measured on dev and logged in
+[`docs/experiments.md`](docs/experiments.md); failure analysis in
+[`docs/error-analysis-v1.md`](docs/error-analysis-v1.md).
+
+**Baseline** (dev, n=30, free model `nvidia/nemotron-3-super-120b-a12b`):
+
+![Triage baseline: single-prompt, rag, rag-tools](results/charts/baseline.png)
+
+**Since the baseline** (rag config; triage numbers are the average of two runs, because the same
+setup run twice moves accuracy by ~0.03-0.07 and F1 by ~0.03):
+
+| Setup | Right technique in search top 5 | Triage accuracy | Technique F1 |
+|---|---|---|---|
+| rag, vector search (baseline) | 35% | 0.83 | 0.58 |
+| + BM25 keyword search | 60% | 0.90 | 0.61 |
+| + launch context (parent -> child chain as a sentence) | **65%** | **0.92** | 0.60 |
+
+The search gain is solid (deterministic test, no model involved). The triage gain points the same
+way but is within run-to-run noise on 30 alerts; the sealed test split gives the final number.
+Tried and dropped: smaller technique chunks, two security embedding models (SecEmbed), a security
+reranker (SecReranker). Prompt-injection attack success rate on the unhardened agent: 20% (2/10;
+the 40-payload corpus is ready, live run pending).
 
 ## Golden dataset: how we measured labeling quality
 
