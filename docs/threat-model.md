@@ -75,8 +75,6 @@ To cover in Week 2/4: treat retrieved and enrichment text with the same spotligh
 
 ## Model output that becomes code: generated Sigma rules (Day 12)
 
-*Draft by Mouheb, for Mouadh to review.*
-
 From Day 12, `agents/rule_gen.py` writes a Sigma rule for an attack no existing rule catches. A
 rule is code: it decides what the SOC sees. And it is built from **attacker-written values**: the
 command line, image path and registry key of the attack itself. This is OWASP **LLM05**
@@ -112,21 +110,30 @@ command line, image path and registry key of the attack itself. This is OWASP **
 - **Rules only run inside the matcher:** an in-memory SQLite table, nothing written, no network.
   A generated rule is never deployed by the pipeline; it goes into a PR behind the eval gate
   (Week 3). (RG-6)
+- **Validator** (`validation/validate.py`, Day 12): held-out positives of the claimed technique
+  (never from the source alert's capture), golden benign events, and a noise count over ~10.8k
+  unlabeled held-out events. Its feedback names alert ids and rule fields, never event values, so
+  the repair loop can't be injected through it. It also lints the rule: a filter on `Image`,
+  `ParentImage` or `OriginalFileName` is flagged (RG-3), and `/` path values in non-path fields
+  are flagged as dead (they never match Sysmon's `\`). (RG-3 partly, RG-5)
+- **Leakage test:** `tests/test_no_leakage.py` grades a match-everything rule for every golden
+  attack and checks that no positive comes from the source capture.
 
 ### What is still open
 
-- **RG-3, filters as an evasion path.** Seen on the first live rule (day2-006): the model added
-  "unless Image ends with services.exe / svchost.exe". The validator should flag filters on
-  generic Windows processes, and the threat model should list which filter values are never
-  acceptable. Owner: Mouadh (validator), Mouheb (form check).
-- **RG-5, over-broad or over-narrow rules.** Seen on day3-056: one OR'ed value (`.xml`) made the
-  rule fire on any MSBuild run with an XML file. Only the validator's FP count on the benign
-  corpus and TP count on held-out attacks can measure this.
+- **RG-3, filters as an evasion path.** Seen on day2-006 ("unless Image ends with services.exe /
+  svchost.exe"). The validator flags it, but only as feedback: the rule can still pass. Decide in
+  Week 3 whether `rule_form` should refuse filters on process names outright. Owner: Mouheb (form),
+  Mouadh (list of never-acceptable filter values).
+- **RG-5, over-broad or over-narrow rules.** Seen on day3-056 (an OR'ed `.xml`). Now measured, but
+  weakly: about 20-50 benign events per log source, and many techniques have no held-out positive
+  ("TP unknown", the rule then passes on negatives alone). Event-level labels for the held-out
+  pool (Week 3) fix both.
 - **RG-3, retrieved Sigma rules are shown as style examples.** Their text comes from SigmaHQ
   contributors (see the table above): a poisoned community rule could steer generation.
   Spotlighting in Week 4.
-- **Leakage:** the alert a rule was written from must never be the only positive the validator
-  counts (`tests/test_no_leakage.py`, Day 12 validator task).
+- **Feedback quoting.** The repair loop (Week 3) will need the missed events' values to fix a rule;
+  it must fetch them through `failed_samples[].event_ref` and quote them in `<UNTRUSTED>` blocks.
 
 ## Not covered yet
 
@@ -140,4 +147,5 @@ Linux auditd, AWS CloudTrail, and AWS GuardDuty aren't normalized yet — out of
 |---|---|---|
 | 2026-09-20 | Added `raw.*`, `process.parent.image`, `process.pid`, `network.protocol` rows; reclassified `user` and `host` as attacker-influenced; replaced vague lengths with Windows limits; added the non-telemetry inputs section | Review found the Sysmon table incomplete: `raw` carries attacker-set PE metadata, and account and host names can be set by an attacker after compromise |
 | 2026-09-20 | Added `registry.target_object` to `config/untrusted_fields.yaml` (event 13) | The doc marked it ⚠️ but the config, which the code reads, did not; they now agree |
-| 2026-10-02 | Added "Model output that becomes code: generated Sigma rules" (RG-1..RG-6, controls in place, open items) | Day 12 rule generation builds rules from attacker-written values; draft by Mouheb, to review by Mouadh |
+| 2026-10-02 | Added "Model output that becomes code: generated Sigma rules" (RG-1..RG-6, controls in place, open items) | Day 12 rule generation builds rules from attacker-written values; drafted by Mouheb, reviewed by Mouadh |
+| 2026-10-03 | Validator and leakage test added to controls; RG-3/RG-5 open items narrowed to what the validator still can't decide; feedback-quoting item added | Day 12 validator landed |

@@ -70,18 +70,28 @@ def _compile(rule_yaml: str) -> tuple[list[str], set[str]]:
 
 
 def _load(events: list[Event], rule_fields: set[str]) -> sqlite3.Connection:
-    columns = sorted({k for e in events for k in e.raw} | rule_fields | {"EventID"})
-    columns = [c for c in columns if c != _ID_COLUMN]
+    # SQLite column names are case-insensitive, and logs spell some fields both ways (ProcessId
+    # in one event, ProcessID in another): one column per lowercased name, fed by every spelling.
+    spellings: dict[str, list[str]] = {}
+    for k in sorted({k for e in events for k in e.raw} | rule_fields | {"EventID"}):
+        if k.lower() != _ID_COLUMN:
+            spellings.setdefault(k.lower(), []).append(k)
+    columns = list(spellings.values())
     db = sqlite3.connect(":memory:")
     db.create_function("regexp", 2, _regexp, deterministic=True)
-    defs = ", ".join(f"{_quote(c)} TEXT COLLATE NOCASE" for c in [_ID_COLUMN, *columns])
+    names = [_ID_COLUMN, *(keys[0] for keys in columns)]
+    defs = ", ".join(f"{_quote(c)} TEXT COLLATE NOCASE" for c in names)
     db.execute(f"CREATE TABLE {_TABLE} ({defs})")
-    placeholders = ", ".join("?" for _ in range(len(columns) + 1))
+    placeholders = ", ".join("?" for _ in names)
     db.executemany(
         f"INSERT INTO {_TABLE} VALUES ({placeholders})",
-        [[e.event_id, *(_text(e.raw.get(c)) for c in columns)] for e in events],
+        [[e.event_id, *(_first(e.raw, keys) for keys in columns)] for e in events],
     )
     return db
+
+
+def _first(raw: dict[str, Any], keys: list[str]) -> str | None:
+    return next((_text(raw[k]) for k in keys if raw.get(k) is not None), None)
 
 
 def _quote(name: str) -> str:

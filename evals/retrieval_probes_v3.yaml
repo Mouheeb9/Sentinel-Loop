@@ -1,0 +1,178 @@
+# Retrieval probe set v3 — written from real golden alert behaviour (Day 11 task).
+#
+# v1 (ATT&CK knowledge) and v2 (held out for the lexical leg) are SPENT: both were tuned against.
+# v3 is written the other way round: each query describes what one real golden alert shows, in
+# the words an analyst would use, not ATT&CK text. `source` is that alert; `expected` is its
+# golden-v1.1 label (human-reviewed by Mouadh).
+#
+# Leakage rules:
+#   - Sources come only from golden true_positive alerts in NEITHER split-v1 dev NOR test, so
+#     tuning retrieval on v3 can't leak into the triage dev/test numbers.
+#   - No query repeats a v1/v2 behaviour (lsass handle dump, Run key, ntdsutil, netsh firewall,
+#     bitsadmin, net user /add, remote mshta were skipped for that reason).
+#
+# Status: drafted 2026-10-03 by Mouadh with Claude. Reviewed against source events: v3-06 reworded
+# (task is created ON the remote host), v3-24 / v3-25 cut to what the event shows (the ms-settings
+# write and cmstp /au were context from the label rationale, not in the event). NOTHING was run on
+# it before freezing. Do not edit queries or expected IDs; a wrong probe gets a dated note below.
+#
+# FROZEN: 2026-10-03 (sha256 in retrieval_probes_v3.sha256)
+#
+# Scoring rules (pre-registered, same as v1/v2):
+#   primary   recall@5, technique chunks only, exact ID match.
+#   lenient   recall@5, technique chunks only, parent/child counts (T1218 <-> T1218.010).
+#   mixed     recall@5 over technique + Sigma chunks, a Sigma rule counts through its tags.
+# Tags: id = names a tool or a literal command; behaviour = describes what happens without the
+# telling keyword; multi = two techniques are both correct.
+
+probes:
+  - id: v3-01
+    source: day2-003
+    query: rundll32 loads comsvcs.dll and calls MiniDump on a process id, writing a .dmp file to the user's temp folder
+    expected: [T1003.001]
+    tag: id
+  - id: v3-02
+    source: day2-004
+    query: esentutl copies the SAM file from the config folder using the volume shadow copy option and writes it to ProgramData
+    expected: [T1003.002]
+    tag: id
+  - id: v3-03
+    source: day3-131
+    query: A process started by the PsExec service saves the HKLM security policy secrets hive to a file in temp
+    expected: [T1003.004]
+    tag: behaviour
+  - id: v3-04
+    source: day3-105
+    query: A program on the user's desktop is given a remote IP address and an .xll file path, so Excel on the other machine loads the add-in
+    expected: [T1021.003, T1137.006]
+    tag: multi
+  - id: v3-05
+    source: day3-125
+    query: An unknown executable in System32 is started with WmiPrvSE.exe as its parent process
+    expected: [T1047]
+    tag: behaviour
+  - id: v3-06
+    source: day3-159
+    query: schtasks creates a task on a remote workstation that runs cmd.exe at startup as SYSTEM, under a name that imitates a built-in Windows task
+    expected: [T1053.005]
+    tag: behaviour
+  - id: v3-07
+    source: day3-122
+    query: A tool takes mimikatz.exe, a target file name and a legitimate program path, so the running process differs from the file left on disk
+    expected: [T1055]
+    tag: behaviour
+  - id: v3-08
+    source: day3-108
+    query: regsvr32.exe is the parent of a hidden PowerShell process with -noP -sta -w 1 -enc and a base64 payload
+    expected: [T1059.001]
+    tag: id
+  - id: v3-09
+    source: day3-144
+    query: wsmprovhost.exe starts a hidden PowerShell that decompresses and runs an in-memory script
+    expected: [T1059.001, T1021.006]
+    tag: multi
+  - id: v3-10
+    source: day3-068
+    query: The HTML Help viewer hh.exe spawns cmd.exe /c to start another program
+    expected: [T1059.003]
+    tag: behaviour
+  - id: v3-11
+    source: day2-009
+    query: A standard domain user runs net localgroup Administrators from PowerShell
+    expected: [T1069.001]
+    tag: id
+  - id: v3-12
+    source: day3-110
+    query: An executable in ProgramData reads the access control entries of the Domain Admins group with Get-ObjectAcl
+    expected: [T1069.002]
+    tag: id
+  - id: v3-13
+    source: day3-149
+    query: PowerShell writes the NtlmMinClientSec value under the Lsa MSV1_0 registry key, weakening NTLM session security
+    expected: [T1112]
+    tag: id
+  - id: v3-14
+    source: day3-163
+    query: A binary in C:\TMP creates a named pipe called msagent_ followed by hex characters
+    expected: [T1134]
+    tag: id
+  - id: v3-15
+    source: day3-041
+    query: python runs a public proof-of-concept script against localhost with an Exchange mailbox address as argument
+    expected: [T1190]
+    tag: behaviour
+  - id: v3-16
+    source: day3-120
+    query: wuauclt.exe is run with /UpdateDeploymentProvider pointing at a DLL in ProgramData and /RunHandlerComServer
+    expected: [T1218]
+    tag: id
+  - id: v3-17
+    source: day3-146
+    query: Register-CimProvider.exe from SysWOW64 is given -Path to a DLL in ProgramData
+    expected: [T1218]
+    tag: id
+  - id: v3-18
+    source: day3-075
+    query: InstallUtil.exe with /u and logging turned off runs a .NET DLL stored in ProgramData
+    expected: [T1218.004]
+    tag: id
+  - id: v3-19
+    source: day3-148
+    query: mshta is given inline vbscript that creates a Wscript.Shell object and runs a PowerShell command
+    expected: [T1218.005]
+    tag: id
+  - id: v3-20
+    source: day3-140
+    query: regsvr32 /s /n /u /i with an http URL to a .sct file and scrobj.dll
+    expected: [T1218.010]
+    tag: id
+  - id: v3-21
+    source: day3-171
+    query: regsvr32.exe opens an outbound network connection to an internal address on an unusual high port
+    expected: [T1218.010]
+    tag: behaviour
+  - id: v3-22
+    source: day3-175
+    query: sc config changes the binPath of the existing Fax service to a PowerShell command line
+    expected: [T1543.003]
+    tag: id
+  - id: v3-23
+    source: day3-069
+    query: scrcons.exe -Embedding is started by svchost.exe
+    expected: [T1546.003]
+    tag: id
+  - id: v3-24
+    source: day3-102
+    query: PowerShell starts fodhelper.exe with no arguments
+    expected: [T1548.002]
+    tag: behaviour
+  - id: v3-25
+    source: day3-161
+    query: dllhost.exe spawns cmd.exe with no command-line arguments
+    expected: [T1548.002]
+    tag: behaviour
+  - id: v3-26
+    source: day3-107
+    query: Rubeus asktgt with a user name and an RC4 hash and /createnetonly to start cmd.exe
+    expected: [T1550]
+    tag: id
+  - id: v3-27
+    source: day3-155
+    query: PSEXESVC.exe is started by services.exe
+    expected: [T1569.002]
+    tag: id
+  - id: v3-28
+    source: day3-043
+    query: reg add sets ProcessCreationIncludeCmdLine_Enabled to 0 under the Policies System Audit key
+    expected: [T1685.001]
+    tag: id
+  - id: v3-29
+    source: day3-060
+    query: A program from the Downloads folder runs auditpol to disable success auditing for one category and one user
+    expected: [T1685.001]
+    tag: behaviour
+  - id: v3-30
+    source: day3-063
+    query: reg add creates a MiniNt key under ControlSet001 Control
+    expected: [T1685.001]
+    tag: id

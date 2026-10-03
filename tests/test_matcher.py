@@ -147,3 +147,15 @@ def test_broken_rule_raises_value_error(broken):
 
 def test_no_events_is_empty():
     assert match(COMSVCS_RULE, []) == []
+
+
+def test_field_spelled_two_ways_across_events():
+    # Logs spell some fields both ways (ProcessId / ProcessID); SQLite column names are
+    # case-insensitive, so they share one column instead of crashing the table build.
+    a = _event("a", EventID=1, ProcessId="4", Image=r"C:\Windows\System32\rundll32.exe")
+    b = _event("b", EventID=1, ProcessID="7", Image=r"C:\Windows\System32\notepad.exe")
+    rule = COMSVCS_RULE.replace(
+        "condition: (selection_img and 1 of selection_cli_*) or selection_generic",
+        "condition: selection_img",
+    )
+    assert match(rule, [a, b]) == ["a"]

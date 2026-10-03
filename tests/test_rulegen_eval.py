@@ -75,9 +75,13 @@ def test_regrade_uses_the_validator_without_model_calls(monkeypatch):
     assert row["outcome"] == "rule_passed" and row["validation_pending"] is False
 
 
-def test_regrade_keeps_rows_while_no_validator_exists():
+def test_regrade_keeps_rows_while_no_validator_exists(monkeypatch):
+    def not_implemented(*args):
+        raise NotImplementedError("validator not implemented yet")
+
+    monkeypatch.setattr(rg.validate_module, "validate", not_implemented)
     row = _row("rule_unvalidated")
-    assert rg.regrade(row, alert=None) == row  # the real validate() still raises
+    assert rg.regrade(row, alert=None) == row
 
 
 def test_resume_skips_finished_alerts(tmp_path, monkeypatch):

@@ -1,7 +1,7 @@
 # Error analysis v1 (Day 9, written 2026-10-02)
 
-**Status: draft by Mouheb (with Claude). Mouadh to confirm the buckets, especially the two marked
-"label question".**
+**Status: written by Mouheb (with Claude); buckets confirmed by Mouadh 2026-10-03 (day2-014 label
+kept, day3-113 / day3-151 kept).**
 
 Source: the baseline runs on the dev split (30 alerts, `results/single-prompt.json`, `rag.json`,
 `rag-tools.json`), read with `uv run python -m evals.failures`. Labels: golden-v1.1. Each failure
@@ -65,6 +65,9 @@ None: every run produced a valid verdict.
   "tag what the event shows, not what the tool is known for" (the name "launcher" hints at Empire,
   the event shows a script run). Either the label should be needs_review, or the guide needs an
   exception for script files run from user folders.
+  **Decision (Mouadh, 2026-10-03): keep true_positive T1059.005.** The model's needs_review stays a
+  failure (read it as a reasoning error from here on). The labeling guide's tie-break rule 3
+  now has the matching exception (script host + user-writable folder -> true_positive).
 - **day3-113 / day3-151** (counted as retrieval misses above): the model's T1003 is what mimikatz
   is known for, but the command line shows the Zerologon exploit, so T1210 matches the guide's
   "wrapper event" rule. Keep the label; noted only because the model's answer is defensible.
@@ -84,7 +87,7 @@ None: every run produced a valid verdict.
 |---|---|---|---|
 | Retrieval miss | 5 | 6 | day3-071, day3-166 (DCOM), day3-113, day3-151 (Zerologon), day3-048 (pipe name), day3-145 in run 2 |
 | Reasoning error | 1 | 1 | day3-095: T1190 is now in the context, the model chose T1505.003 (web shell): close, no credit |
-| Label question | 1 | 1 | day2-014 (see above) |
+| Label question | 1 | 1 | day2-014 (see above; label kept 2026-10-03, now a reasoning error) |
 
 Fixed since baseline: day3-176 (service execution), day2-006 (new ATT&CK ID), day2-031 (benign
 task cache, both runs).

@@ -65,9 +65,13 @@ def _with_rule() -> dict:
     return _state() | nodes.rule_gen_live(_state(), _config(model))
 
 
+def _not_implemented(*args):
+    raise NotImplementedError("validator not implemented yet")
+
+
 def test_without_a_validator_the_rule_is_unvalidated_never_passed():
     state = _with_rule()
-    state |= nodes.validate_live(state, _config())  # the real validate() is still a stub
+    state |= nodes.validate_live(state, _config(validator=_not_implemented))
     assert state["validation_pending"] is True
     assert "NOT VALIDATED" in state["validations"][0].feedback
     assert build.after_validate(state) == "output"
