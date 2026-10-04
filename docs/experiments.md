@@ -209,3 +209,24 @@ rule generalizes beyond its own capture, a fingerprint gets 0.
 rulegen-v0 pass rate 1/3 -> 2/3. Known gap: "none to test" (day3-056) passes on the benign side
 alone; the benign set is small (golden benign_noisy + background), so the pool noise line is the
 only breadth signal there.
+
+## 2026-10-04: first live end-to-end run (Day 13 checkpoint)
+
+`uv run python -m sentinel.run --alert data/raw/e2e/day3-071.json --config-name e2e-day13`
+(day3-071 = dev TP, DCOM lateral movement via MoveExcel4.exe, label T1021.003, no existing rule
+covers it; alert JSON exported to gitignored data/raw/e2e/). ~5 requests.
+
+Path ingest -> enrich -> triage -> route -> rule_gen -> validate -> output: every node ran live.
+
+- **triage:** true_positive (right), but T1059.003/T1204.002 (wrong: label T1021.003; the known
+  DCOM retrieval miss). Tier 1 confidence .60 -> escalated to tier 2 (.75).
+- **rule_gen:** 1 self-check retry; rule = `Image|endswith MoveExcel4.exe` + user-profile path +
+  parent cmd.exe: a fingerprint of this tool name.
+- **validate:** 0/7 held-out attacks, 0/23 benign, 0/238 pool -> **rule_failed** (pass rule v1
+  works as intended: precise but does not generalize).
+
+**Lesson: technique errors propagate.** The validator grades a rule against held-out attacks of
+the technique *triage* claimed. Here triage's T1059.003 sent the rule to the wrong comparison set;
+a correct T1021.003 rule would be graded against DCOM attacks. Retrieval quality (Week 2 error
+analysis: 5-6 of 7-8 failures are retrieval misses) now limits rule quality too.
+Open: repair loop (Week 3) is still a stub (max_attempts=1), so a failed rule stops here.
