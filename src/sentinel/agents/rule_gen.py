@@ -53,7 +53,10 @@ Write a detection, not a fingerprint of this one event:
 - Do NOT match what changes every time: process IDs, user names, host names, IP addresses,
   random or temporary file names, timestamps, full user-profile paths.
 - Prefer `endswith` on Image (e.g. "/rundll32.exe") and `contains` on CommandLine keywords.
-  Use several keywords in one selection (all must match) to stay precise.
+  Several values in one field test match if ANY of them is present (OR). When every keyword
+  must be present, set all=true (e.g. CommandLine contains all of ["comsvcs", "MiniDump"]);
+  without it a common keyword like "/c" alone makes the rule fire almost everywhere.
+  Different field tests in one selection must all match (AND).
 - In the path fields ({", ".join(sorted(PATH_FIELDS))}) write every backslash as a forward
   slash: "HKLM/System/CurrentControlSet/Services/EventLog/Start". Code converts it back.
   In CommandLine, prefer keywords without backslashes (e.g. "comsvcs.dll", "MiniDump").
@@ -183,7 +186,8 @@ def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event]) -> str:
                 else "nothing (the event has no such field)"
             )
             misses.append(
-                f"selection {i}: {m.field} {m.match} {m.values} matches no event; "
+                f"selection {i}: {m.field} {m.match} {'all of ' if m.all else ''}{m.values} "
+                "matches no event; "
                 f"the event's {m.field} holds {held}"
             )
     if not misses:
@@ -204,7 +208,8 @@ def _item_matches(m: FieldMatch, event: Event) -> bool:
         "startswith": lambda v: a.startswith(v),
         "endswith": lambda v: a.endswith(v),
     }
-    return any(tests[m.match](v.lower()) for v in m.values)
+    combine = all if m.all else any
+    return combine(tests[m.match](v.lower()) for v in m.values)
 
 
 def _parse(response: AIMessage, category: str | None) -> tuple[RuleDraft | None, str]:

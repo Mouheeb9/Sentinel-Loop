@@ -9,7 +9,7 @@
       "day3-056",
       "day3-070"
     ],
-    "written_at": "2026-10-02T23:17:11+00:00"
+    "written_at": "2026-10-04T11:19:09+00:00"
   },
   "summary": {
     "alerts": 5,
@@ -18,13 +18,14 @@
     "generation_failures": 0,
     "compile_rate": 1.0,
     "validated": 3,
-    "validation_pass_rate": 0.3333333333333333,
+    "validation_pass_rate": 0.6666666666666666,
+    "median_recall": 0.2857142857142857,
     "median_fp_rate": 0.0,
     "outcomes": {
-      "rule_failed": 2,
+      "rule_failed": 1,
       "needs_review": 1,
       "benign": 1,
-      "rule_passed": 1
+      "rule_passed": 2
     },
     "schema_retries": 1
   },
@@ -82,7 +83,8 @@
       },
       "validation_pending": false,
       "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4d8c3e05e9550a9acfe390dacd46cd2c",
-      "at": "2026-10-02T20:08:59+00:00"
+      "at": "2026-10-02T20:08:59+00:00",
+      "recall": 0.0
     },
     {
       "alert_id": "day2-014",
@@ -179,7 +181,8 @@
       },
       "validation_pending": false,
       "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8f0b278e158f449b8b82aee09006d99c",
-      "at": "2026-10-02T20:11:33+00:00"
+      "at": "2026-10-02T20:11:33+00:00",
+      "recall": null
     },
     {
       "alert_id": "day3-070",
@@ -187,7 +190,7 @@
       "label_techniques": [
         "T1059.003"
       ],
-      "outcome": "rule_failed",
+      "outcome": "rule_passed",
       "path": [
         "ingest",
         "enrich",
@@ -250,7 +253,8 @@
       },
       "validation_pending": false,
       "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0013a474557884a287023e5c0390aaa6",
-      "at": "2026-10-02T20:12:52+00:00"
+      "at": "2026-10-02T20:12:52+00:00",
+      "recall": 0.5714285714285714
     }
   ]
 }

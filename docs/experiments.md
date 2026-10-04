@@ -164,3 +164,48 @@ their own alert. Validation pass rate and FP rate: pending Mouadh's validator
 Seen in the rules: the model writes several values in one field as if they must ALL match, but
 Sigma ORs them (day3-070: any `cmd /c` launched from a Desktop program). Candidate fix: an `all`
 option on a field test (Sigma's `|all` modifier).
+
+## 2026-10-04: rule_gen `all` flag (Sigma value lists are OR)
+
+**Problem (rulegen-v0, day3-070):** the model wrote `CommandLine|contains: [/c, Desktop, .exe]`
+meaning AND; Sigma ORs a value list, so any `cmd /c ...` matched. The system prompt itself said
+"several keywords in one selection (all must match)", which invited it. Second, silent bug: two
+items with the same field+match were merged by `_selection_yaml` into one OR list.
+
+**Change:** `FieldMatch.all` renders `|all` (AND); `equals` + `all` + several values refused; a
+field+match may appear once per selection; prompt explains OR vs `all=true`; self-check feedback
+says "all of". 5 new tests (real matcher: OR rule fires on `cmd.exe /c dir`, `all` rule does not).
+
+**Live (results/rulegen-v1-all.json, day3-070 only, 1 schema retry):** the model used
+`CommandLine|contains|all: [/c, MoveExcel4.exe]` + `ParentImage|endswith: GruntHTTP.exe`.
+Fixed the broadness, but swung to a fingerprint: TP 0/7 held-out same-technique attacks, FP 0/23,
+noise 0/238 (v0 rule: TP 4/7). One alert, so not a measurement, just a direction.
+
+**Next:** too broad vs too narrow is the job of the repair loop (Week 3): the validator feedback
+("fires on 0/7 held-out attacks") goes back to the model. Also the pass rule (Day 13) decides
+whether 0/7 TP with 0 FP is acceptable.
+
+## 2026-10-04: validator pass rule v1 (Day 13)
+
+**v0 rule (placeholder):** pass only if every held-out same-technique attack fires and no benign
+event does. Too strict: a narrow, correct rule (one launcher pattern) fails because other attacks
+labeled T1059.003 use a different launcher.
+
+**v1 (`nodes.rule_passed`, used by the graph and `evals/rulegen.py`):** compiles AND 0 benign hits
+AND (>=1 held-out same-technique attack fires, OR none exists to test). Recall
+(`nodes.rule_recall` = TP / held-out positives) is reported per row and as `median_recall`, not
+required. Rationale: in a SOC a noisy rule costs more than a missed variant; one hit proves the
+rule generalizes beyond its own capture, a fingerprint gets 0.
+
+**Re-graded (no model calls):**
+
+| run | alert | v0 rule | v1 rule | TP / held-out | FP |
+|---|---|---|---|---|---|
+| rulegen-v0 | day2-006 | fail | fail | 0/1 | 0 |
+| rulegen-v0 | day3-056 | pass | pass | none to test | 0 |
+| rulegen-v0 | day3-070 | fail | **pass** | 4/7 (recall .57) | 0 |
+| rulegen-v1-all | day3-070 | fail | fail | 0/7 | 0 |
+
+rulegen-v0 pass rate 1/3 -> 2/3. Known gap: "none to test" (day3-056) passes on the benign side
+alone; the benign set is small (golden benign_noisy + background), so the pool noise line is the
+only breadth signal there.

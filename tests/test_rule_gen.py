@@ -160,3 +160,25 @@ def test_a_rule_that_never_fires_twice_raises():
     model = ScriptedModel(replies=[_call(broken), _call(broken)], seen=[])
     with pytest.raises(RuleGenError, match="does not fire"):
         generate_rule(_alert(), VERDICT, [], model)
+
+
+def test_all_values_rule_that_misses_its_alert_names_the_and():
+    """With all=true one absent keyword is enough to miss; the feedback must say 'all of'."""
+    broken = VALID | {
+        "selections": [
+            {
+                "items": [
+                    {
+                        "field": "CommandLine",
+                        "match": "contains",
+                        "values": ["comsvcs", "procdump"],
+                        "all": True,
+                    }
+                ]
+            }
+        ]
+    }
+    model = ScriptedModel(replies=[_call(broken), _call(VALID)], seen=[])
+    result = generate_rule(_alert(), VERDICT, [], model)
+    assert result.schema_retries == 1
+    assert "all of ['comsvcs', 'procdump']" in model.seen[1][-1].content

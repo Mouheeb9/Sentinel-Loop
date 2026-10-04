@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import pytest
 from langchain_core.messages import AIMessage
 
 from sentinel.graph import build, nodes
@@ -94,3 +95,39 @@ def test_validator_verdicts_drive_the_outcome():
     state |= nodes.validate_live(state, _config(validator=lambda *a: _result(False)))
     assert build.after_validate(state) == "output"  # max_attempts=1: no stub repair
     assert nodes.output(state)["outcome"] == "rule_failed"
+
+
+def _graded(tp: int, missed: int = 0, fp: int = 0, compiled: bool = True) -> ValidationResult:
+    def sample(sid: str, should_fire: bool) -> dict:
+        return {
+            "sample_id": sid,
+            "should_fire": should_fire,
+            "did_fire": not should_fire,
+            "event_ref": "e",
+        }
+
+    return ValidationResult(
+        rule_id="r",
+        compiled=compiled,
+        true_positives=tp,
+        false_positives=fp,
+        fp_rate=fp / 20,
+        failed_samples=[sample(f"m{i}", True) for i in range(missed)]
+        + [sample(f"b{i}", False) for i in range(fp)],
+        feedback="",
+    )
+
+
+@pytest.mark.parametrize(
+    "result, passed, recall",
+    [
+        (_graded(tp=4, missed=3), True, 4 / 7),  # Day 12 day3-070 v0: narrow but correct
+        (_graded(tp=0, missed=7), False, 0.0),  # day3-070 v1: a fingerprint of one event
+        (_graded(tp=0), True, None),  # no held-out attack of that technique: benign side only
+        (_graded(tp=5, fp=1), False, 1.0),  # any benign hit fails
+        (_graded(tp=1, compiled=False), False, 1.0),
+    ],
+)
+def test_pass_rule_needs_zero_fp_and_one_held_out_hit(result, passed, recall):
+    assert nodes.rule_passed(result) is passed
+    assert nodes.rule_recall(result) == recall

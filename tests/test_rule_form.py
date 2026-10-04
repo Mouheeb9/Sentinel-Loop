@@ -170,3 +170,54 @@ def test_forward_slashes_in_path_fields_become_backslashes():
     assert cmd.values == ["/c"]  # CommandLine keeps '/': it's a real switch character
     event = _event("e", Image=r"C:\Windows\System32\rundll32.exe", CommandLine="x /c y")
     assert match(render(draft), [event]) == ["e"]
+
+
+# Day 12 rulegen-v0, day3-070: the model wrote CommandLine contains ["/c", "Desktop", ".exe"]
+# meaning AND; Sigma reads a value list as OR, so any "cmd /c ..." matched.
+ATTACK = _event(
+    "attack",
+    Image=r"C:\Windows\System32\cmd.exe",
+    CommandLine=r'cmd.exe /c "C:\Users\bob\Desktop\payload.exe" 10.0.0.5 4444',
+)
+ADMIN = _event("admin", Image=r"C:\Windows\System32\cmd.exe", CommandLine="cmd.exe /c dir")
+
+
+def _cmd_rule(all_: bool) -> str:
+    item = {"field": "CommandLine", "match": "contains", "values": ["/c", "Desktop", ".exe"]}
+    if all_:
+        item["all"] = True
+    sel = [{"items": [{"field": "Image", "match": "endswith", "values": ["/cmd.exe"]}, item]}]
+    return render(_draft(selections=sel))
+
+
+def test_value_list_is_or_unless_all_is_set():
+    assert match(_cmd_rule(all_=False), [ATTACK, ADMIN]) == ["attack", "admin"]
+    rule = _cmd_rule(all_=True)
+    assert "CommandLine|contains|all" in yaml.safe_load(rule)["detection"]["selection1"]
+    assert match(rule, [ATTACK, ADMIN]) == ["attack"]
+
+
+def test_all_with_one_value_renders_no_modifier():
+    sel = [
+        {"items": [{"field": "Image", "match": "endswith", "values": ["/cmd.exe"], "all": True}]}
+    ]
+    assert (
+        "Image|endswith"
+        in yaml.safe_load(render(_draft(selections=sel)))["detection"]["selection1"]
+    )
+
+
+def test_equals_several_values_with_all_is_refused():
+    item = {"field": "Image", "match": "equals", "values": ["a.exe", "b.exe"], "all": True}
+    with pytest.raises(ValidationError, match="cannot equal several values"):
+        _draft(selections=[{"items": [item]}])
+
+
+def test_same_field_test_twice_in_a_selection_is_refused():
+    # Rendered as one YAML key, the two would silently become one OR list.
+    items = [
+        {"field": "CommandLine", "match": "contains", "values": ["comsvcs"]},
+        {"field": "CommandLine", "match": "contains", "values": ["MiniDump"]},
+    ]
+    with pytest.raises(ValidationError, match="more than once"):
+        _draft(selections=[{"items": items}])

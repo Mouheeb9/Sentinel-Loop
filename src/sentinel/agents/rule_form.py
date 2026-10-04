@@ -10,6 +10,9 @@ It fills a strict form; this module checks the form and renders the YAML:
 - every value is matched literally: Sigma wildcards (`*`, `?`) and the escape character in it
   are escaped, so a planted `*` can't widen the rule into "match everything";
 - values are single-line, bounded in length and count, and never empty;
+- several values in one field test mean ANY of them (Sigma's OR) unless `all` is set, which
+  renders the `|all` modifier (Sigma's AND); a field test may appear only once per selection,
+  since two would be silently merged into one OR list;
 - the condition is built by code from the selections and filters, never written by the model;
 - the YAML is produced with yaml.safe_dump, so no value can inject keys or structure.
 
@@ -67,7 +70,7 @@ RULE_NAMESPACE = uuid.UUID("5b1c4f0e-0c1e-4c55-9e57-5e7f1e0b0a11")  # for conten
 
 
 class FieldMatch(BaseModel):
-    """One field test. Several values = any of them (OR)."""
+    """One field test. Several values = any of them (OR), or all of them when `all` is set."""
 
     model_config = ConfigDict(extra="forbid")
 
@@ -78,6 +81,11 @@ class FieldMatch(BaseModel):
         max_length=10,
         description="matched literally; in path fields write the separator as / (code turns it "
         "into a backslash)",
+    )
+    all: bool = Field(
+        default=False,
+        description="false: the field matches if it has ANY of the values (OR); true: it must "
+        'have ALL of them (AND), e.g. CommandLine contains all of ["-enc", "-nop"]',
     )
 
     @field_validator("values")
@@ -95,6 +103,14 @@ class FieldMatch(BaseModel):
             out.append(v)
         return out
 
+    @model_validator(mode="after")
+    def _all_needs_a_partial_match(self) -> FieldMatch:
+        if self.all and self.match == "equals" and len(self.values) > 1:
+            raise ValueError(
+                "a field cannot equal several values at once: drop all, or use contains"
+            )
+        return self
+
 
 class Selection(BaseModel):
     """Field tests that must ALL be true (AND)."""
@@ -102,6 +118,16 @@ class Selection(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     items: list[FieldMatch] = Field(min_length=1, max_length=6)
+
+    @model_validator(mode="after")
+    def _one_test_per_field_and_match(self) -> Selection:
+        keys = [(m.field, m.match) for m in self.items]
+        if dupes := sorted({f"{f} {t}" for f, t in keys if keys.count((f, t)) > 1}):
+            raise ValueError(
+                f"{dupes} appear more than once in one selection: put the values in one item, "
+                "with all=true if every value must match"
+            )
+        return self
 
 
 class RuleDraft(BaseModel):
@@ -174,8 +200,9 @@ def _selection_yaml(sel: Selection) -> dict[str, list[str]]:
     out: dict[str, list[str]] = {}
     for m in sel.items:
         key = m.field if m.match == "equals" else f"{m.field}|{m.match}"
-        out.setdefault(key, [])
-        out[key] += [escape_value(v) for v in m.values]
+        if m.all and len(m.values) > 1:
+            key += "|all"
+        out[key] = [escape_value(v) for v in m.values]  # one item per key (Selection validator)
     return out
 
 
