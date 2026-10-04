@@ -39,7 +39,7 @@ from dotenv import load_dotenv
 from evals.run import DAILY_QUOTA_MARKERS
 from evals.split import load_split
 from evals.triage_smoke import load_golden
-from sentinel.graph.nodes import StubScript
+from sentinel.graph.nodes import StubScript, rule_passed, rule_recall
 from sentinel.llm import rulegen_model_name
 from sentinel.run import default_owner, models_label, run_alert
 from sentinel.schemas import Alert
@@ -59,13 +59,13 @@ def uncovered_dev_attacks(n: int) -> list[str]:
     return sorted(a for a in dev if a in uncovered)[:n]
 
 
-def run_one(alert: Alert, trace: bool) -> dict[str, Any]:
+def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
     try:
         res = run_alert(
             alert,
             live=True,
             stub=StubScript(),
-            config_name=NAME,
+            config_name=name,
             owner=default_owner(),
             trace=trace,
         )
@@ -85,6 +85,7 @@ def run_one(alert: Alert, trace: bool) -> dict[str, Any]:
         if f.get("validations")
         else None,
         "validation_pending": bool(f.get("validation_pending")),
+        "recall": rule_recall(f["validations"][-1]) if f.get("validations") else None,
         "trace": res.trace_url,
     }
 
@@ -98,10 +99,11 @@ def regrade(row: dict[str, Any], alert: Alert) -> dict[str, Any]:
         result = validate_module.validate(row["rule_yaml"], alert, techniques)
     except NotImplementedError:
         return row
-    passed = result.compiled and not result.failed_samples and not result.compile_errors
+    passed = rule_passed(result)
     return row | {
         "validation": result.model_dump(mode="json"),
         "validation_pending": False,
+        "recall": rule_recall(result),
         "outcome": "rule_passed" if passed else "rule_failed",
     }
 
@@ -121,6 +123,11 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "validation_pass_rate": (
             sum(r["outcome"] == "rule_passed" for r in graded) / len(graded) if graded else None
         ),
+        "median_recall": (
+            statistics.median(recalls)
+            if (recalls := [r["recall"] for r in graded if r.get("recall") is not None])
+            else None
+        ),
         "median_fp_rate": (
             statistics.median(r["validation"]["fp_rate"] for r in graded) if graded else None
         ),
@@ -136,11 +143,14 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--no-trace", action="store_true")
     p.add_argument("--fresh", action="store_true", help="drop earlier rows")
     p.add_argument("--validate-only", action="store_true", help="re-grade stored rules only")
+    p.add_argument("--run", default=NAME, help=f"results name (default {NAME})")
+    p.add_argument("--ids", nargs="+", help="these alert ids instead of the first n uncovered")
     args = p.parse_args(argv)
+    name = args.run
 
     labels, alerts = load_golden()
-    ids = uncovered_dev_attacks(args.n)
-    rows_path = RESULTS / f"{NAME}.rows.jsonl"
+    ids = args.ids or uncovered_dev_attacks(args.n)
+    rows_path = RESULTS / f"{name}.rows.jsonl"
     done: dict[str, dict] = {}
     if rows_path.exists() and not args.fresh:
         for line in rows_path.read_text(encoding="utf-8").splitlines():
@@ -151,18 +161,18 @@ def main(argv: list[str] | None = None) -> None:
     if args.validate_only:
         done = {a: regrade(r, alerts[a]) for a, r in done.items()}
     else:
-        print(f"[{NAME}] {len(done)} done, {len([i for i in ids if i not in done])} to run")
+        print(f"[{name}] {len(done)} done, {len([i for i in ids if i not in done])} to run")
         for aid in ids:
             if aid in done:
                 continue
             lab = next(x for x in labels if x["alert_id"] == aid)
             row = {"alert_id": aid, "label": lab["label"], "label_techniques": lab["technique_ids"]}
-            row |= run_one(alerts[aid], trace=not args.no_trace) | {
+            row |= run_one(alerts[aid], trace=not args.no_trace, name=name) | {
                 "at": datetime.now(UTC).isoformat(timespec="seconds")
             }
             err = str(row.get("error", ""))
             title = (row.get("rulegen") or {}).get("title", "-")
-            print(f"[{NAME}] {aid:10} {row.get('outcome', 'ERR'):18} {title[:60]}")
+            print(f"[{name}] {aid:10} {row.get('outcome', 'ERR'):18} {title[:60]}")
             if err:
                 print(f"           {err[:160]}")
             if not err.startswith("transport"):
@@ -170,7 +180,7 @@ def main(argv: list[str] | None = None) -> None:
             with rows_path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(row, ensure_ascii=False) + "\n")
             if any(m in err for m in DAILY_QUOTA_MARKERS):
-                print(f"[{NAME}] daily quota hit: re-run tomorrow to resume")
+                print(f"[{name}] daily quota hit: re-run tomorrow to resume")
                 break
 
     rows = [done[a] for a in ids if a in done]
@@ -182,7 +192,7 @@ def main(argv: list[str] | None = None) -> None:
         "written_at": datetime.now(UTC).isoformat(timespec="seconds"),
     }
     summary = summarize(rows)
-    out = RESULTS / f"{NAME}.json"
+    out = RESULTS / f"{name}.json"
     out.write_text(
         json.dumps({"meta": meta, "summary": summary, "rows": rows}, indent=2, ensure_ascii=False)
         + "\n",

@@ -93,7 +93,7 @@ def test_resume_skips_finished_alerts(tmp_path, monkeypatch):
     monkeypatch.setattr(rg, "load_golden", lambda: (labels, {"a1": None, "a2": None}))
     calls = []
 
-    def fake_run(alert, trace):
+    def fake_run(alert, trace, name=None):
         calls.append(alert)
         return {"outcome": "rule_unvalidated", "rule_yaml": RULE, "rulegen": {"title": "t"}}
 

@@ -52,9 +52,26 @@ def _options(config: RunnableConfig | None) -> PipelineOptions:
     return (config or {}).get("configurable", {}).get("pipeline") or PipelineOptions()
 
 
+def held_out_positives(result: ValidationResult) -> int:
+    """Same-technique held-out attacks the rule was graded on (caught + missed)."""
+    return result.true_positives + sum(f.should_fire for f in result.failed_samples)
+
+
+def rule_recall(result: ValidationResult) -> float | None:
+    """Share of the held-out same-technique attacks the rule catches; None when there are none."""
+    n = held_out_positives(result)
+    return result.true_positives / n if n else None
+
+
 def rule_passed(result: ValidationResult) -> bool:
-    # Placeholder for the Week 3 gate (TP/FP thresholds): compiles and every sample behaved.
-    return result.compiled and not result.failed_samples and not result.compile_errors
+    """Pass rule v1 (Day 13): compiles, fires on NO benign sample, and catches at least one
+    held-out same-technique attack (or none exists to test). Recall is reported, not required:
+    v0 demanded every held-out attack fire, which failed narrow-but-correct rules on attacks
+    they were never meant to cover (a T1059.003 rule for one launcher vs. all cmd abuse). A
+    benign hit always fails: in a SOC a noisy rule costs more than a missed variant."""
+    if not result.compiled or result.compile_errors or result.false_positives:
+        return False
+    return result.true_positives >= 1 or held_out_positives(result) == 0
 
 
 def ingest(state: SentinelState) -> dict:

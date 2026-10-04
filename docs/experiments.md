@@ -164,3 +164,94 @@ their own alert. Validation pass rate and FP rate: pending Mouadh's validator
 Seen in the rules: the model writes several values in one field as if they must ALL match, but
 Sigma ORs them (day3-070: any `cmd /c` launched from a Desktop program). Candidate fix: an `all`
 option on a field test (Sigma's `|all` modifier).
+
+## 2026-10-04: rule_gen `all` flag (Sigma value lists are OR)
+
+**Problem (rulegen-v0, day3-070):** the model wrote `CommandLine|contains: [/c, Desktop, .exe]`
+meaning AND; Sigma ORs a value list, so any `cmd /c ...` matched. The system prompt itself said
+"several keywords in one selection (all must match)", which invited it. Second, silent bug: two
+items with the same field+match were merged by `_selection_yaml` into one OR list.
+
+**Change:** `FieldMatch.all` renders `|all` (AND); `equals` + `all` + several values refused; a
+field+match may appear once per selection; prompt explains OR vs `all=true`; self-check feedback
+says "all of". 5 new tests (real matcher: OR rule fires on `cmd.exe /c dir`, `all` rule does not).
+
+**Live (results/rulegen-v1-all.json, day3-070 only, 1 schema retry):** the model used
+`CommandLine|contains|all: [/c, MoveExcel4.exe]` + `ParentImage|endswith: GruntHTTP.exe`.
+Fixed the broadness, but swung to a fingerprint: TP 0/7 held-out same-technique attacks, FP 0/23,
+noise 0/238 (v0 rule: TP 4/7). One alert, so not a measurement, just a direction.
+
+**Next:** too broad vs too narrow is the job of the repair loop (Week 3): the validator feedback
+("fires on 0/7 held-out attacks") goes back to the model. Also the pass rule (Day 13) decides
+whether 0/7 TP with 0 FP is acceptable.
+
+## 2026-10-04: validator pass rule v1 (Day 13)
+
+**v0 rule (placeholder):** pass only if every held-out same-technique attack fires and no benign
+event does. Too strict: a narrow, correct rule (one launcher pattern) fails because other attacks
+labeled T1059.003 use a different launcher.
+
+**v1 (`nodes.rule_passed`, used by the graph and `evals/rulegen.py`):** compiles AND 0 benign hits
+AND (>=1 held-out same-technique attack fires, OR none exists to test). Recall
+(`nodes.rule_recall` = TP / held-out positives) is reported per row and as `median_recall`, not
+required. Rationale: in a SOC a noisy rule costs more than a missed variant; one hit proves the
+rule generalizes beyond its own capture, a fingerprint gets 0.
+
+**Re-graded (no model calls):**
+
+| run | alert | v0 rule | v1 rule | TP / held-out | FP |
+|---|---|---|---|---|---|
+| rulegen-v0 | day2-006 | fail | fail | 0/1 | 0 |
+| rulegen-v0 | day3-056 | pass | pass | none to test | 0 |
+| rulegen-v0 | day3-070 | fail | **pass** | 4/7 (recall .57) | 0 |
+| rulegen-v1-all | day3-070 | fail | fail | 0/7 | 0 |
+
+rulegen-v0 pass rate 1/3 -> 2/3. Known gap: "none to test" (day3-056) passes on the benign side
+alone; the benign set is small (golden benign_noisy + background), so the pool noise line is the
+only breadth signal there.
+
+## 2026-10-04: first live end-to-end run (Day 13 checkpoint)
+
+`uv run python -m sentinel.run --alert data/raw/e2e/day3-071.json --config-name e2e-day13`
+(day3-071 = dev TP, DCOM lateral movement via MoveExcel4.exe, label T1021.003, no existing rule
+covers it; alert JSON exported to gitignored data/raw/e2e/). ~5 requests.
+
+Path ingest -> enrich -> triage -> route -> rule_gen -> validate -> output: every node ran live.
+
+- **triage:** true_positive (right), but T1059.003/T1204.002 (wrong: label T1021.003; the known
+  DCOM retrieval miss). Tier 1 confidence .60 -> escalated to tier 2 (.75).
+- **rule_gen:** 1 self-check retry; rule = `Image|endswith MoveExcel4.exe` + user-profile path +
+  parent cmd.exe: a fingerprint of this tool name.
+- **validate:** 0/7 held-out attacks, 0/23 benign, 0/238 pool -> **rule_failed** (pass rule v1
+  works as intended: precise but does not generalize).
+
+**Lesson: technique errors propagate.** The validator grades a rule against held-out attacks of
+the technique *triage* claimed. Here triage's T1059.003 sent the rule to the wrong comparison set;
+a correct T1021.003 rule would be graded against DCOM attacks. Retrieval quality (Week 2 error
+analysis: 5-6 of 7-8 failures are retrieval misses) now limits rule quality too.
+Open: repair loop (Week 3) is still a stub (max_attempts=1), so a failed rule stops here.
+
+## 2026-10-04: rulegen-v0 rule review (Day 13 read-out)
+
+Every rulegen-v0 row, graded with pass rule v1. Cause = generator (bad rule logic), validator
+(wrong verdict), data (corpus can't judge the rule) or triage (no rule was generated).
+DRAFT: Mouheb + Mouadh to confirm.
+
+| alert | rule (detection) | v1 verdict | cause | why |
+|---|---|---|---|---|
+| day2-006 (T1685.001) | `TargetObject` ends with `Services\EventLog\Start` AND `Details` contains `DWORD (0x00000004)` (EventLog service set to disabled) | fail (0/1 held-out, 0 FP) | **data** (validator verdict too harsh) | Rule is precise and sound. The only held-out T1685.001 attack, day3-053, is a different procedure (sets `...\Audit\ProcessCreationIncludeCmdLine_Enabled` to 0: turns off command-line logging). No rule for one procedure catches the other. 1 hit in 9,779 pool events. |
+| day2-014 (T1059.005) | none | needs_review | **triage** | Triage stopped at needs_review (wscript + .vbs; label kept TP by Mouadh, guide rule 3 exception added 2026-10-03). |
+| day3-048 (T1134) | none | benign | **triage** | Triage said benign (wrong): a missed attack, no rule attempted. |
+| day3-056 (T1127.001) | `Image` ends with `MSBuild.exe` AND `CommandLine` contains `Tasks` | pass (no held-out positive, 0 FP) | **data** | No other T1127.001 attack outside the source capture, so recall can't be measured; passes on the benign side only. `Tasks` is a weak keyword (a project path), a likely FP source in real networks. |
+| day3-070 (T1059.003) | `ParentImage` contains `Desktop` AND `Image` ends with `cmd.exe` AND `CommandLine` contains any of `/c`, `Desktop`, `.exe` | pass (4/7, recall .57, 0 FP) | **generator** (partial) | The value list was meant as AND (fixed today: `all` flag). The 3 misses are other procedures, not rule errors: day3-054 launcher.exe from explorer, day3-068 cmd from hh.exe, day3-119 cmd from mshta.exe. |
+
+**Summary:** 5 alerts → 3 rules, 3/3 compile, 2/3 pass, 0 benign hits. Of 5: 2 triage, 2 data,
+1 generator (partial). No validator bug found; one verdict judged too harsh (day2-006).
+
+**Follow-ups (Week 3):**
+1. **Procedure-level positives:** grade against held-out attacks of the same *procedure*, not only
+   the same technique (T1685.001 covers several ways to impair logging). Until then, a fail with
+   ≤1 held-out positive is reported as low-evidence, not as a real failure.
+2. **Benign set too small to catch broad rules** (day3-070's OR list fired on 0 benign events):
+   add benign `cmd /c` and MSBuild events.
+3. **Triage before rules:** 2/5 rule attempts were lost to triage errors.
