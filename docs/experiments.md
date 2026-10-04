@@ -230,3 +230,28 @@ the technique *triage* claimed. Here triage's T1059.003 sent the rule to the wro
 a correct T1021.003 rule would be graded against DCOM attacks. Retrieval quality (Week 2 error
 analysis: 5-6 of 7-8 failures are retrieval misses) now limits rule quality too.
 Open: repair loop (Week 3) is still a stub (max_attempts=1), so a failed rule stops here.
+
+## 2026-10-04: rulegen-v0 rule review (Day 13 read-out)
+
+Every rulegen-v0 row, graded with pass rule v1. Cause = generator (bad rule logic), validator
+(wrong verdict), data (corpus can't judge the rule) or triage (no rule was generated).
+DRAFT: Mouheb + Mouadh to confirm.
+
+| alert | rule (detection) | v1 verdict | cause | why |
+|---|---|---|---|---|
+| day2-006 (T1685.001) | `TargetObject` ends with `Services\EventLog\Start` AND `Details` contains `DWORD (0x00000004)` (EventLog service set to disabled) | fail (0/1 held-out, 0 FP) | **data** (validator verdict too harsh) | Rule is precise and sound. The only held-out T1685.001 attack, day3-053, is a different procedure (sets `...\Audit\ProcessCreationIncludeCmdLine_Enabled` to 0: turns off command-line logging). No rule for one procedure catches the other. 1 hit in 9,779 pool events. |
+| day2-014 (T1059.005) | none | needs_review | **triage** | Triage stopped at needs_review (wscript + .vbs; label kept TP by Mouadh, guide rule 3 exception added 2026-10-03). |
+| day3-048 (T1134) | none | benign | **triage** | Triage said benign (wrong): a missed attack, no rule attempted. |
+| day3-056 (T1127.001) | `Image` ends with `MSBuild.exe` AND `CommandLine` contains `Tasks` | pass (no held-out positive, 0 FP) | **data** | No other T1127.001 attack outside the source capture, so recall can't be measured; passes on the benign side only. `Tasks` is a weak keyword (a project path), a likely FP source in real networks. |
+| day3-070 (T1059.003) | `ParentImage` contains `Desktop` AND `Image` ends with `cmd.exe` AND `CommandLine` contains any of `/c`, `Desktop`, `.exe` | pass (4/7, recall .57, 0 FP) | **generator** (partial) | The value list was meant as AND (fixed today: `all` flag). The 3 misses are other procedures, not rule errors: day3-054 launcher.exe from explorer, day3-068 cmd from hh.exe, day3-119 cmd from mshta.exe. |
+
+**Summary:** 5 alerts → 3 rules, 3/3 compile, 2/3 pass, 0 benign hits. Of 5: 2 triage, 2 data,
+1 generator (partial). No validator bug found; one verdict judged too harsh (day2-006).
+
+**Follow-ups (Week 3):**
+1. **Procedure-level positives:** grade against held-out attacks of the same *procedure*, not only
+   the same technique (T1685.001 covers several ways to impair logging). Until then, a fail with
+   ≤1 held-out positive is reported as low-evidence, not as a real failure.
+2. **Benign set too small to catch broad rules** (day3-070's OR list fired on 0 benign events):
+   add benign `cmd /c` and MSBuild events.
+3. **Triage before rules:** 2/5 rule attempts were lost to triage errors.
