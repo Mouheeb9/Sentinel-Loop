@@ -26,7 +26,7 @@ Draft by Mouheb on Day 14; Mouadh adds his side and the test-split numbers are f
   v1), 0 benign hits. Read-out table in `docs/experiments.md`.
 - **Security:** injection corpus 10 → 40 payloads (5 categories × 8), threat-model section for
   model-written rules (RG-1..RG-6).
-- **ADR 0001** (partial-credit scoring). ADR 0002 (two-tier routing): Mouadh.
+- **ADR 0001** (partial-credit scoring, by Mouheb) and **ADR 0002** (two-tier routing, by Mouadh).
 
 ## Test split (the honest number, run once)
 
@@ -79,7 +79,25 @@ alerts, the split itself moves the number. Compare before/after on the same spli
 
 ## Mouadh
 
-_To add: what took longer, what to change in Week 3._
+### What took longer than planned
+
+- **Label review** (116 rows) finished on 27 Sep, not Day 8, and held up `golden-v1.1` for
+  everyone.
+- **Branch out of date with main:** two PRs needed a merge of `origin/main` into `mouadh` first
+  (28 and 29 Sep) to fix conflicts.
+- **Injection runner fix sat in a stash** from 3 Oct to 5 Oct, on no branch, while the retro
+  already counted it as done. The 40-payload run (`asr-v1.json`) has not started yet.
+- **Validator "same technique" positives** turned out too coarse (`day2-006`): a rule can pass
+  against attacks that use a different procedure.
+
+### What to change in Week 3
+
+- **Merge `origin/main` into `mouadh` at the start of each day**, not when the PR conflicts.
+- **No stash for unfinished work:** commit it to my branch (a WIP commit is fine) so it can't get
+  lost or forgotten.
+- **Plan quota per day with Mouheb** before any live run, starting with `asr-v1.json`.
+- **Keep contract first** (signature + one test before building): it worked for the matcher and
+  the validator.
 
 ## Week 3 plan (Days 15-21): close the loop
 
