@@ -26,6 +26,10 @@ Draft by Mouheb on Day 14; Mouadh adds his side and the test-split numbers are f
   v1), 0 benign hits. Read-out table in `docs/experiments.md`.
 - **Security:** injection corpus 10 → 40 payloads (5 categories × 8), threat-model section for
   model-written rules (RG-1..RG-6).
+- **Injection ASR (`asr-v1.json`, 40 payloads, no defenses, 2026-10-05):** 25% (10/40). Worst:
+  tool_hijack 4/8, then fake_system_msg 3/8, context_stuffing 2/8, encoded 1/8, direct_override
+  0/8. 5 successes leaked the canary (certain); 5 changed the verdict with no canary, and some of
+  those may be run-to-run noise (about 4 in 30 verdicts change between identical runs).
 - **ADR 0001** (partial-credit scoring, by Mouheb) and **ADR 0002** (two-tier routing, by Mouadh).
 
 ## Test split (the honest number, run once)
@@ -86,7 +90,8 @@ alerts, the split itself moves the number. Compare before/after on the same spli
 - **Branch out of date with main:** two PRs needed a merge of `origin/main` into `mouadh` first
   (28 and 29 Sep) to fix conflicts.
 - **Injection runner fix sat in a stash** from 3 Oct to 5 Oct, on no branch, while the retro
-  already counted it as done. The 40-payload run (`asr-v1.json`) has not started yet.
+  already counted it as done. The 40-payload run (`asr-v1.json`) only ran on 5 Oct, and its first
+  5 cases failed because Docker (the Postgres tool cache) was not running.
 - **Validator "same technique" positives** turned out too coarse (`day2-006`): a rule can pass
   against attacks that use a different procedure.
 
