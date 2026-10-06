@@ -33,3 +33,10 @@ Frozen versions are never edited. Any change is a new version plus a line here.
   validator v2. Labels in `v1.1.jsonl` are untouched. 80 rows (every TP whose primary technique has
   >=2 golden TPs), 47 procedures; 12 can test a rule on another capture with the same log source.
   Drafted from the v1.1 rationales, verified by Mouadh against the events on 2026-10-06.
+
+## validation benign set v1 (2026-10-06, validator v2)
+
+- New `data/validation/benign/`: benign negatives for the validator (not golden labels, triage is
+  not scored on them). `synthetic-v1.jsonl` = 20 hand-written everyday `cmd /c`, MSBuild and
+  script-host events (ids `syn-*`, not real telemetry); `real-v1.jsonl` = 12 real monitoring-agent
+  `cscript` events from the captures (11 new, 1 was already a golden event). Hand-check by Mouadh.

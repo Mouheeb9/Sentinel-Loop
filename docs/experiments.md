@@ -287,3 +287,9 @@ real reason passes. Pass rule unchanged (v1: 0 FP + ≥1 TP or no positive). No 
 
 **Decision:** keep v2. Open: the 35/47 procedures with no usable positive (other capture, same log
 source) are a data gap; the bigger benign set (`cmd /c`, MSBuild, script hosts) is the next step.
+
+**Same day, bigger benign set:** +31 benign process events (`data/validation/benign/`: 20
+hand-written `cmd /c` / MSBuild / script-host, 11 real). Re-grade: no verdict above changes; the
+Day 12 `rulegen-try` day3-056 rule (MSBuild + any `.xml`, flagged as broad on 2026-10-02) now
+**fails** on `syn-msbuild-framework-docxml` (a legacy build writing an XML doc file). Before, the
+benign set had no MSBuild event, so it passed.

@@ -47,6 +47,7 @@ GOLDEN_ALERTS = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (
 POOL_LIST = ROOT / "data" / "validation" / "validation_datasets.txt"
 CAPTURES = ROOT / "data" / "raw" / "security-datasets"
 BACKGROUND = ROOT / "tests" / "fixtures" / "sysmon"  # hand-checked non-attack events (bg_*)
+BENIGN = ROOT / "data" / "validation" / "benign"  # v2: hand-checked benign events (*.jsonl)
 
 # Sysmon EventIDs each rule_form category reads (the sysmon pipeline adds the same filter).
 CATEGORY_EVENT_IDS = {
@@ -227,6 +228,16 @@ def default_corpus() -> Corpus:
         e = sysmon_to_event(json.loads(path.read_text(encoding="utf-8")))
         if e and e.event_id not in seen:
             golden.append(Sample(f"bg:{path.stem}", "benign_noisy", (), "background", e))
+            seen.add(e.event_id)
+    for path in sorted(BENIGN.glob("*.jsonl")):  # v2: {"id", "why", "event"} per line
+        for line in path.read_text(encoding="utf-8").splitlines():
+            row = json.loads(line) if line.strip() else None
+            e = row and sysmon_to_event(row["event"])
+            if e and e.event_id not in seen:
+                seen.add(e.event_id)
+                golden.append(
+                    Sample(f"bg:{row['id']}", "benign_noisy", (), f"benign:{path.stem}", e)
+                )
     pool, notes = _load_pool()
     return Corpus(golden=golden, pool=pool, notes=notes)
 

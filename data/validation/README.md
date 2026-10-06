@@ -50,7 +50,8 @@ Known gaps, written in the feedback rather than hidden:
 - Many techniques have no other golden alert: TP is then "unknown (data gap)", not 0, and the rule
   can still pass on negatives alone.
 - Sibling sub-techniques (rule claims T1218.005, alert is T1218.011) are reported, not required.
-- The benign set is small (about 20-50 events per log source).
+- The benign set is small (about 20-50 events per log source). v2 adds 31 process events
+  (20 hand-written + 11 real) for `cmd /c`, MSBuild and script hosts: `benign/README.md`.
 
 ## Status
 
