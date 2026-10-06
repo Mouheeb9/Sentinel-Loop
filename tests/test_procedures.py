@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+from collections import Counter
 
 import pytest
 
@@ -18,6 +19,13 @@ def test_procedures_file_matches_golden_labels():
     procedures = load_procedures(_labels())
     assert procedures["day2-006"] != procedures["day3-053"]  # same technique, other procedure
     assert procedures["day2-006"].startswith("T1685.001/")
+
+
+def test_every_shared_technique_attack_has_a_procedure():
+    tps = [r for r in _labels() if r["label"] == "true_positive"]
+    count = Counter(r["technique_ids"][0] for r in tps)
+    shared = {r["alert_id"] for r in tps if count[r["technique_ids"][0]] > 1}
+    assert shared - set(load_procedures(_labels())) == set()
 
 
 def test_procedure_must_match_a_label(tmp_path):
