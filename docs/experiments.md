@@ -287,3 +287,28 @@ with 2 false positives. The after-run errors (read only after both runs complete
    Team, Caldera) are treated as legitimate tooling. Labeling guide says TP. Check: dev alerts
    from simulation frameworks. Candidate fix: one line in the triage prompt + a guide example.
 Triage stays frozen this week (Week 3 guide); both go to the Day 19 slot or Week 4.
+
+## 2026-10-06: repair-try on day3-070 (repair loop, first live run)
+
+Repair never ran: rule version 1 failed both rule_gen tries (path ends rule_gen -> output).
+Try 1: two `CommandLine contains` items in one selection (refused by the form since 10-04).
+Try 2: `CommandLine contains all of ['/c', '/Desktop/', '172.18.39.6']`: '/' path in a non-path
+field (never matches Sysmon's '\') + the IP (fingerprint). Fix (no quota): self-check names the
+'/' mistake when the '\' version would match (`_slash_hint`). Re-run as `repair-try2`.
+
+## 2026-10-06: repair-try2 on day3-070: first repair that turned a fail into a pass
+
+Path: rule_gen -> validate (fail) -> repair -> validate (pass). 2 rule versions, 1 repair call.
+- **v1** "GruntHTTP.exe spawning cmd.exe to run MoveExcel4.exe": a fingerprint of this event,
+  failed (0 held-out hits).
+- **v2** (after the validator report): ParentImage in a user-writable folder (`\Users\`,
+  `\Desktop\`, `\Temp\`...) -> `cmd.exe` -> CommandLine contains all of `.exe` + a private-IP
+  prefix (`10.` / `172.` / `192.168.`). TP 1/7 (recall .14), benign 0/23, pool 0/238 -> pass.
+
+**The loop works:** the report ("missed 6, compare their fields") moved the model from a tool-name
+fingerprint to a behavior. **The pass bar is low:** v2 passes with 1/7, below the Day 12 v0 rule
+(4/7), and the loop stops at the first pass. `'10.'` as a substring also matches version numbers
+("Windows 10."), a real-network FP the 23-event benign set can't see.
+**For ADR 0003 floors (Mouadh + Mouheb):** consider a recall floor (e.g. ≥2 held-out hits or
+recall ≥ .3 when ≥3 positives exist) or "keep repairing while recall rises". Decide on loop-v1
+data (10 alerts), not this one.

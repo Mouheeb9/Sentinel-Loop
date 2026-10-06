@@ -243,11 +243,26 @@ def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event]) -> str:
             misses.append(
                 f"selection {i}: {m.field} {m.match} {'all of ' if m.all else ''}{m.values} "
                 "matches no event; "
-                f"the event's {m.field} holds {held}"
+                f"the event's {m.field} holds {held}" + _slash_hint(m, events)
             )
     if not misses:
         return "every selection matches the alert, but a filter excludes it: remove that filter"
     return "the rule does not fire on the alert it was written for. " + " | ".join(misses)
+
+
+def _slash_hint(m: FieldMatch, events: list[Event]) -> str:
+    """Path fields take '/' (code converts it), other fields don't: a '/' path in CommandLine
+    never matches Sysmon's '\\'. Live on day3-070 (6 Oct) the model wrote '/Desktop/' there."""
+    paths = [v for v in m.values if "/" in v[1:]]  # not a switch like '/c'
+    if m.field in PATH_FIELDS or not paths:
+        return ""
+    fixed = m.model_copy(update={"values": [v.replace("/", "\\") for v in paths], "all": False})
+    if not any(_item_matches(fixed, e) for e in events):
+        return ""
+    return (
+        f" ({m.field} is not a path field: '/' is NOT converted there, so a '/' path never "
+        "matches; use the keyword without separators, e.g. 'Desktop' instead of '/Desktop/')"
+    )
 
 
 def _item_matches(m: FieldMatch, event: Event) -> bool:
