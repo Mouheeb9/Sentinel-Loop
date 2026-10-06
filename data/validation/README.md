@@ -41,6 +41,11 @@ final number must be re-measured on held-out labels (below).
 Why the pool is not graded: those captures contain attacks too, so a hit is not proof of a false
 positive. Hundreds of hits do mean the rule is too broad (feedback says "likely too broad" from 20).
 
+**v2 (Day 16):** golden attacks are grouped by procedure (HOW, not WHAT) in
+`data/golden/procedures.yaml`. When the source alert has a procedure and the rule claims its
+technique, positives = the same procedure only (`procedure_recall`); other procedures of the
+technique are reported as `sibling_recall`, not graded. `evidence: low` when there is <=1 positive.
+
 Known gaps, written in the feedback rather than hidden:
 - Many techniques have no other golden alert: TP is then "unknown (data gap)", not 0, and the rule
   can still pass on negatives alone.

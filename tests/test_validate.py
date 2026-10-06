@@ -58,14 +58,16 @@ SOURCE_EVENT = _msbuild("src", r"MSBuild.exe C:\Users\Public\evil.xml")
 SOURCE = Alert(alert_id="a-src", detection_name="x", severity="high", events=[SOURCE_EVENT])
 
 
-def _sample(alert_id, label, techniques, capture, event) -> Sample:
-    return Sample(alert_id, label, tuple(techniques), capture, event)
+def _sample(alert_id, label, techniques, capture, event, procedure=None) -> Sample:
+    return Sample(alert_id, label, tuple(techniques), capture, event, procedure)
 
 
-def _corpus(*samples: Sample, pool=None) -> Corpus:
+def _corpus(*samples: Sample, pool=None, source_procedure=None) -> Corpus:
     return Corpus(
         golden=[
-            _sample("a-src", "true_positive", ["T1127.001"], "cap-src", SOURCE_EVENT),
+            _sample(
+                "a-src", "true_positive", ["T1127.001"], "cap-src", SOURCE_EVENT, source_procedure
+            ),
             *samples,
         ],
         pool=pool,
@@ -171,3 +173,32 @@ def test_feedback_never_quotes_event_values():
     noisy = _sample("b1", "benign_noisy", [], "cap3", _msbuild("e3", "MSBuild.exe SECRET.xml"))
     r = grade(MSBUILD_RULE, SOURCE, ["T1127.001"], _corpus(hit, noisy))
     assert "IGNORE-ALL" not in r.feedback and "SECRET" not in r.feedback
+
+
+XML = "T1127.001/msbuild-xml-project"
+
+
+def test_v2_only_same_procedure_must_fire_others_are_siblings():
+    same = _sample("a1", "true_positive", ["T1127.001"], "c1", _msbuild("e1", "m x.xml"), XML)
+    same2 = _sample("a2", "true_positive", ["T1127.001"], "c2", _msbuild("e2", "m y.xml"), XML)
+    other = _sample(
+        "a3", "true_positive", ["T1127.001"], "c3", _msbuild("e3", "m a.proj"), "T1127.001/proj"
+    )
+    r = grade(
+        MSBUILD_RULE, SOURCE, ["T1127.001"], _corpus(same, same2, other, source_procedure=XML)
+    )
+    assert (r.true_positives, r.procedure_recall, r.sibling_recall) == (2, 1.0, 0.0)
+    assert not r.failed_samples  # the other procedure's miss is not a failure
+    assert r.evidence == "ok" and "msbuild-xml-project (procedure)" in r.feedback
+
+
+def test_v2_one_positive_is_low_evidence():
+    same = _sample("a1", "true_positive", ["T1127.001"], "c1", _msbuild("e1", "m x.xml"), XML)
+    r = grade(MSBUILD_RULE, SOURCE, ["T1127.001"], _corpus(same, source_procedure=XML))
+    assert r.true_positives == 1 and r.evidence == "low" and "evidence: low" in r.feedback
+
+
+def test_v2_falls_back_to_technique_when_rule_claims_another_technique():
+    hit = _sample("a1", "true_positive", ["T1218"], "c1", _msbuild("e1", "m x.xml"), "T1218/x")
+    r = grade(MSBUILD_RULE, SOURCE, ["T1218"], _corpus(hit, source_procedure=XML))
+    assert r.true_positives == 1 and r.procedure_recall is None

@@ -87,6 +87,7 @@ def test_validator_never_counts_the_source_capture_as_positive():
             if o.capture != s.capture
             and o.label == "true_positive"
             and _relation(claimed, o.technique_ids) == "same"
+            and (s.procedure is None or o.procedure == s.procedure)  # v2: same procedure only
             and str(o.event.raw.get("EventID")) == "1"
         ]
         assert r.true_positives == len(held_out)  # fires on all: only held-out ones are counted
