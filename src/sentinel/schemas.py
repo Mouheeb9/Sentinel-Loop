@@ -104,6 +104,10 @@ class ValidationResult(StrictModel):
     fp_rate: float = Field(ge=0, le=1)
     failed_samples: list[FailedSample] = Field(default_factory=list)
     feedback: str  # structured text the repair loop reads
+    # Validator v2 (data/golden/procedures.yaml). Defaults keep v0 results valid.
+    evidence: Literal["low", "ok"] = "ok"  # low: <=1 held-out positive, a pass proves little
+    procedure_recall: float | None = Field(default=None, ge=0, le=1)  # None: no same-procedure
+    sibling_recall: float | None = Field(default=None, ge=0, le=1)  # same technique, other proc.
 
 
 class InjectionCase(StrictModel):

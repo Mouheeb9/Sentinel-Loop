@@ -1,0 +1,15 @@
+# Procedure ids for golden true_positive alerts (validator v2). Owner: Mouadh.
+#
+# A technique says WHAT the attacker achieved; a procedure says HOW. Two alerts with the same
+# technique can share no field a rule could match on (day2-006 vs day3-053 below), so the
+# validator v2 requires a rule to catch the same procedure, and only reports the others.
+#
+# Format: alert_id: <technique id>/<short-kebab-name>
+# - alert_id must be a golden v1.1 true_positive
+# - the technique part must be one of that row's technique_ids
+# - labels stay in v1.1.jsonl untouched; this file only groups them
+# Rows not listed here are their own procedure (counted as "no same-procedure positive").
+# Checked by tests/test_procedures.py.
+
+day2-006: T1685.001/eventlog-service-disabled  # EventLog service Start = 4 via registry
+day3-053: T1685.001/cmdline-logging-off  # ProcessCreationIncludeCmdLine_Enabled = 0

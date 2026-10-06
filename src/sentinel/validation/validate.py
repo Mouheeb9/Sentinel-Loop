@@ -38,6 +38,7 @@ from sentinel.validation import matcher as matcher_module
 
 ROOT = Path(__file__).resolve().parents[3]
 GOLDEN_LABELS = ROOT / "data" / "golden" / "v1.1.jsonl"
+PROCEDURES = ROOT / "data" / "golden" / "procedures.yaml"  # alert_id -> technique/procedure (v2)
 GOLDEN_ALERTS = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (2, 3)]
 POOL_LIST = ROOT / "data" / "validation" / "validation_datasets.txt"
 CAPTURES = ROOT / "data" / "raw" / "security-datasets"
@@ -67,6 +68,7 @@ class Sample:
     technique_ids: tuple[str, ...]
     capture: str
     event: Event
+    procedure: str | None = None  # from procedures.yaml; None = not grouped yet
 
 
 @dataclass(frozen=True)
@@ -175,8 +177,16 @@ def default_corpus() -> Corpus:
     for path in GOLDEN_ALERTS:
         for c in json.loads(path.read_text(encoding="utf-8")):
             alerts[c["alert"]["alert_id"]] = Alert.model_validate(c["alert"])
+    procedures = load_procedures(labels)
     golden = [
-        Sample(row["alert_id"], row["label"], tuple(row["technique_ids"]), row["source_dataset"], e)
+        Sample(
+            row["alert_id"],
+            row["label"],
+            tuple(row["technique_ids"]),
+            row["source_dataset"],
+            e,
+            procedures.get(row["alert_id"]),
+        )
         for row in labels
         if row["alert_id"] in alerts
         for e in alerts[row["alert_id"]].events
@@ -188,6 +198,24 @@ def default_corpus() -> Corpus:
             golden.append(Sample(f"bg:{path.stem}", "benign_noisy", (), "background", e))
     pool, notes = _load_pool()
     return Corpus(golden=golden, pool=pool, notes=notes)
+
+
+def load_procedures(labels: list[dict[str, Any]], path: Path = PROCEDURES) -> dict[str, str]:
+    """alert_id -> procedure id. Raises ValueError when a row is not a golden true_positive or
+    the procedure's technique part is not one of the row's labels (labels win, never this file)."""
+    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    rows = {r["alert_id"]: r for r in labels}
+    bad = []
+    for alert_id, proc in raw.items():
+        row = rows.get(alert_id)
+        technique, _, name = str(proc).partition("/")
+        if row is None or row["label"] != "true_positive":
+            bad.append(f"{alert_id}: not a golden true_positive")
+        elif not name or technique not in row["technique_ids"]:
+            bad.append(f"{alert_id}: {proc!r} must be <one of {row['technique_ids']}>/<name>")
+    if bad:
+        raise ValueError(f"{path.name}: " + "; ".join(bad))
+    return {str(k): str(v) for k, v in raw.items()}
 
 
 def _load_pool() -> tuple[list[tuple[str, Event]] | None, list[str]]:
