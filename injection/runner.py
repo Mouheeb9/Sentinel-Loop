@@ -155,6 +155,43 @@ def score(clean: dict, attacked: dict) -> tuple[str, list[str]]:
     return ("success" if success else "safe"), signals
 
 
+def write_summary(args, models: str, rows: list[dict], clean_runs: dict) -> dict:
+    """Write the results file. Called after every case, so a killed run keeps its progress."""
+    counted = [r for r in rows if r["outcome"] != "error"]
+    successes = sum(r["outcome"] == "success" for r in counted)
+    by_category: dict[str, dict] = {}
+    for r in counted:
+        c = by_category.setdefault(r["category"], {"cases": 0, "success": 0})
+        c["cases"] += 1
+        c["success"] += r["outcome"] == "success"
+
+    summary = {
+        "run_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        "config": CONFIG_NAME,
+        "models": models,
+        "seed": args.seed,
+        "cases_file": str(args.cases.relative_to(ROOT))
+        if args.cases.is_absolute()
+        else str(args.cases),
+        "totals": {
+            "cases": len(rows),
+            "counted": len(counted),
+            "success": successes,
+            "blocked": sum(r["outcome"] == "blocked" for r in counted),
+            "safe": sum(r["outcome"] == "safe" for r in counted),
+            "errors": len(rows) - len(counted),
+            "asr": round(successes / len(counted), 3) if counted else None,
+        },
+        "by_category": by_category,
+        "results": rows,
+        "clean_runs": clean_runs,
+    }
+    args.out.parent.mkdir(parents=True, exist_ok=True)
+    args.out.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", "utf-8")
+
+    return summary
+
+
 def main() -> None:
     load_dotenv()
     p = argparse.ArgumentParser(prog="python -m injection.runner")
@@ -211,39 +248,12 @@ def main() -> None:
                 "attacked": attacked,
             }
         )
-        print(f"{i:2}/{len(cases)} {case.case_id} base={base_id} -> {outcome} {signals}")
+        print(
+            f"{i:2}/{len(cases)} {case.case_id} base={base_id} -> {outcome} {signals}", flush=True
+        )
+        write_summary(args, models, rows, clean_runs)
 
-    counted = [r for r in rows if r["outcome"] != "error"]
-    successes = sum(r["outcome"] == "success" for r in counted)
-    by_category: dict[str, dict] = {}
-    for r in counted:
-        c = by_category.setdefault(r["category"], {"cases": 0, "success": 0})
-        c["cases"] += 1
-        c["success"] += r["outcome"] == "success"
-
-    summary = {
-        "run_at": datetime.now(UTC).isoformat(timespec="seconds"),
-        "config": CONFIG_NAME,
-        "models": models,
-        "seed": args.seed,
-        "cases_file": str(args.cases.relative_to(ROOT))
-        if args.cases.is_absolute()
-        else str(args.cases),
-        "totals": {
-            "cases": len(rows),
-            "counted": len(counted),
-            "success": successes,
-            "blocked": sum(r["outcome"] == "blocked" for r in counted),
-            "safe": sum(r["outcome"] == "safe" for r in counted),
-            "errors": len(rows) - len(counted),
-            "asr": round(successes / len(counted), 3) if counted else None,
-        },
-        "by_category": by_category,
-        "results": rows,
-        "clean_runs": clean_runs,
-    }
-    args.out.parent.mkdir(parents=True, exist_ok=True)
-    args.out.write_text(json.dumps(summary, indent=2, ensure_ascii=False) + "\n", "utf-8")
+    summary = write_summary(args, models, rows, clean_runs)
 
     t = summary["totals"]
     asr = "n/a" if t["asr"] is None else f"{t['asr']:.0%}"
