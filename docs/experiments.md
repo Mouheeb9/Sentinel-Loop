@@ -255,3 +255,35 @@ DRAFT: Mouheb + Mouadh to confirm.
 2. **Benign set too small to catch broad rules** (day3-070's OR list fired on 0 benign events):
    add benign `cmd /c` and MSBuild events.
 3. **Triage before rules:** 2/5 rule attempts were lost to triage errors.
+
+## 2026-10-06: test split before/after (Week 2 final number) + 2 hypotheses
+
+Sealed test split, rag, n=30 each, run once. Before = `baseline-v0` (vector only, prompt
+2edd88418b70); after = vector+BM25 + launch context (prompt a7a0d78eaac5). Chart:
+`results/charts/week2.png`.
+
+| | before | after |
+|---|---|---|
+| accuracy | 0.97 | 0.90 |
+| attack recall | 0.95 (1 missed) | 0.95 (1 missed) |
+| benign recall | 1.00 | 0.80 (2 called attacks) |
+| technique F1 | 0.60 | 0.62 |
+| exact primary technique | 0.55 | 0.50 |
+| invented IOCs | 0.06 | 0.02 |
+
+**Verdict: a tie, not a win.** F1 +0.02 is inside the ±0.05 noise; fewer invented IOCs, paid
+with 2 false positives. The after-run errors (read only after both runs completed):
+- `day2-007` benign (lsass writes its W32Time value) → TP T1547.003 Time Providers.
+- `day2-025` benign (`smartscreen.exe -Embedding`, normal COM self-launch) → TP T1021.003 DCOM.
+- `day3-137` TP (PurpleSharp spraying + Kerberoasting) → benign. Both runs miss it.
+
+**Hypotheses (NOT to be tuned on these test alerts; check on dev first):**
+1. **Keyword priming:** a string in a benign event that matches a technique name or its
+   procedure text (`W32Time`, `-Embedding`) pulls that technique in, and the model treats the
+   match as evidence. BM25 likely makes it worse (exact-token leg). Check: dev benign alerts
+   called TP, with a technique whose name/keyword appears in the event. Keep a fix only if dev
+   benign recall rises with no attack-recall loss beyond noise.
+2. **Adversary-simulation tools read as admin activity:** PurpleSharp (and similar: Atomic Red
+   Team, Caldera) are treated as legitimate tooling. Labeling guide says TP. Check: dev alerts
+   from simulation frameworks. Candidate fix: one line in the triage prompt + a guide example.
+Triage stays frozen this week (Week 3 guide); both go to the Day 19 slot or Week 4.

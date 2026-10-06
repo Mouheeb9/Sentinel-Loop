@@ -58,9 +58,12 @@ class SentinelState(TypedDict):
     # rule_gen_live: title, technique_ids, schema_retries, tokens, llm_calls, model; or
     # {"error": ...} when no valid rule came back; or {"skipped": True}.
     rulegen: NotRequired[dict]
-    # How many rule versions this run may try. rule_gen_live sets 1 while repair is a stub
-    # (Day 13: "repair stays a stub, 1 attempt"); MAX_ATTEMPTS when unset.
+    # How many rule versions this run may try; MAX_ATTEMPTS when unset.
     max_attempts: NotRequired[int]
+    # repair_live: one dict per repair call (attempt, model, tokens, or error), oldest first.
+    repairs: NotRequired[Annotated[list[dict], operator.add]]
+    # repair_live: True when the model gave no valid rule; the run ends on the last validation.
+    repair_failed: NotRequired[bool]
 
     # validate: one result per validation run, oldest first (appended, never overwritten).
     validations: NotRequired[Annotated[list[ValidationResult], operator.add]]

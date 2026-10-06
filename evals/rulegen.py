@@ -17,6 +17,8 @@ Summary (results/rulegen-v0.json):
     rules_generated / generation_failures   how many alerts got a rule
     compile_rate                            share of generated rules that compile
     validation_pass_rate, median_fp_rate    None while no validator ran
+    first_attempt_pass_rate                 share passing on version 1 (before any repair)
+    repairs                                 repair calls made (Week 3 loop, max 2 per alert)
     outcomes                                count per pipeline outcome
 
 Resumable like evals/run.py: rows go to results/rulegen-v0.rows.jsonl as they finish; a re-run
@@ -86,6 +88,9 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
         else None,
         "validation_pending": bool(f.get("validation_pending")),
         "recall": rule_recall(f["validations"][-1]) if f.get("validations") else None,
+        # One entry per rule version validated, oldest first: did that version pass?
+        "attempt_passes": [rule_passed(v) for v in f.get("validations", [])],
+        "repairs": f.get("repairs", []),
         "trace": res.trace_url,
     }
 
@@ -123,6 +128,12 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "validation_pass_rate": (
             sum(r["outcome"] == "rule_passed" for r in graded) / len(graded) if graded else None
         ),
+        "first_attempt_pass_rate": (
+            sum((r.get("attempt_passes") or [False])[0] for r in graded) / len(graded)
+            if graded
+            else None
+        ),
+        "repairs": sum(len(r.get("repairs") or []) for r in done),
         "median_recall": (
             statistics.median(recalls)
             if (recalls := [r["recall"] for r in graded if r.get("recall") is not None])

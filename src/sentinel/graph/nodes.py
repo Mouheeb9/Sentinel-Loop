@@ -5,7 +5,7 @@ a `StubScript` in the run config (`{"configurable": {"stub": StubScript(...)}}`)
 force any path. Real implementations (`*_live`) replace them one at a time: enrich and triage
 since Day 5, route since Day 11 (matcher injectable via `config["configurable"]["matcher"]`),
 rule_gen and validate since Day 13 (model / validator injectable as "rulegen_model" /
-"validator"). Repair is still a stub, so a live run tries one rule version (max_attempts=1).
+"validator"), repair since Day 16 (event lookup injectable as "event_lookup").
 
 `PipelineOptions` in `config["configurable"]["pipeline"]` switches retrieval, enrichment tools
 and rule generation off for the eval baselines (evals/run.py); the default is everything on.
@@ -18,12 +18,13 @@ from dataclasses import asdict, dataclass
 import yaml
 from langchain_core.runnables import RunnableConfig
 
+from sentinel.agents import repair as repair_module
 from sentinel.agents.enrich import enrich_alert
 from sentinel.agents.routing import triage_routed
 from sentinel.agents.rule_gen import RuleGenError, generate_rule
-from sentinel.graph.state import Outcome, SentinelState
+from sentinel.graph.state import MAX_ATTEMPTS, Outcome, SentinelState
 from sentinel.llm import chat_model, rulegen_model_name
-from sentinel.schemas import TriageVerdict, ValidationResult
+from sentinel.schemas import FailedSample, TriageVerdict, ValidationResult
 from sentinel.validation import validate as validate_module
 from sentinel.validation.coverage import check_coverage
 
@@ -72,6 +73,19 @@ def rule_passed(result: ValidationResult) -> bool:
     if not result.compiled or result.compile_errors or result.false_positives:
         return False
     return result.true_positives >= 1 or held_out_positives(result) == 0
+
+
+def stalled(validations: list[ValidationResult]) -> bool:
+    """The last repair changed nothing the validator can see: same counts, same failing samples.
+    Another attempt would most likely repeat it, so the loop stops and saves the quota."""
+    if len(validations) < 2:
+        return False
+
+    def seen(v: ValidationResult) -> tuple:
+        failing = sorted((s.sample_id, s.should_fire) for s in v.failed_samples)
+        return v.compiled, v.true_positives, v.false_positives, failing
+
+    return seen(validations[-1]) == seen(validations[-2])
 
 
 def ingest(state: SentinelState) -> dict:
@@ -147,7 +161,37 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
         )
     except RuleGenError as e:
         return {"draft_rule": "", "attempts": 1, "rulegen": {"error": str(e)[:1000]}}
-    info = {
+    return {"draft_rule": r.rule_yaml, "attempts": 1, "rulegen": _info(r, model_name)}
+
+
+def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
+    """The next version of a rule that failed validation: rule_gen again, told what the validator
+    found (agents/repair.py). Never raises: no valid rule ends the run on the last validation."""
+    configurable = (config or {}).get("configurable", {})
+    model_name = rulegen_model_name()
+    model = configurable.get("rulegen_model") or chat_model(model_name)
+    lookup = configurable.get("event_lookup") or repair_module.default_event_lookup
+    attempt = state.get("attempts", 0) + 1
+    context = repair_module.build_repair_context(
+        state["draft_rule"],
+        state["validations"][-1],
+        attempt,
+        state.get("max_attempts", MAX_ATTEMPTS),
+        lookup,
+    )
+    try:
+        r = generate_rule(
+            state["alert"], state["verdict"], state.get("sigma_rules", []), model, config, context
+        )
+    except RuleGenError as e:
+        error = {"attempt": attempt, "error": str(e)[:1000]}
+        return {"repairs": [error], "repair_failed": True}
+    info = {"attempt": attempt, **_info(r, model_name)}
+    return {"draft_rule": r.rule_yaml, "attempts": attempt, "repairs": [info]}
+
+
+def _info(r, model_name: str) -> dict:
+    return {
         "title": r.draft.title,
         "technique_ids": r.draft.technique_ids,
         "schema_retries": r.schema_retries,
@@ -156,7 +200,6 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
         "llm_calls": r.llm_calls,
         "model": model_name,
     }
-    return {"draft_rule": r.rule_yaml, "attempts": 1, "max_attempts": 1, "rulegen": info}
 
 
 def validate_live(state: SentinelState, config: RunnableConfig) -> dict:
@@ -191,13 +234,17 @@ def validate(state: SentinelState, config: RunnableConfig) -> dict:
     passes = _script(config).validation_passes
     run = len(state.get("validations", []))
     ok = passes[min(run, len(passes) - 1)]
+    version = f"stub-v{state.get('attempts', 0)}"
+    # Each failure names a different sample, so the stall check sees the repair change something.
+    failed = [FailedSample(sample_id=version, should_fire=True, did_fire=False, event_ref="stub")]
     result = ValidationResult(
-        rule_id=f"stub-v{state.get('attempts', 0)}",
+        rule_id=version,
         compiled=ok,
         compile_errors=[] if ok else ["stub failure"],
         true_positives=1 if ok else 0,
         false_positives=0,
         fp_rate=0.0,
+        failed_samples=[] if ok else failed,
         feedback="" if ok else "stub: rule did not compile",
     )
     return {"validations": [result]}

@@ -44,12 +44,12 @@ def test_rules_off_skips_generation_without_a_model_call():
     assert nodes.output(state)["outcome"] == "rule_skipped"
 
 
-def test_generated_rule_goes_to_validation_with_one_attempt():
+def test_generated_rule_goes_to_validation_as_version_one():
     model = ScriptedModel(replies=[_call(VALID)], seen=[])
     update = nodes.rule_gen_live(_state(), _config(model))
     assert "title: LSASS dump via comsvcs MiniDump" in update["draft_rule"]
     assert update["rulegen"]["technique_ids"] == ["T1003.001"]
-    assert update["attempts"] == 1 and update["max_attempts"] == 1  # repair is still a stub
+    assert update["attempts"] == 1 and "max_attempts" not in update  # MAX_ATTEMPTS applies
     assert build.after_rule_gen(_state() | update) == "validate"
 
 
@@ -93,7 +93,7 @@ def test_validator_verdicts_drive_the_outcome():
 
     state = _with_rule()
     state |= nodes.validate_live(state, _config(validator=lambda *a: _result(False)))
-    assert build.after_validate(state) == "output"  # max_attempts=1: no stub repair
+    assert build.after_validate(state) == "repair"  # attempt 1 of 3 failed
     assert nodes.output(state)["outcome"] == "rule_failed"
 
 
