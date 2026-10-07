@@ -15,6 +15,10 @@ detect a registry write), and it must fire on the alert it was written for: the 
 the alert's own events with the Sigma matcher (deterministic, no model call). When it doesn't
 fire, the retry message says which field test missed and what the event really holds. On Day 12
 both first live rules failed this way: the free model had dropped every backslash from paths.
+
+Repair (Week 3): with a `RepairContext` the same call writes the next version of a rule that
+failed validation. The message adds the previous rule, the validator's report and the benign
+events it fired on (see agents/repair.py for what is shown and why missed attacks are not).
 """
 
 from __future__ import annotations
@@ -82,6 +86,18 @@ class RuleGenError(RuntimeError):
 
 
 @dataclass(frozen=True)
+class RepairContext:
+    """What the model sees when it rewrites a rule that failed validation."""
+
+    attempt: int  # the version being written: 2 or 3
+    max_attempts: int
+    previous_rule: str  # YAML; its values were copied from events, so they are untrusted
+    report: str  # the validator's feedback: counts, alert ids, rule fields, never event values
+    # (sample id, {field: value}) for benign events the previous rule fired on
+    benign_hits: tuple[tuple[str, dict[str, str]], ...] = ()
+
+
+@dataclass(frozen=True)
 class RuleGenResult:
     draft: RuleDraft
     rule_yaml: str
@@ -97,6 +113,7 @@ def generate_rule(
     sigma_rules: list[Hit],
     model: BaseChatModel,
     config: RunnableConfig | None = None,
+    repair: RepairContext | None = None,
 ) -> RuleGenResult:
     _, _, category = search_plan(alert)  # the event's Sigma logsource category, or None
     llm = model.bind_tools([RuleDraft], tool_choice=ANSWER_TOOL).with_retry(
@@ -106,7 +123,7 @@ def generate_rule(
     )
     messages: list[BaseMessage] = [
         SystemMessage(SYSTEM_PROMPT),
-        HumanMessage(build_rule_message(alert, verdict, sigma_rules, category)),
+        HumanMessage(build_rule_message(alert, verdict, sigma_rules, category, repair)),
     ]
     errors: list[str] = []
     in_tokens = out_tokens = calls = 0
@@ -141,7 +158,11 @@ def generate_rule(
 
 
 def build_rule_message(
-    alert: Alert, verdict: TriageVerdict, sigma_rules: list[Hit], category: str | None
+    alert: Alert,
+    verdict: TriageVerdict,
+    sigma_rules: list[Hit],
+    category: str | None,
+    repair: RepairContext | None = None,
 ) -> str:
     """The triage view of the alert (same untrusted-field split), with the verdict on top and the
     existing rules relabeled as style examples. ATT&CK references are left out."""
@@ -161,6 +182,40 @@ def build_rule_message(
             alert_view.rstrip(),
             "## EXISTING SIGMA RULES (style examples; none of them fires on this alert)",
             *(rules or ["(none)"]),
+            *([repair_section(repair)] if repair else []),
+        ]
+    )
+
+
+def repair_section(repair: RepairContext) -> str:
+    """The validator's verdict on the previous version and what to change. Event values and the
+    previous rule (built from event values) are quoted as untrusted; the report is our own text."""
+    hits = [
+        f"- {sample_id}: "
+        + ", ".join(
+            f"{k}=<UNTRUSTED>{json.dumps(v[:200], ensure_ascii=False)}</UNTRUSTED>"
+            for k, v in values.items()
+        )
+        for sample_id, values in repair.benign_hits
+    ]
+    return "\n".join(
+        [
+            f"## REPAIR: write version {repair.attempt} of {repair.max_attempts} of the rule",
+            "Your previous rule failed validation against held-out attacks and benign events.",
+            "### Previous rule (its values come from the event)",
+            f"<UNTRUSTED>\n{repair.previous_rule.strip()}\n</UNTRUSTED>",
+            "### Validator report",
+            repair.report.strip() or "(no report)",
+            "### Benign events the previous rule fired on (it must NOT fire on these)",
+            *(hits or ["(none)"]),
+            "### What to change",
+            "- Fired on benign events: tighten. Add a field test the attack has and these events "
+            "lack, or require several keywords with all=true. Do not filter by the benign "
+            "process name: an attacker can run under the same name.",
+            "- Missed held-out attacks (you are not shown them): the rule is too narrow. Drop "
+            "details specific to this one event (tool or file names, user paths) and match the "
+            "behavior that every repetition of the attack shares.",
+            "- The new rule must still fire on the alert above.",
         ]
     )
 
@@ -188,11 +243,26 @@ def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event]) -> str:
             misses.append(
                 f"selection {i}: {m.field} {m.match} {'all of ' if m.all else ''}{m.values} "
                 "matches no event; "
-                f"the event's {m.field} holds {held}"
+                f"the event's {m.field} holds {held}" + _slash_hint(m, events)
             )
     if not misses:
         return "every selection matches the alert, but a filter excludes it: remove that filter"
     return "the rule does not fire on the alert it was written for. " + " | ".join(misses)
+
+
+def _slash_hint(m: FieldMatch, events: list[Event]) -> str:
+    """Path fields take '/' (code converts it), other fields don't: a '/' path in CommandLine
+    never matches Sysmon's '\\'. Live on day3-070 (6 Oct) the model wrote '/Desktop/' there."""
+    paths = [v for v in m.values if "/" in v[1:]]  # not a switch like '/c'
+    if m.field in PATH_FIELDS or not paths:
+        return ""
+    fixed = m.model_copy(update={"values": [v.replace("/", "\\") for v in paths], "all": False})
+    if not any(_item_matches(fixed, e) for e in events):
+        return ""
+    return (
+        f" ({m.field} is not a path field: '/' is NOT converted there, so a '/' path never "
+        "matches; use the keyword without separators, e.g. 'Desktop' instead of '/Desktop/')"
+    )
 
 
 def _item_matches(m: FieldMatch, event: Event) -> bool:

@@ -44,12 +44,12 @@ def test_rules_off_skips_generation_without_a_model_call():
     assert nodes.output(state)["outcome"] == "rule_skipped"
 
 
-def test_generated_rule_goes_to_validation_with_one_attempt():
+def test_generated_rule_goes_to_validation_as_version_one():
     model = ScriptedModel(replies=[_call(VALID)], seen=[])
     update = nodes.rule_gen_live(_state(), _config(model))
     assert "title: LSASS dump via comsvcs MiniDump" in update["draft_rule"]
     assert update["rulegen"]["technique_ids"] == ["T1003.001"]
-    assert update["attempts"] == 1 and update["max_attempts"] == 1  # repair is still a stub
+    assert update["attempts"] == 1 and "max_attempts" not in update  # MAX_ATTEMPTS applies
     assert build.after_rule_gen(_state() | update) == "validate"
 
 
@@ -93,7 +93,7 @@ def test_validator_verdicts_drive_the_outcome():
 
     state = _with_rule()
     state |= nodes.validate_live(state, _config(validator=lambda *a: _result(False)))
-    assert build.after_validate(state) == "output"  # max_attempts=1: no stub repair
+    assert build.after_validate(state) == "repair"  # attempt 1 of 3 failed
     assert nodes.output(state)["outcome"] == "rule_failed"
 
 
@@ -119,15 +119,27 @@ def _graded(tp: int, missed: int = 0, fp: int = 0, compiled: bool = True) -> Val
 
 
 @pytest.mark.parametrize(
-    "result, passed, recall",
+    "result, verdict, recall",
     [
-        (_graded(tp=4, missed=3), True, 4 / 7),  # Day 12 day3-070 v0: narrow but correct
-        (_graded(tp=0, missed=7), False, 0.0),  # day3-070 v1: a fingerprint of one event
-        (_graded(tp=0), True, None),  # no held-out attack of that technique: benign side only
-        (_graded(tp=5, fp=1), False, 1.0),  # any benign hit fails
-        (_graded(tp=1, compiled=False), False, 1.0),
+        (_graded(tp=4, missed=3), "passed", 4 / 7),  # day3-070 v0: >= 2 repeats caught
+        (_graded(tp=1, missed=3), "failed", 1 / 4),  # repair-try2 under v2: 1 of 4, too narrow
+        (_graded(tp=2, missed=4), "passed", 2 / 6),  # min(2, n) = 2
+        (_graded(tp=1), "passed", 1.0),  # only 1 repeat exists: catching it is enough
+        (_graded(tp=0, missed=1), "failed", 0.0),
+        (_graded(tp=0, missed=7), "failed", 0.0),  # day3-070 v1: a fingerprint of one event
+        (_graded(tp=0), "needs_review", None),  # no repeat to test on: a human decides
+        (_graded(tp=0, fp=1), "failed", None),  # ...unless it is noisy: then it is just a fail
+        (_graded(tp=5, fp=1), "failed", 1.0),  # any benign hit fails
+        (_graded(tp=2, compiled=False), "failed", 1.0),
     ],
 )
-def test_pass_rule_needs_zero_fp_and_one_held_out_hit(result, passed, recall):
-    assert nodes.rule_passed(result) is passed
+def test_pass_bar_v2(result, verdict, recall):
+    assert nodes.rule_verdict(result) == verdict
+    assert nodes.rule_passed(result) is (verdict == "passed")
     assert nodes.rule_recall(result) == recall
+
+
+def test_needs_review_ends_the_loop_with_its_own_outcome():
+    state = _with_rule() | {"validations": [_graded(tp=0)]}
+    assert build.after_validate(state) == "output"  # repair can't create test data
+    assert nodes.output(state)["outcome"] == "rule_needs_review"

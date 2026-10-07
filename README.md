@@ -12,7 +12,7 @@ Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / 
 
 ## Status
 
-Week 2 (2026-10-02). Golden set: 150 alerts, all human-reviewed (golden-v1.1), split into a dev set
+Week 3 (2026-10-07). Golden set: 150 alerts, all human-reviewed (golden-v1.1), split into a dev set
 (30, used for tuning) and a sealed test set (30, run once at the end). CI runs lint + tests on
 every PR; `main` is protected. Every change is measured on dev and logged in
 [`docs/experiments.md`](docs/experiments.md); failure analysis in
@@ -32,16 +32,30 @@ setup run twice moves accuracy by ~0.03-0.07 and F1 by ~0.03):
 | + launch context (parent -> child chain as a sentence) | **65%** | **0.92** | 0.60 |
 
 The search gain is solid (deterministic test, no model involved). The triage gain points the same
-way but is within run-to-run noise on 30 alerts; the sealed test split gives the final number.
+way but is within run-to-run noise on 30 alerts.
 Tried and dropped: smaller technique chunks, two security embedding models (SecEmbed), a security
 reranker (SecReranker).
+
+**Final number on the sealed test split** (run once, n=30 each; before = `baseline-v0`):
+
+![Week 2 before/after on the test split](results/charts/week2.png)
+
+| | before | after (BM25 + launch context) |
+|---|---|---|
+| accuracy | 0.97 | 0.90 |
+| attack recall | 0.95 | 0.95 |
+| technique F1 | 0.60 | 0.62 |
+| invented IOCs | 0.06 | 0.02 |
+
+A tie: the search gain did not carry over to triage on unseen alerts (F1 +0.02 is noise), it
+cut invented IOCs but added 2 false positives (keyword matches on benign events). Reported as is.
 
 **Coverage:** 46 of the 100 golden attacks (46%) are already caught by a public SigmaHQ rule among
 the 5 our search returns (`uv run python -m evals.coverage`, run with Mouadh's matcher). A lower
 bound, since rules outside the top 5 are not tried. The other 54 are what rule generation is for.
 
-Prompt-injection attack success rate on the unhardened agent: 20% (2/10;
-the 40-payload corpus is ready, live run pending).
+Prompt-injection attack success rate on the unhardened agent: **25% (10/40 payloads)**, worst
+category tool hijacking (4/8). Hardening comes in Week 4; the same 40 payloads are re-run after it.
 
 ## Golden dataset: how we measured labeling quality
 

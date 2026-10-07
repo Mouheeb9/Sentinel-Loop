@@ -1,0 +1,22 @@
+# Triage eval gate (Day 17, evals/gate.py). CI fails a PR when the committed dev results don't
+# match the current triage input, or score below these floors.
+#
+# results: the dev-split run of the CURRENT triage prompt/model/search. A PR that changes the
+# prompt must re-measure on dev (`uv run python -m evals.run --split dev --configs rag --run NAME`)
+# and point this at the new file.
+#
+# Floors are PROVISIONAL (Mouheb, 2026-10-07): the worse of the two dev runs of prompt
+# a7a0d78eaac5 (results/launch-context, results/launch-context-repeat) minus the measured
+# run-to-run noise, so an unlucky re-run of the same prompt passes and a real drop fails.
+#   accuracy .90/.93 -> .83 | attack recall .85/.90 -> .80 | F1 .63/.57 -> .52
+#   invented IOCs .16/.11 -> .20
+# ADR 0003 (Mouadh + Mouheb) sets the final values.
+results: results/launch-context/rag.json
+config: rag
+floors:
+  accuracy: 0.83          # min share of correct verdicts
+  attack_recall: 0.80     # min share of true attacks called true_positive
+  technique_f1: 0.52      # min partial-credit technique F1
+  schema_valid: 0.95      # min share of answers that parse as a TriageVerdict
+ceilings:
+  invented_ioc_rate: 0.20 # max share of quoted IOCs that are not in the alert

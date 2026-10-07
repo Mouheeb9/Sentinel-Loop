@@ -5,7 +5,7 @@ a `StubScript` in the run config (`{"configurable": {"stub": StubScript(...)}}`)
 force any path. Real implementations (`*_live`) replace them one at a time: enrich and triage
 since Day 5, route since Day 11 (matcher injectable via `config["configurable"]["matcher"]`),
 rule_gen and validate since Day 13 (model / validator injectable as "rulegen_model" /
-"validator"). Repair is still a stub, so a live run tries one rule version (max_attempts=1).
+"validator"), repair since Day 16 (event lookup injectable as "event_lookup").
 
 `PipelineOptions` in `config["configurable"]["pipeline"]` switches retrieval, enrichment tools
 and rule generation off for the eval baselines (evals/run.py); the default is everything on.
@@ -14,16 +14,18 @@ and rule generation off for the eval baselines (evals/run.py); the default is ev
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from typing import Literal
 
 import yaml
 from langchain_core.runnables import RunnableConfig
 
+from sentinel.agents import repair as repair_module
 from sentinel.agents.enrich import enrich_alert
 from sentinel.agents.routing import triage_routed
 from sentinel.agents.rule_gen import RuleGenError, generate_rule
-from sentinel.graph.state import Outcome, SentinelState
+from sentinel.graph.state import MAX_ATTEMPTS, Outcome, SentinelState
 from sentinel.llm import chat_model, rulegen_model_name
-from sentinel.schemas import TriageVerdict, ValidationResult
+from sentinel.schemas import FailedSample, TriageVerdict, ValidationResult
 from sentinel.validation import validate as validate_module
 from sentinel.validation.coverage import check_coverage
 
@@ -63,15 +65,40 @@ def rule_recall(result: ValidationResult) -> float | None:
     return result.true_positives / n if n else None
 
 
-def rule_passed(result: ValidationResult) -> bool:
-    """Pass rule v1 (Day 13): compiles, fires on NO benign sample, and catches at least one
-    held-out same-technique attack (or none exists to test). Recall is reported, not required:
-    v0 demanded every held-out attack fire, which failed narrow-but-correct rules on attacks
-    they were never meant to cover (a T1059.003 rule for one launcher vs. all cmd abuse). A
-    benign hit always fails: in a SOC a noisy rule costs more than a missed variant."""
+RuleVerdict = Literal["passed", "needs_review", "failed"]
+
+
+def rule_verdict(result: ValidationResult) -> RuleVerdict:
+    """Pass bar v2 (2026-10-07, ADR 0003): compiles, fires on NO benign event, and catches at
+    least min(2, n) of the n held-out repeats of the attack (validator v2: same procedure when the
+    alert has one, else same technique). n = 0: nothing to test recall on, so a human decides.
+
+    v1 passed with a single held-out hit, so a near-fingerprint passed (repair-try2: 1 of 4
+    repeats). A recall floor (>= .3) was dropped: n is at most 6 in golden-v1.1, and 2 of 6 already
+    clears it. A benign hit always fails: in a SOC a noisy rule costs more than a missed variant."""
     if not result.compiled or result.compile_errors or result.false_positives:
+        return "failed"
+    n = held_out_positives(result)
+    if n == 0:
+        return "needs_review"
+    return "passed" if result.true_positives >= min(2, n) else "failed"
+
+
+def rule_passed(result: ValidationResult) -> bool:
+    return rule_verdict(result) == "passed"
+
+
+def stalled(validations: list[ValidationResult]) -> bool:
+    """The last repair changed nothing the validator can see: same counts, same failing samples.
+    Another attempt would most likely repeat it, so the loop stops and saves the quota."""
+    if len(validations) < 2:
         return False
-    return result.true_positives >= 1 or held_out_positives(result) == 0
+
+    def seen(v: ValidationResult) -> tuple:
+        failing = sorted((s.sample_id, s.should_fire) for s in v.failed_samples)
+        return v.compiled, v.true_positives, v.false_positives, failing
+
+    return seen(validations[-1]) == seen(validations[-2])
 
 
 def ingest(state: SentinelState) -> dict:
@@ -147,7 +174,47 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
         )
     except RuleGenError as e:
         return {"draft_rule": "", "attempts": 1, "rulegen": {"error": str(e)[:1000]}}
-    info = {
+    return {
+        "draft_rule": r.rule_yaml,
+        "rule_versions": [r.rule_yaml],
+        "attempts": 1,
+        "rulegen": _info(r, model_name),
+    }
+
+
+def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
+    """The next version of a rule that failed validation: rule_gen again, told what the validator
+    found (agents/repair.py). Never raises: no valid rule ends the run on the last validation."""
+    configurable = (config or {}).get("configurable", {})
+    model_name = rulegen_model_name()
+    model = configurable.get("rulegen_model") or chat_model(model_name)
+    lookup = configurable.get("event_lookup") or repair_module.default_event_lookup
+    attempt = state.get("attempts", 0) + 1
+    context = repair_module.build_repair_context(
+        state["draft_rule"],
+        state["validations"][-1],
+        attempt,
+        state.get("max_attempts", MAX_ATTEMPTS),
+        lookup,
+    )
+    try:
+        r = generate_rule(
+            state["alert"], state["verdict"], state.get("sigma_rules", []), model, config, context
+        )
+    except RuleGenError as e:
+        error = {"attempt": attempt, "error": str(e)[:1000]}
+        return {"repairs": [error], "repair_failed": True}
+    info = {"attempt": attempt, **_info(r, model_name)}
+    return {
+        "draft_rule": r.rule_yaml,
+        "rule_versions": [r.rule_yaml],
+        "attempts": attempt,
+        "repairs": [info],
+    }
+
+
+def _info(r, model_name: str) -> dict:
+    return {
         "title": r.draft.title,
         "technique_ids": r.draft.technique_ids,
         "schema_retries": r.schema_retries,
@@ -156,7 +223,6 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
         "llm_calls": r.llm_calls,
         "model": model_name,
     }
-    return {"draft_rule": r.rule_yaml, "attempts": 1, "max_attempts": 1, "rulegen": info}
 
 
 def validate_live(state: SentinelState, config: RunnableConfig) -> dict:
@@ -184,20 +250,25 @@ def validate_live(state: SentinelState, config: RunnableConfig) -> dict:
 
 
 def rule_gen(state: SentinelState) -> dict:
-    return {"draft_rule": "title: stub rule v1", "attempts": 1}
+    rule = "title: stub rule v1"
+    return {"draft_rule": rule, "rule_versions": [rule], "attempts": 1}
 
 
 def validate(state: SentinelState, config: RunnableConfig) -> dict:
     passes = _script(config).validation_passes
     run = len(state.get("validations", []))
     ok = passes[min(run, len(passes) - 1)]
+    version = f"stub-v{state.get('attempts', 0)}"
+    # Each failure names a different sample, so the stall check sees the repair change something.
+    failed = [FailedSample(sample_id=version, should_fire=True, did_fire=False, event_ref="stub")]
     result = ValidationResult(
-        rule_id=f"stub-v{state.get('attempts', 0)}",
+        rule_id=version,
         compiled=ok,
         compile_errors=[] if ok else ["stub failure"],
         true_positives=1 if ok else 0,
         false_positives=0,
         fp_rate=0.0,
+        failed_samples=[] if ok else failed,
         feedback="" if ok else "stub: rule did not compile",
     )
     return {"validations": [result]}
@@ -205,11 +276,31 @@ def validate(state: SentinelState, config: RunnableConfig) -> dict:
 
 def repair(state: SentinelState) -> dict:
     attempts = state.get("attempts", 0) + 1
-    return {"draft_rule": f"title: stub rule v{attempts}", "attempts": attempts}
+    rule = f"title: stub rule v{attempts}"
+    return {"draft_rule": rule, "rule_versions": [rule], "attempts": attempts}
 
 
 def output(state: SentinelState) -> dict:
-    return {"outcome": _outcome(state)}
+    update: dict = {}
+    best = best_version(state.get("validations", []))
+    versions = state.get("rule_versions", [])
+    if best is not None and not state.get("validation_pending") and best < len(versions):
+        update = {"draft_rule": versions[best], "best_attempt": best + 1}
+    return update | {"outcome": _outcome(state | update)}
+
+
+def best_version(validations: list[ValidationResult]) -> int | None:
+    """Index of the version to keep: passed > needs review > failed; then fewer benign hits, then
+    more held-out repeats caught; a tie goes to the later version (it saw more feedback). A
+    repair can make a rule worse (day3-070: v0 4/7, v1 0/7), so the last version isn't always
+    the one to ship."""
+    rank = {"failed": 0, "needs_review": 1, "passed": 2}
+
+    def key(i: int) -> tuple:
+        v = validations[i]
+        return rank[rule_verdict(v)], -v.false_positives, v.true_positives, i
+
+    return max(range(len(validations)), key=key) if validations else None
 
 
 def _outcome(state: SentinelState) -> Outcome:
@@ -225,4 +316,11 @@ def _outcome(state: SentinelState) -> Outcome:
     if state.get("validation_pending"):
         return "rule_unvalidated"
     validations = state.get("validations", [])
-    return "rule_passed" if validations and rule_passed(validations[-1]) else "rule_failed"
+    if not validations:
+        return "rule_failed"
+    best = validations[state.get("best_attempt", len(validations)) - 1]
+    return {
+        "passed": "rule_passed",
+        "needs_review": "rule_needs_review",
+        "failed": "rule_failed",
+    }[rule_verdict(best)]

@@ -17,6 +17,9 @@ Summary (results/rulegen-v0.json):
     rules_generated / generation_failures   how many alerts got a rule
     compile_rate                            share of generated rules that compile
     validation_pass_rate, median_fp_rate    None while no validator ran
+    needs_review                            0 FP but no held-out repeat to test (pass bar v2)
+    first_attempt_pass_rate                 share passing on version 1 (before any repair)
+    repairs                                 repair calls made (Week 3 loop, max 2 per alert)
     outcomes                                count per pipeline outcome
 
 Resumable like evals/run.py: rows go to results/rulegen-v0.rows.jsonl as they finish; a re-run
@@ -39,7 +42,7 @@ from dotenv import load_dotenv
 from evals.run import DAILY_QUOTA_MARKERS
 from evals.split import load_split
 from evals.triage_smoke import load_golden
-from sentinel.graph.nodes import StubScript, rule_passed, rule_recall
+from sentinel.graph.nodes import StubScript, rule_passed, rule_recall, rule_verdict
 from sentinel.llm import rulegen_model_name
 from sentinel.run import default_owner, models_label, run_alert
 from sentinel.schemas import Alert
@@ -72,6 +75,9 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
     except Exception as e:  # rate limit, provider down, DB down: retried on the next run
         return {"error": f"transport: {type(e).__name__}: {str(e)[:300]}"}
     f = res.final
+    validations = f.get("validations") or []
+    # The version output kept (best_attempt), else the last one.
+    best = validations[f.get("best_attempt", len(validations)) - 1] if validations else None
     v = f["verdict"]
     return {
         "outcome": f.get("outcome"),
@@ -81,11 +87,13 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
         "covering_rule_id": f.get("covering_rule_id"),
         "rulegen": f.get("rulegen"),
         "rule_yaml": f.get("draft_rule") or None,
-        "validation": f["validations"][-1].model_dump(mode="json")
-        if f.get("validations")
-        else None,
+        "validation": best.model_dump(mode="json") if best else None,
         "validation_pending": bool(f.get("validation_pending")),
-        "recall": rule_recall(f["validations"][-1]) if f.get("validations") else None,
+        "recall": rule_recall(best) if best else None,
+        "best_attempt": f.get("best_attempt"),
+        # One entry per rule version validated, oldest first: did that version pass?
+        "attempt_passes": [rule_passed(v) for v in f.get("validations", [])],
+        "repairs": f.get("repairs", []),
         "trace": res.trace_url,
     }
 
@@ -99,12 +107,12 @@ def regrade(row: dict[str, Any], alert: Alert) -> dict[str, Any]:
         result = validate_module.validate(row["rule_yaml"], alert, techniques)
     except NotImplementedError:
         return row
-    passed = rule_passed(result)
+    verdict = rule_verdict(result)
     return row | {
         "validation": result.model_dump(mode="json"),
         "validation_pending": False,
         "recall": rule_recall(result),
-        "outcome": "rule_passed" if passed else "rule_failed",
+        "outcome": f"rule_{verdict}",
     }
 
 
@@ -123,6 +131,13 @@ def summarize(rows: list[dict[str, Any]]) -> dict[str, Any]:
         "validation_pass_rate": (
             sum(r["outcome"] == "rule_passed" for r in graded) / len(graded) if graded else None
         ),
+        "needs_review": sum(r["outcome"] == "rule_needs_review" for r in graded),
+        "first_attempt_pass_rate": (
+            sum((r.get("attempt_passes") or [False])[0] for r in graded) / len(graded)
+            if graded
+            else None
+        ),
+        "repairs": sum(len(r.get("repairs") or []) for r in done),
         "median_recall": (
             statistics.median(recalls)
             if (recalls := [r["recall"] for r in graded if r.get("recall") is not None])

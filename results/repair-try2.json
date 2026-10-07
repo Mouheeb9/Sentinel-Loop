@@ -1,0 +1,143 @@
+{
+  "meta": {
+    "triage_models": "openrouter:nvidia/nemotron-3-super-120b-a12b:free -> openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "rulegen_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "alert_ids": [
+      "day3-070"
+    ],
+    "written_at": "2026-10-06T16:38:21+00:00"
+  },
+  "summary": {
+    "alerts": 1,
+    "finished": 1,
+    "rules_generated": 1,
+    "generation_failures": 0,
+    "compile_rate": 1.0,
+    "validated": 1,
+    "validation_pass_rate": 1.0,
+    "first_attempt_pass_rate": 0.0,
+    "repairs": 1,
+    "median_recall": 0.14285714285714285,
+    "median_fp_rate": 0.0,
+    "outcomes": {
+      "rule_passed": 1
+    },
+    "schema_retries": 0
+  },
+  "rows": [
+    {
+      "alert_id": "day3-070",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1059.003"
+      ],
+      "outcome": "rule_passed",
+      "path": [
+        "ingest",
+        "enrich",
+        "triage",
+        "route",
+        "rule_gen",
+        "validate",
+        "repair",
+        "validate",
+        "output"
+      ],
+      "verdict": "true_positive",
+      "triage_techniques": [
+        "T1059.003",
+        "T1204.002"
+      ],
+      "covering_rule_id": null,
+      "rulegen": {
+        "title": "GruntHTTP.exe Spawning Cmd.exe to Execute MoveExcel4.exe with IP Argument",
+        "technique_ids": [
+          "T1059.003",
+          "T1204.002"
+        ],
+        "schema_retries": 0,
+        "input_tokens": 3773,
+        "output_tokens": 1049,
+        "llm_calls": 1,
+        "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+      },
+      "rule_yaml": "title: User-Space Executable Spawning Cmd.exe to Run Executable with Private IP Argument\nid: 8a3ac2fb-54b7-50b4-930b-9518f446366d\nstatus: experimental\ndescription: Detects a non-system executable in a user-writable directory spawning\n  cmd.exe to execute another executable from a user-writable directory with a private\n  IP address argument, indicating adversary use of Windows command shell for execution\n  of a malicious file with C2 communication.\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-10-06'\ntags:\n- attack.t1059.003\n- attack.t1204.002\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    ParentImage|contains:\n    - \\Users\\\\\n    - \\AppData\\\\\n    - \\Temp\\\\\n    - \\Desktop\\\\\n    - \\Downloads\\\\\n    - \\Public\\\\\n    Image|endswith:\n    - cmd.exe\n    CommandLine|contains|all:\n    - .exe\n    - '172.'\n  selection2:\n    ParentImage|contains:\n    - \\Users\\\\\n    - \\AppData\\\\\n    - \\Temp\\\\\n    - \\Desktop\\\\\n    - \\Downloads\\\\\n    - \\Public\\\\\n    Image|endswith:\n    - cmd.exe\n    CommandLine|contains|all:\n    - .exe\n    - 192.168.\n  selection3:\n    ParentImage|contains:\n    - \\Users\\\\\n    - \\AppData\\\\\n    - \\Temp\\\\\n    - \\Desktop\\\\\n    - \\Downloads\\\\\n    - \\Public\\\\\n    Image|endswith:\n    - cmd.exe\n    CommandLine|contains|all:\n    - .exe\n    - '10.'\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative scripts running from user profile that invoke cmd.exe\n  to execute tools with IP arguments (rare)\nlevel: high\n",
+      "validation": {
+        "rule_id": "8a3ac2fb-54b7-50b4-930b-9518f446366d",
+        "compiled": true,
+        "compile_errors": [],
+        "true_positives": 1,
+        "false_positives": 0,
+        "fp_rate": 0.0,
+        "failed_samples": [
+          {
+            "sample_id": "day3-050",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-050/sysmon-539807",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-054",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-054/sysmon-6a4fd1b04d394bc2",
+            "note": "held-out T1204.002 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-068",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-068/sysmon-45df3bb9ca01adcf",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-119",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-119/sysmon-675b133900ec672f",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-154",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-154/sysmon-1818951",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          },
+          {
+            "sample_id": "day3-164",
+            "should_fire": true,
+            "did_fire": false,
+            "event_ref": "golden:day3-164/sysmon-599544",
+            "note": "held-out T1059.003 attack, rule did not fire"
+          }
+        ],
+        "feedback": "TP: fires on 1/7 held-out T1059.003/T1204.002 attacks in process_creation; missed day3-050, day3-054, day3-068, day3-119, day3-154 +1 more: compare their fields with the selection\nbenign: fires on 0/23 benign_noisy events in process_creation\nsiblings (info, not graded): fires on 0/11 same-parent attacks of another sub-technique\nnoise: 0/238 held-out pool events in process_creation fire"
+      },
+      "validation_pending": false,
+      "recall": 0.14285714285714285,
+      "attempt_passes": [
+        false,
+        true
+      ],
+      "repairs": [
+        {
+          "attempt": 2,
+          "title": "User-Space Executable Spawning Cmd.exe to Run Executable with Private IP Argument",
+          "technique_ids": [
+            "T1059.003",
+            "T1204.002"
+          ],
+          "schema_retries": 0,
+          "input_tokens": 4359,
+          "output_tokens": 3643,
+          "llm_calls": 1,
+          "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+        }
+      ],
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/dc57fa814f8695b191c62d7e679195c9",
+      "at": "2026-10-06T16:38:21+00:00"
+    }
+  ]
+}

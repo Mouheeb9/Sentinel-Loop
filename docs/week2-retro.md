@@ -1,7 +1,7 @@
 # Week 2 retro (Days 8-14, 2026-09-25 to 2026-10-04)
 
-Draft by Mouheb on Day 14; Mouadh adds his side and the test-split numbers are filled in when the
-"after" run finishes. Week 2 was planned to end on Thu 1 Oct; it ran 3 days over (quota, review).
+Draft by Mouheb on Day 14, Mouadh's side added 2026-10-05, test-split numbers filled in
+2026-10-06. Week 2 was planned to end on Thu 1 Oct; it ran 5 days over (quota, review).
 
 ## What shipped
 
@@ -36,12 +36,21 @@ Draft by Mouheb on Day 14; Mouadh adds his side and the test-split numbers are f
 
 | | before (`baseline-v0`, rag) | after (BM25 + launch context, rag) |
 |---|---|---|
-| alerts | 30/30 | 16/30 (quota, resumes 2026-10-05) |
-| accuracy | 0.97 | _pending_ |
-| attack recall | 0.95 (1 missed) | _pending_ |
-| technique F1 | 0.60 | _pending_ |
-| exact primary technique | 0.55 | _pending_ |
-| invented IOCs | 0.06 | _pending_ |
+| alerts | 30/30 | 30/30 |
+| accuracy | 0.97 | 0.90 |
+| attack recall | 0.95 (1 missed) | 0.95 (1 missed) |
+| benign recall | 1.00 | 0.80 (2 benign called attacks) |
+| technique F1 | 0.60 | 0.62 |
+| exact primary technique | 0.55 | 0.50 |
+| invented IOCs | 0.06 | 0.02 |
+
+**Verdict: a tie, not a win.** The search gain on dev (recall@5 0.35 → 0.65) did not carry over
+to triage on test: F1 +0.02 is inside the ±0.05 noise. Fewer invented IOCs, paid with 2 false
+positives where a keyword in a benign event matched a technique name (`W32Time` → T1547.003,
+`-Embedding` → T1021.003). Both runs miss the same PurpleSharp attack (day3-137). Hypotheses
+logged in `docs/experiments.md`, to be checked on dev, not tuned on these test alerts. Chart:
+`results/charts/week2.png`; raw results: `results/test/rag.json` (after),
+`results/test/before-baseline-v0/rag.json` (before, run from a `baseline-v0` worktree).
 
 Note: the test split scored higher than dev for the baseline (0.97 vs 0.83 accuracy): with 30
 alerts, the split itself moves the number. Compare before/after on the same split only.

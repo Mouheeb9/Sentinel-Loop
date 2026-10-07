@@ -3,8 +3,9 @@
     ingest -> enrich -> triage -> route --(new threat)--> rule_gen --(rule)--> validate
                route --(benign / needs_review / covered)--> output
                rule_gen --(no rule: failed / skipped)--> output
-               validate --(passed, unvalidated, or fail at the last attempt)--> output
-               validate --(fail, attempts < max_attempts)--> repair --> validate
+               validate --(passed, needs review, unvalidated, or fail at the last attempt)--> output
+               validate --(fail, attempts < max_attempts, not stalled)--> repair
+               repair --(new rule)--> validate;  repair --(no valid rule)--> output
 
 The conditional edges below are the only branching logic; nodes never pick their successor.
 """
@@ -41,15 +42,20 @@ def after_rule_gen(state: SentinelState) -> Literal["validate", "output"]:
 def after_validate(state: SentinelState) -> Literal["repair", "output"]:
     if state.get("validation_pending"):  # no validator yet: nothing to repair against
         return "output"
-    if nodes.rule_passed(state["validations"][-1]):
+    if nodes.rule_verdict(state["validations"][-1]) != "failed":  # passed, or needs a human
         return "output"
     if state.get("attempts", 0) >= state.get("max_attempts", MAX_ATTEMPTS):
+        return "output"
+    if nodes.stalled(state["validations"]):
         return "output"
     return "repair"
 
 
-# Nodes with a real implementation so far (repair is still a stub).
-LIVE_NODES = ("enrich", "triage", "route", "rule_gen", "validate")
+def after_repair(state: SentinelState) -> Literal["validate", "output"]:
+    return "output" if state.get("repair_failed") else "validate"
+
+
+LIVE_NODES = ("enrich", "triage", "route", "rule_gen", "validate", "repair")
 
 
 def build_graph(live: bool = False):
@@ -68,7 +74,7 @@ def build_graph(live: bool = False):
     g.add_conditional_edges("route", after_route)
     g.add_conditional_edges("rule_gen", after_rule_gen)
     g.add_conditional_edges("validate", after_validate)
-    g.add_edge("repair", "validate")
+    g.add_conditional_edges("repair", after_repair)
     g.add_edge("output", END)
 
     return g.compile().with_config(recursion_limit=RECURSION_LIMIT)

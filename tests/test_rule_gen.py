@@ -182,3 +182,35 @@ def test_all_values_rule_that_misses_its_alert_names_the_and():
     result = generate_rule(_alert(), VERDICT, [], model)
     assert result.schema_retries == 1
     assert "all of ['comsvcs', 'procdump']" in model.seen[1][-1].content
+
+
+def test_slash_path_in_command_line_gets_a_hint():
+    """day3-070 live (6 Oct): '/System32/' in CommandLine, where '/' is not converted."""
+    broken = VALID | {
+        "selections": [
+            {
+                "items": [
+                    {
+                        "field": "CommandLine",
+                        "match": "contains",
+                        "values": ["/c", "/System32/", "MiniDump"],
+                        "all": True,
+                    }
+                ]
+            }
+        ]
+    }
+    model = ScriptedModel(replies=[_call(broken), _call(VALID)], seen=[])
+    generate_rule(_alert(), VERDICT, [], model)
+    assert "is not a path field" in model.seen[1][-1].content
+
+
+def test_no_slash_hint_for_switches_or_values_that_are_absent_anyway():
+    broken = VALID | {
+        "selections": [
+            {"items": [{"field": "CommandLine", "match": "contains", "values": ["/q", "/nope/"]}]}
+        ]
+    }
+    model = ScriptedModel(replies=[_call(broken), _call(VALID)], seen=[])
+    generate_rule(_alert(), VERDICT, [], model)
+    assert "is not a path field" not in model.seen[1][-1].content

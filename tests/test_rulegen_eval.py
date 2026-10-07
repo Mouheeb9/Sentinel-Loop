@@ -42,6 +42,21 @@ def test_summary_counts_rules_and_keeps_unvalidated_out_of_pass_rate():
     assert s["outcomes"]["rule_unvalidated"] == 1
 
 
+def test_summary_separates_first_attempt_from_after_repair():
+    rows = [
+        _row("rule_passed", validation={"compiled": True, "fp_rate": 0.0}, attempt_passes=[True]),
+        _row(
+            "rule_passed",
+            validation={"compiled": True, "fp_rate": 0.0},
+            attempt_passes=[False, True],
+            repairs=[{"attempt": 2}],
+        ),
+    ]
+    s = rg.summarize(rows)
+    assert s["first_attempt_pass_rate"] == 0.5 and s["validation_pass_rate"] == 1.0
+    assert s["repairs"] == 1
+
+
 def test_nothing_validated_gives_no_pass_rate():
     s = rg.summarize([_row("rule_unvalidated")])
     assert s["validation_pass_rate"] is None and s["median_fp_rate"] is None
@@ -128,3 +143,5 @@ def test_run_one_reads_the_pipeline_result(monkeypatch):
     row = rg.run_one(alert=None, trace=False)
     assert row["outcome"] == "rule_unvalidated" and row["validation_pending"]
     assert row["validation"]["feedback"] == "NOT VALIDATED"
+    assert row["attempt_passes"] == [False]  # 0 FP, nothing to test on: needs review
+    assert row["repairs"] == []

@@ -22,6 +22,7 @@ Outcome = Literal[
     "needs_review",  # triage unsure: hand to a human, no rule
     "covered",  # real threat, but an existing Sigma rule already detects it
     "rule_passed",  # new rule written and validated
+    "rule_needs_review",  # 0 FP, but no held-out repeat of the attack to test on: human decides
     "rule_failed",  # rule still failing after the last attempt, or no valid rule was generated
     "rule_unvalidated",  # rule written (and fires on its own alert), but no validator ran yet
     "rule_skipped",  # rule generation switched off (PipelineOptions.rules=False, e.g. evals)
@@ -52,15 +53,22 @@ class SentinelState(TypedDict):
     # couldn't run (no matcher yet): then "not covered" means unknown, not "no rule exists".
     coverage: NotRequired[dict]
 
-    # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair).
-    # Empty when rule generation failed or was skipped.
+    # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair; output
+    # sets it to the best version). Empty when rule generation failed or was skipped.
     draft_rule: NotRequired[str]
+    # Every rule version, oldest first; rule_versions[i] was graded by validations[i].
+    rule_versions: NotRequired[Annotated[list[str], operator.add]]
+    # output: which version (1-based) draft_rule and the outcome come from.
+    best_attempt: NotRequired[int]
     # rule_gen_live: title, technique_ids, schema_retries, tokens, llm_calls, model; or
     # {"error": ...} when no valid rule came back; or {"skipped": True}.
     rulegen: NotRequired[dict]
-    # How many rule versions this run may try. rule_gen_live sets 1 while repair is a stub
-    # (Day 13: "repair stays a stub, 1 attempt"); MAX_ATTEMPTS when unset.
+    # How many rule versions this run may try; MAX_ATTEMPTS when unset.
     max_attempts: NotRequired[int]
+    # repair_live: one dict per repair call (attempt, model, tokens, or error), oldest first.
+    repairs: NotRequired[Annotated[list[dict], operator.add]]
+    # repair_live: True when the model gave no valid rule; the run ends on the last validation.
+    repair_failed: NotRequired[bool]
 
     # validate: one result per validation run, oldest first (appended, never overwritten).
     validations: NotRequired[Annotated[list[ValidationResult], operator.add]]
