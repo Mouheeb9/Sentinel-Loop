@@ -1,0 +1,28 @@
+title: Suspicious Desktop Executable Spawning Cmd to Execute Another Desktop Binary
+id: aa359567-e160-5c86-ae1d-f3a7a83275e0
+status: experimental
+description: Detects a non-standard executable in a user Desktop folder spawning cmd.exe
+  to execute another executable from Desktop, often with network arguments indicating
+  malicious payload execution.
+author: Sentinel Loop rule_gen v0
+date: '2026-10-02'
+tags:
+- attack.t1059.003
+- attack.t1204.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection1:
+    ParentImage|contains:
+    - Desktop
+    Image|endswith:
+    - cmd.exe
+    CommandLine|contains:
+    - /c
+    - Desktop
+    - .exe
+  condition: 1 of selection*
+falsepositives:
+- Legitimate software installers or updaters running from Desktop
+level: high
