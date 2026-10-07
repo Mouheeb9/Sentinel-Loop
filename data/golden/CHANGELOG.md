@@ -26,3 +26,17 @@ Frozen versions are never edited. Any change is a new version plus a line here.
   stamped `Mouadh` / 2026-09-21 on his confirmation of 2026-09-27; no label changed.
 - v1.1: 150 rows, 116 human-labeled by Mouadh (83 + 33), 34 by `Mouheb+Partner`, 0 `claude-draft`. 3 labels
   changed in total (048, 163, 113). Not tagged yet.
+
+## procedures.yaml (2026-10-06, validator v2)
+
+- New file `procedures.yaml`: groups golden true_positive alerts by procedure (HOW, not WHAT) for
+  validator v2. Labels in `v1.1.jsonl` are untouched. 80 rows (every TP whose primary technique has
+  >=2 golden TPs), 47 procedures; 12 can test a rule on another capture with the same log source.
+  Drafted from the v1.1 rationales, verified by Mouadh against the events on 2026-10-06.
+
+## validation benign set v1 (2026-10-06, validator v2)
+
+- New `data/validation/benign/`: benign negatives for the validator (not golden labels, triage is
+  not scored on them). `synthetic-v1.jsonl` = 20 hand-written everyday `cmd /c`, MSBuild and
+  script-host events (ids `syn-*`, not real telemetry); `real-v1.jsonl` = 12 real monitoring-agent
+  `cscript` events from the captures (11 new, 1 was already a golden event). Hand-check by Mouadh.

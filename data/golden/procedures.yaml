@@ -1,0 +1,142 @@
+# Procedure ids for golden true_positive alerts (validator v2). Owner: Mouadh.
+#
+# A technique says WHAT the attacker achieved; a procedure says HOW. Two alerts with the same
+# technique can share no field a rule could match on (day2-006 vs day3-053 below), so the
+# validator v2 requires a rule to catch the same procedure, and only reports the others.
+#
+# Format: alert_id: <technique id>/<short-kebab-name>
+# - alert_id must be a golden v1.1 true_positive
+# - the technique part must be one of that row's technique_ids
+# - labels stay in v1.1.jsonl untouched; this file only groups them
+# - same procedure = same method AND the event shows the same step (a tool launch and the process
+#   it later creates are two procedures: one rule can't catch both)
+# Rows not listed here are their own procedure (counted as "no same-procedure positive").
+# Covers every TP whose primary technique has >=2 golden TPs (80 rows, 23 techniques).
+# Status: drafted 2026-10-06 from the v1.1 rationales; verified by Mouadh against the events 2026-10-06.
+# Checked by tests/test_procedures.py.
+
+# T1003.001 LSASS memory
+day2-003: T1003.001/comsvcs-minidump  # rundll32 comsvcs.dll MiniDump
+day3-092: T1003.001/direct-syscall-dumper  # Outflank-Dumpert
+
+# T1003.002 SAM
+day2-004: T1003.002/esentutl-vss-copy
+day3-045: T1003.002/reg-save-hive  # reg save HKLM\sam
+day3-118: T1003.002/reg-save-hive  # reg save HKLM\SYSTEM
+
+# T1003.004 LSA secrets (same capture)
+day3-081: T1003.004/reg-save-lsa-secrets
+day3-131: T1003.004/reg-save-lsa-secrets
+
+# T1021.003 DCOM
+day3-051: T1021.003/dcom-excel-xll  # MoveExcelXLL.exe network connection
+day3-105: T1021.003/dcom-excel-xll  # MoveExcelXLL.exe process
+day3-071: T1021.003/dcom-excel4-macro  # MoveExcel4.exe (allowed capture)
+day3-166: T1021.003/dcom-excel4-macro  # MoveExcel4.exe (blocked capture)
+
+# T1047 WMI
+day3-052: T1047/wmiprvse-child-process  # cmd MSBuild under WmiPrvSE
+day3-125: T1047/wmiprvse-child-process  # GruntHTTP2 under WmiPrvSE
+day3-169: T1047/wmiprvse-child-process  # powershell -enc under WmiPrvSE
+day3-158: T1047/wmic-remote-process-create  # wmic /node: process call create
+
+# T1053.005 Scheduled task
+day2-008: T1053.005/schtasks-create
+day3-159: T1053.005/schtasks-create
+day2-030: T1053.005/powershell-registry-staged-payload  # the PowerShell staging, not schtasks
+
+# T1055 Process injection (herpaderping)
+day3-122: T1055/herpaderping-tool-run  # ProcessHerpaderping.exe command line
+day3-139: T1055/herpaderping-tool-run
+day3-091: T1055/herpaderped-process  # wardog.exe, the resulting process
+day3-173: T1055/herpaderped-process
+
+# T1059.001 PowerShell
+day3-082: T1059.001/empire-encoded-stager  # -noP -sta -w 1 -enc
+day3-098: T1059.001/empire-encoded-stager
+day3-101: T1059.001/empire-encoded-stager
+day3-104: T1059.001/empire-encoded-stager
+day3-108: T1059.001/empire-encoded-stager
+day3-112: T1059.001/empire-encoded-stager
+day3-141: T1059.001/empire-encoded-stager
+day3-062: T1059.001/mshta-spawns-powershell
+day3-077: T1059.001/hidden-powershell-from-fodhelper
+day3-144: T1059.001/covenant-hidden-powershell-launcher
+
+# T1059.003 Windows command shell
+day3-050: T1059.003/c2-implant-spawns-cmd  # GruntHTTP.exe parent
+day3-070: T1059.003/c2-implant-spawns-cmd
+day3-154: T1059.003/c2-implant-spawns-cmd
+day3-157: T1059.003/c2-implant-spawns-cmd
+day3-164: T1059.003/c2-implant-spawns-cmd
+day3-068: T1059.003/html-host-spawns-cmd  # hh.exe parent
+day3-119: T1059.003/html-host-spawns-cmd  # mshta.exe parent
+
+# T1069.001 Local groups (same capture)
+day2-009: T1069.001/net-localgroup-administrators
+day2-033: T1069.001/net-localgroup-administrators
+
+# T1134 Token manipulation (same capture)
+day3-048: T1134/cobaltstrike-named-pipe
+day3-163: T1134/cobaltstrike-named-pipe
+
+# T1190 Exploit public-facing app (same capture)
+day3-041: T1190/public-exploit-script
+day3-095: T1190/web-worker-spawns-shell  # w3wp.exe -> cmd
+
+# T1210 Exploitation of remote services (same capture)
+day3-113: T1210/zerologon-mimikatz
+day3-151: T1210/zerologon-mimikatz
+
+# T1218 Signed binary proxy execution
+day3-120: T1218/wuauclt-dll-load
+day3-146: T1218/register-cimprovider-dll-load
+
+# T1218.004 InstallUtil (same capture)
+day3-075: T1218.004/installutil-uninstall-payload
+day3-085: T1218.004/installutil-network-beacon
+
+# T1218.005 Mshta
+day2-005: T1218.005/mshta-hta-file
+day3-059: T1218.005/mshta-inline-script  # javascript:
+day3-148: T1218.005/mshta-inline-script  # vbscript:
+
+# T1218.010 Regsvr32 (same capture)
+day3-140: T1218.010/regsvr32-squiblydoo
+day3-171: T1218.010/regsvr32-network-fetch
+
+# T1546.003 WMI event subscription (same capture)
+day3-067: T1546.003/movewmi-remote-subscription  # network connection
+day3-152: T1546.003/movewmi-remote-subscription  # process
+day3-069: T1546.003/scrcons-consumer-runs
+
+# T1547.001 Run keys
+day2-028: T1547.001/powershell-registry-staged-payload
+day3-078: T1547.001/run-key-write
+
+# T1548.002 UAC bypass
+day3-066: T1548.002/fodhelper-ms-settings-hijack  # registry write
+day3-102: T1548.002/fodhelper-ms-settings-hijack  # fodhelper launch
+day3-161: T1548.002/cmstp-uac-bypass
+
+# T1550 Alternate auth material (same capture)
+day3-107: T1550/rubeus-asktgt
+day3-074: T1550/rubeus-netonly-session
+
+# T1569.002 Service execution
+day3-061: T1569.002/services-spawns-shell  # smbexec
+day3-087: T1569.002/services-spawns-shell  # modified Fax service
+day3-176: T1569.002/services-spawns-shell  # psexec-style
+day3-155: T1569.002/psexesvc-service
+
+# T1685.001 Impair event logging
+day2-006: T1685.001/eventlog-service-disabled  # registry_set event
+day3-093: T1685.001/eventlog-service-disabled  # reg add process
+day3-043: T1685.001/cmdline-logging-off  # reg add process
+day3-053: T1685.001/cmdline-logging-off  # registry_set event
+day3-060: T1685.001/auditpol-user-policy
+day3-079: T1685.001/auditpol-user-policy
+day3-160: T1685.001/auditpol-user-policy
+day3-063: T1685.001/minint-key
+day3-136: T1685.001/minint-key
+day3-128: T1685.001/wevtutil-log-path
