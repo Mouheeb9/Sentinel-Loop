@@ -75,6 +75,9 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
     except Exception as e:  # rate limit, provider down, DB down: retried on the next run
         return {"error": f"transport: {type(e).__name__}: {str(e)[:300]}"}
     f = res.final
+    validations = f.get("validations") or []
+    # The version output kept (best_attempt), else the last one.
+    best = validations[f.get("best_attempt", len(validations)) - 1] if validations else None
     v = f["verdict"]
     return {
         "outcome": f.get("outcome"),
@@ -84,11 +87,10 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
         "covering_rule_id": f.get("covering_rule_id"),
         "rulegen": f.get("rulegen"),
         "rule_yaml": f.get("draft_rule") or None,
-        "validation": f["validations"][-1].model_dump(mode="json")
-        if f.get("validations")
-        else None,
+        "validation": best.model_dump(mode="json") if best else None,
         "validation_pending": bool(f.get("validation_pending")),
-        "recall": rule_recall(f["validations"][-1]) if f.get("validations") else None,
+        "recall": rule_recall(best) if best else None,
+        "best_attempt": f.get("best_attempt"),
         # One entry per rule version validated, oldest first: did that version pass?
         "attempt_passes": [rule_passed(v) for v in f.get("validations", [])],
         "repairs": f.get("repairs", []),

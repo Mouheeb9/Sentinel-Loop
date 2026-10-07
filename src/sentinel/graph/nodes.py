@@ -174,7 +174,12 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
         )
     except RuleGenError as e:
         return {"draft_rule": "", "attempts": 1, "rulegen": {"error": str(e)[:1000]}}
-    return {"draft_rule": r.rule_yaml, "attempts": 1, "rulegen": _info(r, model_name)}
+    return {
+        "draft_rule": r.rule_yaml,
+        "rule_versions": [r.rule_yaml],
+        "attempts": 1,
+        "rulegen": _info(r, model_name),
+    }
 
 
 def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
@@ -200,7 +205,12 @@ def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
         error = {"attempt": attempt, "error": str(e)[:1000]}
         return {"repairs": [error], "repair_failed": True}
     info = {"attempt": attempt, **_info(r, model_name)}
-    return {"draft_rule": r.rule_yaml, "attempts": attempt, "repairs": [info]}
+    return {
+        "draft_rule": r.rule_yaml,
+        "rule_versions": [r.rule_yaml],
+        "attempts": attempt,
+        "repairs": [info],
+    }
 
 
 def _info(r, model_name: str) -> dict:
@@ -240,7 +250,8 @@ def validate_live(state: SentinelState, config: RunnableConfig) -> dict:
 
 
 def rule_gen(state: SentinelState) -> dict:
-    return {"draft_rule": "title: stub rule v1", "attempts": 1}
+    rule = "title: stub rule v1"
+    return {"draft_rule": rule, "rule_versions": [rule], "attempts": 1}
 
 
 def validate(state: SentinelState, config: RunnableConfig) -> dict:
@@ -265,11 +276,31 @@ def validate(state: SentinelState, config: RunnableConfig) -> dict:
 
 def repair(state: SentinelState) -> dict:
     attempts = state.get("attempts", 0) + 1
-    return {"draft_rule": f"title: stub rule v{attempts}", "attempts": attempts}
+    rule = f"title: stub rule v{attempts}"
+    return {"draft_rule": rule, "rule_versions": [rule], "attempts": attempts}
 
 
 def output(state: SentinelState) -> dict:
-    return {"outcome": _outcome(state)}
+    update: dict = {}
+    best = best_version(state.get("validations", []))
+    versions = state.get("rule_versions", [])
+    if best is not None and not state.get("validation_pending") and best < len(versions):
+        update = {"draft_rule": versions[best], "best_attempt": best + 1}
+    return update | {"outcome": _outcome(state | update)}
+
+
+def best_version(validations: list[ValidationResult]) -> int | None:
+    """Index of the version to keep: passed > needs review > failed; then fewer benign hits, then
+    more held-out repeats caught; a tie goes to the later version (it saw more feedback). A
+    repair can make a rule worse (day3-070: v0 4/7, v1 0/7), so the last version isn't always
+    the one to ship."""
+    rank = {"failed": 0, "needs_review": 1, "passed": 2}
+
+    def key(i: int) -> tuple:
+        v = validations[i]
+        return rank[rule_verdict(v)], -v.false_positives, v.true_positives, i
+
+    return max(range(len(validations)), key=key) if validations else None
 
 
 def _outcome(state: SentinelState) -> Outcome:
@@ -287,8 +318,9 @@ def _outcome(state: SentinelState) -> Outcome:
     validations = state.get("validations", [])
     if not validations:
         return "rule_failed"
+    best = validations[state.get("best_attempt", len(validations)) - 1]
     return {
         "passed": "rule_passed",
         "needs_review": "rule_needs_review",
         "failed": "rule_failed",
-    }[rule_verdict(validations[-1])]
+    }[rule_verdict(best)]

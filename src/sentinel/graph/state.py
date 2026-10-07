@@ -53,9 +53,13 @@ class SentinelState(TypedDict):
     # couldn't run (no matcher yet): then "not covered" means unknown, not "no rule exists".
     coverage: NotRequired[dict]
 
-    # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair).
-    # Empty when rule generation failed or was skipped.
+    # rule_gen / repair: the current Sigma rule as YAML text (overwritten on each repair; output
+    # sets it to the best version). Empty when rule generation failed or was skipped.
     draft_rule: NotRequired[str]
+    # Every rule version, oldest first; rule_versions[i] was graded by validations[i].
+    rule_versions: NotRequired[Annotated[list[str], operator.add]]
+    # output: which version (1-based) draft_rule and the outcome come from.
+    best_attempt: NotRequired[int]
     # rule_gen_live: title, technique_ids, schema_retries, tokens, llm_calls, model; or
     # {"error": ...} when no valid rule came back; or {"skipped": True}.
     rulegen: NotRequired[dict]

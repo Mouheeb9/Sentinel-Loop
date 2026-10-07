@@ -138,3 +138,47 @@ def test_pass_on_the_second_version():
     assert build.after_validate(state) == "output"
     assert nodes.output(state)["outcome"] == "rule_passed"
     assert len(state["validations"]) == state["attempts"] == 2
+
+
+def _v(tp: int, missed: int = 0, fp: int = 0) -> ValidationResult:
+    samples = [
+        {"sample_id": f"m{i}", "should_fire": True, "did_fire": False, "event_ref": "e"}
+        for i in range(missed)
+    ] + [
+        {"sample_id": f"b{i}", "should_fire": False, "did_fire": True, "event_ref": "e"}
+        for i in range(fp)
+    ]
+    return ValidationResult(
+        rule_id="r",
+        compiled=True,
+        true_positives=tp,
+        false_positives=fp,
+        fp_rate=fp / 20,
+        failed_samples=samples,
+        feedback="",
+    )
+
+
+def test_best_version_ranks_verdict_then_noise_then_hits():
+    # A repair that made it worse: keep the earlier, quieter version.
+    assert nodes.best_version([_v(1, missed=3), _v(0, missed=4, fp=1)]) == 0
+    # A pass beats any fail, wherever it is.
+    assert nodes.best_version([_v(4), _v(1, missed=3)]) == 0
+    # needs review (0 FP, nothing to test) beats a noisy fail.
+    assert nodes.best_version([_v(0, fp=2), _v(0)]) == 1
+    # More repeats caught wins among fails; a tie goes to the later version.
+    assert nodes.best_version([_v(0, missed=4), _v(1, missed=3)]) == 1
+    assert nodes.best_version([_v(1, missed=3), _v(1, missed=3)]) == 1
+    assert nodes.best_version([]) is None
+
+
+def test_output_ships_the_best_version_not_the_last():
+    state = _state(
+        rule_versions=["v1 rule", "v2 rule", "v3 rule"],
+        validations=[_v(1, missed=3), _v(2, missed=2), _v(0, missed=4, fp=1)],
+        draft_rule="v3 rule",
+        attempts=3,
+    )
+    out = nodes.output(state)
+    assert out["draft_rule"] == "v2 rule" and out["best_attempt"] == 2
+    assert out["outcome"] == "rule_passed"  # v2: 2 of 4 repeats, 0 FP
