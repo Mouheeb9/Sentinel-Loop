@@ -1,0 +1,30 @@
+title: MSBuild Execution with Project File from Suspicious Directory
+id: 6c81e1a5-63ae-56c2-870c-6bbf5a4a073f
+status: experimental
+description: Detects MSBuild.exe executing an XML project file from suspicious directories
+  commonly abused for code execution, such as Windows Tasks folders, Temp directories,
+  or user profile locations.
+author: Sentinel Loop rule_gen v0
+date: '2026-10-02'
+tags:
+- attack.t1127.001
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection1:
+    Image|endswith:
+    - MSBuild.exe
+    CommandLine|contains:
+    - .xml
+    - Windows/Tasks/
+    - Windows/System32/Tasks/
+    - Windows/SysWow64/Tasks/
+    - Users/Public/
+    - AppData/Local/Temp/
+    - AppData/Local/Roaming/
+    - Windows/Temp/
+  condition: 1 of selection*
+falsepositives:
+- Legitimate build processes referencing project files in unusual locations (rare)
+level: high
