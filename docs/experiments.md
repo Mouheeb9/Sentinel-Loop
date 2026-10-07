@@ -312,3 +312,41 @@ fingerprint to a behavior. **The pass bar is low:** v2 passes with 1/7, below th
 **For ADR 0003 floors (Mouadh + Mouheb):** consider a recall floor (e.g. ≥2 held-out hits or
 recall ≥ .3 when ≥3 positives exist) or "keep repairing while recall rises". Decide on loop-v1
 data (10 alerts), not this one.
+
+## 2026-10-06: validator v2 (procedure-level positives), re-grade
+
+**Change:** golden attacks grouped by procedure (`data/golden/procedures.yaml`, 80 rows, 47
+procedures, verified by Mouadh). When the source alert has a procedure and the rule claims its
+technique, the rule must catch the **same procedure** (`procedure_recall`); other procedures of the
+technique are reported as `sibling_recall`, not graded. `evidence: low` when ≤1 positive.
+**Keep if:** day2-006 is no longer failed on another procedure, and no rule that v1 failed for a
+real reason passes. Pass rule unchanged (v1: 0 FP + ≥1 TP or no positive). No model calls.
+
+| run | alert | v1 (technique) | v2 (procedure) | sibling recall | evidence |
+|---|---|---|---|---|---|
+| rulegen-v0 | day2-006 | fail, TP 0/1 | pass, TP 0/0 | 0/1 (day3-053) | low |
+| rulegen-v0 | day3-056 | pass, TP 0/0 | pass, TP 0/0 | none | low |
+| rulegen-v0 | day3-070 | pass, TP 4/7, recall .57 | pass, TP 4/4, recall 1.0 | 0 | ok |
+| rulegen-v1-all | day3-070 | fail, TP 0/7 | fail, TP 0/4 | 0 | ok |
+| repair-try2 | day3-070 | pass, TP 1/7, recall .14 | pass, TP 1/4, recall .25 | 0 | ok |
+
+**Read-out:**
+- **day2-006** is no longer failed on day3-053 (other procedure). It has no same-procedure test:
+  the only other `eventlog-service-disabled` attack (day3-093) is a process event, the rule reads
+  registry events. It passes on the benign side only, so it is `evidence: low` (human review).
+- **day3-070**: the 3 v1 misses (day3-054 launcher.exe, day3-068 hh.exe, day3-119 mshta.exe) are
+  other procedures and moved to siblings. Same procedure = `c2-implant-spawns-cmd` (day3-050, 154,
+  157, 164). The v0 rule catches all 4: its OR list matched the implant's own behavior. The
+  repaired rule (repair-try2) catches 1/4: the repair made it narrower than the procedure.
+- **rulegen-v1-all** still fails 0/4: the over-narrow fingerprint fails for a real reason. Kept.
+- 2/3 rulegen-v0 passes are now `evidence: low`: a pass with no positive proves nothing. ADR 0003
+  must send `evidence: low` passes to human review instead of auto-merge.
+
+**Decision:** keep v2. Open: the 35/47 procedures with no usable positive (other capture, same log
+source) are a data gap; the bigger benign set (`cmd /c`, MSBuild, script hosts) is the next step.
+
+**Same day, bigger benign set:** +31 benign process events (`data/validation/benign/`: 20
+hand-written `cmd /c` / MSBuild / script-host, 11 real). Re-grade: no verdict above changes; the
+Day 12 `rulegen-try` day3-056 rule (MSBuild + any `.xml`, flagged as broad on 2026-10-02) now
+**fails** on `syn-msbuild-framework-docxml` (a legacy build writing an XML doc file). Before, the
+benign set had no MSBuild event, so it passed.

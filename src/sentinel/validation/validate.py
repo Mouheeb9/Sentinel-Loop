@@ -14,6 +14,10 @@ v0 corpus:
   unlabeled Sysmon events. Those captures contain attacks too, so a hit there is not a false
   positive, but hundreds of hits mean the rule is too broad. Skipped when data/raw/ is absent (CI).
 
+v2 (Day 16): when the source alert has a procedure in data/golden/procedures.yaml and the rule
+claims its technique, positives = same procedure only (procedure_recall); the technique's other
+procedures are reported as sibling_recall, not graded. evidence = low with <=1 positive.
+
 The feedback never quotes event values (they are attacker-written): it names alert ids and rule
 fields. The repair loop looks values up through `failed_samples[].event_ref` and quotes them as
 untrusted, like rule_gen's self-check does.
@@ -38,10 +42,12 @@ from sentinel.validation import matcher as matcher_module
 
 ROOT = Path(__file__).resolve().parents[3]
 GOLDEN_LABELS = ROOT / "data" / "golden" / "v1.1.jsonl"
+PROCEDURES = ROOT / "data" / "golden" / "procedures.yaml"  # alert_id -> technique/procedure (v2)
 GOLDEN_ALERTS = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (2, 3)]
 POOL_LIST = ROOT / "data" / "validation" / "validation_datasets.txt"
 CAPTURES = ROOT / "data" / "raw" / "security-datasets"
 BACKGROUND = ROOT / "tests" / "fixtures" / "sysmon"  # hand-checked non-attack events (bg_*)
+BENIGN = ROOT / "data" / "validation" / "benign"  # v2: hand-checked benign events (*.jsonl)
 
 # Sysmon EventIDs each rule_form category reads (the sysmon pipeline adds the same filter).
 CATEGORY_EVENT_IDS = {
@@ -67,6 +73,7 @@ class Sample:
     technique_ids: tuple[str, ...]
     capture: str
     event: Event
+    procedure: str | None = None  # from procedures.yaml; None = not grouped yet
 
 
 @dataclass(frozen=True)
@@ -117,8 +124,22 @@ def grade(
         )
 
     held_out = [s for s in corpus.golden if s.label == "true_positive" and usable(s)]
-    positives = [s for s in held_out if _relation(claimed, s.technique_ids) == "same"]
-    siblings = [s for s in held_out if _relation(claimed, s.technique_ids) == "sibling"]
+    # v2: when the source alert has a procedure and the rule claims its technique, only the same
+    # procedure must fire; other procedures of the technique are siblings (reported, not graded).
+    # Otherwise (alert not in golden, or triage claimed another technique) v0: by technique.
+    procedure = _source_procedure(source_alert, corpus)
+    if procedure and _relation(claimed, (procedure.split("/")[0],)) != "same":
+        procedure = None
+    if procedure:
+        positives = [s for s in held_out if s.procedure == procedure]
+        siblings = [
+            s
+            for s in held_out
+            if s.procedure != procedure and _relation(claimed, s.technique_ids) is not None
+        ]
+    else:
+        positives = [s for s in held_out if _relation(claimed, s.technique_ids) == "same"]
+        siblings = [s for s in held_out if _relation(claimed, s.technique_ids) == "sibling"]
     benign = [s for s in corpus.golden if s.label == "benign_noisy" and usable(s)]
     same_capture = [
         s
@@ -127,6 +148,7 @@ def grade(
         and s.capture == source_capture
         and s.alert_id != source_alert.alert_id
         and _relation(claimed, s.technique_ids) == "same"
+        and (procedure is None or s.procedure == procedure)
     ]
 
     fired = set(matcher_module.match(rule_yaml, [s.event for s in positives + siblings + benign]))
@@ -139,7 +161,16 @@ def grade(
         _failed(s, should_fire=False) for s in fps
     ]
 
-    lines = [_tp_line(claimed, category, positives, hits, misses, same_capture)]
+    target = (
+        f"{procedure} (procedure)" if procedure else "/".join(sorted(claimed)) or "no technique"
+    )
+    evidence = "low" if len(positives) <= 1 else "ok"
+    lines = [_tp_line(target, category, positives, hits, misses, same_capture)]
+    if evidence == "low":
+        lines.append(
+            f"evidence: low ({len(positives)} held-out positive): a pass here proves little, "
+            "flag for human review"
+        )
     lines.append(
         f"benign: fires on {len(fps)}/{len(benign)} benign_noisy events in {category}"
         + (f" ({_ids(fps)}): too broad, tighten the selection" if fps else "")
@@ -147,7 +178,7 @@ def grade(
     if siblings:
         lines.append(
             f"siblings (info, not graded): fires on {len(sibling_hits)}/{len(siblings)} "
-            f"same-parent attacks of another sub-technique"
+            f"attacks of another {'procedure or ' if procedure else ''}sub-technique"
         )
     lines.append(_pool_line(rule_yaml, corpus, source_capture, event_ids, category))
     lines += _lint(rule)
@@ -161,6 +192,9 @@ def grade(
         fp_rate=len(fps) / len(benign) if benign else 0.0,
         failed_samples=failed,
         feedback="\n".join(line for line in lines if line),
+        evidence=evidence,
+        procedure_recall=len(hits) / len(positives) if procedure and positives else None,
+        sibling_recall=len(sibling_hits) / len(siblings) if siblings else None,
     )
 
 
@@ -175,8 +209,16 @@ def default_corpus() -> Corpus:
     for path in GOLDEN_ALERTS:
         for c in json.loads(path.read_text(encoding="utf-8")):
             alerts[c["alert"]["alert_id"]] = Alert.model_validate(c["alert"])
+    procedures = load_procedures(labels)
     golden = [
-        Sample(row["alert_id"], row["label"], tuple(row["technique_ids"]), row["source_dataset"], e)
+        Sample(
+            row["alert_id"],
+            row["label"],
+            tuple(row["technique_ids"]),
+            row["source_dataset"],
+            e,
+            procedures.get(row["alert_id"]),
+        )
         for row in labels
         if row["alert_id"] in alerts
         for e in alerts[row["alert_id"]].events
@@ -186,8 +228,36 @@ def default_corpus() -> Corpus:
         e = sysmon_to_event(json.loads(path.read_text(encoding="utf-8")))
         if e and e.event_id not in seen:
             golden.append(Sample(f"bg:{path.stem}", "benign_noisy", (), "background", e))
+            seen.add(e.event_id)
+    for path in sorted(BENIGN.glob("*.jsonl")):  # v2: {"id", "why", "event"} per line
+        for line in path.read_text(encoding="utf-8").splitlines():
+            row = json.loads(line) if line.strip() else None
+            e = row and sysmon_to_event(row["event"])
+            if e and e.event_id not in seen:
+                seen.add(e.event_id)
+                golden.append(
+                    Sample(f"bg:{row['id']}", "benign_noisy", (), f"benign:{path.stem}", e)
+                )
     pool, notes = _load_pool()
     return Corpus(golden=golden, pool=pool, notes=notes)
+
+
+def load_procedures(labels: list[dict[str, Any]], path: Path = PROCEDURES) -> dict[str, str]:
+    """alert_id -> procedure id. Raises ValueError when a row is not a golden true_positive or
+    the procedure's technique part is not one of the row's labels (labels win, never this file)."""
+    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    rows = {r["alert_id"]: r for r in labels}
+    bad = []
+    for alert_id, proc in raw.items():
+        row = rows.get(alert_id)
+        technique, _, name = str(proc).partition("/")
+        if row is None or row["label"] != "true_positive":
+            bad.append(f"{alert_id}: not a golden true_positive")
+        elif not name or technique not in row["technique_ids"]:
+            bad.append(f"{alert_id}: {proc!r} must be <one of {row['technique_ids']}>/<name>")
+    if bad:
+        raise ValueError(f"{path.name}: " + "; ".join(bad))
+    return {str(k): str(v) for k, v in raw.items()}
 
 
 def _load_pool() -> tuple[list[tuple[str, Event]] | None, list[str]]:
@@ -226,6 +296,15 @@ def _source_capture(alert: Alert, corpus: Corpus) -> str | None:
     for s in corpus.golden:
         if s.alert_id == alert.alert_id or s.event.event_id in events:
             return s.capture
+    return None
+
+
+def _source_procedure(alert: Alert, corpus: Corpus) -> str | None:
+    """The source alert's procedure (procedures.yaml), by alert id, else by any shared event."""
+    events = {e.event_id for e in alert.events}
+    for s in corpus.golden:
+        if s.procedure and (s.alert_id == alert.alert_id or s.event.event_id in events):
+            return s.procedure
     return None
 
 
@@ -271,8 +350,7 @@ def _ids(samples: list[Sample], limit: int = 5) -> str:
     return ", ".join(ids[:limit]) + (f" +{len(ids) - limit} more" if len(ids) > limit else "")
 
 
-def _tp_line(claimed, category, positives, hits, misses, same_capture) -> str:
-    techniques = "/".join(sorted(claimed)) or "no technique"
+def _tp_line(techniques, category, positives, hits, misses, same_capture) -> str:
     if not positives:
         gap = (
             f" ({len(same_capture)} more in the source capture, not usable)" if same_capture else ""
