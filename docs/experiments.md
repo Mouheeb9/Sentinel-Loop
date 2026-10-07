@@ -350,3 +350,24 @@ hand-written `cmd /c` / MSBuild / script-host, 11 real). Re-grade: no verdict ab
 Day 12 `rulegen-try` day3-056 rule (MSBuild + any `.xml`, flagged as broad on 2026-10-02) now
 **fails** on `syn-msbuild-framework-docxml` (a legacy build writing an XML doc file). Before, the
 benign set had no MSBuild event, so it passed.
+
+## 2026-10-07: pass bar v2 (agreed by Mouheb, for ADR 0003 with Mouadh)
+
+`nodes.rule_verdict`: compiles + 0 benign hits + catches at least min(2, n) of the n held-out
+repeats (validator v2: same procedure, else same technique). n = 0 -> new outcome
+`rule_needs_review` (a human decides in the PR; repair can't create test data). Recall floor
+(≥ .3) dropped: n ≤ 6 in golden-v1.1, so 2 hits already give ≥ .33.
+
+Re-grade of every stored rule (no model calls):
+
+| rule | hits / repeats | FP | v1 | **v2** |
+|---|---|---|---|---|
+| rulegen-v0 day3-070 (OR bug) | 4/4 | 0 | pass | **pass** |
+| rulegen-v0 day2-006 | 0/0 | 0 | fail → pass | **needs review** |
+| rulegen-v0 day3-056 | 0/0 | 0 | pass | **needs review** |
+| rulegen-try day3-056 ('.xml' OR) | 0/0 | 1 | pass | **fail** (benign set v1) |
+| rulegen-v1-all day3-070 (fingerprint) | 0/4 | 0 | fail | **fail** |
+| repair-try2 day3-070 (IP rule) | 1/4 | 0 | pass | **fail** → repair continues |
+
+Note for Mouadh: validator `evidence: low` (≤ 1 positive) and the bar differ at n = 1: the bar
+passes a rule that catches the single repeat. Keep or align in ADR 0003.

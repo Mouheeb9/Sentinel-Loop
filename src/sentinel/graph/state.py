@@ -22,6 +22,7 @@ Outcome = Literal[
     "needs_review",  # triage unsure: hand to a human, no rule
     "covered",  # real threat, but an existing Sigma rule already detects it
     "rule_passed",  # new rule written and validated
+    "rule_needs_review",  # 0 FP, but no held-out repeat of the attack to test on: human decides
     "rule_failed",  # rule still failing after the last attempt, or no valid rule was generated
     "rule_unvalidated",  # rule written (and fires on its own alert), but no validator ran yet
     "rule_skipped",  # rule generation switched off (PipelineOptions.rules=False, e.g. evals)

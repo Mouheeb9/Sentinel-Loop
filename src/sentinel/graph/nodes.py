@@ -14,6 +14,7 @@ and rule generation off for the eval baselines (evals/run.py); the default is ev
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from typing import Literal
 
 import yaml
 from langchain_core.runnables import RunnableConfig
@@ -64,15 +65,27 @@ def rule_recall(result: ValidationResult) -> float | None:
     return result.true_positives / n if n else None
 
 
-def rule_passed(result: ValidationResult) -> bool:
-    """Pass rule v1 (Day 13): compiles, fires on NO benign sample, and catches at least one
-    held-out same-technique attack (or none exists to test). Recall is reported, not required:
-    v0 demanded every held-out attack fire, which failed narrow-but-correct rules on attacks
-    they were never meant to cover (a T1059.003 rule for one launcher vs. all cmd abuse). A
-    benign hit always fails: in a SOC a noisy rule costs more than a missed variant."""
+RuleVerdict = Literal["passed", "needs_review", "failed"]
+
+
+def rule_verdict(result: ValidationResult) -> RuleVerdict:
+    """Pass bar v2 (2026-10-07, ADR 0003): compiles, fires on NO benign event, and catches at
+    least min(2, n) of the n held-out repeats of the attack (validator v2: same procedure when the
+    alert has one, else same technique). n = 0: nothing to test recall on, so a human decides.
+
+    v1 passed with a single held-out hit, so a near-fingerprint passed (repair-try2: 1 of 4
+    repeats). A recall floor (>= .3) was dropped: n is at most 6 in golden-v1.1, and 2 of 6 already
+    clears it. A benign hit always fails: in a SOC a noisy rule costs more than a missed variant."""
     if not result.compiled or result.compile_errors or result.false_positives:
-        return False
-    return result.true_positives >= 1 or held_out_positives(result) == 0
+        return "failed"
+    n = held_out_positives(result)
+    if n == 0:
+        return "needs_review"
+    return "passed" if result.true_positives >= min(2, n) else "failed"
+
+
+def rule_passed(result: ValidationResult) -> bool:
+    return rule_verdict(result) == "passed"
 
 
 def stalled(validations: list[ValidationResult]) -> bool:
@@ -272,4 +285,10 @@ def _outcome(state: SentinelState) -> Outcome:
     if state.get("validation_pending"):
         return "rule_unvalidated"
     validations = state.get("validations", [])
-    return "rule_passed" if validations and rule_passed(validations[-1]) else "rule_failed"
+    if not validations:
+        return "rule_failed"
+    return {
+        "passed": "rule_passed",
+        "needs_review": "rule_needs_review",
+        "failed": "rule_failed",
+    }[rule_verdict(validations[-1])]

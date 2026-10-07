@@ -3,7 +3,7 @@
     ingest -> enrich -> triage -> route --(new threat)--> rule_gen --(rule)--> validate
                route --(benign / needs_review / covered)--> output
                rule_gen --(no rule: failed / skipped)--> output
-               validate --(passed, unvalidated, or fail at the last attempt)--> output
+               validate --(passed, needs review, unvalidated, or fail at the last attempt)--> output
                validate --(fail, attempts < max_attempts, not stalled)--> repair
                repair --(new rule)--> validate;  repair --(no valid rule)--> output
 
@@ -42,7 +42,7 @@ def after_rule_gen(state: SentinelState) -> Literal["validate", "output"]:
 def after_validate(state: SentinelState) -> Literal["repair", "output"]:
     if state.get("validation_pending"):  # no validator yet: nothing to repair against
         return "output"
-    if nodes.rule_passed(state["validations"][-1]):
+    if nodes.rule_verdict(state["validations"][-1]) != "failed":  # passed, or needs a human
         return "output"
     if state.get("attempts", 0) >= state.get("max_attempts", MAX_ATTEMPTS):
         return "output"

@@ -143,5 +143,5 @@ def test_run_one_reads_the_pipeline_result(monkeypatch):
     row = rg.run_one(alert=None, trace=False)
     assert row["outcome"] == "rule_unvalidated" and row["validation_pending"]
     assert row["validation"]["feedback"] == "NOT VALIDATED"
-    assert row["attempt_passes"] == [True]  # 0 FP, no held-out attack to miss
+    assert row["attempt_passes"] == [False]  # 0 FP, nothing to test on: needs review
     assert row["repairs"] == []
