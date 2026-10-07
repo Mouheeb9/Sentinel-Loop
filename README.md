@@ -57,6 +57,25 @@ bound, since rules outside the top 5 are not tried. The other 54 are what rule g
 Prompt-injection attack success rate on the unhardened agent: **25% (10/40 payloads)**, worst
 category tool hijacking (4/8). Hardening comes in Week 4; the same 40 payloads are re-run after it.
 
+**CI gate for model-written rules** (Day 17). A generated Sigma rule reaches `main` only through a
+pull request, and CI re-validates every file in `rules/generated/` exactly as it would be merged
+(`uv run python -m evals.validate_rules`): it must compile, fire on **no** benign event, catch at
+least min(2, n) of the n held-out repeats of the same attack, and pass the lints (no filter on a
+process name, no `/` paths that never match). With nothing to test it on (n = 0) it passes as
+*needs human review*. Triage has its own floors (`evals.gate`). Why these thresholds:
+[ADR 0003](docs/adr/0003-eval-gate-floors.md).
+
+Tested with two real rule_gen outputs:
+
+| PR | Rule | Rule gate |
+|---|---|---|
+| #12 | day3-070: user-folder binary -> `cmd.exe` -> binary (4/4 repeats, 0/54 benign) | green, mergeable |
+| #11 | day3-056: any `MSBuild.exe` with `.xml` (1 benign hit, 7 dead `/` values) | **red, merge blocked** |
+
+![Rule gate: the day3-070 rule passes](docs/img/rule-gate-pass.jpg)
+![Rule gate: the broad MSBuild rule is blocked](docs/img/rule-gate-blocked.jpg)
+![Rule gate log on PR #11: tests and eval gate green, rule gate fails on the benign hit and the dead values](docs/img/rule-gate-log.jpg)
+
 ## Golden dataset: how we measured labeling quality
 
 The eval harness is only as trustworthy as its labels, so the first 40 alerts were labeled
