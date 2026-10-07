@@ -10,7 +10,7 @@
 # run-to-run noise, so an unlucky re-run of the same prompt passes and a real drop fails.
 #   accuracy .90/.93 -> .83 | attack recall .85/.90 -> .80 | F1 .63/.57 -> .52
 #   invented IOCs .16/.11 -> .20
-# ADR 0003 (Mouadh + Mouheb) sets the final values.
+# Why these values: docs/adr/0003-eval-gate-floors.md (Mouadh + Mouheb).
 results: results/launch-context/rag.json
 config: rag
 floors:
