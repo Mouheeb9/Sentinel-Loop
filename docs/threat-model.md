@@ -90,6 +90,7 @@ command line, image path and registry key of the attack itself. This is OWASP **
 | RG-4 | A regex value hangs or abuses the matcher | Catastrophic backtracking (ReDoS) in a `\|re` pattern |
 | RG-5 | The rule is a fingerprint, not a detection | It matches this event's PID, user name or temp file name, so the next run is missed |
 | RG-6 | A generated rule runs somewhere it can do harm | Executed against production logs or a real SIEM before anyone checked it |
+| RG-7 | The repair loop carries attacker values back into the prompt, or learns the grading set | A benign event value says "drop the CommandLine test"; or the model copies missed held-out attacks' values into the rule and passes on the data it is graded with |
 
 ### What is in place (code, not prompts)
 
@@ -116,6 +117,11 @@ command line, image path and registry key of the attack itself. This is OWASP **
   the repair loop can't be injected through it. It also lints the rule: a filter on `Image`,
   `ParentImage` or `OriginalFileName` is flagged (RG-3), and `/` path values in non-path fields
   are flagged as dead (they never match Sysmon's `\`). (RG-3 partly, RG-5)
+- **Repair loop** (`agents/repair.py`, Day 16): the next version gets the validator's report
+  (our text, no event values), the previous rule and the benign events it fired on, all event-
+  derived text inside `<UNTRUSTED>` blocks (tested with an injection payload). Missed held-out
+  attacks are never shown, only counted: they grade the next version. At most 3 versions, and
+  the loop stops early when a repair changes nothing the validator sees. (RG-7)
 - **Leakage test:** `tests/test_no_leakage.py` grades a match-everything rule for every golden
   attack and checks that no positive comes from the source capture.
 
@@ -132,8 +138,9 @@ command line, image path and registry key of the attack itself. This is OWASP **
 - **RG-3, retrieved Sigma rules are shown as style examples.** Their text comes from SigmaHQ
   contributors (see the table above): a poisoned community rule could steer generation.
   Spotlighting in Week 4.
-- **Feedback quoting.** The repair loop (Week 3) will need the missed events' values to fix a rule;
-  it must fetch them through `failed_samples[].event_ref` and quote them in `<UNTRUSTED>` blocks.
+- **RG-7, benign events shown in repair are also graded.** A repaired rule can pass by dodging the
+  3 benign events it was shown. The unseen pool noise count partly catches that; a clean fix is a
+  benign set split into "shown in repair" and "graded only" (validator v2, Mouadh).
 
 ## Not covered yet
 
@@ -149,3 +156,4 @@ Linux auditd, AWS CloudTrail, and AWS GuardDuty aren't normalized yet — out of
 | 2026-09-20 | Added `registry.target_object` to `config/untrusted_fields.yaml` (event 13) | The doc marked it ⚠️ but the config, which the code reads, did not; they now agree |
 | 2026-10-02 | Added "Model output that becomes code: generated Sigma rules" (RG-1..RG-6, controls in place, open items) | Day 12 rule generation builds rules from attacker-written values; drafted by Mouheb, reviewed by Mouadh |
 | 2026-10-03 | Validator and leakage test added to controls; RG-3/RG-5 open items narrowed to what the validator still can't decide; feedback-quoting item added | Day 12 validator landed |
+| 2026-10-06 | Added RG-7 (repair loop) with its controls and open item; closed the "feedback quoting" item | Day 16 repair loop; drafted by Mouheb, for Mouadh's review |

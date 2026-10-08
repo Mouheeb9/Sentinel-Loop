@@ -392,6 +392,12 @@ def _pool_line(
     return line
 
 
+def lint(rule_yaml: str) -> list[str]:
+    """The structure problems of a rule (the `_lint` lines); [] when it doesn't parse."""
+    rule, error = _parse(rule_yaml)
+    return [] if error else _lint(rule)
+
+
 def _lint(rule: dict[str, Any]) -> list[str]:
     """Structure problems no sample shows: filter evasion (RG-3) and values that can't match."""
     out = []

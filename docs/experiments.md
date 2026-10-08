@@ -256,6 +256,63 @@ DRAFT: Mouheb + Mouadh to confirm.
    add benign `cmd /c` and MSBuild events.
 3. **Triage before rules:** 2/5 rule attempts were lost to triage errors.
 
+## 2026-10-06: test split before/after (Week 2 final number) + 2 hypotheses
+
+Sealed test split, rag, n=30 each, run once. Before = `baseline-v0` (vector only, prompt
+2edd88418b70); after = vector+BM25 + launch context (prompt a7a0d78eaac5). Chart:
+`results/charts/week2.png`.
+
+| | before | after |
+|---|---|---|
+| accuracy | 0.97 | 0.90 |
+| attack recall | 0.95 (1 missed) | 0.95 (1 missed) |
+| benign recall | 1.00 | 0.80 (2 called attacks) |
+| technique F1 | 0.60 | 0.62 |
+| exact primary technique | 0.55 | 0.50 |
+| invented IOCs | 0.06 | 0.02 |
+
+**Verdict: a tie, not a win.** F1 +0.02 is inside the ±0.05 noise; fewer invented IOCs, paid
+with 2 false positives. The after-run errors (read only after both runs completed):
+- `day2-007` benign (lsass writes its W32Time value) → TP T1547.003 Time Providers.
+- `day2-025` benign (`smartscreen.exe -Embedding`, normal COM self-launch) → TP T1021.003 DCOM.
+- `day3-137` TP (PurpleSharp spraying + Kerberoasting) → benign. Both runs miss it.
+
+**Hypotheses (NOT to be tuned on these test alerts; check on dev first):**
+1. **Keyword priming:** a string in a benign event that matches a technique name or its
+   procedure text (`W32Time`, `-Embedding`) pulls that technique in, and the model treats the
+   match as evidence. BM25 likely makes it worse (exact-token leg). Check: dev benign alerts
+   called TP, with a technique whose name/keyword appears in the event. Keep a fix only if dev
+   benign recall rises with no attack-recall loss beyond noise.
+2. **Adversary-simulation tools read as admin activity:** PurpleSharp (and similar: Atomic Red
+   Team, Caldera) are treated as legitimate tooling. Labeling guide says TP. Check: dev alerts
+   from simulation frameworks. Candidate fix: one line in the triage prompt + a guide example.
+Triage stays frozen this week (Week 3 guide); both go to the Day 19 slot or Week 4.
+
+## 2026-10-06: repair-try on day3-070 (repair loop, first live run)
+
+Repair never ran: rule version 1 failed both rule_gen tries (path ends rule_gen -> output).
+Try 1: two `CommandLine contains` items in one selection (refused by the form since 10-04).
+Try 2: `CommandLine contains all of ['/c', '/Desktop/', '172.18.39.6']`: '/' path in a non-path
+field (never matches Sysmon's '\') + the IP (fingerprint). Fix (no quota): self-check names the
+'/' mistake when the '\' version would match (`_slash_hint`). Re-run as `repair-try2`.
+
+## 2026-10-06: repair-try2 on day3-070: first repair that turned a fail into a pass
+
+Path: rule_gen -> validate (fail) -> repair -> validate (pass). 2 rule versions, 1 repair call.
+- **v1** "GruntHTTP.exe spawning cmd.exe to run MoveExcel4.exe": a fingerprint of this event,
+  failed (0 held-out hits).
+- **v2** (after the validator report): ParentImage in a user-writable folder (`\Users\`,
+  `\Desktop\`, `\Temp\`...) -> `cmd.exe` -> CommandLine contains all of `.exe` + a private-IP
+  prefix (`10.` / `172.` / `192.168.`). TP 1/7 (recall .14), benign 0/23, pool 0/238 -> pass.
+
+**The loop works:** the report ("missed 6, compare their fields") moved the model from a tool-name
+fingerprint to a behavior. **The pass bar is low:** v2 passes with 1/7, below the Day 12 v0 rule
+(4/7), and the loop stops at the first pass. `'10.'` as a substring also matches version numbers
+("Windows 10."), a real-network FP the 23-event benign set can't see.
+**For ADR 0003 floors (Mouadh + Mouheb):** consider a recall floor (e.g. ≥2 held-out hits or
+recall ≥ .3 when ≥3 positives exist) or "keep repairing while recall rises". Decide on loop-v1
+data (10 alerts), not this one.
+
 ## 2026-10-06: validator v2 (procedure-level positives), re-grade
 
 **Change:** golden attacks grouped by procedure (`data/golden/procedures.yaml`, 80 rows, 47
@@ -293,3 +350,24 @@ hand-written `cmd /c` / MSBuild / script-host, 11 real). Re-grade: no verdict ab
 Day 12 `rulegen-try` day3-056 rule (MSBuild + any `.xml`, flagged as broad on 2026-10-02) now
 **fails** on `syn-msbuild-framework-docxml` (a legacy build writing an XML doc file). Before, the
 benign set had no MSBuild event, so it passed.
+
+## 2026-10-07: pass bar v2 (agreed by Mouheb, for ADR 0003 with Mouadh)
+
+`nodes.rule_verdict`: compiles + 0 benign hits + catches at least min(2, n) of the n held-out
+repeats (validator v2: same procedure, else same technique). n = 0 -> new outcome
+`rule_needs_review` (a human decides in the PR; repair can't create test data). Recall floor
+(≥ .3) dropped: n ≤ 6 in golden-v1.1, so 2 hits already give ≥ .33.
+
+Re-grade of every stored rule (no model calls):
+
+| rule | hits / repeats | FP | v1 | **v2** |
+|---|---|---|---|---|
+| rulegen-v0 day3-070 (OR bug) | 4/4 | 0 | pass | **pass** |
+| rulegen-v0 day2-006 | 0/0 | 0 | fail → pass | **needs review** |
+| rulegen-v0 day3-056 | 0/0 | 0 | pass | **needs review** |
+| rulegen-try day3-056 ('.xml' OR) | 0/0 | 1 | pass | **fail** (benign set v1) |
+| rulegen-v1-all day3-070 (fingerprint) | 0/4 | 0 | fail | **fail** |
+| repair-try2 day3-070 (IP rule) | 1/4 | 0 | pass | **fail** → repair continues |
+
+Note for Mouadh: validator `evidence: low` (≤ 1 positive) and the bar differ at n = 1: the bar
+passes a rule that catches the single repeat. Keep or align in ADR 0003.

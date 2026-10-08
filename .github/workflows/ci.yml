@@ -38,3 +38,13 @@ jobs:
 
       - name: Tests
         run: uv run pytest -q
+
+      # Committed dev results must match today's triage prompt and stay above the floors
+      # (config/eval_gate.yaml). Re-scores stored answers: still no model calls.
+      - name: Eval gate
+        run: uv run python -m evals.gate
+
+      # Every model-written rule in rules/generated/ is re-validated as merged (validator v2, pass
+      # bar v2, lints): no benign hit, enough held-out repeats caught. Golden data only, no model.
+      - name: Rule gate
+        run: uv run python -m evals.validate_rules

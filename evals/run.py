@@ -121,6 +121,12 @@ def git_state() -> dict[str, Any]:
     }
 
 
+def _crlf(data: bytes) -> bytes:
+    """File bytes with Windows line endings on any OS. The stored results were measured on
+    Windows (git autocrlf checks out CRLF); CI runs on Linux (LF). Same alerts, same hash."""
+    return data.replace(b"\r\n", b"\n").replace(b"\n", b"\r\n")
+
+
 def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
     """What must match for two rows to belong to the same run: everything that shapes the model
     input. Labels are not part of it: a fixed label re-scores old rows, it doesn't re-run them."""
@@ -132,7 +138,7 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
         "tier2_model": escalation_model_name(),
         "escalate_below": escalate_below(),
         "prompt_sha": prompt_hash(options),
-        "alerts_sha": _sha(b"".join(c.read_bytes() for c in CANDIDATES))[:12],
+        "alerts_sha": _sha(b"".join(_crlf(c.read_bytes()) for c in CANDIDATES))[:12],
         "tool_cache": os.environ.get("SENTINEL_TOOL_CACHE") or "ttl",
     }
     # The search method changes what triage is shown. Added only when BM25 is on, so the
