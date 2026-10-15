@@ -371,3 +371,41 @@ Re-grade of every stored rule (no model calls):
 
 Note for Mouadh: validator `evidence: low` (≤ 1 positive) and the bar differ at n = 1: the bar
 passes a rule that catches the single repeat. Keep or align in ADR 0003.
+
+## 2026-10-15: why loop-v1 rules failed, and three fixes (no model calls)
+
+**Rule form (5 of 10 loop-v1 failures).** The Langfuse tool calls show one shape every time:
+keyword groups with alternatives, e.g. day3-093 `Image endswith reg.exe` AND `CommandLine
+contains [ADD, add]` AND `CommandLine contains [.../Services/EventLog, .../EventLog]` AND
+`/d 4`. That is how the SigmaHQ style examples we show it are written (`selection_cli` +
+`selection_paths`, `all of selection_*`). Our form refused a repeated field test (a hidden
+Pydantic rule, not in the tool schema), and its error told the model to merge the values with
+`all=true`, which turns alternatives into requirements: day3-070 then needed `172.` AND
+`192.168.` AND `10.` at once and failed the self-check. Fix: a repeated test is an AND group,
+rendered as split blocks (`selection1_1`, `selection1_2`, `all of selection1_*`); rules without
+repeats render exactly as before (same ids). Prompt line updated.
+
+Next blocker found by replaying the stored answers: `/` paths in CommandLine (the prompt teaches
+`/` for path fields only). `rule_gen.fix_slashes` converts a value only when the converted one
+matches the alert's own event and the written one doesn't; switches like `/c`, `/d 4` stay.
+
+Replay of the 8 rejected answers (day3-070, -093, -096): **0/8 -> 7/8** valid and firing on
+their alert (day3-070: 2 versions catch 1/4 held-out, 0 FP; -093/-096: evidence low -> needs
+review). The 8th is a real model mistake (`ParentImage endswith "\Desktop\"`), left to the
+self-check retry.
+
+**Retrieval (2 of 10: wrong technique, day3-048 T1134, day3-071 T1021.003).** Neither is in
+the top 50. CamelCase split in BM25 queries only (documents too cost .10 R@5: "PowerShell" ->
+"power", "shell" everywhere) + BM25 over the 17,136 ATT&CK procedure examples (child process
+only as query; with the parent's `C:\Windows\System32\cmd.exe` hundreds of examples match):
+
+| dev, 20 attacks | R@5 / MRR before | after |
+|---|---|---|
+| text->attack | .90 / .70 | **.97 / .83** |
+| alert->attack | .65 / .43 | .65 / .47 |
+| command->attack | .53 / .39 | .53 / .45 |
+
+Shipped OFF (`bm25.CAMEL_QUERIES`, `search.USE_PROCEDURES`; eval: `--camel --procedures`): both change what triage is shown, so they join the eval fingerprint when on and need 2 dev triage runs first. The two targets still miss: "named pipe" honestly points at T1090.001,
+T1559 and T1134 (T1134 6th in the procedure leg, absent from the others, so RRF drops it), and
+ATT&CK has no Excel/DCOM procedure text. Parked: Sigma-tag votes for techniques. Triage effect
+not measured yet (Day 10: a retrieval gain gave no triage gain beyond noise): needs 2 dev runs.
