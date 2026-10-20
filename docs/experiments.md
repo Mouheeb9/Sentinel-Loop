@@ -428,3 +428,30 @@ against unrelated cmd attacks); day3-070 and -176 stay one hit short in all 3 ve
 never sees the missed attacks, by design, RG-7). day2-006 again filters by `Image` (RG-3 lint).
 day3-093 (`reg.exe add ...\Services\EventLog /v Start /d 4`) is the cleanest rule so far: the
 first candidate to merge through the gate with human review.
+
+## 2026-10-20: gold-v1, rule generation alone on the testable set
+
+`evals.rulegen --set testable --gold-technique --run gold-v1`: the 14 non-test attacks with at
+least 2 held-out repeats (4 procedures; results/testable.json), the golden label in place of
+triage, covered alerts included with their firing rules removed from the style examples.
+
+| procedure | alerts | passed |
+|---|---|---|
+| T1059.001 Empire encoded stager | 101, 104, 108, 112, 141 | **5/5** (6/6 repeats each) |
+| T1569.002 services spawns shell | 061, 087, 176 | 1/3 (087 2/2; 061, 176 1/2) |
+| T1047 WmiPrvSE child process | 125, 169 | 1/2 (169 0/2) |
+| T1059.003 C2 implant spawns cmd | 050, 070, 157, 164 | 0/4 (best 1/4) |
+
+**7/14 pass, 0 FP everywhere, and every pass came from repair** (version 2 or 3; first-attempt
+pass rate 0). Compare loop-v2 with real triage on the uncovered set: 0/10, mostly untestable or
+wrong technique. Review of the passes: Empire rules are SigmaHQ-like (encoded command AND
+hidden/no-profile flags), but those alerts were covered, so the model may know the pattern;
+day3-087 (any shell under services.exe) is broad; **day3-125 (any exe under WmiPrvSE, filters by
+Image) is too broad and fails the RG-3 lint, so the CI rule gate would block it**: 6/14 survive
+review. GruntHTTP 0/4: the 4 alerts share only the parent (unknown exe in the user profile ->
+cmd), their commands differ; the model matches the command and repair never sees the missed
+attacks (RG-7), so it can't find the common part.
+
+Infra: the 300 s timeout first went in as 300 ms (ChatOpenRouter takes milliseconds), which
+made every call time out and look like a hang; fixed in f17bb5d. With it fixed an alert takes
+~2 min instead of 12+.
