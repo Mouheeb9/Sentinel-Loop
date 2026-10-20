@@ -64,14 +64,20 @@ def run_alert(
     owner: str,
     trace: bool = True,
     pipeline: PipelineOptions | None = None,
+    configurable: dict | None = None,
 ) -> RunResult:
+    """`configurable`: extra graph settings, for evals (e.g. oracle_verdict, ignore_coverage)."""
     graph = build_graph(live=live)
     path: list[str] = []
     final: dict = {}
     model = models_label() if live else "stub"
     with trace_run(alert, config_name=config_name, owner=owner, model=model, enabled=trace) as tr:
         config = {
-            "configurable": {"stub": stub, "pipeline": pipeline or PipelineOptions()},
+            "configurable": {
+                "stub": stub,
+                "pipeline": pipeline or PipelineOptions(),
+                **(configurable or {}),
+            },
             "callbacks": tr.callbacks,
             "run_name": "sentinel-pipeline",
         }

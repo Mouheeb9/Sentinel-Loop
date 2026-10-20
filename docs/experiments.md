@@ -409,3 +409,22 @@ Shipped OFF (`bm25.CAMEL_QUERIES`, `search.USE_PROCEDURES`; eval: `--camel --pro
 T1559 and T1134 (T1134 6th in the procedure leg, absent from the others, so RRF drops it), and
 ATT&CK has no Excel/DCOM procedure text. Parked: Sigma-tag votes for techniques. Triage effect
 not measured yet (Day 10: a retrieval gain gave no triage gain beyond noise): needs 2 dev runs.
+
+## 2026-10-19: loop-v2 on the 10 uncovered dev attacks (after the rule-form fix)
+
+Same 10 alerts as loop-v1 (8 Oct), repair now always uses its 3 attempts.
+
+| | loop-v1 | **loop-v2** |
+|---|---|---|
+| rule generation failures | 3 | **0** |
+| rules generated | 5 | **7** |
+| passed | 0 | 0 |
+| needs review (no same-procedure repeat to test) | 1 | **4** (day2-006, -056, -093, -096) |
+| failed | 4 | 3 (day3-048 0/8, -070 1/4, -176 1/2; 0 FP, 3 versions each) |
+| no rule (triage needs_review) | 1 | 3 (day2-014, day3-071, -166) |
+
+Failures left are not format: day3-048 is the wrong technique (T1059.003 for T1134, graded
+against unrelated cmd attacks); day3-070 and -176 stay one hit short in all 3 versions (repair
+never sees the missed attacks, by design, RG-7). day2-006 again filters by `Image` (RG-3 lint).
+day3-093 (`reg.exe add ...\Services\EventLog /v Start /d 4`) is the cleanest rule so far: the
+first candidate to merge through the gate with human review.
