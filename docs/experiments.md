@@ -455,3 +455,38 @@ attacks (RG-7), so it can't find the common part.
 Infra: the 300 s timeout first went in as 300 ms (ChatOpenRouter takes milliseconds), which
 made every call time out and look like a hang; fixed in f17bb5d. With it fixed an alert takes
 ~2 min instead of 12+.
+
+## 2026-10-21: e2e-v1-ultra, the full loop with real triage on the testable set
+
+`SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free
+SENTINEL_ESCALATION_MODEL=none evals.rulegen --set testable --run e2e-v1-ultra`: same 14 alerts
+as gold-v1, with triage in place of the golden label. Triage runs on ultra because super's free
+endpoint was down (404). The run took 2 days because of the 50/day free quota.
+
+| procedure | alerts | gold-v1 | e2e-v1-ultra |
+|---|---|---|---|
+| T1059.001 Empire encoded stager | 101, 104, 108, 112, 141 | 5/5 | 4/5 (108 lost) |
+| T1569.002 services spawns shell | 061, 087, 176 | 1/3 | 0/3 (087 triaged benign) |
+| T1047 WmiPrvSE child process | 125, 169 | 1/2 | 1/2 |
+| T1059.003 C2 implant spawns cmd | 050, 070, 157, 164 | 0/4 | 1/4 (070) |
+| **total** | 14 | **7/14** | **6/14** |
+
+**6/14 pass, 0 FP everywhere; 1/13 passed first try (070), the others needed repair (19
+repairs).** Median recall 0.75. Triage cost 4 alerts, all of them two-layer or label questions,
+not attacks it missed:
+- 087: verdict benign (the Atomic test payload looks harmless). 0 rules.
+- 108: T1218.010 (regsvr32 launcher) listed before T1059.001 (stager), so the rule went after the
+  launcher and hit 0/6.
+- 050: T1007/T1018 (what the command does) instead of T1059.003 (how it ran). Ungradable, so
+  needs_review.
+- 164: T1047 instead of T1059.003. Graded against the WMI attacks, fires on 1/4.
+070 is the reverse case: it passed with triage and failed with gold, but only because it matches
+the parent `GruntHTTP.exe` by name (a tool-name fingerprint that breaks on a rename).
+
+Review of the 6 passes: 101, 104, 112 are fine; 141 matches `-e`/`-nop` with `contains`, which
+also catches `-ExecutionPolicy`/`-NoProfile` admin scripts; 125 (any System32 exe under WmiPrvSE)
+is too broad (RG-3); 070 is the fingerprint above. **About 4/14 survive review (gold-v1: 6/14).**
+The 0 FP on 125/141 (and 087 in gold-v1) says more about the benign set than about the rules:
+~53 process_creation events + 238 noise have no WMI-launched admin tools, no SCCM/msiexec and no
+`-ExecutionPolicy Bypass` scripts. Ask for Mouadh: add that activity to data/validation/benign/.
+The 3 last alerts (164, 169, 176) failed in both runs; repair never sees the missed attacks (RG-7).
