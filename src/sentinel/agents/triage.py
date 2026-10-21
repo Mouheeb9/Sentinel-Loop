@@ -65,6 +65,10 @@ context (MITRE ATT&CK techniques and existing Sigma rules retrieved for this ale
     process, expected path and role, routine service traffic).
   - "needs_review": evidence is present but weak (a single indicator, no corroborating context)
     or genuinely ambiguous. An honest "unclear" beats a confident wrong answer.
+  A harmless-looking payload is not evidence of benign: judge the mechanism. A shell started
+  by services.exe or wmiprvse.exe that only prints text, or carries a test string such as
+  "T1543.003 Test" (an attack simulation), still shows the attacker's technique working.
+  benign_noisy needs a known legitimate role (an installer, a vendor agent), not a dull command.
 - technique_ids: ATT&CK IDs (format T1234 or T1234.001). For true_positive give exactly one
   primary technique first, then secondaries only if the event clearly shows another distinct
   technique. Use a sub-technique only when the evidence shows the exact mechanism; otherwise the
