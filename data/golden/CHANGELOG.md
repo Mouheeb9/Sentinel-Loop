@@ -52,7 +52,7 @@ Frozen versions are never edited. Any change is a new version plus a line here.
   - day3-101: T1059.001 + **T1127.001** (MSBuild launcher)
 - Why: on e2e-v1-ultra triage tagged the other layer (defensible), so the validator graded the
   rule against the wrong attacks (docs/experiments.md, 2026-10-21). `labels.jsonl` synced.
-  Validator and triage evals now read v1.2. Reviewer: _Mouadh to confirm_.
+  Validator and triage evals now read v1.2. Reviewer: Mouadh (2026-10-21).
 
 ## validation benign set v2 (2026-10-21)
 
@@ -62,4 +62,4 @@ Frozen versions are never edited. Any change is a new version plus a line here.
 - Why: 3 rules passed with 0 FP and would fire in a real network (125 any System32 exe under
   WmiPrvSE, 141 `-e` matching `-ExecutionPolicy`, 087 any shell under services.exe). Re-grade of the
   stored gold-v1 and e2e-v1-ultra rules: those 3 now fail (2, 4, 2 FP); 101, 104, 112 stay at 0 FP.
-  Reviewer: _Mouadh to check every row against labeling guide rule 3_.
+  Reviewer: Mouadh (2026-10-21), checked against labeling guide rule 3.
