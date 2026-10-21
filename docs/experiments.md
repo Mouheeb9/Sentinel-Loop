@@ -490,3 +490,26 @@ The 0 FP on 125/141 (and 087 in gold-v1) says more about the benign set than abo
 ~53 process_creation events + 238 noise have no WMI-launched admin tools, no SCCM/msiexec and no
 `-ExecutionPolicy Bypass` scripts. Ask for Mouadh: add that activity to data/validation/benign/.
 The 3 last alerts (164, 169, 176) failed in both runs; repair never sees the missed attacks (RG-7).
+
+## 2026-10-21: why triage picks the "wrong" technique on e2e-v1-ultra
+
+Replayed technique retrieval (`enrich.search_plan` + `retrieve`, k=20, no reranker: SecReranker
+was removed in Week 2) on the 14 alerts. **The labeled technique is in the top 5 on 14/14 (rank 1
+on 5, median rank 2).** So retrieval isn't the cause, and a reranker or web tool would have nothing
+to add: triage sees the right ID every time and picks something else.
+
+| alert | chain | label | triage first | why |
+|---|---|---|---|---|
+| 050 | GruntHTTP -> cmd `sc \DC query` | T1059.003 (rank 2) | T1007 | tags what the command does; T1007 isn't even in the top 5, so it comes from the model's own knowledge, and it is a defensible label |
+| 164 | GruntHTTP -> cmd `wmic /node: os get` | T1059.003 (rank 1) | T1047 | same: wmic is WMI, defensible |
+| 108 | regsvr32 -> powershell -enc | T1059.001 (rank 5) | T1218.010 (rank 1) | follows our own prompt ("how a process was started is often the primary") |
+| 101 | MSBuild -> powershell -enc | T1059.001 (rank 4) | T1127.001 (rank 1) | same, passed anyway |
+| 087 | services -> powershell `write-host 'T1543.003 Test'` | T1569.002 | benign | saw an Atomic test string; the only real triage error |
+
+Takeaway: 4 of the 5 are **a conflict between the label policy and the prompt**, not a model
+error. The GruntHTTP alerts are labeled by the launcher (T1059.003, which groups them as one
+procedure), the Empire alerts by the payload (T1059.001), while the prompt says to prefer the
+launch mechanism and to tag the interpreter only "when nothing more specific explains the event".
+The cost to the loop comes from the validator: in e2e mode the held-out positives are picked by
+triage's technique, so a defensible label on a different layer swaps the test set (164 was graded
+against the WMI attacks).
