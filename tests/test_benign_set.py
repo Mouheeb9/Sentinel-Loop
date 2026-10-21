@@ -49,3 +49,22 @@ detection:
     alert = Alert(alert_id="day3-056", detection_name="x", severity="high", events=[source.event])
     r = grade(rule, alert, ["T1127.001"], corpus)
     assert "bg:syn-msbuild-framework-docxml" in {f.sample_id for f in r.failed_samples}
+
+
+def test_broad_wmiprvse_rule_now_hits_admin_wmi_activity():
+    # e2e-v1-ultra rule for day3-125: any System32 binary under WmiPrvSE (passed with 0 FP on v1).
+    rule = r"""
+title: WmiPrvSE Spawning Process from System Directory
+id: 6c81e1a5-63ae-56c2-870c-6bbf5a4a0125
+logsource: {category: process_creation, product: windows}
+detection:
+  selection1:
+    ParentImage|endswith: 'wbem\WmiPrvSE.exe'
+    Image|contains: 'Windows\System32\'
+  condition: 1 of selection*
+"""
+    corpus = default_corpus()
+    source = next(s for s in corpus.golden if s.alert_id == "day3-125")
+    alert = Alert(alert_id="day3-125", detection_name="x", severity="high", events=[source.event])
+    r = grade(rule, alert, ["T1047"], corpus)
+    assert "bg:syn-wmi-msiexec-win32product" in {f.sample_id for f in r.failed_samples}

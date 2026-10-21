@@ -41,7 +41,7 @@ from sentinel.schemas import Alert, Event, FailedSample, ValidationResult
 from sentinel.validation import matcher as matcher_module
 
 ROOT = Path(__file__).resolve().parents[3]
-GOLDEN_LABELS = ROOT / "data" / "golden" / "v1.1.jsonl"
+GOLDEN_LABELS = ROOT / "data" / "golden" / "v1.2.jsonl"
 PROCEDURES = ROOT / "data" / "golden" / "procedures.yaml"  # alert_id -> technique/procedure (v2)
 GOLDEN_ALERTS = [ROOT / "data" / "golden" / f"day{d}_candidates.json" for d in (2, 3)]
 POOL_LIST = ROOT / "data" / "validation" / "validation_datasets.txt"
