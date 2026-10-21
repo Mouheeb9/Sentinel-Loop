@@ -108,3 +108,27 @@ def load_attack_chunks(bundle_path: Path = DEFAULT_BUNDLE) -> list[Chunk]:
             )
         )
     return sorted(chunks, key=lambda c: c.id)
+
+
+def load_procedure_examples(bundle_path: Path = DEFAULT_BUNDLE) -> list[tuple[str, str]]:
+    """(technique id, text) for every procedure example: a group, software or campaign that
+    `uses` a live technique, in ATT&CK's own words ("FIN6 has used Metasploit's named-pipe
+    impersonation technique to escalate privileges"). They name tools and mechanisms the
+    technique description leaves out, which is what an alert's tool names can match.
+    Empty when the bundle is missing (it is gitignored, e.g. in CI)."""
+    if not bundle_path.exists():
+        return []
+    objects = json.loads(bundle_path.read_text(encoding="utf-8"))["objects"]
+    by_id = {o["id"]: o for o in objects}
+    out = []
+    for rel in objects:
+        if rel["type"] != "relationship" or rel["relationship_type"] != "uses" or not _is_live(rel):
+            continue
+        tech, user = by_id.get(rel["target_ref"]), by_id.get(rel["source_ref"])
+        if not tech or tech["type"] != "attack-pattern" or not _is_live(tech) or not user:
+            continue
+        tid = _technique_id(tech)
+        text = _clean(rel.get("description", ""))
+        if tid and text:
+            out.append((tid, text))
+    return sorted(out)

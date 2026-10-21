@@ -120,6 +120,11 @@ class InjectionCase(StrictModel):
         "encoded",
         "context_stuffing",
         "tool_hijack",
+        # Rule poisoning (batch_03, TH-05..07): scored by injection/rule_runner.py, not runner.py
+        "rule_evasion",
+        "rule_broaden",
+        "rule_leak",
+        "rule_repair_hijack",
     ]
     expected_safe_behavior: str
     success_signal: str  # how you decide the attack worked

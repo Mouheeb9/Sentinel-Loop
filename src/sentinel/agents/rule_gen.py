@@ -60,7 +60,9 @@ Write a detection, not a fingerprint of this one event:
   Several values in one field test match if ANY of them is present (OR). When every keyword
   must be present, set all=true (e.g. CommandLine contains all of ["comsvcs", "MiniDump"]);
   without it a common keyword like "/c" alone makes the rule fire almost everywhere.
-  Different field tests in one selection must all match (AND).
+  All field tests in one selection must match (AND), also several tests on the same field:
+  CommandLine contains ["ADD", "add"] plus CommandLine contains ["/d 4"] means
+  ("ADD" or "add") and "/d 4". Use that for keyword groups with alternatives.
 - In the path fields ({", ".join(sorted(PATH_FIELDS))}) write every backslash as a forward
   slash: "HKLM/System/CurrentControlSet/Services/EventLog/Start". Code converts it back.
   In CommandLine, prefer keywords without backslashes (e.g. "comsvcs.dll", "MiniDump").
@@ -135,6 +137,8 @@ def generate_rule(
         out_tokens += usage.get("output_tokens", 0)
 
         draft, error = _parse(response, category)
+        if draft is not None:
+            draft = fix_slashes(draft, alert.events)
         rule_yaml = render(draft) if draft is not None else ""
         if draft is not None:
             error = self_check(draft, rule_yaml, alert.events)
@@ -243,26 +247,38 @@ def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event]) -> str:
             misses.append(
                 f"selection {i}: {m.field} {m.match} {'all of ' if m.all else ''}{m.values} "
                 "matches no event; "
-                f"the event's {m.field} holds {held}" + _slash_hint(m, events)
+                f"the event's {m.field} holds {held}"
             )
     if not misses:
         return "every selection matches the alert, but a filter excludes it: remove that filter"
     return "the rule does not fire on the alert it was written for. " + " | ".join(misses)
 
 
-def _slash_hint(m: FieldMatch, events: list[Event]) -> str:
-    """Path fields take '/' (code converts it), other fields don't: a '/' path in CommandLine
-    never matches Sysmon's '\\'. Live on day3-070 (6 Oct) the model wrote '/Desktop/' there."""
-    paths = [v for v in m.values if "/" in v[1:]]  # not a switch like '/c'
-    if m.field in PATH_FIELDS or not paths:
-        return ""
-    fixed = m.model_copy(update={"values": [v.replace("/", "\\") for v in paths], "all": False})
-    if not any(_item_matches(fixed, e) for e in events):
-        return ""
-    return (
-        f" ({m.field} is not a path field: '/' is NOT converted there, so a '/' path never "
-        "matches; use the keyword without separators, e.g. 'Desktop' instead of '/Desktop/')"
-    )
+def fix_slashes(draft: RuleDraft, events: list[Event]) -> RuleDraft:
+    """'/' turned into a backslash in the values of non-path fields (CommandLine) where that is
+    what the alert's own event holds: the prompt teaches '/' for path fields, and the model
+    carries it over ("CurrentControlSet/Services/EventLog" in CommandLine, day3-093 and -096 on
+    8 Oct), giving values that never match. A value changes only when the converted one matches
+    an event and the written one matches none, so switches like "/c" or "/d 4" stay."""
+    changed = False
+    for sel in [*draft.selections, *draft.filters]:
+        for m in sel.items:
+            if m.field in PATH_FIELDS:
+                continue
+            values = []
+            for v in m.values:
+                fixed = v.replace("/", "\\")
+                if "/" in v[1:] and _value_matches(m, fixed, events):
+                    if not _value_matches(m, v, events):
+                        v, changed = fixed, True
+                values.append(v)
+            m.values = values
+    return draft.model_copy(deep=True) if changed else draft
+
+
+def _value_matches(m: FieldMatch, value: str, events: list[Event]) -> bool:
+    one = m.model_copy(update={"values": [value], "all": False})
+    return any(_item_matches(one, e) for e in events)
 
 
 def _item_matches(m: FieldMatch, event: Event) -> bool:

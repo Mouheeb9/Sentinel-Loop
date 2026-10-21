@@ -88,19 +88,6 @@ def rule_passed(result: ValidationResult) -> bool:
     return rule_verdict(result) == "passed"
 
 
-def stalled(validations: list[ValidationResult]) -> bool:
-    """The last repair changed nothing the validator can see: same counts, same failing samples.
-    Another attempt would most likely repeat it, so the loop stops and saves the quota."""
-    if len(validations) < 2:
-        return False
-
-    def seen(v: ValidationResult) -> tuple:
-        failing = sorted((s.sample_id, s.should_fire) for s in v.failed_samples)
-        return v.compiled, v.true_positives, v.false_positives, failing
-
-    return seen(validations[-1]) == seen(validations[-2])
-
-
 def ingest(state: SentinelState) -> dict:
     return {}
 
@@ -117,6 +104,11 @@ def enrich_live(state: SentinelState, config: RunnableConfig) -> dict:
 
 
 def triage_live(state: SentinelState, config: RunnableConfig) -> dict:
+    # evals only (evals/rulegen.py --gold-technique): the golden label stands in for triage, so
+    # rule generation is measured without triage's mistakes. Never set in the pipeline.
+    oracle = (config or {}).get("configurable", {}).get("oracle_verdict")
+    if oracle is not None:
+        return {"verdict": oracle, "triage_tier": 0}  # 0 = no model tier (tracing skips it)
     result = triage_routed(
         state["alert"],
         state.get("techniques", []),
@@ -154,10 +146,26 @@ def route_live(state: SentinelState, config: RunnableConfig) -> dict:
     """A true positive is covered when one of the retrieved Sigma rules fires on its events."""
     if state["verdict"].verdict != "true_positive":
         return {"covering_rule_id": None}
-    matcher = (config or {}).get("configurable", {}).get("matcher")
+    configurable = (config or {}).get("configurable", {})
+    matcher = configurable.get("matcher")
     rule_ids = [h.id for h in state.get("sigma_rules", [])]
     result = check_coverage(state["alert"].events, rule_ids, matcher)
+    if configurable.get("ignore_coverage") and result.covering_rule_id:
+        return _ignore_coverage(state, rule_ids, matcher)
     return {"covering_rule_id": result.covering_rule_id, "coverage": asdict(result)}
+
+
+def _ignore_coverage(state: SentinelState, rule_ids: list[str], matcher) -> dict:
+    """evals only (evals/rulegen.py --set testable): write a rule for a covered alert anyway, to
+    have more alerts with held-out repeats to grade on. Every retrieved rule that fires on the
+    alert is dropped first: rule_gen shows retrieved rules as style examples, and the answer must
+    not be among them."""
+    firing = []
+    while covering := check_coverage(state["alert"].events, rule_ids, matcher).covering_rule_id:
+        firing.append(covering)
+        rule_ids = [r for r in rule_ids if r != covering]
+    kept = [h for h in state.get("sigma_rules", []) if h.id not in firing]
+    return {"covering_rule_id": None, "sigma_rules": kept, "coverage": {"ignored": firing}}
 
 
 def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
@@ -184,7 +192,7 @@ def rule_gen_live(state: SentinelState, config: RunnableConfig) -> dict:
 
 def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
     """The next version of a rule that failed validation: rule_gen again, told what the validator
-    found (agents/repair.py). Never raises: no valid rule ends the run on the last validation."""
+    found (agents/repair.py). Never raises: no valid rule uses up the attempt (repair_failed)."""
     configurable = (config or {}).get("configurable", {})
     model_name = rulegen_model_name()
     model = configurable.get("rulegen_model") or chat_model(model_name)
@@ -203,13 +211,14 @@ def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
         )
     except RuleGenError as e:
         error = {"attempt": attempt, "error": str(e)[:1000]}
-        return {"repairs": [error], "repair_failed": True}
+        return {"repairs": [error], "repair_failed": True, "attempts": attempt}
     info = {"attempt": attempt, **_info(r, model_name)}
     return {
         "draft_rule": r.rule_yaml,
         "rule_versions": [r.rule_yaml],
         "attempts": attempt,
         "repairs": [info],
+        "repair_failed": False,
     }
 
 

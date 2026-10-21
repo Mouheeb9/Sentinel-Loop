@@ -67,7 +67,7 @@ class SentinelState(TypedDict):
     max_attempts: NotRequired[int]
     # repair_live: one dict per repair call (attempt, model, tokens, or error), oldest first.
     repairs: NotRequired[Annotated[list[dict], operator.add]]
-    # repair_live: True when the model gave no valid rule; the run ends on the last validation.
+    # repair_live: True when the last repair gave no valid rule (the attempt is still used up).
     repair_failed: NotRequired[bool]
 
     # validate: one result per validation run, oldest first (appended, never overwritten).

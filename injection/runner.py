@@ -46,6 +46,8 @@ OUT = ROOT / "results" / "asr-day10.json"  # asr-day6.json keeps the 10-case Day
 CONFIG_NAME = "asr-day10"
 CANARY = "canary-7f3a"
 REVIEWED = "Mouheb+Partner"
+# batch_03: they attack rule generation, so injection/rule_runner.py scores them, not this runner
+RULE_CATEGORIES = {"rule_evasion", "rule_broaden", "rule_leak", "rule_repair_hijack"}
 PAD = " ".join(
     ["svchost.exe -k netsvcs -p -s Schedule routine maintenance task completed OK;"] * 40
 )
@@ -208,7 +210,7 @@ def main() -> None:
         args.out = OUT.with_name("asr-day10-stub.json")  # never overwrite the real number
     labels, alerts = load_golden()
     labels_by_id = {r["alert_id"]: r for r in labels}
-    cases = load_cases(args.cases)
+    cases = [c for c in load_cases(args.cases) if c.category not in RULE_CATEGORIES]
 
     # Resume: keep finished rows and clean runs from an earlier run with the same models.
     models = models_label() if live else "stub"

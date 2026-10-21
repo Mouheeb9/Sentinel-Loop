@@ -3,6 +3,21 @@
 
     uv run python -m evals.rulegen                    # 5 uncovered dev attacks, resumable
     uv run python -m evals.rulegen --validate-only    # re-grade stored rules, no model calls
+    uv run python -m evals.rulegen --set testable --gold-technique --run gold-v1   # rule_gen alone
+    uv run python -m evals.rulegen --set testable --run e2e-v1                    # with triage
+
+Alert sets (--set):
+    uncovered   the first --n dev attacks no existing rule covers (Day 13 default)
+    testable    every non-test attack the validator can grade: at least --min-positives (2)
+                held-out repeats (same procedure, other capture). Covered alerts are included:
+                their rule is written anyway, with every retrieved rule that fires on the alert
+                removed from the style examples (nodes._ignore_coverage). Picked by grading a
+                rule that never fires (all positives show up as missed), cached in
+                results/testable.json. On 2026-10-19: 14 alerts, 4 procedures at >= 2.
+
+--gold-technique: the golden label stands in for triage (oracle verdict), so a failure is rule
+generation's own. Without it, a wrong triage technique grades the rule against unrelated attacks
+(day3-048). Run both: the gap is what triage mistakes cost the loop.
 
 Picks the dev true_positive alerts that no existing Sigma rule covers (results/coverage.json, from
 evals/coverage.py), the first --n by alert id, and runs each through `run_alert` with everything
@@ -29,6 +44,7 @@ skips finished alerts and retries transport errors; it stops on the provider's d
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import statistics
 from collections import Counter
@@ -42,15 +58,23 @@ from dotenv import load_dotenv
 from evals.run import DAILY_QUOTA_MARKERS
 from evals.split import load_split
 from evals.triage_smoke import load_golden
-from sentinel.graph.nodes import StubScript, rule_passed, rule_recall, rule_verdict
+from sentinel.agents.enrich import search_plan
+from sentinel.graph.nodes import (
+    StubScript,
+    held_out_positives,
+    rule_passed,
+    rule_recall,
+    rule_verdict,
+)
 from sentinel.llm import rulegen_model_name
 from sentinel.run import default_owner, models_label, run_alert
-from sentinel.schemas import Alert
+from sentinel.schemas import Alert, TriageVerdict
 from sentinel.validation import validate as validate_module
 
 ROOT = Path(__file__).parent.parent
 RESULTS = ROOT / "results"
 COVERAGE = RESULTS / "coverage.json"
+TESTABLE = RESULTS / "testable.json"
 NAME = "rulegen-v0"
 
 
@@ -62,7 +86,62 @@ def uncovered_dev_attacks(n: int) -> list[str]:
     return sorted(a for a in dev if a in uncovered)[:n]
 
 
-def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
+_NEVER_RULE = """title: never fires
+id: 00000000-0000-0000-0000-000000000000
+logsource: {{category: {category}, product: windows}}
+detection:
+  selection1: {{Image|endswith: '__sentinel_never__'}}
+  condition: selection1
+"""
+
+
+def held_out_counts(labels: list[dict], alerts: dict[str, Alert]) -> dict[str, int]:
+    """alert id -> held-out repeats the validator would grade a rule for it on, for every
+    non-test golden attack. A rule that never fires reports every positive as missed. Cached
+    in results/testable.json, keyed by the label, procedure and split files."""
+    files = [
+        validate_module.GOLDEN_LABELS,
+        validate_module.PROCEDURES,
+        ROOT / "data" / "golden" / "split-v1.json",
+    ]
+    key = hashlib.sha256(b"".join(f.read_bytes() for f in files)).hexdigest()[:12]
+    if TESTABLE.exists():
+        cached = json.loads(TESTABLE.read_text(encoding="utf-8"))
+        if cached.get("key") == key:
+            return cached["counts"]
+    test, _ = load_split("test")
+    counts = {}
+    for lab in labels:
+        aid = lab["alert_id"]
+        category = search_plan(alerts[aid])[2]
+        if lab["label"] != "true_positive" or aid in test or not category:
+            continue
+        rule = _NEVER_RULE.format(category=category)
+        result = validate_module.validate(rule, alerts[aid], lab["technique_ids"])
+        counts[aid] = held_out_positives(result)
+    TESTABLE.write_text(json.dumps({"key": key, "counts": counts}, indent=1) + "\n", "utf-8")
+    return counts
+
+
+def testable_attacks(labels: list[dict], alerts: dict[str, Alert], min_positives: int) -> list[str]:
+    counts = held_out_counts(labels, alerts)
+    return sorted(a for a, n in counts.items() if n >= min_positives)
+
+
+def oracle_verdict(label: dict) -> TriageVerdict:
+    return TriageVerdict(
+        verdict="true_positive",
+        confidence=1.0,
+        technique_ids=label["technique_ids"],
+        reasoning="golden label (oracle triage for the rule-generation eval)",
+        evidence_refs=[],
+        ioc_refs=[],
+    )
+
+
+def run_one(
+    alert: Alert, trace: bool, name: str = NAME, configurable: dict | None = None
+) -> dict[str, Any]:
     try:
         res = run_alert(
             alert,
@@ -71,6 +150,7 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
             config_name=name,
             owner=default_owner(),
             trace=trace,
+            configurable=configurable,
         )
     except Exception as e:  # rate limit, provider down, DB down: retried on the next run
         return {"error": f"transport: {type(e).__name__}: {str(e)[:300]}"}
@@ -85,6 +165,7 @@ def run_one(alert: Alert, trace: bool, name: str = NAME) -> dict[str, Any]:
         "verdict": v.verdict,
         "triage_techniques": v.technique_ids,
         "covering_rule_id": f.get("covering_rule_id"),
+        "coverage_ignored": (f.get("coverage") or {}).get("ignored"),
         "rulegen": f.get("rulegen"),
         "rule_yaml": f.get("draft_rule") or None,
         "validation": best.model_dump(mode="json") if best else None,
@@ -159,12 +240,21 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--fresh", action="store_true", help="drop earlier rows")
     p.add_argument("--validate-only", action="store_true", help="re-grade stored rules only")
     p.add_argument("--run", default=NAME, help=f"results name (default {NAME})")
-    p.add_argument("--ids", nargs="+", help="these alert ids instead of the first n uncovered")
+    p.add_argument("--ids", nargs="+", help="these alert ids instead of the --set")
+    p.add_argument("--set", choices=("uncovered", "testable"), default="uncovered")
+    p.add_argument("--min-positives", type=int, default=2, help="--set testable threshold")
+    p.add_argument("--gold-technique", action="store_true", help="golden label instead of triage")
     args = p.parse_args(argv)
     name = args.run
 
     labels, alerts = load_golden()
-    ids = args.ids or uncovered_dev_attacks(args.n)
+    if args.ids:
+        ids = args.ids
+    elif args.set == "testable":
+        ids = testable_attacks(labels, alerts, args.min_positives)
+    else:
+        ids = uncovered_dev_attacks(args.n)
+    counts = held_out_counts(labels, alerts) if args.set == "testable" else {}
     rows_path = RESULTS / f"{name}.rows.jsonl"
     done: dict[str, dict] = {}
     if rows_path.exists() and not args.fresh:
@@ -182,7 +272,12 @@ def main(argv: list[str] | None = None) -> None:
                 continue
             lab = next(x for x in labels if x["alert_id"] == aid)
             row = {"alert_id": aid, "label": lab["label"], "label_techniques": lab["technique_ids"]}
-            row |= run_one(alerts[aid], trace=not args.no_trace, name=name) | {
+            configurable: dict[str, Any] = {"ignore_coverage": args.set == "testable"}
+            if args.gold_technique:
+                configurable["oracle_verdict"] = oracle_verdict(lab)
+            if aid in counts:
+                row["held_out_repeats"] = counts[aid]
+            row |= run_one(alerts[aid], not args.no_trace, name, configurable) | {
                 "at": datetime.now(UTC).isoformat(timespec="seconds")
             }
             err = str(row.get("error", ""))
@@ -204,6 +299,9 @@ def main(argv: list[str] | None = None) -> None:
         "triage_models": models_label(),
         "rulegen_model": rulegen_model_name(),
         "alert_ids": ids,
+        "set": "ids" if args.ids else args.set,
+        "min_positives": args.min_positives if args.set == "testable" else None,
+        "gold_technique": args.gold_technique,
         "written_at": datetime.now(UTC).isoformat(timespec="seconds"),
     }
     summary = summarize(rows)

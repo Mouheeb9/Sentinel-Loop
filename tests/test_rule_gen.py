@@ -184,8 +184,9 @@ def test_all_values_rule_that_misses_its_alert_names_the_and():
     assert "all of ['comsvcs', 'procdump']" in model.seen[1][-1].content
 
 
-def test_slash_path_in_command_line_gets_a_hint():
-    """day3-070 live (6 Oct): '/System32/' in CommandLine, where '/' is not converted."""
+def test_slash_path_in_command_line_is_fixed_before_the_self_check():
+    """day3-070 live (6 Oct): '/System32/' in CommandLine, where '/' is not converted. Fixed
+    from the event now (fix_slashes); the retry is about the switch that really is absent."""
     broken = VALID | {
         "selections": [
             {
@@ -202,10 +203,11 @@ def test_slash_path_in_command_line_gets_a_hint():
     }
     model = ScriptedModel(replies=[_call(broken), _call(VALID)], seen=[])
     generate_rule(_alert(), VERDICT, [], model)
-    assert "is not a path field" in model.seen[1][-1].content
+    retry = model.seen[1][-1].content
+    assert r"'\\System32\\'" in retry and "'/System32/'" not in retry  # converted value
 
 
-def test_no_slash_hint_for_switches_or_values_that_are_absent_anyway():
+def test_switches_and_absent_slash_values_are_left_alone():
     broken = VALID | {
         "selections": [
             {"items": [{"field": "CommandLine", "match": "contains", "values": ["/q", "/nope/"]}]}
@@ -213,4 +215,32 @@ def test_no_slash_hint_for_switches_or_values_that_are_absent_anyway():
     }
     model = ScriptedModel(replies=[_call(broken), _call(VALID)], seen=[])
     generate_rule(_alert(), VERDICT, [], model)
-    assert "is not a path field" not in model.seen[1][-1].content
+    assert "['/q', '/nope/']" in model.seen[1][-1].content  # reported as written
+
+
+def test_slash_path_in_command_line_is_fixed_from_the_event_and_switches_stay():
+    # day3-093 (8 Oct): "System32/comsvcs.dll" in CommandLine never matches Sysmon's backslash.
+    args = VALID | {
+        "selections": [
+            {
+                "items": [
+                    {"field": "Image", "match": "endswith", "values": ["/rundll32.exe"]},
+                    {
+                        "field": "CommandLine",
+                        "match": "contains",
+                        "values": ["System32/comsvcs.dll"],
+                    },
+                    {
+                        "field": "CommandLine",
+                        "match": "contains",
+                        "values": ["/t/l.dmp", "/nope/x"],
+                    },
+                ]
+            }
+        ]
+    }
+    r = generate_rule(_alert(), VERDICT, [], ScriptedModel(replies=[_call(args)], seen=[]))
+    assert r.schema_retries == 0  # no retry spent on it
+    values = [m.values for m in r.draft.selections[0].items[1:]]
+    assert values == [[r"System32\comsvcs.dll"], [r"\t\l.dmp", "/nope/x"]]  # only where it matches
+    assert match(r.rule_yaml, _alert().events) == ["evt-1"]

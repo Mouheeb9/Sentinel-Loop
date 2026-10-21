@@ -213,11 +213,43 @@ def test_equals_several_values_with_all_is_refused():
         _draft(selections=[{"items": [item]}])
 
 
-def test_same_field_test_twice_in_a_selection_is_refused():
-    # Rendered as one YAML key, the two would silently become one OR list.
+def test_same_field_tested_twice_means_and_of_each_or_group():
+    # The shape the model wrote in 5 of 10 loop-v1 alerts (day3-093): keyword groups, each with
+    # alternatives. One Sigma block can't hold the key twice, so the selection is split.
     items = [
-        {"field": "CommandLine", "match": "contains", "values": ["comsvcs"]},
-        {"field": "CommandLine", "match": "contains", "values": ["MiniDump"]},
+        {"field": "Image", "match": "endswith", "values": ["/rundll32.exe"]},
+        {"field": "CommandLine", "match": "contains", "values": ["comsvcs", "comsvcs.dll"]},
+        {"field": "CommandLine", "match": "contains", "values": ["MiniDump", "#24"]},
     ]
-    with pytest.raises(ValidationError, match="more than once"):
-        _draft(selections=[{"items": items}])
+    rule = render(_draft(selections=[{"items": items}]))
+    detection = yaml.safe_load(rule)["detection"]
+    assert detection["condition"] == "all of selection1_*"
+    assert set(detection) == {"selection1_1", "selection1_2", "condition"}
+    only_comsvcs = _event(
+        "comsvcs-only",
+        Image=DUMP.raw["Image"],
+        CommandLine="rundll32 comsvcs.dll",
+    )
+    assert match(rule, [OTHER, DUMP, only_comsvcs]) == ["dump"]  # AND across groups
+
+
+def test_split_selection_keeps_or_between_selections_and_filters():
+    split = {
+        "items": [
+            {"field": "CommandLine", "match": "contains", "values": ["comsvcs"]},
+            {"field": "CommandLine", "match": "contains", "values": ["MiniDump"]},
+        ]
+    }
+    other = {"items": [{"field": "CommandLine", "match": "contains", "values": ["a.dll"]}]}
+    flt = {
+        "items": [
+            {"field": "CommandLine", "match": "contains", "values": ["624"]},
+            {"field": "CommandLine", "match": "contains", "values": ["full"]},
+        ]
+    }
+    rule = render(_draft(selections=[split, other], filters=[flt]))
+    assert (
+        yaml.safe_load(rule)["detection"]["condition"]
+        == "(all of selection1_* or selection2) and not all of filter1_*"
+    )
+    assert match(rule, [OTHER, DUMP]) == ["other"]  # DUMP has 624 and full: filtered out

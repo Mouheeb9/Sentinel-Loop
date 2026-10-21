@@ -13,6 +13,9 @@ identifiers (`T1003.001`, `lsass.exe`, `vssadmin`). So results come from three s
 
 4. BM25 keyword search (bm25.py): a chunk scores higher when it contains the query's words
    often and when those words are rare overall. ON by default (USE_BM25).
+5. techniques only: BM25 over ATT&CK procedure examples (bm25.procedure_search), each mapped to
+   its technique. An alert names tools ("CreateNamedPipe.exe"); the technique description often
+   doesn't, its procedure examples do ("named-pipe impersonation"). Flag USE_PROCEDURES.
 
 The rankings are merged with reciprocal rank fusion (RRF: each chunk gets points for how high it
 ranks in each list), which needs no score calibration between the very different scales.
@@ -45,15 +48,20 @@ from sentinel.retrieval.embed import embed_texts
 POOL = 50  # candidates taken from each ranked list before fusion
 RRF_K = 60  # standard RRF damping constant
 USE_BM25 = True  # BM25 keyword ranking next to the vector search (see module docstring)
+# Procedure-example ranking for techniques (module docstring). OFF until a triage dev run
+# shows it helps: retrieval-only gain on 2026-10-15 (docs/experiments.md). Part of the eval
+# fingerprint when on.
+USE_PROCEDURES = False
 
 
 @dataclass(frozen=True)
 class _Legs:
-    """Which rankings are merged: vector search, the old IDF keyword leg, BM25."""
+    """Which rankings are merged: vector search, the old IDF keyword leg, BM25, procedures."""
 
     vector: bool = True
     lexical: bool = False
     bm25: bool = USE_BM25
+    procedures: bool = USE_PROCEDURES
 
 
 LEXICAL_MAX_DF = 0.02  # a plain word is "rare" if it is in at most 2% of the searched chunks
@@ -103,7 +111,7 @@ class Hit(BaseModel):
     logsource: str | None
     technique_ids: list[str]
     score: float
-    matched_by: list[str]  # any of "id", "vector", "lexical", "bm25"
+    matched_by: list[str]  # any of "id", "vector", "lexical", "bm25", "procedure"
 
 
 def _filters(
@@ -173,14 +181,23 @@ def retrieve(
     use_lexical: bool = False,
     use_bm25: bool = USE_BM25,
     use_vector: bool = True,
+    use_procedures: bool = USE_PROCEDURES,
+    procedure_query: str | None = None,
 ) -> list[Hit]:
     """use_vector=False turns the vector search off (to measure BM25 alone). BM25 needs a
-    kind: its index is built per chunk kind; without one it is skipped."""
-    legs = _Legs(vector=use_vector, lexical=use_lexical, bm25=use_bm25 and kind is not None)
+    kind: its index is built per chunk kind; without one it is skipped. The procedure leg only
+    runs for kind="technique", searching `procedure_query` when given (enrich.procedure_query),
+    else the query."""
+    legs = _Legs(
+        vector=use_vector,
+        lexical=use_lexical,
+        bm25=use_bm25 and kind is not None,
+        procedures=use_procedures and kind == "technique",
+    )
     owns_conn = conn is None
     conn = conn or store.connect()
     try:
-        return _retrieve(conn, query, k, logsource, platform, kind, legs)
+        return _retrieve(conn, query, k, logsource, platform, kind, legs, procedure_query)
     finally:
         if owns_conn:
             conn.close()
@@ -194,6 +211,7 @@ def _retrieve(
     platform: str | None,
     kind: str | None,
     legs: _Legs,
+    procedure_query: str | None = None,
 ) -> list[Hit]:
     where, params = _filters(kind, platform, logsource)
 
@@ -231,12 +249,17 @@ def _retrieve(
 
     # 4. BM25 keyword ranking, restricted to the chunks the filters allow
     keyword: list[str] = []
-    if legs.bm25:
+    procedure: list[str] = []
+    if legs.bm25 or legs.procedures:
         allowed = {r[0] for r in conn.execute(f"SELECT id FROM chunks WHERE {where}", params)}
-        keyword = bm25.index_for(conn, kind).search(query, allowed, POOL)
+        if legs.bm25:
+            keyword = bm25.index_for(conn, kind).search(query, allowed, POOL)
+        # 5. procedure examples, as technique ids
+        if legs.procedures:
+            procedure = bm25.procedure_search(procedure_query or query, allowed, POOL)
 
     scores: dict[str, float] = {}
-    for ranking in (vector, lexical, keyword):
+    for ranking in (vector, lexical, keyword, procedure):
         for rank, cid in enumerate(ranking):
             scores[cid] = scores.get(cid, 0.0) + 1.0 / (RRF_K + rank + 1)
     fused = sorted(scores, key=lambda cid: (-scores[cid], cid))
@@ -258,6 +281,7 @@ def _retrieve(
         "vector": set(vector),
         "lexical": set(lexical),
         "bm25": set(keyword),
+        "procedure": set(procedure),
     }
     hits = []
     for cid in top:
