@@ -144,6 +144,7 @@ def test_run_one_reads_the_pipeline_result(monkeypatch):
     assert row["outcome"] == "rule_unvalidated" and row["validation_pending"]
     assert row["validation"]["feedback"] == "NOT VALIDATED"
     assert row["attempt_passes"] == [False]  # 0 FP, nothing to test on: needs review
+    assert row["attempt_recalls"] == [None] and row["attempt_fps"] == [0]  # no repeats: no recall
     assert row["repairs"] == []
 
 
