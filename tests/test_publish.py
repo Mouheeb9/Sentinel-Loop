@@ -46,7 +46,7 @@ def test_plan_for_a_passed_rule():
     plan = pub.build_plan(_row())
     assert plan.branch == "rule/day3-070"
     assert plan.path.as_posix() == "rules/generated/day3-070.yml"
-    assert plan.title == "Rule for day3-070: User-folder EXE spawning cmd"
+    assert plan.title == "Rule for day3-070: t"  # the YAML title (code-built), not the model's
     assert "| held-out repeats caught | 4 (recall 1.00) |" in plan.body
     assert "| version shipped | 2 of 2 |" in plan.body
     assert "```yaml\n" + RULE in plan.body

@@ -47,7 +47,7 @@ def test_rules_off_skips_generation_without_a_model_call():
 def test_generated_rule_goes_to_validation_as_version_one():
     model = ScriptedModel(replies=[_call(VALID)], seen=[])
     update = nodes.rule_gen_live(_state(), _config(model))
-    assert "title: LSASS dump via comsvcs MiniDump" in update["draft_rule"]
+    assert "title: 'T1003.001 process_creation: Image + CommandLine'" in update["draft_rule"]
     assert update["rulegen"]["technique_ids"] == ["T1003.001"]
     assert update["attempts"] == 1 and "max_attempts" not in update  # MAX_ATTEMPTS applies
     assert build.after_rule_gen(_state() | update) == "validate"
