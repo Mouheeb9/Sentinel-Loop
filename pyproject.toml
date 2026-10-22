@@ -36,6 +36,9 @@ requires = ["uv_build>=0.12.14,<0.13.0"]
 build-backend = "uv_build"
 
 [dependency-groups]
+dashboard = [
+    "streamlit>=1.66.1",
+]
 dev = [
     "matplotlib>=3.11.2",
     "pre-commit>=4.6.2",
