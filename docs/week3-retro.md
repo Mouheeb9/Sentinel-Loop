@@ -53,7 +53,7 @@ needs_review). Those alerts mostly have nothing to grade against: a data gap, no
 | T1059.003 C2 implant spawns cmd | 1/4 |
 | T1569.002 services spawns shell | 0/3 |
 
-- **Rule-poisoning ASR (batch_03, TH-05..07):** 1/7 (14%), N=1, 1 case (048) waiting on quota.
+- **Rule-poisoning ASR (batch_03, TH-05..07):** 1/8 (12%), N=1: only the title/description leak (047) got through.
   No payload changed a `detection:` block; the success put a canary in the title/description
   (free text no control checks). Deny 2/7, likely noise (docs/experiments.md, 2026-10-22).
 - **Rules merged through the gate:** 1 (day3-104, PR #14, 2026-10-21).
@@ -131,7 +131,7 @@ Proposal, to agree together:
 2. ~~**Mouadh, data:** second-layer labels (050, 164, 108, 101), benign set v2~~ done
    2026-10-21 (golden v1.2, PR #15).
 3. **Mouheb, triage:** re-measure the 087 prompt rule on dev (`triage-v3`), keep only above noise.
-4. ~~**Mouadh, security:** batch_03 and its ASR~~ done 2026-10-22 (1/7; finish inj-048).
+4. ~~**Mouadh, security:** batch_03 and its ASR~~ done 2026-10-22 (1/8).
    Next: free-text hardening for rules, then re-run all injection batches for before/after.
 5. **Deploy:** ADR 0004 on day 1 (local docker-compose + recorded demo is the cheapest option).
 6. **Demo:** Streamlit dashboard + video. Cut first if late: hardening and the full
