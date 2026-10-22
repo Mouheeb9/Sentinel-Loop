@@ -69,10 +69,21 @@ def chat_model(name: str) -> BaseChatModel:
         # init_chat_model doesn't pass on (azure_deployment stays None). Endpoint, key and API
         # version come from AZURE_OPENAI_ENDPOINT / AZURE_OPENAI_API_KEY / OPENAI_API_VERSION.
         deployment = name.split(":", 1)[1]
+        # Reasoning models (gpt-5*, o-series) reject temperature=0: only the default is allowed,
+        # so their answers vary run to run more than the old temperature-0 runs.
+        temp = {} if _is_reasoning(deployment) else {"temperature": 0}
         return init_chat_model(
-            name, temperature=0, timeout=_timeout_arg(name), azure_deployment=deployment
+            name, timeout=_timeout_arg(name), azure_deployment=deployment, **temp
         )
     return init_chat_model(name, temperature=0, timeout=_timeout_arg(name))
+
+
+def _is_reasoning(deployment: str) -> bool:
+    """By deployment name; SENTINEL_REASONING_MODELS=1 forces it for a custom-named deployment."""
+    d = deployment.lower()
+    return os.environ.get("SENTINEL_REASONING_MODELS") == "1" or d.startswith(
+        ("gpt-5", "o1", "o3", "o4")
+    )
 
 
 def triage_model() -> BaseChatModel:

@@ -68,3 +68,13 @@ def test_azure_model_uses_the_name_as_deployment(monkeypatch):
     monkeypatch.setenv("AZURE_OPENAI_API_KEY", "dummy")
     monkeypatch.setenv("OPENAI_API_VERSION", "2024-10-21")
     assert chat_model("azure_openai:triage-mini").deployment_name == "triage-mini"
+
+
+def test_reasoning_deployment_sends_no_temperature(monkeypatch):
+    from sentinel.llm import chat_model
+
+    monkeypatch.setenv("AZURE_OPENAI_ENDPOINT", "https://x.openai.azure.com")
+    monkeypatch.setenv("AZURE_OPENAI_API_KEY", "dummy")
+    monkeypatch.setenv("OPENAI_API_VERSION", "2025-04-01-preview")
+    assert chat_model("azure_openai:gpt-5-mini").temperature is None  # gpt-5 rejects 0
+    assert chat_model("azure_openai:gpt-4.1-mini").temperature == 0
