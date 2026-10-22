@@ -107,23 +107,24 @@ def test_repair_sends_the_report_and_quotes_values_as_untrusted():
     assert build.after_repair(_state() | update) == "validate"
 
 
-def test_failed_repair_ends_on_the_last_validation():
+def test_failed_repair_uses_up_its_attempt_and_tries_again():
     model = ScriptedModel(replies=[AIMessage("no"), AIMessage("still no")], seen=[])
     state = _state()
     state |= nodes.repair_live(state, _config(model))
-    assert state["repair_failed"] is True and state["attempts"] == 1
+    assert state["repair_failed"] is True and state["attempts"] == 2
+    assert build.after_repair(state) == "repair"  # attempt 3 of 3 is still left
+
+    model = ScriptedModel(replies=[AIMessage("no"), AIMessage("still no")], seen=[])
+    state |= nodes.repair_live(state, _config(model))
+    assert state["attempts"] == 3
     assert build.after_repair(state) == "output"
     assert nodes.output(state)["outcome"] == "rule_failed"
 
 
-def test_loop_stops_when_a_repair_changes_nothing():
+def test_loop_uses_every_attempt_even_when_nothing_changes():
     state = _state(attempts=2, validations=[_failed(), _failed()])
-    assert nodes.stalled(state["validations"])
-    assert build.after_validate(state) == "output"
-
-    moved = _state(attempts=2, validations=[_failed(fp=2), _failed(fp=1)])
-    assert not nodes.stalled(moved["validations"])
-    assert build.after_validate(moved) == "repair"
+    assert build.after_validate(state) == "repair"
+    assert build.after_validate(_state(attempts=3, validations=[_failed()] * 3)) == "output"
 
 
 def test_pass_on_the_second_version():

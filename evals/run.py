@@ -63,7 +63,7 @@ from sentinel.agents.triage import (
 )
 from sentinel.graph.nodes import PipelineOptions, StubScript
 from sentinel.llm import escalation_model_name, triage_model_name
-from sentinel.retrieval import search
+from sentinel.retrieval import bm25, search
 from sentinel.run import default_owner, run_alert
 from sentinel.schemas import Alert, TriageVerdict
 from sentinel.tools import ALLOWED_TOOLS
@@ -145,6 +145,11 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
     # vector-only baseline keeps its original fingerprint (and its rows stay valid).
     if options.retrieval and search.USE_BM25:
         fp["search"] = "vector+bm25"
+        # later search changes, appended only when on (same reason)
+        if bm25.CAMEL_QUERIES:
+            fp["search"] += "+camel"
+        if search.USE_PROCEDURES:
+            fp["search"] += "+procedures"
     return fp
 
 

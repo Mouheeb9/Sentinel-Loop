@@ -29,7 +29,14 @@ def search_plan(alert: Alert) -> tuple[str, str | None, str | None]:
 def enrich_alert(alert: Alert, k: int = K) -> tuple[list[Hit], list[Hit]]:
     query, platform, logsource = search_plan(alert)
     with store.connect() as conn:
-        techniques = retrieve(query, k, platform=platform, kind="technique", conn=conn)
+        techniques = retrieve(
+            query,
+            k,
+            platform=platform,
+            kind="technique",
+            conn=conn,
+            procedure_query=procedure_query(alert),
+        )
         rules = retrieve(
             query, k, logsource=logsource, platform=platform, kind="sigma_rule", conn=conn
         )
@@ -43,6 +50,23 @@ def enrichment_query(alert: Alert) -> str:
             parts += [e.process.image, e.process.command_line]
             if e.process.parent:
                 parts += [e.process.parent.image, e.process.parent.command_line]
+        if e.registry:
+            parts += [e.registry.target_object, e.registry.details]
+        if e.network:
+            n = e.network
+            parts.append(f"network connection to {n.dst_ip} port {n.dst_port} {n.protocol or ''}")
+    return " ".join(p for p in parts if p)
+
+
+def procedure_query(alert: Alert) -> str:
+    """What the alert's processes DID, without how they were started: the search text for the
+    ATT&CK procedure examples. Parent paths like C:\Windows\System32\cmd.exe appear word for
+    word in hundreds of examples and outweigh the child's own tool name (day3-048: with the
+    parent, CreateNamedPipe.exe ranked T1134 37th; without it, 6th)."""
+    parts: list[str] = []
+    for e in alert.events:
+        if e.process:
+            parts += [e.process.image, e.process.command_line]
         if e.registry:
             parts += [e.registry.target_object, e.registry.details]
         if e.network:

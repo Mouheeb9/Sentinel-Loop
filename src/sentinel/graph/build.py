@@ -4,8 +4,10 @@
                route --(benign / needs_review / covered)--> output
                rule_gen --(no rule: failed / skipped)--> output
                validate --(passed, needs review, unvalidated, or fail at the last attempt)--> output
-               validate --(fail, attempts < max_attempts, not stalled)--> repair
-               repair --(new rule)--> validate;  repair --(no valid rule)--> output
+               validate --(fail, attempts < max_attempts)--> repair
+               repair --(new rule)--> validate
+               repair --(no valid rule, attempts < max_attempts)--> repair
+               repair --(no valid rule at the last attempt)--> output
 
 The conditional edges below are the only branching logic; nodes never pick their successor.
 """
@@ -46,13 +48,17 @@ def after_validate(state: SentinelState) -> Literal["repair", "output"]:
         return "output"
     if state.get("attempts", 0) >= state.get("max_attempts", MAX_ATTEMPTS):
         return "output"
-    if nodes.stalled(state["validations"]):
-        return "output"
     return "repair"
 
 
-def after_repair(state: SentinelState) -> Literal["validate", "output"]:
-    return "output" if state.get("repair_failed") else "validate"
+def after_repair(state: SentinelState) -> Literal["validate", "repair", "output"]:
+    if not state.get("repair_failed"):
+        return "validate"
+    # A repair with no valid rule still uses up its attempt; the next one starts again from the
+    # last validated rule and its report.
+    if state.get("attempts", 0) < state.get("max_attempts", MAX_ATTEMPTS):
+        return "repair"
+    return "output"
 
 
 LIVE_NODES = ("enrich", "triage", "route", "rule_gen", "validate", "repair")
