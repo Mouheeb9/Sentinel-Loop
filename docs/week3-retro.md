@@ -1,6 +1,6 @@
 # Week 3 retro (Days 15-21, 2026-10-05 to 2026-10-21)
 
-Draft by Mouheb on 2026-10-21; Mouadh's side and the `_pending_` cells still to fill. Week 3 was
+Draft by Mouheb on 2026-10-21; Mouadh's side filled 2026-10-22. Week 3 was
 planned to end on Sun 11 Oct; it ran 10 days over (quota, a provider outage, a timeout bug).
 
 ## What shipped
@@ -23,8 +23,12 @@ planned to end on Sun 11 Oct; it ran 10 days over (quota, a provider outage, a t
 - **Rule form fix:** a repeated field test is an AND group (the hidden "one test per field" rule
   caused 5 of 10 loop-v1 failures); `/` paths in CommandLine fixed from the event. Replay of the
   rejected answers: 0/8 -> 7/8 valid.
-- **First generated rule PR:** `rule/day3-104` (Empire encoded stager), CI green.
-  Merge: _pending_ (Mouadh's review).
+- **First generated rule PR:** `rule/day3-104` (Empire encoded stager), CI green, merged
+  through the gate (PR #14, 2026-10-21).
+- **Golden v1.2 + benign set v2** (Mouadh): 2nd-layer technique on 050/164/108/101; 8 admin
+  automation events (Task Scheduler/SCCM/Intune PowerShell, WMI -> msiexec/gpupdate, services ->
+  vendor wrappers). Re-grade: 125, 141, 087 now fail on FP; 101, 104, 112 stay clean.
+- **Rule poisoning** (Mouadh): `batch_03.json` (TH-05..07, 8 cases) + `injection/rule_runner.py`.
 - **ADR 0003** (eval-gate floors, Mouadh + Mouheb).
 
 ## The numbers
@@ -97,21 +101,38 @@ needs_review). Those alerts mostly have nothing to grade against: a data gap, no
 
 ### What took longer than planned
 
-_pending_
+- **CI on Linux vs my Windows checkout.** The first rule-gate PR failed in an unrelated test:
+  `alerts_sha` hashed file bytes, and autocrlf gave CRLF locally, LF on the runner. Found only by
+  reproducing CI in Docker (no CI logs without auth, no gh CLI); fixed by normalizing line endings.
+- **Batch_03 waited on the loop.** Rule poisoning can only be measured once rule_gen, the
+  validator and repair run end to end, so it moved from Day 19 to after e2e (2026-10-22), and the
+  live run still lost its last case (048) to the daily quota.
+- **Label changes ripple.** Adding the 2nd label to 101 (v1.2) made its clean rule chase the
+  MSBuild layer and fail, so it couldn't be a base alert for batch_03: a run spent, base swapped
+  to 112. Every golden change needs a re-grade of what depends on it.
+- **One machine, one quota.** Mouheb's live runs and mine share the 50 requests a day and the
+  laptop; my live work had to wait for his runs to finish.
 
 ### What to change in Week 4
 
-_pending_
+- **Treat rule free text as untrusted output.** The only poisoning success put the canary in the
+  title/description; build the title from technique + category in code, or lint text that
+  repeats source-event values, then re-run batch_03 with N=3.
+- **Grow the benign set before trusting 0 FP.** Three rules passed with 0 FP and still fired on
+  ordinary admin activity once v2 existed; add more real admin captures, not only hand-written.
+- **Reproduce CI in Docker before opening a PR** when a change touches hashing, paths or files.
+- **Book my live runs in the quota table** with Mouheb, the day before.
 
 ## Week 4 plan (cut down, about 10 days behind)
 
 Proposal, to agree together:
 
 1. **Close Week 3:** merge day3-104, README loop diagram + chart, tag `loop-v1`.
-2. **Mouadh, data:** second-layer labels (050, 164, 108, 101), benign set v2 (admin PowerShell,
-   SCCM/msiexec, WMI-launched tools, services -> cmd installers); re-grade stored rules (no quota).
+2. ~~**Mouadh, data:** second-layer labels (050, 164, 108, 101), benign set v2~~ done
+   2026-10-21 (golden v1.2, PR #15).
 3. **Mouheb, triage:** re-measure the 087 prompt rule on dev (`triage-v3`), keep only above noise.
-4. **Mouadh, security:** a smaller batch_03 (rule poisoning) and its ASR.
+4. ~~**Mouadh, security:** batch_03 and its ASR~~ done 2026-10-22 (1/7; finish inj-048).
+   Next: free-text hardening for rules, then re-run all injection batches for before/after.
 5. **Deploy:** ADR 0004 on day 1 (local docker-compose + recorded demo is the cheapest option).
 6. **Demo:** Streamlit dashboard + video. Cut first if late: hardening and the full
    injection re-run.
