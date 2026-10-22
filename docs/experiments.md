@@ -544,3 +544,20 @@ fields), and the hardening has to come from us. Side notes, N=1, not a measureme
 got the labeled technique first (087 T1569.002, 070 T1059.003, 113 T1210, 003 T1003.001); 087 is
 needs_review instead of nemotron's benign; all 5 poisoned alerts stayed true_positive; benign
 day2-007 went to needs_review.
+
+## 2026-10-22: triage dev baseline on Foundry (gpt-5-mini, one tier)
+
+`SENTINEL_TRIAGE_MODEL=azure_openai:gpt-5-mini SENTINEL_ESCALATION_MODEL=none evals.run --split
+dev --configs rag --run foundry-base` (+ `foundry-base-repeat`). Same prompt (a7a0d78eaac5) and
+search as `launch-context` (nemotron super -> ultra, two tiers, 5/30 escalated).
+
+| run | accuracy | technique F1 | invented IOCs | TP -> needs_review | benign -> needs_review |
+|---|---|---|---|---|---|
+| nemotron two-tier (launch-context / repeat) | .90 / .93 | .63 / .57 | .16 / .11 | 3 / 2 | 0 / 0 |
+| **gpt-5-mini one tier** (foundry-base / repeat) | **.67 / .77** | **.57 / .51** | .05 / .05 | 6 / 4 | 3 / 3 |
+
+Not a fair comparison yet: nemotron re-ran its 5 unsure alerts on a stronger model; gpt-5-mini
+had no tier 2. The errors are almost all caution (`needs_review`: 9 and 7 per run, on attacks and
+benign alike), the kind tier 2 exists for. Run-to-run gap .10 accuracy (no temperature 0 on a
+reasoning model): N=2 is the minimum here. Fewer invented IOCs (.05). Next: tier 2 on a stronger
+Foundry deployment, then compare.
