@@ -1,6 +1,6 @@
 # ADR 0005: Models on Microsoft Foundry (Azure) instead of free OpenRouter
 
-- **Status:** Proposed, conditional on the content-filter smoke test below
+- **Status:** Proposed; content-filter gate PASSED 2026-10-22 (gpt-5-mini, default filter: 12/12 ok, 0 blocked)
 - **Date:** 2026-10-22
 - **Decision by:** Mouheb (Mouadh to review)
 - **Written by:** Mouheb (Mouadh should write the review notes: it changes every number he owns)
