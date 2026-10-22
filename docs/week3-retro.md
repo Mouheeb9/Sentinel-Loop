@@ -63,7 +63,8 @@ needs_review). Those alerts mostly have nothing to grade against: a data gap, no
   with escalation off, so it is not the same setup as the dev triage numbers.
 - **The rule form** fought the model for a week (hidden constraint, misleading error) before the
   Langfuse traces showed why.
-- **No commits 2026-10-09 to 2026-10-14:** _pending_ (reason).
+- **No commits 2026-10-09 to 2026-10-14:** school engagements (Mouheb); the plan had no slack
+  for a week away, so everything after Day 18 slid by the same 6 days.
 
 ## What we learned
 
