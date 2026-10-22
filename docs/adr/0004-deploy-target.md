@@ -1,7 +1,7 @@
 # ADR 0004: Deploy target for the Week 4 demo
 
 - **Status:** Proposed (Mouadh to review)
-- **Date:** 2026-10-22
+- **Date:** 2026-10-22 (option D added the same day, with ADR 0005)
 - **Decision by:** Mouheb + Mouadh (to agree on Day 22)
 - **Written by:** Mouheb
 - **Code:** none yet (`docker-compose.yml` runs Postgres only; no app service, no dashboard)
@@ -37,6 +37,7 @@ right).
 |---|---|---|---|---|
 | A. ECS Fargate + RDS (original plan) | app container (0.5 vCPU, 1 GB) + RDS Postgres db.t4g.micro + ALB | ~$18 Fargate + ~$14 RDS (with 20 GB) + ~$16 ALB + ~$4 public IPv4 = **~$50** | the "cloud" line on the CV; IaC practice | the most money and setup time; still can't call the model publicly (quota); new IAM/network attack surface to secure in the hardening week |
 | B. Free host for a read-only dashboard | Streamlit on a free tier (e.g. Hugging Face Spaces CPU) reading committed results; no model calls, no DB | **$0** | public link for the README; no keys on the host | free tiers sleep and change terms; shows stored runs only |
+| D. Azure (with ADR 0005) | Container Apps (scales to zero) + Azure Database for PostgreSQL Flexible Server (pgvector extension), model calls to Foundry | paid by the $200 trial credits for 30 days, then pay-as-you-go (to price) | same cloud as the models; managed identity + Key Vault instead of keys in env; AI-103 fit | dies when the credits end unless paid; public endpoint must not spend the model budget (read-only or auth) |
 | C. Local docker-compose + recorded demo | everything on a laptop: Postgres + pipeline + dashboard; 3-minute video | **$0** | the full live loop on camera; nothing to secure online | no link to click; "works on my machine" unless the compose file is complete |
 
 ## Decision (proposed)
@@ -45,7 +46,8 @@ right).
 locally for the video, and the same Streamlit app on a free host in **read-only mode** (stored
 results, no model key, no database) for the README link.
 
-A (ECS + RDS) is not built. If wanted for the CV, a short "how this maps to ECS + RDS" section in
+A (ECS + RDS) is not built. If ADR 0005 is kept, D replaces A as the cloud option: worth it only
+with the live loop behind auth, and B stays the permanent README link because D ends with the credits. If wanted for the CV, a short "how this maps to ECS + RDS" section in
 the README (task definition, RDS with pgvector, secrets in SSM) is honest and costs nothing.
 
 ## Consequences
