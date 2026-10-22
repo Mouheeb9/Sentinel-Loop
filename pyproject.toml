@@ -12,6 +12,7 @@ dependencies = [
     "httpx>=0.28",
     "langchain>=1.4.2",
     "langchain-anthropic>=1.7.2",
+    "langchain-openai>=1.0",
     "langchain-openrouter>=0.2.9",
     "langfuse>=4.15.4",
     "langgraph>=1.2.11",

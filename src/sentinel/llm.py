@@ -9,6 +9,8 @@ re-runs the alert when the first answer is unsure.
     SENTINEL_RULEGEN_MODEL=...      rule generation (default: the tier-2 model; writing a rule is
                                     the harder task, and it runs only on uncovered attacks)
     later: anthropic:claude-haiku-4-5 (tier 1), anthropic:claude-sonnet-5 (tier 2)
+    azure_openai:<deployment>        a Microsoft Foundry deployment (ADR 0005); content filter
+                                     is per deployment, so check it with evals.foundry_smoke
 
 Format is LangChain's `provider:model`. Every eval number is only comparable to numbers from the
 same model strings, so re-run the baseline whenever one changes.
@@ -62,6 +64,14 @@ def _timeout_arg(name: str) -> float | int:
 
 
 def chat_model(name: str) -> BaseChatModel:
+    if name.startswith("azure_openai:"):
+        # Foundry (ADR 0005): the part after the prefix is the DEPLOYMENT name, which
+        # init_chat_model doesn't pass on (azure_deployment stays None). Endpoint, key and API
+        # version come from AZURE_OPENAI_ENDPOINT / AZURE_OPENAI_API_KEY / OPENAI_API_VERSION.
+        deployment = name.split(":", 1)[1]
+        return init_chat_model(
+            name, temperature=0, timeout=_timeout_arg(name), azure_deployment=deployment
+        )
     return init_chat_model(name, temperature=0, timeout=_timeout_arg(name))
 
 
