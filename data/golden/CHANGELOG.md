@@ -40,3 +40,26 @@ Frozen versions are never edited. Any change is a new version plus a line here.
   not scored on them). `synthetic-v1.jsonl` = 20 hand-written everyday `cmd /c`, MSBuild and
   script-host events (ids `syn-*`, not real telemetry); `real-v1.jsonl` = 12 real monitoring-agent
   `cscript` events from the captures (11 new, 1 was already a golden event). Hand-check by Mouadh.
+
+## v1.2 (2026-10-21, second technique layer)
+
+- `v1.2.jsonl` = `v1.1.jsonl` (frozen, tag `golden-v1.1`) with a second technique on 4 attacks
+  whose event shows two layers, the launcher and what it ran. The first ID (the procedure's
+  technique in `procedures.yaml`) is unchanged:
+  - day3-050: T1059.003 + **T1007** (`sc.exe \DC query`, remote service discovery)
+  - day3-164: T1059.003 + **T1047** (`wmic /node: os get`)
+  - day3-108: T1059.001 + **T1218.010** (regsvr32 launcher)
+  - day3-101: T1059.001 + **T1127.001** (MSBuild launcher)
+- Why: on e2e-v1-ultra triage tagged the other layer (defensible), so the validator graded the
+  rule against the wrong attacks (docs/experiments.md, 2026-10-21). `labels.jsonl` synced.
+  Validator and triage evals now read v1.2. Reviewer: Mouadh (2026-10-21).
+
+## validation benign set v2 (2026-10-21)
+
+- New `data/validation/benign/synthetic-v2.jsonl`: 8 hand-written admin events (PowerShell
+  `-NoProfile -ExecutionPolicy Bypass -File` from Task Scheduler / ConfigMgr / Intune, an admin
+  console, WMI-launched msiexec and gpupdate, services.exe -> vendor cmd wrapper / PowerShell agent).
+- Why: 3 rules passed with 0 FP and would fire in a real network (125 any System32 exe under
+  WmiPrvSE, 141 `-e` matching `-ExecutionPolicy`, 087 any shell under services.exe). Re-grade of the
+  stored gold-v1 and e2e-v1-ultra rules: those 3 now fail (2, 4, 2 FP); 101, 104, 112 stay at 0 FP.
+  Reviewer: Mouadh (2026-10-21), checked against labeling guide rule 3.

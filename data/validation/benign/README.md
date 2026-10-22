@@ -11,6 +11,7 @@ One JSON object per line: `{"id", "why", "event"}`, `event` = a raw Sysmon Event
 |---|---|---|
 | `synthetic-v1.jsonl` | 20 | **Hand-written** (ids `syn-*`): everyday dev/admin activity (Visual Studio and CI builds, npm, VS Code, GPO logon scripts, SCCM, slmgr/OSPP/prnmngr, a vendor .hta). Not real telemetry: field values follow real Sysmon output, but the events never happened. |
 | `real-v1.jsonl` | 12 | Real, from the captures: `cscript MonitorKnowledgeDiscovery.vbs` run by the monitoring agent (MonitoringHost.exe). Not attack events, not golden alerts. |
+| `synthetic-v2.jsonl` | 8 | **Hand-written** (2026-10-21): admin automation the v1 set missed: PowerShell `-NoProfile -ExecutionPolicy Bypass -File` from Task Scheduler, ConfigMgr and Intune, an admin console, WMI-launched msiexec and gpupdate, services.exe starting a vendor cmd wrapper or a PowerShell agent. Same caveat as v1. |
 
 Rules:
 - Every row is hand-checked by Mouadh before use; `why` says why it is benign.
