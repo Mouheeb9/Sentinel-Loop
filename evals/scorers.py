@@ -23,6 +23,7 @@ from typing import Any
 
 from evals.check_labels import TechniqueIndex
 from evals.eval_row import EvalRow
+from sentinel.refs import missing_iocs
 from sentinel.retrieval.attack import DEFAULT_BUNDLE, _is_live, _technique_id
 from sentinel.schemas import Alert
 
@@ -166,28 +167,11 @@ def triage_accuracy(rows: Iterable[EvalRow]) -> dict[str, Any]:
 # --- hallucinated IOCs ----------------------------------------------------------------------
 
 
-def _normalize(text: str) -> str:
-    """Lowercase and forward slashes: the model writes C:/Users/... for C:\\Users\\..."""
-    return text.lower().replace("\\", "/")
-
-
-def _strings(value: Any) -> Iterable[str]:
-    """Every string/number leaf of a JSON value (so escaping never hides a match)."""
-    if isinstance(value, dict):
-        for v in value.values():
-            yield from _strings(v)
-    elif isinstance(value, list):
-        for v in value:
-            yield from _strings(v)
-    elif value is not None and not isinstance(value, bool):
-        yield str(value)
-
-
 def hallucinated_iocs(ioc_refs: Iterable[str], alert: Alert) -> list[str]:
     """IOCs that appear nowhere in the input alert (its events, raw fields included).
-    A set difference after normalizing both sides, not a judgement."""
-    haystack = "\n".join(_normalize(s) for s in _strings(alert.model_dump(mode="json")))
-    return [ioc for ioc in ioc_refs if ioc.strip() and _normalize(ioc.strip()) not in haystack]
+    A set difference after normalizing both sides, not a judgement. Same check triage uses to
+    reject a verdict (sentinel.refs)."""
+    return missing_iocs(ioc_refs, alert)
 
 
 def ioc_scores(rows: Iterable[EvalRow], alerts: Mapping[str, Alert]) -> dict[str, Any]:

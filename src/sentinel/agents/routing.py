@@ -53,6 +53,7 @@ class TierRun:
     cost_usd: float | None = None
     llm_calls: int = 0
     lookups: tuple[dict, ...] = ()
+    rejected: tuple[dict, ...] = ()  # lookups refused by tools.check_args
     schema_retries: int = 0
     error: str | None = None
 
@@ -148,6 +149,7 @@ def _run(
         cost_usd=cost_usd(name, r.input_tokens, r.output_tokens),
         llm_calls=r.llm_calls,
         lookups=r.lookups,
+        rejected=r.rejected,
         schema_retries=r.schema_retries,
     )
     return run, r
