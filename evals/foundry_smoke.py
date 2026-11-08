@@ -79,7 +79,7 @@ def classify(model, alert: Alert, retrieval: bool) -> dict:
     annotations = {
         k: meta[k] for k in ("prompt_filter_results", "content_filter_results") if k in meta
     }
-    verdict, error = _parse(response)
+    verdict, error = _parse(response, alert)
     if finish == "content_filter":
         outcome = "blocked"
     elif _any_filtered(annotations):

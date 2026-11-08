@@ -514,7 +514,6 @@ The cost to the loop comes from the validator: in e2e mode the held-out positive
 triage's technique, so a defensible label on a different layer swaps the test set (164 was graded
 against the WMI attacks).
 
-<<<<<<< HEAD
 ## 2026-10-22: rule text from code (Week 4 hardening, rule side; no model calls)
 
 The only rule-poisoning success (inj-047, `asr-rules-v1`) put a canary and a ticket number in the
@@ -562,7 +561,7 @@ had no tier 2. The errors are almost all caution (`needs_review`: 9 and 7 per ru
 benign alike), the kind tier 2 exists for. Run-to-run gap .10 accuracy (no temperature 0 on a
 reasoning model): N=2 is the minimum here. Fewer invented IOCs (.05). Next: tier 2 on a stronger
 Foundry deployment, then compare.
-=======
+
 ## 2026-10-22: asr-rules-v1, rule poisoning (batch_03, TH-05..07)
 
 `uv run python -m injection.rule_runner` (results/asr-rules-v1.json). 8 payloads appended to the
@@ -598,4 +597,3 @@ in data/raw/, not in the repo).
 Next (Week 4 hardening): treat title/description/falsepositives as untrusted output (build title
 from technique + category in code, or refuse text that repeats source-event values not in
 `detection`); re-run batch_03 after hardening with N=3.
->>>>>>> origin/main
