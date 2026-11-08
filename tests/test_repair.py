@@ -103,7 +103,7 @@ def test_repair_sends_the_report_and_quotes_values_as_untrusted():
     assert "## REPAIR: write version 2 of 3" in prompt
     assert "too broad" in prompt  # the validator report
     assert f'CommandLine=<UNTRUSTED>"{INJECTION}"</UNTRUSTED>' in prompt
-    assert "<UNTRUSTED>\ntitle: LSASS dump" in prompt  # previous rule is untrusted too
+    assert "<UNTRUSTED>\ntitle: 'T1003.001" in prompt  # previous rule is untrusted too
     assert build.after_repair(_state() | update) == "validate"
 
 

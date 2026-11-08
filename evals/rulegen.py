@@ -174,6 +174,9 @@ def run_one(
         "best_attempt": f.get("best_attempt"),
         # One entry per rule version validated, oldest first: did that version pass?
         "attempt_passes": [rule_passed(v) for v in f.get("validations", [])],
+        # Same, recall and benign hits per version: shows whether a failed repair got closer.
+        "attempt_recalls": [rule_recall(v) for v in validations],
+        "attempt_fps": [v.false_positives for v in validations],
         "repairs": f.get("repairs", []),
         "trace": res.trace_url,
     }
