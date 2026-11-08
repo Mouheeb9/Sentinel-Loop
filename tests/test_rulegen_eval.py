@@ -108,8 +108,8 @@ def test_resume_skips_finished_alerts(tmp_path, monkeypatch):
     monkeypatch.setattr(rg, "load_golden", lambda: (labels, {"a1": None, "a2": None}))
     calls = []
 
-    def fake_run(alert, trace, name=None):
-        calls.append(alert)
+    def fake_run(alert, trace, name=None, configurable=None):
+        calls.append(configurable)
         return {"outcome": "rule_unvalidated", "rule_yaml": RULE, "rulegen": {"title": "t"}}
 
     monkeypatch.setattr(rg, "run_one", fake_run)
@@ -118,7 +118,7 @@ def test_resume_skips_finished_alerts(tmp_path, monkeypatch):
         encoding="utf-8",
     )
     rg.main(["--no-trace"])
-    assert len(calls) == 1  # only a2 ran
+    assert calls == [{"ignore_coverage": False}]  # only a2 ran, with triage
     result = json.loads((tmp_path / "rulegen-v0.json").read_text(encoding="utf-8"))
     assert [r["alert_id"] for r in result["rows"]] == ["a1", "a2"]
 
@@ -145,3 +145,22 @@ def test_run_one_reads_the_pipeline_result(monkeypatch):
     assert row["validation"]["feedback"] == "NOT VALIDATED"
     assert row["attempt_passes"] == [False]  # 0 FP, nothing to test on: needs review
     assert row["repairs"] == []
+
+
+def test_gold_technique_puts_the_golden_label_in_place_of_triage(tmp_path, monkeypatch):
+    monkeypatch.setattr(rg, "RESULTS", tmp_path)
+    labels = [{"alert_id": "a1", "label": "true_positive", "technique_ids": ["T1134"]}]
+    monkeypatch.setattr(rg, "load_golden", lambda: (labels, {"a1": None}))
+    monkeypatch.setattr(rg, "held_out_counts", lambda labels, alerts: {"a1": 2, "a2": 1})
+    seen = []
+    monkeypatch.setattr(
+        rg, "run_one", lambda alert, trace, name, configurable: seen.append(configurable) or {}
+    )
+    rg.main(["--no-trace", "--set", "testable", "--gold-technique", "--run", "gold"])
+    assert len(seen) == 1  # a2 has only 1 repeat: below --min-positives 2
+    assert seen[0]["ignore_coverage"] is True
+    assert seen[0]["oracle_verdict"].technique_ids == ["T1134"]
+    meta = json.loads((tmp_path / "gold.json").read_text(encoding="utf-8"))["meta"]
+    assert meta["set"] == "testable" and meta["gold_technique"] is True
+    row = json.loads((tmp_path / "gold.json").read_text(encoding="utf-8"))["rows"][0]
+    assert row["held_out_repeats"] == 2

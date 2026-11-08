@@ -371,3 +371,145 @@ Re-grade of every stored rule (no model calls):
 
 Note for Mouadh: validator `evidence: low` (≤ 1 positive) and the bar differ at n = 1: the bar
 passes a rule that catches the single repeat. Keep or align in ADR 0003.
+
+## 2026-10-15: why loop-v1 rules failed, and three fixes (no model calls)
+
+**Rule form (5 of 10 loop-v1 failures).** The Langfuse tool calls show one shape every time:
+keyword groups with alternatives, e.g. day3-093 `Image endswith reg.exe` AND `CommandLine
+contains [ADD, add]` AND `CommandLine contains [.../Services/EventLog, .../EventLog]` AND
+`/d 4`. That is how the SigmaHQ style examples we show it are written (`selection_cli` +
+`selection_paths`, `all of selection_*`). Our form refused a repeated field test (a hidden
+Pydantic rule, not in the tool schema), and its error told the model to merge the values with
+`all=true`, which turns alternatives into requirements: day3-070 then needed `172.` AND
+`192.168.` AND `10.` at once and failed the self-check. Fix: a repeated test is an AND group,
+rendered as split blocks (`selection1_1`, `selection1_2`, `all of selection1_*`); rules without
+repeats render exactly as before (same ids). Prompt line updated.
+
+Next blocker found by replaying the stored answers: `/` paths in CommandLine (the prompt teaches
+`/` for path fields only). `rule_gen.fix_slashes` converts a value only when the converted one
+matches the alert's own event and the written one doesn't; switches like `/c`, `/d 4` stay.
+
+Replay of the 8 rejected answers (day3-070, -093, -096): **0/8 -> 7/8** valid and firing on
+their alert (day3-070: 2 versions catch 1/4 held-out, 0 FP; -093/-096: evidence low -> needs
+review). The 8th is a real model mistake (`ParentImage endswith "\Desktop\"`), left to the
+self-check retry.
+
+**Retrieval (2 of 10: wrong technique, day3-048 T1134, day3-071 T1021.003).** Neither is in
+the top 50. CamelCase split in BM25 queries only (documents too cost .10 R@5: "PowerShell" ->
+"power", "shell" everywhere) + BM25 over the 17,136 ATT&CK procedure examples (child process
+only as query; with the parent's `C:\Windows\System32\cmd.exe` hundreds of examples match):
+
+| dev, 20 attacks | R@5 / MRR before | after |
+|---|---|---|
+| text->attack | .90 / .70 | **.97 / .83** |
+| alert->attack | .65 / .43 | .65 / .47 |
+| command->attack | .53 / .39 | .53 / .45 |
+
+Shipped OFF (`bm25.CAMEL_QUERIES`, `search.USE_PROCEDURES`; eval: `--camel --procedures`): both change what triage is shown, so they join the eval fingerprint when on and need 2 dev triage runs first. The two targets still miss: "named pipe" honestly points at T1090.001,
+T1559 and T1134 (T1134 6th in the procedure leg, absent from the others, so RRF drops it), and
+ATT&CK has no Excel/DCOM procedure text. Parked: Sigma-tag votes for techniques. Triage effect
+not measured yet (Day 10: a retrieval gain gave no triage gain beyond noise): needs 2 dev runs.
+
+## 2026-10-19: loop-v2 on the 10 uncovered dev attacks (after the rule-form fix)
+
+Same 10 alerts as loop-v1 (8 Oct), repair now always uses its 3 attempts.
+
+| | loop-v1 | **loop-v2** |
+|---|---|---|
+| rule generation failures | 3 | **0** |
+| rules generated | 5 | **7** |
+| passed | 0 | 0 |
+| needs review (no same-procedure repeat to test) | 1 | **4** (day2-006, -056, -093, -096) |
+| failed | 4 | 3 (day3-048 0/8, -070 1/4, -176 1/2; 0 FP, 3 versions each) |
+| no rule (triage needs_review) | 1 | 3 (day2-014, day3-071, -166) |
+
+Failures left are not format: day3-048 is the wrong technique (T1059.003 for T1134, graded
+against unrelated cmd attacks); day3-070 and -176 stay one hit short in all 3 versions (repair
+never sees the missed attacks, by design, RG-7). day2-006 again filters by `Image` (RG-3 lint).
+day3-093 (`reg.exe add ...\Services\EventLog /v Start /d 4`) is the cleanest rule so far: the
+first candidate to merge through the gate with human review.
+
+## 2026-10-20: gold-v1, rule generation alone on the testable set
+
+`evals.rulegen --set testable --gold-technique --run gold-v1`: the 14 non-test attacks with at
+least 2 held-out repeats (4 procedures; results/testable.json), the golden label in place of
+triage, covered alerts included with their firing rules removed from the style examples.
+
+| procedure | alerts | passed |
+|---|---|---|
+| T1059.001 Empire encoded stager | 101, 104, 108, 112, 141 | **5/5** (6/6 repeats each) |
+| T1569.002 services spawns shell | 061, 087, 176 | 1/3 (087 2/2; 061, 176 1/2) |
+| T1047 WmiPrvSE child process | 125, 169 | 1/2 (169 0/2) |
+| T1059.003 C2 implant spawns cmd | 050, 070, 157, 164 | 0/4 (best 1/4) |
+
+**7/14 pass, 0 FP everywhere, and every pass came from repair** (version 2 or 3; first-attempt
+pass rate 0). Compare loop-v2 with real triage on the uncovered set: 0/10, mostly untestable or
+wrong technique. Review of the passes: Empire rules are SigmaHQ-like (encoded command AND
+hidden/no-profile flags), but those alerts were covered, so the model may know the pattern;
+day3-087 (any shell under services.exe) is broad; **day3-125 (any exe under WmiPrvSE, filters by
+Image) is too broad and fails the RG-3 lint, so the CI rule gate would block it**: 6/14 survive
+review. GruntHTTP 0/4: the 4 alerts share only the parent (unknown exe in the user profile ->
+cmd), their commands differ; the model matches the command and repair never sees the missed
+attacks (RG-7), so it can't find the common part.
+
+Infra: the 300 s timeout first went in as 300 ms (ChatOpenRouter takes milliseconds), which
+made every call time out and look like a hang; fixed in f17bb5d. With it fixed an alert takes
+~2 min instead of 12+.
+
+## 2026-10-21: e2e-v1-ultra, the full loop with real triage on the testable set
+
+`SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free
+SENTINEL_ESCALATION_MODEL=none evals.rulegen --set testable --run e2e-v1-ultra`: same 14 alerts
+as gold-v1, with triage in place of the golden label. Triage runs on ultra because super's free
+endpoint was down (404). The run took 2 days because of the 50/day free quota.
+
+| procedure | alerts | gold-v1 | e2e-v1-ultra |
+|---|---|---|---|
+| T1059.001 Empire encoded stager | 101, 104, 108, 112, 141 | 5/5 | 4/5 (108 lost) |
+| T1569.002 services spawns shell | 061, 087, 176 | 1/3 | 0/3 (087 triaged benign) |
+| T1047 WmiPrvSE child process | 125, 169 | 1/2 | 1/2 |
+| T1059.003 C2 implant spawns cmd | 050, 070, 157, 164 | 0/4 | 1/4 (070) |
+| **total** | 14 | **7/14** | **6/14** |
+
+**6/14 pass, 0 FP everywhere; 1/13 passed first try (070), the others needed repair (19
+repairs).** Median recall 0.75. Triage cost 4 alerts, all of them two-layer or label questions,
+not attacks it missed:
+- 087: verdict benign (the Atomic test payload looks harmless). 0 rules.
+- 108: T1218.010 (regsvr32 launcher) listed before T1059.001 (stager), so the rule went after the
+  launcher and hit 0/6.
+- 050: T1007/T1018 (what the command does) instead of T1059.003 (how it ran). Ungradable, so
+  needs_review.
+- 164: T1047 instead of T1059.003. Graded against the WMI attacks, fires on 1/4.
+070 is the reverse case: it passed with triage and failed with gold, but only because it matches
+the parent `GruntHTTP.exe` by name (a tool-name fingerprint that breaks on a rename).
+
+Review of the 6 passes: 101, 104, 112 are fine; 141 matches `-e`/`-nop` with `contains`, which
+also catches `-ExecutionPolicy`/`-NoProfile` admin scripts; 125 (any System32 exe under WmiPrvSE)
+is too broad (RG-3); 070 is the fingerprint above. **About 4/14 survive review (gold-v1: 6/14).**
+The 0 FP on 125/141 (and 087 in gold-v1) says more about the benign set than about the rules:
+~53 process_creation events + 238 noise have no WMI-launched admin tools, no SCCM/msiexec and no
+`-ExecutionPolicy Bypass` scripts. Ask for Mouadh: add that activity to data/validation/benign/.
+The 3 last alerts (164, 169, 176) failed in both runs; repair never sees the missed attacks (RG-7).
+
+## 2026-10-21: why triage picks the "wrong" technique on e2e-v1-ultra
+
+Replayed technique retrieval (`enrich.search_plan` + `retrieve`, k=20, no reranker: SecReranker
+was removed in Week 2) on the 14 alerts. **The labeled technique is in the top 5 on 14/14 (rank 1
+on 5, median rank 2).** So retrieval isn't the cause, and a reranker or web tool would have nothing
+to add: triage sees the right ID every time and picks something else.
+
+| alert | chain | label | triage first | why |
+|---|---|---|---|---|
+| 050 | GruntHTTP -> cmd `sc \DC query` | T1059.003 (rank 2) | T1007 | tags what the command does; T1007 isn't even in the top 5, so it comes from the model's own knowledge, and it is a defensible label |
+| 164 | GruntHTTP -> cmd `wmic /node: os get` | T1059.003 (rank 1) | T1047 | same: wmic is WMI, defensible |
+| 108 | regsvr32 -> powershell -enc | T1059.001 (rank 5) | T1218.010 (rank 1) | follows our own prompt ("how a process was started is often the primary") |
+| 101 | MSBuild -> powershell -enc | T1059.001 (rank 4) | T1127.001 (rank 1) | same, passed anyway |
+| 087 | services -> powershell `write-host 'T1543.003 Test'` | T1569.002 | benign | saw an Atomic test string; the only real triage error |
+
+Takeaway: 4 of the 5 are **a conflict between the label policy and the prompt**, not a model
+error. The GruntHTTP alerts are labeled by the launcher (T1059.003, which groups them as one
+procedure), the Empire alerts by the payload (T1059.001), while the prompt says to prefer the
+launch mechanism and to tag the interpreter only "when nothing more specific explains the event".
+The cost to the loop comes from the validator: in e2e mode the held-out positives are picked by
+triage's technique, so a defensible label on a different layer swaps the test set (164 was graded
+against the WMI attacks).

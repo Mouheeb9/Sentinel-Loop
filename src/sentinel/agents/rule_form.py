@@ -11,8 +11,12 @@ It fills a strict form; this module checks the form and renders the YAML:
   are escaped, so a planted `*` can't widen the rule into "match everything";
 - values are single-line, bounded in length and count, and never empty;
 - several values in one field test mean ANY of them (Sigma's OR) unless `all` is set, which
-  renders the `|all` modifier (Sigma's AND); a field test may appear only once per selection,
-  since two would be silently merged into one OR list;
+  renders the `|all` modifier (Sigma's AND);
+- the tests of one selection must all match (AND), also several tests on the same field:
+  CommandLine contains [ADD, add] + CommandLine contains [/d 4] = (ADD or add) and /d 4. A Sigma
+  block can't hold one key twice, so such a selection is rendered as several blocks
+  (selection1_1, selection1_2) joined with `all of selection1_*`. The model wrote this shape in
+  5 of the 10 loop-v1 alerts (8 Oct): it is how SigmaHQ rules are written;
 - the condition is built by code from the selections and filters, never written by the model;
 - the YAML is produced with yaml.safe_dump, so no value can inject keys or structure.
 
@@ -113,21 +117,16 @@ class FieldMatch(BaseModel):
 
 
 class Selection(BaseModel):
-    """Field tests that must ALL be true (AND)."""
+    """Field tests that must ALL be true (AND), including several tests on the same field."""
 
     model_config = ConfigDict(extra="forbid")
 
-    items: list[FieldMatch] = Field(min_length=1, max_length=6)
-
-    @model_validator(mode="after")
-    def _one_test_per_field_and_match(self) -> Selection:
-        keys = [(m.field, m.match) for m in self.items]
-        if dupes := sorted({f"{f} {t}" for f, t in keys if keys.count((f, t)) > 1}):
-            raise ValueError(
-                f"{dupes} appear more than once in one selection: put the values in one item, "
-                "with all=true if every value must match"
-            )
-        return self
+    items: list[FieldMatch] = Field(
+        min_length=1,
+        max_length=6,
+        description="all must match; the same field may be tested several times, e.g. "
+        'CommandLine contains ["ADD", "add"] and CommandLine contains ["/d 4"]',
+    )
 
 
 class RuleDraft(BaseModel):
@@ -196,26 +195,60 @@ def escape_value(value: str) -> str:
     return "".join(out)
 
 
-def _selection_yaml(sel: Selection) -> dict[str, list[str]]:
-    out: dict[str, list[str]] = {}
+def _key(m: FieldMatch) -> str:
+    key = m.field if m.match == "equals" else f"{m.field}|{m.match}"
+    return key + "|all" if m.all and len(m.values) > 1 else key
+
+
+def _selection_blocks(sel: Selection) -> list[dict[str, list[str]]]:
+    """The Sigma blocks of one selection, all of which must match. One block unless a key repeats
+    (the same field and match type tested twice): a block can't hold a key twice, so each repeat
+    goes into the next block that doesn't have it yet."""
+    blocks: list[dict[str, list[str]]] = []
     for m in sel.items:
-        key = m.field if m.match == "equals" else f"{m.field}|{m.match}"
-        if m.all and len(m.values) > 1:
-            key += "|all"
-        out[key] = [escape_value(v) for v in m.values]  # one item per key (Selection validator)
-    return out
+        key = _key(m)
+        block = next((b for b in blocks if key not in b), None)
+        if block is None:
+            block = {}
+            blocks.append(block)
+        block[key] = [escape_value(v) for v in m.values]
+    return blocks
+
+
+def _blocks(prefix: str, sels: list[Selection]) -> tuple[dict[str, object], list[str]]:
+    """{block name: block} and one condition term per selection: `selection1`, or
+    `all of selection1_*` when the selection needed several blocks."""
+    named: dict[str, object] = {}
+    terms = []
+    for i, sel in enumerate(sels, start=1):
+        blocks = _selection_blocks(sel)
+        if len(blocks) == 1:
+            named[f"{prefix}{i}"] = blocks[0]
+            terms.append(f"{prefix}{i}")
+        else:
+            named |= {f"{prefix}{i}_{j}": b for j, b in enumerate(blocks, start=1)}
+            terms.append(f"all of {prefix}{i}_*")
+    return named, terms
+
+
+def _any(terms: list[str]) -> str:
+    return terms[0] if len(terms) == 1 else "(" + " or ".join(terms) + ")"
 
 
 def render(draft: RuleDraft, today: date | None = None) -> str:
     """The Sigma rule YAML for a draft. Deterministic for a given draft and date."""
-    detection: dict[str, object] = {}
-    for i, sel in enumerate(draft.selections, start=1):
-        detection[f"selection{i}"] = _selection_yaml(sel)
-    for i, flt in enumerate(draft.filters, start=1):
-        detection[f"filter{i}"] = _selection_yaml(flt)
-    condition = "1 of selection*"
-    if draft.filters:
-        condition += " and not 1 of filter*"
+    selections, sel_terms = _blocks("selection", draft.selections)
+    filters, flt_terms = _blocks("filter", draft.filters)
+    detection: dict[str, object] = selections | filters
+    if all(" of " not in t for t in sel_terms + flt_terms):
+        # every selection is one block: the short form (same rules, same ids as before)
+        condition = "1 of selection*"
+        if draft.filters:
+            condition += " and not 1 of filter*"
+    else:
+        condition = _any(sel_terms)
+        if flt_terms:
+            condition += f" and not {_any(flt_terms)}"
     detection["condition"] = condition
 
     body: dict[str, object] = {

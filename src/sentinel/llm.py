@@ -45,8 +45,24 @@ def rulegen_model_name() -> str:
     return os.environ.get("SENTINEL_RULEGEN_MODEL") or DEFAULT_ESCALATION_MODEL
 
 
+def request_timeout() -> float:
+    """Seconds one model call may take before it counts as a transport error (retried, and a
+    resumable eval re-runs the alert). Without it a provider that keeps the connection open but
+    never answers hangs the run: gold-v1 sat 3.5 h on one call (19 Oct). Free models take up to
+    ~3 min on a rule, hence the margin. SENTINEL_LLM_TIMEOUT overrides."""
+    return float(os.environ.get("SENTINEL_LLM_TIMEOUT") or 300)
+
+
+def _timeout_arg(name: str) -> float | int:
+    """The timeout in the unit the provider's client takes. ChatOpenRouter's `timeout` is in
+    MILLISECONDS (SDK timeout_ms); the others take seconds. Passing 300 to OpenRouter meant 0.3 s:
+    every rule call timed out and the SDK retried for ~5 min before failing (19-20 Oct)."""
+    seconds = request_timeout()
+    return int(seconds * 1000) if name.startswith("openrouter:") else seconds
+
+
 def chat_model(name: str) -> BaseChatModel:
-    return init_chat_model(name, temperature=0)
+    return init_chat_model(name, temperature=0, timeout=_timeout_arg(name))
 
 
 def triage_model() -> BaseChatModel:

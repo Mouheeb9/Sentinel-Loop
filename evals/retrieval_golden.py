@@ -3,6 +3,7 @@
     uv run python -m evals.retrieval_golden                  # current search (BM25 + vector), dev
     uv run python -m evals.retrieval_golden --no-bm25 --label vector-only
     uv run python -m evals.retrieval_golden --no-vector --label bm25-only
+    uv run python -m evals.retrieval_golden --camel --procedures --label camel-procedures
 
 Six question types ("tasks"), each scored on its own, because a search setup can be good at one
 and bad at another:
@@ -48,8 +49,8 @@ import yaml
 from evals.scorers import AttackMap
 from evals.split import SPLITS, load_split
 from evals.triage_smoke import GOLDEN, load_golden
-from sentinel.agents.enrich import search_plan
-from sentinel.retrieval import search, store
+from sentinel.agents.enrich import procedure_query, search_plan
+from sentinel.retrieval import bm25, search, store
 from sentinel.retrieval.embed import MODEL_NAME
 from sentinel.retrieval.search import retrieve
 from sentinel.schemas import Alert
@@ -74,6 +75,7 @@ class Case:
     gold: list[str]  # right technique IDs
     platform: str | None = None
     logsource: str | None = None
+    procedure_query: str | None = None  # alert->attack: what the pipeline sends that leg
 
 
 # --- questions ------------------------------------------------------------------------------
@@ -112,7 +114,15 @@ def alert_cases(labels: list[dict], alerts: dict[str, Alert]) -> list[Case]:
         query, platform, logsource = search_plan(alert)
         aid = lab["alert_id"]
         cases += [
-            Case("alert->attack", aid, query, "technique", gold, platform),
+            Case(
+                "alert->attack",
+                aid,
+                query,
+                "technique",
+                gold,
+                platform,
+                procedure_query=procedure_query(alert),
+            ),
             Case("alert->sigma", aid, query, "sigma_rule", gold, platform, logsource),
             Case(
                 "fields->sigma", aid, fields_query(alert), "sigma_rule", gold, platform, logsource
@@ -203,6 +213,7 @@ def evaluate(
     lexical: bool = False,
     bm25: bool = True,
     vector: bool = True,
+    procedures: bool = False,
 ) -> list[dict]:
     rows = []
     with store.connect() as conn:
@@ -217,6 +228,8 @@ def evaluate(
                 use_lexical=lexical,
                 use_bm25=bm25,
                 use_vector=vector,
+                use_procedures=procedures,
+                procedure_query=case.procedure_query,
             )
             answers = [[h.id] if h.kind == "technique" else h.technique_ids for h in hits]
             rels = relevance(case, answers, attack)
@@ -240,8 +253,11 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--lexical", action="store_true", help="add the old IDF keyword leg")
     p.add_argument("--no-bm25", action="store_true", help="turn the BM25 keyword search off")
     p.add_argument("--no-vector", action="store_true", help="turn the vector search off")
+    p.add_argument("--camel", action="store_true", help="split CamelCase in BM25 queries")
+    p.add_argument("--procedures", action="store_true", help="add the ATT&CK procedure-example leg")
     p.add_argument("--label", default="current", help="experiment name for the output file")
     args = p.parse_args(argv)
+    bm25.CAMEL_QUERIES = args.camel
     if args.split == "test" and not args.unseal_test:
         p.error("the test split is sealed until Day 13-14: add --unseal-test to run it")
 
@@ -251,7 +267,12 @@ def main(argv: list[str] | None = None) -> None:
     labels = [lab for lab in label_rows if lab["alert_id"] in wanted]
     cases = probe_cases() + alert_cases(labels, alerts)
     rows = evaluate(
-        cases, AttackMap.from_bundle(), args.lexical, not args.no_bm25, not args.no_vector
+        cases,
+        AttackMap.from_bundle(),
+        args.lexical,
+        not args.no_bm25,
+        not args.no_vector,
+        args.procedures,
     )
     summary = summarize(rows)
 
@@ -266,6 +287,8 @@ def main(argv: list[str] | None = None) -> None:
         "lexical": args.lexical,
         "bm25": not args.no_bm25,
         "vector": not args.no_vector,
+        "procedures": args.procedures,
+        "camel": args.camel,
         "index": dict(chunks),
         "deep": DEEP,
     }

@@ -138,3 +138,27 @@ def test_route_live_without_matcher_does_not_crash(rules_dir):
     """Eval runs use the live graph: without a usable matcher, route must record 'unknown'."""
     update = nodes.route_live(_state("true_positive"), {"configurable": {"matcher": _unavailable}})
     assert update["covering_rule_id"] is None and update["coverage"]["unavailable"]
+
+
+def test_ignore_coverage_writes_a_rule_without_the_firing_rules_as_examples(rules_dir):
+    """evals/rulegen.py --set testable: a covered alert still gets a rule, but no rule that
+    fires on it may be shown to rule_gen as a style example (it would be the answer)."""
+    state = _state("true_positive")
+    config = {"configurable": {"matcher": fires_on("one", "two"), "ignore_coverage": True}}
+    update = nodes.route_live(state, config)
+    assert update["covering_rule_id"] is None
+    assert update["coverage"] == {"ignored": [R1, R2]}
+    assert update["sigma_rules"] == []
+    assert build.after_route(state | update) == "rule_gen"
+
+
+def test_ignore_coverage_changes_nothing_for_an_uncovered_alert(rules_dir):
+    config = {"configurable": {"matcher": fires_on(), "ignore_coverage": True}}
+    update = nodes.route_live(_state("true_positive"), config)
+    assert "sigma_rules" not in update and update["coverage"]["checked"] == [R1, R2]
+
+
+def test_oracle_verdict_replaces_triage_without_a_model_call():
+    oracle = _state("true_positive")["verdict"]
+    update = nodes.triage_live({"alert": ALERT}, {"configurable": {"oracle_verdict": oracle}})
+    assert update == {"verdict": oracle, "triage_tier": 0}
