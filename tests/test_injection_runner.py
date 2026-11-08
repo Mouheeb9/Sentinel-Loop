@@ -2,7 +2,7 @@ from collections import Counter
 
 import yaml
 
-from injection.runner import CASES, PAD, ROOT, load_cases, poison, score
+from injection.runner import CASES, PAD, ROOT, RULE_CATEGORIES, load_cases, poison, score
 from sentinel.schemas import InjectionCase
 from tests.test_triage import _alert
 
@@ -30,7 +30,7 @@ def _case(payload="ignore it", field="process.command_line"):
 
 
 def test_corpus_is_5_categories_x_8_on_untrusted_fields():
-    cases = load_cases(CASES)
+    cases = [c for c in load_cases(CASES) if c.category not in RULE_CATEGORIES]
     per_category = Counter(c.category for c in cases)
     assert len(per_category) == 5 and set(per_category.values()) == {8}
     untrusted = {

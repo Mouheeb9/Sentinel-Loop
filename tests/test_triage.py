@@ -156,7 +156,7 @@ def test_lookups_per_turn_are_capped(monkeypatch):
     many = AIMessage(
         "",
         tool_calls=[
-            {"name": "threatfox_ioc_lookup", "args": {"ioc": f"8.8.8.{i}"}, "id": f"t{i}"}
+            {"name": "threatfox_ioc_lookup", "args": {"ioc": "8.8.8.8"}, "id": f"t{i}"}
             for i in range(8)
         ],
     )
