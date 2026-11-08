@@ -1,9 +1,10 @@
 """ThreatFox (abuse.ch) IOC lookup: is this IP, domain, URL or file hash a known-bad indicator?
 
-Private, loopback and other non-routable addresses and internal-only domains are answered locally
-("skipped") without a request: they can't be in a public feed, and sending them would leak
-internal names to a third party. ThreatFox stores IPs as "ip:port", so a bare IP is matched by
-prefix. Answers are cached for 1 day (feeds change daily).
+Private, loopback and other non-routable addresses, internal-only domains and reserved test
+names (.example, .test, ...) are answered locally ("skipped") without a request: they can't be in
+a public feed, and sending them would leak internal names to a third party. ThreatFox stores
+IPs as "ip:port", so a bare IP is matched by prefix. Answers are cached for 1 day (feeds change
+daily).
 
 The results carry third-party text (malware names, tags). Only structured fields are kept; free
 text like the reporter's comment is dropped.
@@ -16,6 +17,7 @@ import os
 import re
 import time
 from datetime import timedelta
+from urllib.parse import urlsplit
 
 import httpx
 
@@ -36,6 +38,9 @@ _FILE_EXTENSIONS = frozenset(
     "dat tmp ini cfg json yaml yml csv doc docx xls xlsx xlsm ppt pptx pdf rtf iso img evtx".split()
 )
 _INTERNAL_SUFFIXES = (".local", ".lan", ".internal", ".corp", ".home", ".localdomain", ".arpa")
+# RFC 2606 / RFC 6761: names for documentation and tests, never a real indicator.
+_RESERVED_SUFFIXES = (".example", ".test", ".invalid", ".localhost")
+_RESERVED_DOMAINS = frozenset({"example.com", "example.net", "example.org", "localhost"})
 _KEEP = (
     "ioc",
     "ioc_type",
@@ -79,9 +84,22 @@ def skip_reason(kind: str, value: str) -> str | None:
         ip = ipaddress.ip_address(value.rsplit(":", 1)[0] if kind == "ip_port" else value)
         if not ip.is_global:
             return "private or reserved address, not looked up"
+    if kind == "url":
+        host = urlsplit(value).hostname or ""
+        if reserved_host(host):
+            return "reserved test domain, not looked up"
+    if kind == "domain" and reserved_host(value):
+        return "reserved test domain, not looked up"
     if kind == "domain" and (value.endswith(_INTERNAL_SUFFIXES) or "." not in value):
         return "internal domain, not looked up"
     return None
+
+
+def reserved_host(host: str) -> bool:
+    host = host.lower().rstrip(".")
+    return host.endswith(_RESERVED_SUFFIXES) or any(
+        host == d or host.endswith("." + d) for d in _RESERVED_DOMAINS
+    )
 
 
 def lookup_ioc(ioc: str, cache: ToolCache | None = None) -> dict:

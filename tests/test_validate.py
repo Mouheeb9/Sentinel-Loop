@@ -198,6 +198,16 @@ def test_v2_one_positive_is_low_evidence():
     assert r.true_positives == 1 and r.evidence == "low" and "evidence: low" in r.feedback
 
 
+def test_v2_keeps_procedure_when_rule_claims_another_label_of_the_source():
+    same = _sample("a1", "true_positive", ["T1127.001"], "c1", _msbuild("e1", "m x.xml"), XML)
+    corpus = _corpus(same, source_procedure=XML)
+    src = corpus.golden[0]
+    corpus.golden[0] = Sample(src.alert_id, src.label, ("T1127.001", "T1218"), src.capture,
+                              src.event, src.procedure)  # fmt: skip
+    r = grade(MSBUILD_RULE, SOURCE, ["T1218"], corpus)
+    assert r.true_positives == 1 and r.procedure_recall == 1.0
+
+
 def test_v2_falls_back_to_technique_when_rule_claims_another_technique():
     hit = _sample("a1", "true_positive", ["T1218"], "c1", _msbuild("e1", "m x.xml"), "T1218/x")
     r = grade(MSBUILD_RULE, SOURCE, ["T1218"], _corpus(hit, source_procedure=XML))

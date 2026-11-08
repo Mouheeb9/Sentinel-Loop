@@ -9,11 +9,15 @@ Event.raw is never sent.
 Since Day 6, when the alert contains a lookup target (public IP, URL, CVE id), the model may
 first call the enrichment tools (NVD, ThreatFox; see sentinel.tools) for up to MAX_TOOL_ROUNDS
 turns; once it replies without a tool call, or after the last round, only the answer tool is
-offered. A call to a tool outside the allow-list raises ToolNotAllowedError.
+offered. A call to a tool outside the allow-list raises ToolNotAllowedError. An allowed call
+runs only when its argument is a lookup target code found in the alert (tools.check_args);
+otherwise the model gets "rejected: ..." back and the call is recorded in `rejected`, not run.
 
-The answer is a tool call whose schema is TriageVerdict. If the arguments don't validate, the
-model gets exactly one retry with the validation error; a second failure raises TriageError.
-Nothing is ever coerced into shape.
+The answer is a tool call whose schema is TriageVerdict. If the arguments don't validate, or the
+verdict cites IOCs or evidence paths the alert doesn't have (sentinel.refs: output schema
+validation, Week 4), the model gets exactly one retry with the error; a second failure raises
+TriageError. Nothing is ever coerced into shape, and a verdict that points at invented data is
+never trusted.
 """
 
 from __future__ import annotations
@@ -34,9 +38,10 @@ from langchain_core.runnables import RunnableConfig
 from pydantic import ValidationError
 
 from sentinel.agents.enrich import launch_context
+from sentinel.refs import missing_evidence, missing_iocs
 from sentinel.retrieval.search import Hit
 from sentinel.schemas import Alert, TriageVerdict
-from sentinel.tools import ALLOWED_TOOLS, check_allowed, lookup_targets, run_tool
+from sentinel.tools import ALLOWED_TOOLS, check_allowed, check_args, lookup_targets, run_tool
 
 ANSWER_TOOL = TriageVerdict.__name__
 ANSWER_NOW = "Now give your answer by calling the TriageVerdict tool."
@@ -104,7 +109,8 @@ class TriageResult:
     input_tokens: int = 0
     output_tokens: int = 0
     llm_calls: int = 0
-    lookups: tuple[dict, ...] = ()  # {"name", "args"} of each enrichment tool call, in order
+    lookups: tuple[dict, ...] = ()  # {"name", "args"} of each enrichment tool call run, in order
+    rejected: tuple[dict, ...] = ()  # {"name", "args", "reason"} of calls refused by check_args
 
 
 def triage_alert(
@@ -131,11 +137,13 @@ def triage_alert(
     ]
     errors: list[str] = []
     lookups: list[dict] = []
+    rejected: list[dict] = []
     tool_rounds = in_tokens = out_tokens = calls = 0
     # Tools are only offered when the alert holds something they can look up. Otherwise the
     # model answers in one forced call, as on Day 5: on the Day 6 smoke run nemotron-super
     # replied in plain text to 12/16 tool-enabled first turns, doubling calls for no lookup.
-    done_looking = not (use_tools and lookup_targets(alert))
+    targets = lookup_targets(alert)
+    done_looking = not (use_tools and targets)
     while True:
         # After a plain-text reply or a bad answer only the forced answer tool is offered.
         lookups_open = not done_looking and tool_rounds < MAX_TOOL_ROUNDS and not errors
@@ -153,13 +161,16 @@ def triage_alert(
             tool_rounds += 1
             messages.append(response)
             for i, call in enumerate(requested):
-                if i < MAX_LOOKUPS_PER_ROUND:
-                    lookups.append({"name": call["name"], "args": call["args"]})
-                    content = run_tool(call["name"], call["args"], config)
-                else:
+                if i >= MAX_LOOKUPS_PER_ROUND:
                     content = json.dumps(
                         {"error": f"skipped: max {MAX_LOOKUPS_PER_ROUND} per turn"}
                     )
+                elif reason := check_args(call["name"], call["args"], targets):
+                    rejected.append({"name": call["name"], "args": call["args"], "reason": reason})
+                    content = json.dumps({"error": f"rejected: {reason}"})
+                else:
+                    lookups.append({"name": call["name"], "args": call["args"]})
+                    content = run_tool(call["name"], call["args"], config)
                 messages.append(ToolMessage(content, tool_call_id=call["id"]))
             continue
 
@@ -169,7 +180,7 @@ def triage_alert(
             messages += [response, HumanMessage(ANSWER_NOW)]
             continue
 
-        verdict, error = _parse(response)
+        verdict, error = _parse(response, alert)
         if verdict is not None:
             return TriageResult(
                 verdict=verdict,
@@ -178,6 +189,7 @@ def triage_alert(
                 output_tokens=out_tokens,
                 llm_calls=calls,
                 lookups=tuple(lookups),
+                rejected=tuple(rejected),
             )
         errors.append(error)
         if len(errors) == 2:
@@ -252,14 +264,23 @@ def _json(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False)
 
 
-def _parse(response: AIMessage) -> tuple[TriageVerdict | None, str]:
+def _parse(response: AIMessage, alert: Alert) -> tuple[TriageVerdict | None, str]:
     calls = [c for c in response.tool_calls if c["name"] == "TriageVerdict"]
     if not calls:
         return None, "no TriageVerdict tool call in the response"
     try:
-        return TriageVerdict.model_validate(calls[0]["args"]), ""
+        verdict = TriageVerdict.model_validate(calls[0]["args"])
     except ValidationError as e:
         return None, str(e)
+    problems = []
+    if bad := missing_iocs(verdict.ioc_refs, alert):
+        problems.append(f"ioc_refs not found in the alert: {_json(bad)}")
+    if bad := missing_evidence(verdict.evidence_refs, alert):
+        problems.append(
+            f"evidence_refs that are not fields of the alert: {_json(bad)}"
+            ' (use paths like "events[0].process.command_line")'
+        )
+    return (None, "; ".join(problems)) if problems else (verdict, "")
 
 
 def _feedback(response: AIMessage, error: str) -> list[BaseMessage]:
