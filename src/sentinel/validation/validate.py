@@ -127,8 +127,11 @@ def grade(
     # v2: when the source alert has a procedure and the rule claims its technique, only the same
     # procedure must fire; other procedures of the technique are siblings (reported, not graded).
     # Otherwise (alert not in golden, or triage claimed another technique) v0: by technique.
-    procedure = _source_procedure(source_alert, corpus)
-    if procedure and _relation(claimed, (procedure.split("/")[0],)) != "same":
+    # Any of the source's labels counts: an alert labeled with both layers (launcher T1059.003
+    # and what it ran, T1007) keeps its procedure whichever layer triage tagged (day3-050).
+    source = _source_sample(source_alert, corpus)
+    procedure = source.procedure if source else None
+    if procedure and _relation(claimed, source.technique_ids) != "same":
         procedure = None
     if procedure:
         positives = [s for s in held_out if s.procedure == procedure]
@@ -299,12 +302,13 @@ def _source_capture(alert: Alert, corpus: Corpus) -> str | None:
     return None
 
 
-def _source_procedure(alert: Alert, corpus: Corpus) -> str | None:
-    """The source alert's procedure (procedures.yaml), by alert id, else by any shared event."""
+def _source_sample(alert: Alert, corpus: Corpus) -> Sample | None:
+    """The source alert's golden sample that has a procedure (procedures.yaml), by alert id,
+    else by any shared event."""
     events = {e.event_id for e in alert.events}
     for s in corpus.golden:
         if s.procedure and (s.alert_id == alert.alert_id or s.event.event_id in events):
-            return s.procedure
+            return s
     return None
 
 
