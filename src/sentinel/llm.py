@@ -1,13 +1,13 @@
 """Which chat model each role uses. One env var per role, so switching provider is config only.
 
-Triage can run in two tiers (see agents/routing.py): a cheap first pass, and a stronger model that
-re-runs the alert when the first answer is unsure. Since 2026-11-11 the default is one tier on
-nemotron ultra: the free nemotron super endpoint left OpenRouter, and escalating ultra to itself
-only doubles the calls. Numbers from before that date are super -> ultra.
+Triage runs in two tiers (see agents/routing.py): a cheap first pass, and a stronger model that
+re-runs the alert when the first answer is unsure. Since 2026-11-11 tier 1 is nemotron 3.5 super
+(the free nemotron 3 super endpoint left OpenRouter); numbers from before that date are
+nemotron 3 super -> ultra.
 
-    SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free   (tier 1, default)
-    SENTINEL_ESCALATION_MODEL=none                                            (one tier, default)
-    SENTINEL_ESCALATION_MODEL=<provider:model>                                (tier 2)
+    SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3.5-super-vl:free         (tier 1, default)
+    SENTINEL_ESCALATION_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free (tier 2, default)
+    SENTINEL_ESCALATION_MODEL=none                                             (tier 1 only)
     SENTINEL_RULEGEN_MODEL=...      rule generation (default: nemotron ultra; writing a rule is
                                     the harder task, and it runs only on uncovered attacks)
     later: anthropic:claude-haiku-4-5 (tier 1), anthropic:claude-sonnet-5 (tier 2)
@@ -26,8 +26,8 @@ from langchain.chat_models import init_chat_model
 from langchain_core.language_models import BaseChatModel
 
 ULTRA = "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
-DEFAULT_TRIAGE_MODEL = ULTRA
-DEFAULT_ESCALATION_MODEL = "none"
+DEFAULT_TRIAGE_MODEL = "openrouter:nvidia/nemotron-3.5-super-vl:free"
+DEFAULT_ESCALATION_MODEL = ULTRA
 DEFAULT_RULEGEN_MODEL = ULTRA
 
 # USD per million tokens (input, output). Anthropic list prices, checked 2026-09-23.
