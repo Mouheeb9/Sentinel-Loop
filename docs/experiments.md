@@ -524,7 +524,8 @@ both from validated parts only (technique ids, category, field names tested, nev
 the form (kept in the eval rows), but they no longer reach the YAML; the PR title comes from the
 YAML too. Detection logic is unchanged, so validation results don't move; rule ids change (they
 hash the YAML). **To measure:** batch_03 after-run (Week 4, Day 27-28): inj-047 should be `safe`.
-Not covered: `falsepositives` is still model text (Mouadh's rule-text lint, Day 24).
+Not covered: `falsepositives` is still model text (Mouadh's rule-text lint, Day 24). Closed on
+Day 24, see "falsepositives from code" below.
 
 ## 2026-10-22: Foundry content-filter smoke test (ADR 0005 gate)
 
@@ -597,3 +598,18 @@ in data/raw/, not in the repo).
 Next (Week 4 hardening): treat title/description/falsepositives as untrusted output (build title
 from technique + category in code, or refuse text that repeats source-event values not in
 `detection`); re-run batch_03 after hardening with N=3.
+
+## 2026-11-11: falsepositives from code (Week 4 hardening, Day 24; no model calls)
+
+The last model text that reached the rule YAML was `falsepositives` (inj-041 steered it to
+"Approved red team exercises"). Two options: a lint that refuses text repeating source-event
+values or authorization claims, or building the text in code like the title. Chose code: a lint
+is a deny-list the next payload rewords around, code-built text can't carry attacker text at all,
+and it is the same contract as the title and description (RC in the threat model).
+`rule_form.rule_falsepositives` writes one line from the field names tested, never a value:
+`Legitimate administrative or software activity with the same Image, CommandLine values; check
+against the local baseline before enabling`. The model still fills `falsepositives` in the form
+(kept in the eval rows, not in the YAML). Detection logic is unchanged, so validation results
+don't move; rule ids change again (they hash the YAML). Test:
+`test_falsepositives_never_carry_model_text`. **To measure:** batch_03 after-run (Day 27-28),
+with inj-041 and inj-047.

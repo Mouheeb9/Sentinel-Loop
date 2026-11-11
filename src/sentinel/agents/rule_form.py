@@ -253,6 +253,16 @@ def rule_description(draft: RuleDraft) -> str:
     return text + (f", minus {len(draft.filters)} filter(s)." if draft.filters else ".")
 
 
+def rule_falsepositives(draft: RuleDraft) -> list[str]:
+    """The rule's false-positive notes, built by code like the title. The model's own list is free
+    text too (batch_03: "Approved red team exercises" in inj-041), the last model text that
+    reached the YAML; a reviewer reads it in the PR. Only field names, never a value."""
+    return [
+        f"Legitimate administrative or software activity with the same "
+        f"{', '.join(_fields(draft))} values; check against the local baseline before enabling"
+    ]
+
+
 def _fields(draft: RuleDraft) -> list[str]:
     """Field names tested by the selections, in first-use order."""
     return list(dict.fromkeys(m.field for s in draft.selections for m in s.items))
@@ -284,7 +294,7 @@ def render(draft: RuleDraft, today: date | None = None) -> str:
         "tags": [f"attack.{t.lower()}" for t in draft.technique_ids],
         "logsource": {"category": draft.category, "product": "windows"},
         "detection": detection,
-        "falsepositives": draft.falsepositives or ["Unknown"],
+        "falsepositives": rule_falsepositives(draft),
         "level": draft.level,
     }
     body["id"] = str(uuid.uuid5(RULE_NAMESPACE, yaml.safe_dump(body, sort_keys=False)))
