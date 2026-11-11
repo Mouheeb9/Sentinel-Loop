@@ -1,6 +1,8 @@
 # ADR 0002: Two-tier triage routing on free models
 
-- **Status:** Accepted (in use since Week 1, Day 6)
+- **Status:** Accepted (in use since Week 1, Day 6). Paused 2026-11-11: the free nemotron super
+  endpoint left OpenRouter, so the default is one tier on ultra (`SENTINEL_ESCALATION_MODEL=none`).
+  The routing code stays; a second tier comes back with the next paid or free pair of models.
 - **Date:** 2026-10-05
 - **Decision by:** Mouheb (`src/sentinel/agents/routing.py`)
 - **Written by:** Mouadh (Week 2 ADR swap)

@@ -1,12 +1,14 @@
 """Which chat model each role uses. One env var per role, so switching provider is config only.
 
-Triage runs in two tiers (see agents/routing.py): a cheap first pass, and a stronger model that
-re-runs the alert when the first answer is unsure.
+Triage can run in two tiers (see agents/routing.py): a cheap first pass, and a stronger model that
+re-runs the alert when the first answer is unsure. Since 2026-11-11 the default is one tier on
+nemotron ultra: the free nemotron super endpoint left OpenRouter, and escalating ultra to itself
+only doubles the calls. Numbers from before that date are super -> ultra.
 
-    SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-super-120b-a12b:free       (tier 1, default)
-    SENTINEL_ESCALATION_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free   (tier 2, default)
-    SENTINEL_ESCALATION_MODEL=none                                                (tier 1 only)
-    SENTINEL_RULEGEN_MODEL=...      rule generation (default: the tier-2 model; writing a rule is
+    SENTINEL_TRIAGE_MODEL=openrouter:nvidia/nemotron-3-ultra-550b-a55b:free   (tier 1, default)
+    SENTINEL_ESCALATION_MODEL=none                                            (one tier, default)
+    SENTINEL_ESCALATION_MODEL=<provider:model>                                (tier 2)
+    SENTINEL_RULEGEN_MODEL=...      rule generation (default: nemotron ultra; writing a rule is
                                     the harder task, and it runs only on uncovered attacks)
     later: anthropic:claude-haiku-4-5 (tier 1), anthropic:claude-sonnet-5 (tier 2)
     azure_openai:<deployment>        a Microsoft Foundry deployment (ADR 0005); content filter
@@ -23,8 +25,10 @@ import os
 from langchain.chat_models import init_chat_model
 from langchain_core.language_models import BaseChatModel
 
-DEFAULT_TRIAGE_MODEL = "openrouter:nvidia/nemotron-3-super-120b-a12b:free"
-DEFAULT_ESCALATION_MODEL = "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+ULTRA = "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+DEFAULT_TRIAGE_MODEL = ULTRA
+DEFAULT_ESCALATION_MODEL = "none"
+DEFAULT_RULEGEN_MODEL = ULTRA
 
 # USD per million tokens (input, output). Anthropic list prices, checked 2026-09-23.
 PRICES_PER_MTOK: dict[str, tuple[float, float]] = {
@@ -44,7 +48,7 @@ def escalation_model_name() -> str | None:
 
 
 def rulegen_model_name() -> str:
-    return os.environ.get("SENTINEL_RULEGEN_MODEL") or DEFAULT_ESCALATION_MODEL
+    return os.environ.get("SENTINEL_RULEGEN_MODEL") or DEFAULT_RULEGEN_MODEL
 
 
 def request_timeout() -> float:
