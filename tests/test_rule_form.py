@@ -277,4 +277,5 @@ def test_falsepositives_never_carry_model_text():
     text = " ".join(body["falsepositives"])
     assert "red team" not in text and "canary" not in text
     # an empty model list gives the same code-built text
-    assert yaml.safe_load(render(_draft(falsepositives=[])))["falsepositives"] == body["falsepositives"]
+    empty = yaml.safe_load(render(_draft(falsepositives=[])))
+    assert empty["falsepositives"] == body["falsepositives"]
