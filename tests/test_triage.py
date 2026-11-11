@@ -6,6 +6,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import AIMessage, HumanMessage, ToolMessage
 from langchain_core.outputs import ChatGeneration, ChatResult
 
+from sentinel.agents.blocks import block_id
 from sentinel.agents.triage import (
     MAX_LOOKUPS_PER_ROUND,
     MAX_TOOL_ROUNDS,
@@ -78,9 +79,11 @@ def test_split_event_moves_untrusted_fields_out_and_drops_raw():
 
 def test_untrusted_text_only_appears_inside_its_block():
     msg = build_user_message(_alert(), [], [])
-    block = '<UNTRUSTED path="events[0].process.command_line">'
+    bid = block_id(_alert().events)
+    block = f'<UNTRUSTED id="{bid}" path="events[0].process.command_line">'
+    close = f'</UNTRUSTED id="{bid}">'
     assert msg.count(INJECTION) == 1
-    assert msg.index(block) < msg.index(INJECTION) < msg.index("</UNTRUSTED>", msg.index(block))
+    assert msg.index(block) < msg.index(INJECTION) < msg.index(close, msg.index(block))
     assert "raw-only-value" not in msg
 
 

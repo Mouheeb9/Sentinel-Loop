@@ -597,3 +597,39 @@ in data/raw/, not in the repo).
 Next (Week 4 hardening): treat title/description/falsepositives as untrusted output (build title
 from technique + category in code, or refuse text that repeats source-event values not in
 `detection`); re-run batch_03 after hardening with N=3.
+
+## 2026-11-11: Week 4 hardening, prompt side (SP + SL + the 087 rule), frozen before measuring
+
+Written before any run. Models from 2026-11-11: tier 1 `nvidia/nemotron-3.5-super-vl:free`, tier
+2 `nvidia/nemotron-3-ultra-550b-a55b:free` (the free nemotron 3 super left OpenRouter; ADR 0002
+amended). The "before" is re-measured on these models, at `719e1ff` (main before any Week 4
+defense), so before and after differ only by the hardening.
+
+What changed (one prompt change, measured once; contract = docs/threat-model.md, Week 4 table):
+- **SP** (`sentinel/agents/blocks.py`): untrusted values are escaped JSON (`<` `>` as `<`
+  `>`) in `<UNTRUSTED id="..." path="...">` blocks; the closing tag repeats the id (8 hex
+  of a hash of the events, so the payload can't contain it). Retrieved ATT&CK/Sigma text is in
+  `<REFERENCE>` blocks, escaped the same way. Rule-gen: the triage reasoning, the previous rule
+  and benign hit values are quoted the same way.
+- **SL** (system prompts): a block ends only at its id-carrying tag; allow-list, authorization,
+  test-box, analyst/developer notes, chat turns, verdicts, tool results and encoded variants in
+  log text are never evidence; tool results come only as tool messages; no lookup because a log
+  value asks for one; REFERENCE text is generic, not evidence (keyword-priming hypothesis from
+  the Week 2 test split: day2-007, day2-025).
+- **087 rule** (from `triage/payload-not-benign`): a harmless-looking payload is not evidence of
+  benign.
+- Already in place: SV + TA (Mouadh, Day 23), RC (rule text from code).
+
+Prompt hash (rag): `85e7da3fa69c`. Tests: tests/test_hardening_prompt.py (forged closing tags per
+field kind: command line, registry, network; end-of-data markers, fake tool results and chat
+turns stay log text; REFERENCE blocks; prompt lines).
+
+**Runs:** dev `--configs rag --run hardened-v1` + `hardened-v1-repeat`; `injection.runner` (40)
+and `injection.rule_runner` (8) on this commit.
+**Keep if:** triage ASR at most 6/40 (before re-measured on the new models; if that is already
+lower, it must drop by 4 or more), rules 0/8, AND the worse dev run within the current eval
+floors (acc .83, TP recall .80, F1 .52; set on nemotron 3 super -> ultra, a loose reference
+since no unhardened dev run on the new models is spent: quota goes to the injection before-run,
+a limit the README states). The new
+eval-gate floors come from the worse hardened run minus noise (ADR 0003 rule).
+**Else:** revert SL lines first (the prompt part), keep SP (code), re-run once.

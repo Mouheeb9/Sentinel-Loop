@@ -52,7 +52,7 @@ from evals.eval_row import EvalRow
 from evals.scorers import AttackMap, score_all
 from evals.split import SPLITS, load_split
 from evals.triage_smoke import CANDIDATES, GOLDEN, load_golden, sample
-from sentinel.agents import enrich
+from sentinel.agents import blocks, enrich
 from sentinel.agents.enrich import K
 from sentinel.agents.routing import escalate_below
 from sentinel.agents.triage import (
@@ -102,7 +102,7 @@ def prompt_hash(options: PipelineOptions) -> str:
         "retrieval_k": K if options.retrieval else 0,
         "context_chars": CONTEXT_TEXT_CHARS,
         # the user message layout and the search query (incl. launch-context rules) are prompt too
-        "user_message": inspect.getsource(build_user_message),
+        "user_message": inspect.getsource(build_user_message) + inspect.getsource(blocks),
         "query": inspect.getsource(enrich.enrichment_query)
         + inspect.getsource(enrich.launch_context)
         + repr([text for _, text in enrich._LAUNCHERS]),

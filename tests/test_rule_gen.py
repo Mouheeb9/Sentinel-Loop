@@ -141,7 +141,7 @@ def test_rule_that_misses_its_own_alert_is_sent_back_with_the_reason():
     assert result.schema_retries == 1
     feedback = model.seen[1][-1].content
     assert "does not fire on the alert" in feedback and "windowsSystem32" in feedback
-    assert "<UNTRUSTED>" in feedback  # the event's real value is quoted as attacker data
+    assert "<UNTRUSTED id=" in feedback  # the event's real value is quoted as attacker data
 
 
 def test_filter_that_excludes_the_alert_is_explained():
