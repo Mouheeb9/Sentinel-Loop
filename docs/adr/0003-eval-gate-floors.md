@@ -47,6 +47,22 @@ Runs 1 and 2 = the same prompt (`a7a0d78eaac5`), twice: `results/launch-context`
 `results/launch-context-repeat`. Rule: **floor = the worse run minus the run-to-run noise**,
 rounded to whole alerts where the metric counts alerts.
 
+**Amended 2026-11-19 (Week 4 hardening, Mouheb).** New prompt `85e7da3fa69c` (SP + SL + the 087
+rule) on new models (nemotron 3.5 super -> ultra), so the floors were re-set by the same rule
+from `results/hardened-v1` and `results/hardened-v1-repeat`:
+
+| Metric | Run 1 | Run 2 | Floor | Margin |
+|---|---|---|---|---|
+| Verdict accuracy | .90 | .90 | **≥ .83** (unchanged) | 2 alerts of 30 |
+| Attack recall | .95 | .95 | **≥ .90** (was .80) | 1 attack of 20 |
+| Technique F1 | .57 | .59 | **≥ .52** (unchanged) | noise .05 (Week 2 estimate; .02 this time) |
+| Schema valid | 1.00 | 1.00 | **≥ .95** (unchanged) | 1 alert of 30 |
+| Invented IOC rate | .00 | .00 | **≤ .05** (was .20) | noise .05 |
+
+Two floors got stricter: the hardened runs miss at most 1 attack and invent no IOCs (output
+validation, SV), and the gate now holds that gain. F1 keeps the larger Week 2 noise estimate,
+since two runs that happen to agree are a thin estimate.
+
 ### 2. Rule floors (`evals.validate_rules`, every PR, every file in `rules/generated/`)
 
 Pass bar v2, on validator v2 (`data/golden/procedures.yaml`). Let n = held-out repeats of the
