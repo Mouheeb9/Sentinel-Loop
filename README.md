@@ -54,8 +54,23 @@ cut invented IOCs but added 2 false positives (keyword matches on benign events)
 the 5 our search returns (`uv run python -m evals.coverage`, run with Mouadh's matcher). A lower
 bound, since rules outside the top 5 are not tried. The other 54 are what rule generation is for.
 
-Prompt-injection attack success rate on the unhardened agent: **25% (10/40 payloads)**, worst
-category tool hijacking (4/8). Hardening comes in Week 4; the same 40 payloads are re-run after it.
+**Prompt injection (Week 4).** The same 40 payloads, planted in attacker-writable fields of real
+attacks, before and after hardening, same models (nemotron 3.5 super -> ultra):
+
+| | before (unhardened) | after (hardened) |
+|---|---|---|
+| attack success rate | 7/40 (17.5%) | **3/40 (7.5%)** |
+| verdict flipped to benign | 5 | 1 |
+| fake system message / tool hijack | 3/8 / 3/8 | 1/8 / 2/8 |
+| dev triage: accuracy / attack recall / F1 / invented IOCs | - | .90 / .95 / .57 / 0% (two runs, worse shown) |
+
+Hardening: untrusted log values are escaped and wrapped in blocks with a per-alert id the payload
+can't forge, the system prompt says what inside them is never evidence, outputs are checked
+against the alert, tools are allow-listed, and rule text is built by code. 4 of the 7 successful
+attacks now fail, none new. Left: a fake "tool result" in a command line still flips one thin
+alert (inj-021); the other 2 only echo the attacker's URL as an IOC, without changing the verdict.
+One run each, so +/-1-2 payloads is noise. Earlier unhardened number (10/40) was on the retired
+nemotron 3 super. Details: [`docs/experiments.md`](docs/experiments.md).
 
 **CI gate for model-written rules** (Day 17). A generated Sigma rule reaches `main` only through a
 pull request, and CI re-validates every file in `rules/generated/` exactly as it would be merged

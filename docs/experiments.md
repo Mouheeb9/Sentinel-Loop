@@ -709,3 +709,37 @@ keep decision: rules 0/8 (Mouadh, `injection.rule_runner`) and the two dev runs 
 Follow-up for Week 4 report: fake tool results in log text (inj-021) are the remaining hole;
 SL already names them, so the next defense is code-side (e.g. flag `TOOL RESULT`-like markers
 in untrusted fields as a feature for the verdict, not a prompt line).
+
+## 2026-11-18: note on the first hardened dev run (wrong command)
+
+The first `hardened-v1` dev run was started without `--split dev` (command given wrong), so it
+ran the whole golden set: 115/150 alerts before the quota ended, ~85 calls on alerts outside
+dev. It included 23 of the 30 sealed test alerts. Their rows stay in
+`results/hardened-v1/rag.rows.jsonl` (a later test run of the same prompt+models would reuse
+them, which is fine: nothing was tuned on them), but they were not scored or read on their own,
+and nothing in the keep decision uses them. Dev scores come from `--split dev` (23 dev rows
+reused, 7 run).
+
+## 2026-11-19: hardened dev runs (prompt 85e7da3fa69c) + new eval-gate floors
+
+`results/hardened-v1`, `results/hardened-v1-repeat`, dev split, 30/30 each, 0 errors, nemotron
+3.5 super -> ultra.
+
+| | run 1 | run 2 | old floor | new floor |
+|---|---|---|---|---|
+| accuracy | .90 | .90 | .83 | .83 |
+| attack recall | .95 | .95 | .80 | **.90** |
+| technique F1 | .57 | .59 | .52 | .52 |
+| schema valid | 1.00 | 1.00 | .95 | .95 |
+| invented IOCs | .00 | .00 | <= .20 | **<= .05** |
+
+Misses (both runs): day2-014 TP -> needs_review (the thin wscript alert inj-021 still flips),
+day3-165 benign -> TP; day2-031 benign -> TP in run 1, needs_review in run 2. No attack called
+benign. Invented IOCs went from .16/.11 (old prompt and models) to 0/0: SV + escaping.
+
+**Keep rule (dev part): passed**, worse run within the old floors. With the injection result
+(3/40 <= 6/40) the hardening is kept, pending rules 0/8 (Mouadh, `injection.rule_runner`).
+Floors re-set by the ADR 0003 rule (worse run minus noise; ADR amended): attack recall and the
+IOC ceiling get stricter, so the gate holds the gain. `config/eval_gate.yaml` points at
+`results/hardened-v1` (the worse run). Not tuned on the 3 misses: the prompt stays frozen for
+this measurement; a v2 gets its own hypothesis and its own dev + injection runs.

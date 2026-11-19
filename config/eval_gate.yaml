@@ -5,18 +5,20 @@
 # prompt must re-measure on dev (`uv run python -m evals.run --split dev --configs rag --run NAME`)
 # and point this at the new file.
 #
-# Floors are PROVISIONAL (Mouheb, 2026-10-07): the worse of the two dev runs of prompt
-# a7a0d78eaac5 (results/launch-context, results/launch-context-repeat) minus the measured
-# run-to-run noise, so an unlucky re-run of the same prompt passes and a real drop fails.
-#   accuracy .90/.93 -> .83 | attack recall .85/.90 -> .80 | F1 .63/.57 -> .52
-#   invented IOCs .16/.11 -> .20
+# Floors (Mouheb, 2026-11-19, Week 4 hardening): the worse of the two dev runs of prompt
+# 85e7da3fa69c on nemotron 3.5 super -> ultra (results/hardened-v1, results/hardened-v1-repeat)
+# minus the run-to-run noise, so an unlucky re-run of the same prompt passes and a real drop fails.
+#   accuracy .90/.90 -> .83 (2 alerts) | attack recall .95/.95 -> .90 (1 attack)
+#   F1 .57/.59 -> .52 (noise .05) | invented IOCs .00/.00 -> .05 (noise .05)
+# Previous floors (prompt a7a0d78eaac5, nemotron 3 super): .83 / .80 / .52 / IOC .20.
 # Why these values: docs/adr/0003-eval-gate-floors.md (Mouadh + Mouheb).
-results: results/launch-context/rag.json
+# Points at the worse run (lower F1), so the gate re-scores the less lucky answers.
+results: results/hardened-v1/rag.json
 config: rag
 floors:
   accuracy: 0.83          # min share of correct verdicts
-  attack_recall: 0.80     # min share of true attacks called true_positive
+  attack_recall: 0.90     # min share of true attacks called true_positive
   technique_f1: 0.52      # min partial-credit technique F1
   schema_valid: 0.95      # min share of answers that parse as a TriageVerdict
 ceilings:
-  invented_ioc_rate: 0.20 # max share of quoted IOCs that are not in the alert
+  invented_ioc_rate: 0.05 # max share of quoted IOCs that are not in the alert
