@@ -72,6 +72,11 @@ alert (inj-021); the other 2 only echo the attacker's URL as an IOC, without cha
 One run each, so +/-1-2 payloads is noise. Earlier unhardened number (10/40) was on the retired
 nemotron 3 super. Details: [`docs/experiments.md`](docs/experiments.md).
 
+Limit: the dev scores above are with the threat-intel tools (NVD, ThreatFox) off. With them on,
+nothing breaks (one dev run: accuracy 1.00, F1 .54), but they fired on 1 alert of 30: our alerts
+are Windows endpoint events with few public IPs and no CVEs. Whether the tools help is not yet
+measured; a test set built for it is planned ([`docs/tools-eval-plan.md`](docs/tools-eval-plan.md)).
+
 **CI gate for model-written rules** (Day 17). A generated Sigma rule reaches `main` only through a
 pull request, and CI re-validates every file in `rules/generated/` exactly as it would be merged
 (`uv run python -m evals.validate_rules`): it must compile, fire on **no** benign event, catch at

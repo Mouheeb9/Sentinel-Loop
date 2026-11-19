@@ -743,3 +743,22 @@ Floors re-set by the ADR 0003 rule (worse run minus noise; ADR amended): attack 
 IOC ceiling get stricter, so the gate holds the gain. `config/eval_gate.yaml` points at
 `results/hardened-v1` (the worse run). Not tuned on the 3 misses: the prompt stays frozen for
 this measurement; a v2 gets its own hypothesis and its own dev + injection runs.
+
+## 2026-11-19: hardened prompt with tools on (rag-tools, dev, regression check)
+
+`results/hardened-v1/rag-tools.json`, dev 30/30, 0 errors, same models; prompt hash
+`86ffda36612d` (the rag prompt plus the tool lines). One run.
+
+| | rag (worse of 2) | rag-tools |
+|---|---|---|
+| accuracy | .90 | 1.00 |
+| attack recall | .95 | 1.00 |
+| technique F1 | .57 | .54 |
+| invented IOCs | 0 | 0 |
+
+**One lookup in 30 alerts** (day3-044, ThreatFox on 52.113.194.132; verdict already right without
+it). The 3 alerts rag missed (day2-014, day2-031, day3-165) are right here, but none of them made
+a lookup, so the tools are not why: it is the slightly different prompt plus run-to-run noise
+(rag missed the same 3 in both its runs, so it may be a little of each). Not a claim that tools
+help; that needs the tools eval set (`docs/tools-eval-plan.md`). What this run shows: turning the
+tools on with the hardened prompt breaks nothing (all scores within the floors).
