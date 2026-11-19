@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from langchain_core.messages import AIMessage
 
+from sentinel.agents.blocks import block_id
 from sentinel.agents.repair import MAX_BENIGN_SHOWN, build_repair_context
 from sentinel.agents.rule_form import RuleDraft
 from sentinel.agents.rule_gen import render
@@ -102,8 +103,9 @@ def test_repair_sends_the_report_and_quotes_values_as_untrusted():
     prompt = model.seen[0][1].content
     assert "## REPAIR: write version 2 of 3" in prompt
     assert "too broad" in prompt  # the validator report
-    assert f'CommandLine=<UNTRUSTED>"{INJECTION}"</UNTRUSTED>' in prompt
-    assert "<UNTRUSTED>\ntitle: 'T1003.001" in prompt  # previous rule is untrusted too
+    bid = block_id(_alert().events)
+    assert f'CommandLine=<UNTRUSTED id="{bid}">"{INJECTION}"</UNTRUSTED id="{bid}">' in prompt
+    assert f'<UNTRUSTED id="{bid}" path="previous_rule">\ntitle: ' in prompt  # untrusted too
     assert build.after_repair(_state() | update) == "validate"
 
 

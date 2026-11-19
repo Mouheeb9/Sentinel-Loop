@@ -1,6 +1,8 @@
 # ADR 0002: Two-tier triage routing on free models
 
-- **Status:** Accepted (in use since Week 1, Day 6)
+- **Status:** Accepted (in use since Week 1, Day 6). Amended 2026-11-11: the free nemotron 3 super
+  endpoint left OpenRouter; tier 1 is now `nvidia/nemotron-3.5-super-vl:free` (same size, 120B /
+  12B active), tier 2 unchanged. Earlier numbers are on nemotron 3 super and are re-measured.
 - **Date:** 2026-10-05
 - **Decision by:** Mouheb (`src/sentinel/agents/routing.py`)
 - **Written by:** Mouadh (Week 2 ADR swap)
