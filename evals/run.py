@@ -5,6 +5,7 @@
     uv run python -m evals.run --split dev                      # the frozen dev split (tune here)
     uv run python -m evals.run --split dev --configs rag --run bm25   # a new run in results/bm25/
     uv run python -m evals.run --score-only                     # rebuild scores + charts, no calls
+    uv run python -m evals.run --set tools --configs rag rag-tools --run tools-v1  # tools eval
 
 Tune on dev, report on test: `--split test` is sealed until Day 13-14 (needs --unseal-test) and
 writes to results/test/ so it never mixes with dev rows.
@@ -48,8 +49,9 @@ from typing import Any
 
 from dotenv import load_dotenv
 
+from evals import tools_set
 from evals.eval_row import EvalRow
-from evals.scorers import AttackMap, score_all
+from evals.scorers import AttackMap, score_all, tools_scores
 from evals.split import SPLITS, load_split
 from evals.triage_smoke import CANDIDATES, GOLDEN, load_golden, sample
 from sentinel.agents import blocks, enrich
@@ -81,6 +83,11 @@ CONFIGS: dict[str, PipelineOptions] = {
 PAUSE_S = 3  # free-tier models are rate limited per minute
 MAX_TRANSPORT_STREAK = 3
 DAILY_QUOTA_MARKERS = ("per-day", "per day")
+
+# The input set: golden (default) or the tools set (--set tools). main() swaps these.
+ALERT_FILES: list[Path] = list(CANDIDATES)
+LABEL_FILE: Path = GOLDEN
+TOOLS_SET = False
 
 
 # --- fingerprint ----------------------------------------------------------------------------
@@ -138,9 +145,11 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
         "tier2_model": escalation_model_name(),
         "escalate_below": escalate_below(),
         "prompt_sha": prompt_hash(options),
-        "alerts_sha": _sha(b"".join(_crlf(c.read_bytes()) for c in CANDIDATES))[:12],
+        "alerts_sha": _sha(b"".join(_crlf(c.read_bytes()) for c in ALERT_FILES))[:12],
         "tool_cache": os.environ.get("SENTINEL_TOOL_CACHE") or "ttl",
     }
+    if TOOLS_SET:  # only on the tools set, so golden fingerprints stay as they were
+        fp["set"] = "tools"
     # The search method changes what triage is shown. Added only when BM25 is on, so the
     # vector-only baseline keeps its original fingerprint (and its rows stay valid).
     if options.retrieval and search.USE_BM25:
@@ -209,6 +218,7 @@ def eval_one(
         "retrieved_rules": [h.id for h in f.get("sigma_rules", [])],
         "escalation": f.get("triage_escalation"),
         "lookups": [x for r in f.get("triage_runs", []) for x in r["lookups"]],
+        "rejected": [x for r in f.get("triage_runs", []) for x in r.get("rejected", [])],
         "tokens": sum(r["input_tokens"] + r["output_tokens"] for r in f.get("triage_runs", [])),
     }
     return row, detail
@@ -327,7 +337,7 @@ def write_results(
     shas = sorted({x["detail"].get("git_sha") for x in entries if x["detail"].get("git_sha")})
     stamps = sorted(x["detail"]["at"] for x in entries if "at" in x["detail"])
     meta = fp | {
-        "golden_sha": _sha(GOLDEN.read_bytes())[:12],  # the labels these scores used
+        "golden_sha": _sha(LABEL_FILE.read_bytes())[:12],  # the labels these scores used
         "split": split,  # {"name", "sha"} of the frozen split, or None for an ad-hoc sample
         "git_shas": shas,  # more than one = code changed mid-run
         "git_dirty": any(x["detail"].get("git_dirty") for x in entries),
@@ -338,9 +348,13 @@ def write_results(
         "transport_errors": transport,
         "complete": len(rows) == len(wanted) and transport == 0,
     }
+    scores = score_all(rows, alerts, attack)
+    if TOOLS_SET:
+        details = {x["row"]["alert_id"]: x["detail"] for x in entries}
+        scores["tools"] = tools_scores(rows, details, labels, alerts)
     result = {
         "meta": meta,
-        "scores": score_all(rows, alerts, attack),
+        "scores": scores,
         "rows": [r.model_dump(mode="json") for r in rows],
         "details": {x["row"]["alert_id"]: x["detail"] for x in entries},
     }
@@ -398,7 +412,8 @@ def render_chart(results: dict[str, dict], out: Path) -> Path:
     meta = next(iter(results.values()))["meta"]
     n = {c: results[c]["meta"]["alerts_run"] for c in configs}
     fig.suptitle(
-        f"Triage on golden-{GOLDEN.stem} (n={', '.join(str(v) for v in n.values())})  "
+        f"Triage on {'tools-set' if TOOLS_SET else 'golden-' + LABEL_FILE.stem} "
+        f"(n={', '.join(str(v) for v in n.values())})  "
         f"model: {meta['tier1_model'].split(':', 1)[-1]}"
         + ("  [INCOMPLETE]" if not all(results[c]["meta"]["complete"] for c in configs) else ""),
         fontsize=10,
@@ -431,13 +446,27 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--fresh", action="store_true", help="drop earlier rows for these configs")
     p.add_argument("--score-only", action="store_true", help="no model calls; rescore + chart")
     p.add_argument("--run", default=None, help="write to results/<RUN>/ (keeps other runs intact)")
+    p.add_argument(
+        "--set",
+        choices=["golden", "tools"],
+        default="golden",
+        help="tools = data/tools-eval (docs/tools-eval-plan.md), written to results/<RUN>/tools/",
+    )
     args = p.parse_args(argv)
 
-    global RESULTS, CHARTS
+    global RESULTS, CHARTS, ALERT_FILES, LABEL_FILE, TOOLS_SET
+    if args.set == "tools" and (args.split or args.n):
+        p.error("--set tools runs the whole tools set: drop --split / --n")
     if args.run:
         RESULTS = RESULTS / args.run
         CHARTS = RESULTS / "charts"
-    labels, alerts = load_golden()
+    if args.set == "tools":
+        ALERT_FILES, LABEL_FILE, TOOLS_SET = [tools_set.CANDIDATES], tools_set.LABELS, True
+        RESULTS = RESULTS / "tools"
+        CHARTS = RESULTS / "charts"
+        labels, alerts = tools_set.load_tools_set()
+    else:
+        labels, alerts = load_golden()
     split = None
     if args.split:
         if args.split == "test" and not args.unseal_test:
@@ -474,6 +503,14 @@ def main(argv: list[str] | None = None) -> None:
         h = headline(r)
         cells = " ".join("  n/a" if v is None else f"{v:5.2f}" for v in h.values())
         print(f"{config:14} {r['meta']['alerts_run']:4} {cells}  {r['meta']['complete']}")
+        if t := r["scores"].get("tools"):
+            pa, lr = t["pair_accuracy"], t["lookup_recall"]
+            print(
+                f"{'':14} pairs {len(t['pairs_right'])}/{t['pairs']}"
+                f" ({'n/a' if pa is None else f'{pa:.2f}'})  lookup recall "
+                f"{'n/a' if lr is None else f'{lr:.2f}'}  clean->TP after lookup "
+                f"{len(t['clean_true_positive_after_lookup'])}  refused {t['refused_calls']}"
+            )
     chart = render_chart(results, CHARTS / "baseline.png")
     print(
         f"written: {chart.parent.parent.relative_to(ROOT).as_posix()}/<config>.json, "
