@@ -28,7 +28,9 @@ different fingerprint starts over instead of mixing two setups into one number. 
 from the current golden file (its hash goes in meta), so a label fix re-scores without re-running.
 
 Resuming: a re-run keeps finished rows (valid verdicts AND schema errors, which are real
-outcomes) and retries transport errors. The run stops early on a provider's daily quota, or after
+outcomes) and retries transport errors. On an OpenRouter daily quota it switches to the next key
+(OPENROUTER_API_KEY_<name> in .env, one per account) and retries the alert; it stops early when
+every key is spent, or after
 MAX_TRANSPORT_STREAK transport errors in a row, rather than burning retries on 150 alerts. A
 results file with transport errors left is marked complete=false: its scores count those rows as
 wrong (scorers never skip a row), so don't quote it.
@@ -83,6 +85,7 @@ CONFIGS: dict[str, PipelineOptions] = {
 PAUSE_S = 3  # free-tier models are rate limited per minute
 MAX_TRANSPORT_STREAK = 3
 DAILY_QUOTA_MARKERS = ("per-day", "per day")
+DEAD_KEY_MARKERS = ("401", "User not found", "No auth credentials")  # expired / revoked key
 
 # The input set: golden (default) or the tools set (--set tools). main() swaps these.
 ALERT_FILES: list[Path] = list(CANDIDATES)
@@ -164,6 +167,45 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
 
 def _sha(data: str | bytes) -> str:
     return hashlib.sha256(data.encode() if isinstance(data, str) else data).hexdigest()
+
+
+# --- OpenRouter keys -----------------------------------------------------------------------
+
+KEY_VAR = "OPENROUTER_API_KEY"
+_spent: set[str] = set()  # keys that hit their daily quota in this process
+
+
+def openrouter_keys() -> list[tuple[str, str]]:
+    """(env var, key) for OPENROUTER_API_KEY, then every OPENROUTER_API_KEY_<name>, one entry
+    per distinct key. Each must be a different OpenRouter account: the free-tier daily quota
+    counts per account, so two keys of one account share it."""
+    names = [KEY_VAR] + sorted(n for n in os.environ if n.startswith(KEY_VAR + "_"))
+    out: list[tuple[str, str]] = []
+    for name in names:
+        value = os.environ.get(name, "").strip()
+        if value and value not in {v for _, v in out}:
+            out.append((name, value))
+    return out
+
+
+def next_key() -> str | None:
+    """The current key hit its daily quota: point OPENROUTER_API_KEY at the next unspent key.
+    Returns that key's env var name (never the key), or None when all are spent. Safe because
+    chat_model() builds a fresh client per triage call, which reads the env var then. The key is
+    not part of the fingerprint: same models, same prompt, so rows from any key are one run."""
+    _spent.add(os.environ.get(KEY_VAR, "").strip())
+    for name, value in openrouter_keys():
+        if value not in _spent:
+            os.environ[KEY_VAR] = value
+            return name
+    return None
+
+
+def _quota_hit(row: EvalRow) -> bool:
+    """Daily quota or a dead key: either way this key can't answer today, try the next one."""
+    err = str(row.error or "")
+    markers = DAILY_QUOTA_MARKERS + DEAD_KEY_MARKERS
+    return err.startswith("transport") and any(m in err for m in markers)
 
 
 # --- one alert ------------------------------------------------------------------------------
@@ -266,7 +308,13 @@ def run_config(
     todo = [lab for lab in labels if lab["alert_id"] not in keep]
     print(f"[{config}] {len(keep)} done, {len(todo)} to run  (prompt {fp['prompt_sha']})")
     for i, label in enumerate(todo, 1):
-        row, detail = eval_one(config, options, label, alerts[label["alert_id"]], trace=trace)
+        while True:
+            row, detail = eval_one(config, options, label, alerts[label["alert_id"]], trace=trace)
+            if not _quota_hit(row) or not (switched := next_key()):
+                break
+            print(
+                f"[{config}] key spent (quota/dead): switching to {switched}, retry {row.alert_id}"
+            )
         detail |= git_state() | {"at": _now()}
         with path.open("a", encoding="utf-8") as f:
             f.write(_line({"row": row.model_dump(mode="json"), "detail": detail}))
@@ -278,7 +326,7 @@ def run_config(
         if row.error and row.error.startswith("transport"):
             streak += 1
             if any(m in row.error for m in DAILY_QUOTA_MARKERS):
-                print(f"[{config}] daily quota hit: stopping, re-run tomorrow to resume")
+                print(f"[{config}] daily quota hit on every key: stopping, re-run tomorrow")
                 return False
             if streak >= MAX_TRANSPORT_STREAK:
                 print(f"[{config}] {streak} transport errors in a row: stopping")

@@ -197,3 +197,55 @@ def test_run_option_writes_to_its_own_folder(tmp_results, monkeypatch):
     monkeypatch.setattr(ev.AttackMap, "from_bundle", staticmethod(lambda *a, **kw: AttackMap({})))
     ev.main(["--run", "bm25", "--score-only", "--configs", "rag"])
     assert ev.RESULTS == tmp_results / "bm25"
+
+
+QUOTA = RuntimeError("Rate limit exceeded: free-models-per-day")
+
+
+@pytest.fixture
+def two_keys(monkeypatch):
+    for name in [n for n in ev.os.environ if n.startswith(ev.KEY_VAR)]:
+        monkeypatch.delenv(name)
+    monkeypatch.setenv(ev.KEY_VAR, "k1")
+    monkeypatch.setenv(ev.KEY_VAR + "_a", "k1")  # same key under two names: one entry
+    monkeypatch.setenv(ev.KEY_VAR + "_b", "k2")
+    monkeypatch.setattr(ev, "_spent", set())
+
+
+def test_daily_quota_switches_key_and_retries_the_alert(tmp_results, monkeypatch, two_keys):
+    assert [v for _, v in ev.openrouter_keys()] == ["k1", "k2"]  # names: OS may upper-case
+    seen = []
+
+    def per_key(alert, **kw):
+        seen.append(ev.os.environ[ev.KEY_VAR])
+        if ev.os.environ[ev.KEY_VAR] == "k1" and alert.alert_id == "a-1":
+            raise QUOTA
+        return _ok(alert)
+
+    monkeypatch.setattr(ev, "run_alert", per_key)
+    labels, alerts = _alerts(3)
+    assert ev.run_config("rag", labels, alerts, trace=False, fresh=False)
+    assert seen == ["k1", "k1", "k2", "k2"]  # a-1 retried on k2, the rest stays on k2
+    assert all(r["row"]["error"] is None for r in _rows("rag"))
+
+
+def test_stops_when_every_key_is_spent(tmp_results, monkeypatch, two_keys):
+    def always_quota(alert, **kw):
+        raise QUOTA
+
+    monkeypatch.setattr(ev, "run_alert", always_quota)
+    labels, alerts = _alerts(2)
+    assert ev.run_config("rag", labels, alerts, trace=False, fresh=False) is False
+    assert ev.next_key() is None
+
+
+def test_dead_key_switches_too(tmp_results, monkeypatch, two_keys):
+    def per_key(alert, **kw):
+        if ev.os.environ[ev.KEY_VAR] == "k1":
+            raise RuntimeError("Error code: 401 - User not found.")
+        return _ok(alert)
+
+    monkeypatch.setattr(ev, "run_alert", per_key)
+    labels, alerts = _alerts(2)
+    assert ev.run_config("rag", labels, alerts, trace=False, fresh=False)
+    assert all(r["row"]["error"] is None for r in _rows("rag"))
