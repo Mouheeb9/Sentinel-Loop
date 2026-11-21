@@ -298,7 +298,7 @@ def run_config(
     done = load_rows(config, fp, fresh)
     keep = {a: x for a, x in done.items() if not x["row"]["error"] or _is_schema(x["row"])}
 
-    RESULTS.mkdir(exist_ok=True)
+    RESULTS.mkdir(parents=True, exist_ok=True)
     path = rows_path(config)
     path.write_text(
         _line({"fingerprint": fp}) + "".join(_line(x) for x in keep.values()), encoding="utf-8"

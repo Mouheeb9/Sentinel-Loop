@@ -122,3 +122,12 @@ def test_tools_set_has_its_own_fingerprint(monkeypatch, tmp_path):
 def test_set_tools_refuses_split():
     with pytest.raises(SystemExit):
         ev.main(["--set", "tools", "--split", "dev", "--score-only"])
+
+
+def test_run_creates_nested_results_dir(monkeypatch, tmp_path):
+    """--run X --set tools writes to results/X/tools/: both levels must be created."""
+    monkeypatch.setattr(ev, "RESULTS", tmp_path / "tools-v1" / "tools")
+    monkeypatch.setattr(ev, "PAUSE_S", 0)
+    monkeypatch.setattr(ev, "run_alert", lambda alert, **kw: (_ for _ in ()).throw(TypeError))
+    assert ev.run_config("rag", [], {}, trace=False, fresh=False)
+    assert (tmp_path / "tools-v1" / "tools" / "rag.rows.jsonl").exists()
