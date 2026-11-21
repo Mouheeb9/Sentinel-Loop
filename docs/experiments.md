@@ -831,3 +831,47 @@ instruction reads as data, not as a constraint on the rule).
 
 **Keep rule (rules part): passed**, 0/8. With the triage part (3/40 <= 6/40, 2026-11-18 above),
 the hardening is kept. day3-112's clean rule failed again (3 of 4 runs): still a weak base.
+
+## 2026-11-21: tools eval v1 (`--set tools`, 30 cases, does the lookup decide the answer?)
+
+Set: `data/tools-eval/` (Mouadh): 8 IP pairs (A), 4 URL pairs (B), 6 CVE cases (C); pairs are
+identical except the looked-up value (ThreatFox-listed C2 / payload URL vs a Microsoft, Google
+or vendor one). Alert ids renamed to neutral `tools-001..030` before any run (the original
+`-bad` / `-clean` ids were in the triage prompt). Tool answers frozen: 38 lookups in
+`cache.json`, fetched 2026-11-21, 0 label conflicts (all 12 bad IOCs known to ThreatFox, no
+clean one). Same models and prompts as hardened-v1 (rag `85e7da3fa69c`, rag-tools
+`86ffda36612d`), code bba91f5, clean tree. Runs: rag x1 (no tools, its pair floor is predictable),
+rag-tools x2. Labels not yet reviewed by both (plan step 3).
+
+**Hypothesis (written 2026-11-19):** rag-tools pair accuracy >= .60 and >= rag + .40 in both
+runs, and no clean case flipped to true_positive by a lookup.
+
+| | rag | rag-tools run 1 | rag-tools run 2 |
+|---|---|---|---|
+| **pairs right (of 12)** | 2 (.17) | **9 (.75)** | **10 (.83)** |
+| group A, IP (of 8) | 0 | 7 | 8 |
+| group B, URL (of 4) | 2 | 2 | 2 |
+| verdict accuracy | .67 | .90 | .93 |
+| attack recall | .47 | .93 | 1.00 |
+| technique F1 | .33 | .59 | .71 |
+| lookup recall | 0 | .57 | .60 |
+| clean -> TP after a lookup | 0 | 0 | 0 |
+| refused calls | 0 | 0 | 0 |
+
+**Verdict: hypothesis passed in both runs.** The whole gain is group A: without tools the model
+calls a browser / svchost connection to a public IP benign whatever the IP (0/8 pairs); with the
+ThreatFox lookup it flips the C2 twin to true_positive (T1071.001) and keeps the clean twin
+benign (7/8, 8/8). The one run-1 miss (A01-bad) made no lookup at all; in run 2 it did.
+
+Group B measures nothing yet: rag and rag-tools both get B02 and B04, and both miss B01-clean
+and B03-clean the same way, true_positive (T1197 / T1105) **without a lookup**. The clean
+commands (BITS / download cradle to a vendor URL) look malicious on their own, the risk the plan
+noted for B-clean. Fix: a really benign command for B01/B03-clean (signed updater, admin script
+path) or drop them; Mouadh decides and writes why. Group C: 6/6 in all runs, context alone
+decides (NVD changes nothing here), so it is a regression check only.
+
+Lookup recall ~.6: the model skips lookups mostly on alerts that already look benign or already
+look malicious (B-bad commands); that is fine except A01-bad in run 1.
+
+Limits: 12 pairs, one model, IOCs from one day of ThreatFox; labels reviewed by one person.
+Next: B-clean fix + joint label review, then one rag-tools re-run on the changed cases.
