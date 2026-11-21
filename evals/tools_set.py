@@ -10,7 +10,8 @@ row's fingerprint, so adding cases there would make every stored dev result stal
 ThreatFox drops old IOCs, so the answers cached at build time ARE the ground truth: export them
 once the live lookups are done, import them on any other machine before a run.
 
-    uv run python -m evals.tools_set check            # files load, pairs complete, targets cached
+    uv run python -m evals.tools_set check            # files load, pairs complete, targets exist
+    uv run python -m evals.tools_set fill             # live lookup per uncached key + label check
     uv run python -m evals.tools_set export           # tool_cache (Postgres) -> cache.json
     uv run python -m evals.tools_set import           # cache.json -> tool_cache
 """
@@ -130,12 +131,48 @@ def import_cache(path: Path = CACHE) -> int:
     return len(rows)
 
 
+def fill(labels: list[dict], alerts: dict[str, Alert]) -> list[str]:
+    """One live lookup per uncached key, through our own tools (so the cache holds exactly what
+    a run would read). Returns label conflicts: a true_positive whose IOC lookups all miss, or a
+    benign case whose lookup hits. Already-cached keys are not re-fetched."""
+    found_by_alert: dict[str, bool] = {}
+    for lab in labels:
+        alert = alerts[lab["alert_id"]]
+        hits = []
+        for tool, key in sorted(cache_keys(alert)):
+            result = nvd.lookup_cve(key) if tool == nvd.NAME else threatfox.lookup_ioc(key)
+            hits.append(bool(result.get("found")))
+            print(
+                f"  {lab.get('case', lab['alert_id']):12} {tool.split('_')[0]:9} {key[:60]:60} "
+                f"found={result.get('found')}"
+            )
+        found_by_alert[lab["alert_id"]] = any(hits)
+    conflicts = []
+    for lab in labels:
+        if lab.get("group") not in ("A", "B"):
+            continue  # CVE cases: NVD knows every CVE; the context decides, not found/not found
+        name, hit = lab.get("case", lab["alert_id"]), found_by_alert[lab["alert_id"]]
+        if lab["label"] == "true_positive" and not hit:
+            conflicts.append(f"{name}: labeled true_positive but ThreatFox doesn't know its IOC")
+        if lab["label"] == "benign_noisy" and hit:
+            conflicts.append(f"{name}: labeled benign but ThreatFox lists its IOC")
+    return conflicts
+
+
 def main(argv: list[str] | None = None) -> None:
     load_dotenv()
     p = argparse.ArgumentParser(prog="python -m evals.tools_set")
-    p.add_argument("command", choices=["check", "export", "import"])
+    p.add_argument("command", choices=["check", "fill", "export", "import"])
     args = p.parse_args(argv)
     labels, alerts = load_tools_set()
+    if args.command == "fill":
+        conflicts = fill(labels, alerts)
+        print(f"{len(conflicts)} label conflicts")
+        for c in conflicts:
+            print(f"  {c}")
+        if conflicts:
+            raise SystemExit(1)
+        return
     if args.command == "import":
         print(f"imported {import_cache()} rows from {CACHE.relative_to(ROOT).as_posix()}")
         return
