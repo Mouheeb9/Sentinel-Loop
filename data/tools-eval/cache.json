@@ -1,0 +1,851 @@
+[
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2020-0796",
+    "response": {
+      "cwe": [
+        "CWE-119"
+      ],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "CRITICAL",
+        "base_score": 10.0
+      },
+      "found": true,
+      "cve_id": "CVE-2020-0796",
+      "status": "Analyzed",
+      "published": "2020-03-12",
+      "cisa_added": "2022-02-10",
+      "description": "A remote code execution vulnerability exists in the way that the Microsoft Server Message Block 3.1.1 (SMBv3) protocol handles certain requests, aka 'Windows SMBv3 Client/Server Remote Code Execution Vulnerability'.",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:33.976487+00:00"
+  },
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2021-1675",
+    "response": {
+      "cwe": [],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "HIGH",
+        "base_score": 7.8
+      },
+      "found": true,
+      "cve_id": "CVE-2021-1675",
+      "status": "Analyzed",
+      "published": "2021-06-08",
+      "cisa_added": "2021-11-03",
+      "description": "Windows Print Spooler Remote Code Execution Vulnerability",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:36.167969+00:00"
+  },
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2021-34527",
+    "response": {
+      "cwe": [],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "HIGH",
+        "base_score": 8.8
+      },
+      "found": true,
+      "cve_id": "CVE-2021-34527",
+      "status": "Analyzed",
+      "published": "2021-07-02",
+      "cisa_added": "2021-11-03",
+      "description": "A remote code execution vulnerability exists when the Windows Print Spooler service improperly performs privileged file operations. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights. UPDATE July 7, 2021: The security update for Windows Server 2012, Windows Server 2016 and Windows 10, Version 1607 have been released. Please se",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:41.006887+00:00"
+  },
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2021-36934",
+    "response": {
+      "cwe": [],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "HIGH",
+        "base_score": 7.8
+      },
+      "found": true,
+      "cve_id": "CVE-2021-36934",
+      "status": "Analyzed",
+      "published": "2021-07-22",
+      "cisa_added": "2022-02-10",
+      "description": "An elevation of privilege vulnerability exists because of overly permissive Access Control Lists (ACLs) on multiple system files, including the Security Accounts Manager (SAM) database. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights. An attacker must have the ability to execute code on a victim system to exploit this vulne",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:36.985415+00:00"
+  },
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2021-40444",
+    "response": {
+      "cwe": [
+        "CWE-22"
+      ],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "HIGH",
+        "base_score": 7.8
+      },
+      "found": true,
+      "cve_id": "CVE-2021-40444",
+      "status": "Analyzed",
+      "published": "2021-09-15",
+      "cisa_added": "2021-11-03",
+      "description": "Microsoft is investigating reports of a remote code execution vulnerability in MSHTML that affects Microsoft Windows. Microsoft is aware of targeted attacks that attempt to exploit this vulnerability by using specially-crafted Microsoft Office documents. An attacker could craft a malicious ActiveX control to be used by a Microsoft Office document that hosts the browser rendering engine. The attacker would then have to convince the user to open the malicious document. Users whose accounts are con",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:47.482240+00:00"
+  },
+  {
+    "tool": "nvd_cve_lookup",
+    "key": "CVE-2022-30190",
+    "response": {
+      "cwe": [],
+      "cvss": {
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
+        "version": "3.1",
+        "severity": "HIGH",
+        "base_score": 7.8
+      },
+      "found": true,
+      "cve_id": "CVE-2022-30190",
+      "status": "Analyzed",
+      "published": "2022-06-01",
+      "cisa_added": "2022-06-14",
+      "description": "A remote code execution vulnerability exists when MSDT is called using the URL protocol from a calling application such as Word. An attacker who successfully exploits this vulnerability can run arbitrary code with the privileges of the calling application. The attacker can then install programs, view, change, or delete data, or create new accounts in the context allowed by the user’s rights. Please see the MSRC Blog Entry for important information about steps you can take to protect your system ",
+      "cisa_known_exploited": true
+    },
+    "fetched_at": "2026-11-21T20:03:42.030915+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "13.107.21.200",
+    "response": {
+      "ioc": "13.107.21.200",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:35.403350+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "13.107.4.50",
+    "response": {
+      "ioc": "13.107.4.50",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:49.027974+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "13.107.42.12",
+    "response": {
+      "ioc": "13.107.42.12",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:39.173325+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "13.107.6.158",
+    "response": {
+      "ioc": "13.107.6.158",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:30.946147+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "139.224.67.151",
+    "response": {
+      "ioc": "139.224.67.151",
+      "kind": "ip",
+      "found": true,
+      "matches": 4,
+      "results": [
+        {
+          "ioc": "139.224.67.151:8080",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 02:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "139.224.67.151:80",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 02:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "139.224.67.151:443",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 02:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:32.075254+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "142.250.185.78",
+    "response": {
+      "ioc": "142.250.185.78",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:34.675132+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "142.250.74.110",
+    "response": {
+      "ioc": "142.250.74.110",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:45.311361+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "154.86.18.153",
+    "response": {
+      "ioc": "154.86.18.153",
+      "kind": "ip",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "154.86.18.153:443",
+          "tags": [
+            "AsyncRAT",
+            "RAT"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": "2026-11-21 05:10:21 UTC",
+          "first_seen": "2026-11-18 15:37:17 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "AsyncRAT"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:34.304107+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "160.250.187.136",
+    "response": {
+      "ioc": "160.250.187.136",
+      "kind": "ip",
+      "found": true,
+      "matches": 4,
+      "results": [
+        {
+          "ioc": "160.250.187.136:8808",
+          "tags": [
+            "asyncrat",
+            "modat"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": "2026-11-21 19:43:39 UTC",
+          "first_seen": "2026-11-20 05:12:56 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 50,
+          "malware_printable": "AsyncRAT"
+        },
+        {
+          "ioc": "160.250.187.136:443",
+          "tags": [
+            "asyncrat"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 13:05:08 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "AsyncRAT"
+        },
+        {
+          "ioc": "160.250.187.136:8080",
+          "tags": [
+            "AsyncRAT",
+            "drb-ra",
+            "RAT"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": "2026-11-21 19:43:39 UTC",
+          "first_seen": "2026-11-11 09:43:44 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 75,
+          "malware_printable": "AsyncRAT"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:31.354262+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "167.86.70.217",
+    "response": {
+      "ioc": "167.86.70.217",
+      "kind": "ip",
+      "found": true,
+      "matches": 5,
+      "results": [
+        {
+          "ioc": "167.86.70.217:8080",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 07:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "167.86.70.217:80",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 07:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "167.86.70.217:443",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 07:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:35.013913+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "204.168.243.201",
+    "response": {
+      "ioc": "204.168.243.201",
+      "kind": "ip",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "204.168.243.201:443",
+          "tags": [
+            "vidar"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 05:01:14 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Vidar"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:44.734056+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "3byy0j.oss-cn-beijing.aliyuncs.com",
+    "response": {
+      "ioc": "3byy0j.oss-cn-beijing.aliyuncs.com",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:46.319373+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "45.63.60.57",
+    "response": {
+      "ioc": "45.63.60.57",
+      "kind": "ip",
+      "found": true,
+      "matches": 5,
+      "results": [
+        {
+          "ioc": "45.63.60.57:8080",
+          "tags": [
+            "adaptix"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 11:05:06 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "AdaptixC2"
+        },
+        {
+          "ioc": "45.63.60.57:80",
+          "tags": [
+            "adaptix"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 11:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "AdaptixC2"
+        },
+        {
+          "ioc": "45.63.60.57:443",
+          "tags": [
+            "adaptix"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 11:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "AdaptixC2"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:31.710303+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "52.113.194.132",
+    "response": {
+      "ioc": "52.113.194.132",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:45.839419+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "52.167.249.196",
+    "response": {
+      "ioc": "52.167.249.196",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:48.648087+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "8.212.181.6",
+    "response": {
+      "ioc": "8.212.181.6",
+      "kind": "ip",
+      "found": true,
+      "matches": 5,
+      "results": [
+        {
+          "ioc": "8.212.181.6:8080",
+          "tags": [
+            "havoc"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 16:05:06 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Havoc"
+        },
+        {
+          "ioc": "8.212.181.6:443",
+          "tags": [
+            "havoc"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": "2026-11-21 19:45:13 UTC",
+          "first_seen": "2026-11-18 16:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Havoc"
+        },
+        {
+          "ioc": "8.212.181.6:22",
+          "tags": [
+            "havoc"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-18 16:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Havoc"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:33.216215+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "82.158.89.27",
+    "response": {
+      "ioc": "82.158.89.27",
+      "kind": "ip",
+      "found": true,
+      "matches": 5,
+      "results": [
+        {
+          "ioc": "82.158.89.27:8080",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 13:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "82.158.89.27:80",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": null,
+          "first_seen": "2026-11-20 13:05:07 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        },
+        {
+          "ioc": "82.158.89.27:443",
+          "tags": [
+            "cobaltstrike"
+          ],
+          "ioc_type": "ip:port",
+          "last_seen": "2026-11-21 19:45:44 UTC",
+          "first_seen": "2026-11-20 13:05:05 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Cobalt Strike"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:38.824847+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "82.165.181.96",
+    "response": {
+      "ioc": "82.165.181.96",
+      "kind": "ip",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:42.578482+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "aka.ms",
+    "response": {
+      "ioc": "aka.ms",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:43.701823+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "dl.google.com",
+    "response": {
+      "ioc": "dl.google.com",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:32.448826+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "download.mozilla.org",
+    "response": {
+      "ioc": "download.mozilla.org",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:38.044372+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "fitbodnz.com",
+    "response": {
+      "ioc": "fitbodnz.com",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:39.535811+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "github.com",
+    "response": {
+      "ioc": "github.com",
+      "kind": "domain",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:37.350811+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "http://82.165.181.96:443/d/wuauclt.exe",
+    "response": {
+      "ioc": "http://82.165.181.96:443/d/wuauclt.exe",
+      "kind": "url",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "http://82.165.181.96:443/d/wuauclt.exe",
+          "tags": [
+            "cryptominer",
+            "exe",
+            "RandomX",
+            "RAT",
+            "stealer"
+          ],
+          "ioc_type": "url",
+          "last_seen": null,
+          "first_seen": "2026-11-18 03:04:14 UTC",
+          "threat_type": "payload_delivery",
+          "confidence_level": 90,
+          "malware_printable": "Unknown RAT"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:43.154897+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat",
+    "response": {
+      "ioc": "https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat",
+      "kind": "url",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat",
+          "tags": [
+            "fake-deepseek",
+            "trojan",
+            "yogi"
+          ],
+          "ioc_type": "url",
+          "last_seen": null,
+          "first_seen": "2026-11-18 13:22:45 UTC",
+          "threat_type": "payload_delivery",
+          "confidence_level": 100,
+          "malware_printable": "Sliver"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:46.690419+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+    "response": {
+      "ioc": "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+      "kind": "url",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:44.215566+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe",
+    "response": {
+      "ioc": "https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe",
+      "kind": "url",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:32.821041+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US",
+    "response": {
+      "ioc": "https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US",
+      "kind": "url",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:38.461524+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://fitbodnz.com/bmMb8kDc/61.bin",
+    "response": {
+      "ioc": "https://fitbodnz.com/bmMb8kDc/61.bin",
+      "kind": "url",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "https://fitbodnz.com/bmMb8kDc/61.bin",
+          "tags": [
+            "64-bit",
+            "clickfix",
+            "obfuscated",
+            "powershell",
+            "shellcode"
+          ],
+          "ioc_type": "url",
+          "last_seen": null,
+          "first_seen": "2026-11-18 02:51:53 UTC",
+          "threat_type": "payload_delivery",
+          "confidence_level": 100,
+          "malware_printable": "Stealc"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:39.916774+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win-x64.msi",
+    "response": {
+      "ioc": "https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win-x64.msi",
+      "kind": "url",
+      "found": false,
+      "matches": 0,
+      "results": []
+    },
+    "fetched_at": "2026-11-21T20:03:37.694333+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "https://remoto.painelst.com/api/source-file.php?f=d3dx9_43.bin",
+    "response": {
+      "ioc": "https://remoto.painelst.com/api/source-file.php?f=d3dx9_43.bin",
+      "kind": "url",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "https://remoto.painelst.com/api/source-file.php?f=d3dx9_43.bin",
+          "tags": [
+            "banker",
+            "BR",
+            "Delphi",
+            "FluxBanker",
+            "FluxEngine"
+          ],
+          "ioc_type": "url",
+          "last_seen": null,
+          "first_seen": "2026-11-19 10:45:18 UTC",
+          "threat_type": "payload_delivery",
+          "confidence_level": 100,
+          "malware_printable": "Unknown RAT"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:47.885221+00:00"
+  },
+  {
+    "tool": "threatfox_ioc_lookup",
+    "key": "remoto.painelst.com",
+    "response": {
+      "ioc": "remoto.painelst.com",
+      "kind": "domain",
+      "found": true,
+      "matches": 1,
+      "results": [
+        {
+          "ioc": "remoto.painelst.com",
+          "tags": [
+            "banker",
+            "BR",
+            "Delphi",
+            "FluxBanker",
+            "FluxEngine"
+          ],
+          "ioc_type": "domain",
+          "last_seen": null,
+          "first_seen": "2026-11-19 10:45:20 UTC",
+          "threat_type": "botnet_cc",
+          "confidence_level": 100,
+          "malware_printable": "Unknown RAT"
+        }
+      ]
+    },
+    "fetched_at": "2026-11-21T20:03:48.265711+00:00"
+  }
+]

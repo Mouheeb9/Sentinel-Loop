@@ -5,6 +5,7 @@
     uv run python -m evals.run --split dev                      # the frozen dev split (tune here)
     uv run python -m evals.run --split dev --configs rag --run bm25   # a new run in results/bm25/
     uv run python -m evals.run --score-only                     # rebuild scores + charts, no calls
+    uv run python -m evals.run --set tools --configs rag rag-tools --run tools-v1  # tools eval
 
 Tune on dev, report on test: `--split test` is sealed until Day 13-14 (needs --unseal-test) and
 writes to results/test/ so it never mixes with dev rows.
@@ -27,7 +28,9 @@ different fingerprint starts over instead of mixing two setups into one number. 
 from the current golden file (its hash goes in meta), so a label fix re-scores without re-running.
 
 Resuming: a re-run keeps finished rows (valid verdicts AND schema errors, which are real
-outcomes) and retries transport errors. The run stops early on a provider's daily quota, or after
+outcomes) and retries transport errors. On an OpenRouter daily quota it switches to the next key
+(OPENROUTER_API_KEY_<name> in .env, one per account) and retries the alert; it stops early when
+every key is spent, or after
 MAX_TRANSPORT_STREAK transport errors in a row, rather than burning retries on 150 alerts. A
 results file with transport errors left is marked complete=false: its scores count those rows as
 wrong (scorers never skip a row), so don't quote it.
@@ -48,8 +51,9 @@ from typing import Any
 
 from dotenv import load_dotenv
 
+from evals import tools_set
 from evals.eval_row import EvalRow
-from evals.scorers import AttackMap, score_all
+from evals.scorers import AttackMap, score_all, tools_scores
 from evals.split import SPLITS, load_split
 from evals.triage_smoke import CANDIDATES, GOLDEN, load_golden, sample
 from sentinel.agents import blocks, enrich
@@ -81,6 +85,12 @@ CONFIGS: dict[str, PipelineOptions] = {
 PAUSE_S = 3  # free-tier models are rate limited per minute
 MAX_TRANSPORT_STREAK = 3
 DAILY_QUOTA_MARKERS = ("per-day", "per day")
+DEAD_KEY_MARKERS = ("401", "User not found", "No auth credentials")  # expired / revoked key
+
+# The input set: golden (default) or the tools set (--set tools). main() swaps these.
+ALERT_FILES: list[Path] = list(CANDIDATES)
+LABEL_FILE: Path = GOLDEN
+TOOLS_SET = False
 
 
 # --- fingerprint ----------------------------------------------------------------------------
@@ -138,9 +148,11 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
         "tier2_model": escalation_model_name(),
         "escalate_below": escalate_below(),
         "prompt_sha": prompt_hash(options),
-        "alerts_sha": _sha(b"".join(_crlf(c.read_bytes()) for c in CANDIDATES))[:12],
+        "alerts_sha": _sha(b"".join(_crlf(c.read_bytes()) for c in ALERT_FILES))[:12],
         "tool_cache": os.environ.get("SENTINEL_TOOL_CACHE") or "ttl",
     }
+    if TOOLS_SET:  # only on the tools set, so golden fingerprints stay as they were
+        fp["set"] = "tools"
     # The search method changes what triage is shown. Added only when BM25 is on, so the
     # vector-only baseline keeps its original fingerprint (and its rows stay valid).
     if options.retrieval and search.USE_BM25:
@@ -155,6 +167,45 @@ def fingerprint(config: str, options: PipelineOptions) -> dict[str, Any]:
 
 def _sha(data: str | bytes) -> str:
     return hashlib.sha256(data.encode() if isinstance(data, str) else data).hexdigest()
+
+
+# --- OpenRouter keys -----------------------------------------------------------------------
+
+KEY_VAR = "OPENROUTER_API_KEY"
+_spent: set[str] = set()  # keys that hit their daily quota in this process
+
+
+def openrouter_keys() -> list[tuple[str, str]]:
+    """(env var, key) for OPENROUTER_API_KEY, then every OPENROUTER_API_KEY_<name>, one entry
+    per distinct key. Each must be a different OpenRouter account: the free-tier daily quota
+    counts per account, so two keys of one account share it."""
+    names = [KEY_VAR] + sorted(n for n in os.environ if n.startswith(KEY_VAR + "_"))
+    out: list[tuple[str, str]] = []
+    for name in names:
+        value = os.environ.get(name, "").strip()
+        if value and value not in {v for _, v in out}:
+            out.append((name, value))
+    return out
+
+
+def next_key() -> str | None:
+    """The current key hit its daily quota: point OPENROUTER_API_KEY at the next unspent key.
+    Returns that key's env var name (never the key), or None when all are spent. Safe because
+    chat_model() builds a fresh client per triage call, which reads the env var then. The key is
+    not part of the fingerprint: same models, same prompt, so rows from any key are one run."""
+    _spent.add(os.environ.get(KEY_VAR, "").strip())
+    for name, value in openrouter_keys():
+        if value not in _spent:
+            os.environ[KEY_VAR] = value
+            return name
+    return None
+
+
+def _quota_hit(row: EvalRow) -> bool:
+    """Daily quota or a dead key: either way this key can't answer today, try the next one."""
+    err = str(row.error or "")
+    markers = DAILY_QUOTA_MARKERS + DEAD_KEY_MARKERS
+    return err.startswith("transport") and any(m in err for m in markers)
 
 
 # --- one alert ------------------------------------------------------------------------------
@@ -209,6 +260,7 @@ def eval_one(
         "retrieved_rules": [h.id for h in f.get("sigma_rules", [])],
         "escalation": f.get("triage_escalation"),
         "lookups": [x for r in f.get("triage_runs", []) for x in r["lookups"]],
+        "rejected": [x for r in f.get("triage_runs", []) for x in r.get("rejected", [])],
         "tokens": sum(r["input_tokens"] + r["output_tokens"] for r in f.get("triage_runs", [])),
     }
     return row, detail
@@ -246,7 +298,7 @@ def run_config(
     done = load_rows(config, fp, fresh)
     keep = {a: x for a, x in done.items() if not x["row"]["error"] or _is_schema(x["row"])}
 
-    RESULTS.mkdir(exist_ok=True)
+    RESULTS.mkdir(parents=True, exist_ok=True)
     path = rows_path(config)
     path.write_text(
         _line({"fingerprint": fp}) + "".join(_line(x) for x in keep.values()), encoding="utf-8"
@@ -256,7 +308,13 @@ def run_config(
     todo = [lab for lab in labels if lab["alert_id"] not in keep]
     print(f"[{config}] {len(keep)} done, {len(todo)} to run  (prompt {fp['prompt_sha']})")
     for i, label in enumerate(todo, 1):
-        row, detail = eval_one(config, options, label, alerts[label["alert_id"]], trace=trace)
+        while True:
+            row, detail = eval_one(config, options, label, alerts[label["alert_id"]], trace=trace)
+            if not _quota_hit(row) or not (switched := next_key()):
+                break
+            print(
+                f"[{config}] key spent (quota/dead): switching to {switched}, retry {row.alert_id}"
+            )
         detail |= git_state() | {"at": _now()}
         with path.open("a", encoding="utf-8") as f:
             f.write(_line({"row": row.model_dump(mode="json"), "detail": detail}))
@@ -268,7 +326,7 @@ def run_config(
         if row.error and row.error.startswith("transport"):
             streak += 1
             if any(m in row.error for m in DAILY_QUOTA_MARKERS):
-                print(f"[{config}] daily quota hit: stopping, re-run tomorrow to resume")
+                print(f"[{config}] daily quota hit on every key: stopping, re-run tomorrow")
                 return False
             if streak >= MAX_TRANSPORT_STREAK:
                 print(f"[{config}] {streak} transport errors in a row: stopping")
@@ -327,7 +385,7 @@ def write_results(
     shas = sorted({x["detail"].get("git_sha") for x in entries if x["detail"].get("git_sha")})
     stamps = sorted(x["detail"]["at"] for x in entries if "at" in x["detail"])
     meta = fp | {
-        "golden_sha": _sha(GOLDEN.read_bytes())[:12],  # the labels these scores used
+        "golden_sha": _sha(LABEL_FILE.read_bytes())[:12],  # the labels these scores used
         "split": split,  # {"name", "sha"} of the frozen split, or None for an ad-hoc sample
         "git_shas": shas,  # more than one = code changed mid-run
         "git_dirty": any(x["detail"].get("git_dirty") for x in entries),
@@ -338,9 +396,13 @@ def write_results(
         "transport_errors": transport,
         "complete": len(rows) == len(wanted) and transport == 0,
     }
+    scores = score_all(rows, alerts, attack)
+    if TOOLS_SET:
+        details = {x["row"]["alert_id"]: x["detail"] for x in entries}
+        scores["tools"] = tools_scores(rows, details, labels, alerts)
     result = {
         "meta": meta,
-        "scores": score_all(rows, alerts, attack),
+        "scores": scores,
         "rows": [r.model_dump(mode="json") for r in rows],
         "details": {x["row"]["alert_id"]: x["detail"] for x in entries},
     }
@@ -398,7 +460,8 @@ def render_chart(results: dict[str, dict], out: Path) -> Path:
     meta = next(iter(results.values()))["meta"]
     n = {c: results[c]["meta"]["alerts_run"] for c in configs}
     fig.suptitle(
-        f"Triage on golden-{GOLDEN.stem} (n={', '.join(str(v) for v in n.values())})  "
+        f"Triage on {'tools-set' if TOOLS_SET else 'golden-' + LABEL_FILE.stem} "
+        f"(n={', '.join(str(v) for v in n.values())})  "
         f"model: {meta['tier1_model'].split(':', 1)[-1]}"
         + ("  [INCOMPLETE]" if not all(results[c]["meta"]["complete"] for c in configs) else ""),
         fontsize=10,
@@ -431,13 +494,27 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--fresh", action="store_true", help="drop earlier rows for these configs")
     p.add_argument("--score-only", action="store_true", help="no model calls; rescore + chart")
     p.add_argument("--run", default=None, help="write to results/<RUN>/ (keeps other runs intact)")
+    p.add_argument(
+        "--set",
+        choices=["golden", "tools"],
+        default="golden",
+        help="tools = data/tools-eval (docs/tools-eval-plan.md), written to results/<RUN>/tools/",
+    )
     args = p.parse_args(argv)
 
-    global RESULTS, CHARTS
+    global RESULTS, CHARTS, ALERT_FILES, LABEL_FILE, TOOLS_SET
+    if args.set == "tools" and (args.split or args.n):
+        p.error("--set tools runs the whole tools set: drop --split / --n")
     if args.run:
         RESULTS = RESULTS / args.run
         CHARTS = RESULTS / "charts"
-    labels, alerts = load_golden()
+    if args.set == "tools":
+        ALERT_FILES, LABEL_FILE, TOOLS_SET = [tools_set.CANDIDATES], tools_set.LABELS, True
+        RESULTS = RESULTS / "tools"
+        CHARTS = RESULTS / "charts"
+        labels, alerts = tools_set.load_tools_set()
+    else:
+        labels, alerts = load_golden()
     split = None
     if args.split:
         if args.split == "test" and not args.unseal_test:
@@ -474,6 +551,14 @@ def main(argv: list[str] | None = None) -> None:
         h = headline(r)
         cells = " ".join("  n/a" if v is None else f"{v:5.2f}" for v in h.values())
         print(f"{config:14} {r['meta']['alerts_run']:4} {cells}  {r['meta']['complete']}")
+        if t := r["scores"].get("tools"):
+            pa, lr = t["pair_accuracy"], t["lookup_recall"]
+            print(
+                f"{'':14} pairs {len(t['pairs_right'])}/{t['pairs']}"
+                f" ({'n/a' if pa is None else f'{pa:.2f}'})  lookup recall "
+                f"{'n/a' if lr is None else f'{lr:.2f}'}  clean->TP after lookup "
+                f"{len(t['clean_true_positive_after_lookup'])}  refused {t['refused_calls']}"
+            )
     chart = render_chart(results, CHARTS / "baseline.png")
     print(
         f"written: {chart.parent.parent.relative_to(ROOT).as_posix()}/<config>.json, "

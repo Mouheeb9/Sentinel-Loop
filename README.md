@@ -74,8 +74,11 @@ nemotron 3 super. Details: [`docs/experiments.md`](docs/experiments.md).
 
 Limit: the dev scores above are with the threat-intel tools (NVD, ThreatFox) off. With them on,
 nothing breaks (one dev run: accuracy 1.00, F1 .54), but they fired on 1 alert of 30: our alerts
-are Windows endpoint events with few public IPs and no CVEs. Whether the tools help is not yet
-measured; a test set built for it is planned ([`docs/tools-eval-plan.md`](docs/tools-eval-plan.md)).
+are Windows endpoint events with few public IPs and no CVEs. On a set built for it (30 cases,
+alert pairs that differ only in the looked-up IP or URL, [`docs/tools-eval-plan.md`](docs/tools-eval-plan.md)),
+the lookup decides the answer: **pairs right 2/12 without tools -> 9/12 and 10/12 with** (2 runs),
+all of the gain on the IP pairs (0/8 -> 7-8/8), no clean case flipped by a lookup. The URL pairs
+don't separate yet (2 clean commands look malicious on their own).
 
 **CI gate for model-written rules** (Day 17). A generated Sigma rule reaches `main` only through a
 pull request, and CI re-validates every file in `rules/generated/` exactly as it would be merged

@@ -1,6 +1,6 @@
 # Tools eval: a test set where the lookup decides the answer
 
-- **Status:** Plan (2026-11-19), starts after the Week 4 hardening PR is merged
+- **Status:** v1 run 2026-11-21, hypothesis passed (see `docs/experiments.md`); B-clean fix open
 - **Owners:** Mouadh (cases, IOCs, labels), Mouheb (harness, metrics, report); labels reviewed by both
 - **Budget:** ~2-3 days, ~150 model calls (rag + rag-tools, 2 runs each, on 30 cases)
 

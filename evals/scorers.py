@@ -246,3 +246,49 @@ def score_all(
         "schema": schema_scores(parsed),
         "cost_latency": cost_latency_scores(parsed),
     }
+
+
+# --- tools set (data/tools-eval, docs/tools-eval-plan.md) -----------------------------------
+
+
+def tools_scores(
+    rows: Iterable[EvalRow],
+    details: Mapping[str, Mapping[str, Any]],
+    labels: Iterable[Mapping[str, Any]],
+    alerts: Mapping[str, Alert],
+) -> dict[str, Any]:
+    """Does the lookup decide the answer? Pairs = two alerts that differ only in the looked-up
+    value (label field "pair"); a pair counts only when BOTH verdicts are right. Without tools the
+    model sees the same alert twice, so pair accuracy near 0 is the floor.
+
+    `details` = the per-alert detail dicts of evals.run (lookups / rejected lists)."""
+    from sentinel.tools import lookup_targets  # local: keep the scorer import-light
+
+    by_id = {r.alert_id: r for r in rows}
+    right = {a: r.error is None and r.verdict == r.label for a, r in by_id.items()}
+
+    pairs: dict[str, list[str]] = {}
+    for lab in labels:
+        if lab.get("pair") and lab["alert_id"] in by_id:
+            pairs.setdefault(lab["pair"], []).append(lab["alert_id"])
+    full = {p: ids for p, ids in pairs.items() if len(ids) == 2}
+    pair_right = sorted(p for p, ids in full.items() if all(right[a] for a in ids))
+
+    with_target = [a for a in by_id if lookup_targets(alerts[a])]
+    looked = [a for a in with_target if details.get(a, {}).get("lookups")]
+    clean_flipped = sorted(
+        a
+        for a, r in by_id.items()
+        if r.label == "benign_noisy"
+        and r.verdict == "true_positive"
+        and details.get(a, {}).get("lookups")
+    )
+    return {
+        "pairs": len(full),
+        "pair_accuracy": len(pair_right) / len(full) if full else None,
+        "pairs_right": pair_right,
+        "lookup_recall": len(looked) / len(with_target) if with_target else None,
+        "alerts_with_target": len(with_target),
+        "clean_true_positive_after_lookup": clean_flipped,
+        "refused_calls": sum(len(d.get("rejected") or []) for d in details.values()),
+    }
