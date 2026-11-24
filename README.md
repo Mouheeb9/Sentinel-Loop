@@ -8,13 +8,42 @@ treating log fields as attacker-controlled input: a red-team suite attacks the p
 indirect prompt injection, measures attack success rate, the agent is hardened, and the
 before/after curve is published against the OWASP LLM Top 10.
 
-Built by Mouheb (AI/agent engineering) and **Partner** (detection engineering / AI security).
+Built by Mouheb (AI/agent engineering) and Mouadh (detection engineering / AI security).
+
+## How it works
+
+```
+alert -> ingest -> enrich -> triage -> route
+                     |         |         |-- benign / needs review / rule exists --> output
+              ATT&CK + Sigma   |         '-- real threat, no rule yet
+              search (RAG)     |                  |
+                        ThreatFox / NVD        rule_gen -> validate --pass--> output (PR)
+                        lookups (tools)                      ^    |
+                                                             |  fail
+                                                             '-- repair  (max 3 tries)
+```
+
+- **ingest**: Sysmon / Windows events -> one alert; attacker-writable fields are marked untrusted.
+- **enrich**: hybrid search (vector + BM25) over 697 ATT&CK techniques and 3,144 SigmaHQ rules.
+- **triage**: an LLM gives verdict, ATT&CK techniques, IOCs and evidence; it can look up IPs, URLs
+  and CVEs in ThreatFox / NVD. Low confidence escalates to a bigger model.
+- **rule_gen / validate / repair**: for a real threat no existing rule catches, write a Sigma rule,
+  run it on labeled telemetry (must catch the attack, fire on nothing benign), repair if it fails.
+- Every run is traced in Langfuse; every change is measured on a frozen eval set before it's kept.
 
 ## Status
 
-Week 3 (2026-10-07). Golden set: 150 alerts, all human-reviewed (golden-v1.1), split into a dev set
-(30, used for tuning) and a sealed test set (30, run once at the end). CI runs lint + tests on
-every PR; `main` is protected. Every change is measured on dev and logged in
+**Done (2026-11-24).** What's in it:
+
+- **Eval harness**: golden set of 150 human-reviewed alerts (golden-v1.1), split into dev (30, for
+  tuning) and a sealed test set (30, run once). Results are fingerprinted (prompt, alerts, models),
+  so a stale number can't be reused. CI runs lint + tests + an eval gate on every PR; `main` is
+  protected.
+- **Triage with retrieval**: search top-5 hit rate 35% -> 65%, dev accuracy 0.83 -> 0.92.
+- **Rule generation + CI gate**: a model-written Sigma rule merges only if it catches the attack
+  and fires on nothing benign.
+- **Prompt-injection red team**: attack success 17.5% -> 7.5% after hardening.
+- **Threat-intel tools**: on alerts where the lookup decides, pairs right 2/12 -> 11/12. Every change is measured on dev and logged in
 [`docs/experiments.md`](docs/experiments.md); failure analysis in
 [`docs/error-analysis-v1.md`](docs/error-analysis-v1.md).
 
@@ -77,8 +106,16 @@ nothing breaks (one dev run: accuracy 1.00, F1 .54), but they fired on 1 alert o
 are Windows endpoint events with few public IPs and no CVEs. On a set built for it (30 cases,
 alert pairs that differ only in the looked-up IP or URL, [`docs/tools-eval-plan.md`](docs/tools-eval-plan.md)),
 the lookup decides the answer: **pairs right 2/12 without tools -> 9/12 and 10/12 with** (2 runs),
-all of the gain on the IP pairs (0/8 -> 7-8/8), no clean case flipped by a lookup. The URL pairs
-don't separate yet (2 clean commands look malicious on their own).
+the gain on the IP pairs (0/8 -> 7-8/8), no clean case flipped by a lookup. Two URL pairs didn't
+separate because their shared context (a script in `ProgramData` calling bitsadmin) looked
+malicious by itself; with that context fixed (v2), **11/12**, URL pairs 4/4. The one miss: the
+model looked up a listed C2 IP and ignored the answer.
+
+| Tools eval (12 pairs) | pairs right | IP | URL | CVE |
+|---|---|---|---|---|
+| no tools | 2/12 | 0/8 | 2/4 | 6/6 |
+| tools, v1 (2 runs) | 9-10/12 | 7-8/8 | 2/4 | 6/6 |
+| tools, v2 (case fix) | **11/12** | 7/8 | **4/4** | 6/6 |
 
 **CI gate for model-written rules** (Day 17). A generated Sigma rule reaches `main` only through a
 pull request, and CI re-validates every file in `rules/generated/` exactly as it would be merged
@@ -139,8 +176,14 @@ frozen (hashed) before any search ran, and scored strictly (exact technique ID, 
 - **The keyword leg did not earn its place.** The first hybrid version scored 0.80 on v1. Reworking
   it (rare words only, IDF-weighted) and testing on the held-out v2 set left it below plain vector
   search on both sets, so it is off by default. Reason: when results are merged by rank, a chunk
-  found by both lists beats the correct chunk found by only one. To be re-tested in Week 2 on
-  queries built from real alerts.
+  found by both lists beats the correct chunk found by only one. Re-tested in Week 2 on queries
+  built from real alerts: BM25 (a better keyword ranking) did earn its place there, 35% -> 60%
+  top-5 hit rate, and is on by default (see Status).
+- **Where retrieval still limits triage** (2026-11-21): on the 7 dev attacks with a wrong
+  technique, the right one was never in the top 5. Putting it there by hand fixed 4 of 7; the
+  other 3 stay wrong even when shown. So a perfect search would take dev from 13/20 to 17/20
+  exact techniques. The 4 need command-level knowledge (`lsadump::zerologon` -> T1210) that
+  ATT&CK's own tool-to-technique links don't hold.
 - 40 probes is a small sample (one probe is 2.5 to 5 points), so the direction is reliable and the
   size of the gap is not. Both sets are now spent for tuning; further work needs a fresh set.
 - ATT&CK renumbers techniques between releases (e.g. `T1562.002` became `T1685.001`), which would
@@ -154,7 +197,7 @@ Raw results: `evals/results/`. Probe files and scoring rules: `evals/retrieval_p
 ```bash
 uv sync
 docker compose up -d
-cp .env.example .env   # fill in ANTHROPIC_API_KEY, LANGFUSE_* keys
+cp .env.example .env   # fill in OPENROUTER_API_KEY (more keys: OPENROUTER_API_KEY_<name>), LANGFUSE_*, ABUSE_CH_API_KEY, NVD_API_KEY
 uv run pytest
 ```
 
@@ -176,7 +219,12 @@ uv run python -m evals.split --check        # the frozen dev/test split is untou
 uv run python -m evals.failures             # one card per failure -> results/failures-<config>.md
 uv run python -m evals.coverage             # share of golden attacks an existing Sigma rule catches
 uv run python -m evals.retrieval_golden     # retrieval recall@k on real dev alerts, no model calls
+
+uv run python -m evals.tools_set import     # tools eval: load the frozen lookups into the cache
+uv run python -m evals.run --set tools --configs rag rag-tools --run <name>   # pairs, lookup recall
 ```
+
+The runner switches to the next `OPENROUTER_API_KEY_<name>` when a key hits its daily quota.
 
 **Tune on dev, report on test.** `data/golden/split-v1.json` freezes 30 dev alerts (the ones we
 read failures on) and 30 test alerts nobody looks at; `--split test` refuses to run without
