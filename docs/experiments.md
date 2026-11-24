@@ -875,3 +875,58 @@ look malicious (B-bad commands); that is fine except A01-bad in run 1.
 
 Limits: 12 pairs, one model, IOCs from one day of ThreatFox; labels reviewed by one person.
 Next: B-clean fix + joint label review, then one rag-tools re-run on the changed cases.
+
+## 2026-11-21/22: are the dev technique errors retrieval misses? (oracle check + bge reranker)
+
+**Join (no model calls).** hardened-v1 dev, 20 attacks: the labeled technique was in the top 5
+triage saw on 13, and triage got all 13 exact in both runs; it was missing on 7, and triage got
+all 7 wrong. Misses: day3-048 (T1134), -071 / -166 (T1021.003), -113 / -151 (T1210), -136
+(T1685.001), -145 (T1550.003).
+
+**Oracle check (7 tier-1 calls, one run).** The labeled technique put at rank 5 of what triage
+sees (lowest slot, so it is "in the top 5", not handed over). Pre-registered: >= 5/7 exact ->
+retrieval is the bottleneck. Result **4/7** (113, 151 T1210; 136 T1685.001; 145 T1550.003); 048,
+071, 166 stay wrong even when shown (custom binaries `CreateNamedPipe.exe` / `MoveExcel4.exe`:
+too little in the alert to tie them to token theft / DCOM). Rule not met: retrieval explains 4 of
+7 errors, the other 3 are a limit of the alert. Ceiling of a perfect retrieval fix on dev: 17/20.
+`results/retrieval/oracle-misses-dev.json`.
+
+**Candidate pool.** With the procedure leg on, all 7 labeled techniques are in the top 36 of 100
+(without it, 113/151 aren't in the pool at all), so a reranker over the top 50 could reach them.
+
+**bge-reranker-v2-m3 (ONNX, onnx-community export, fastembed custom model), top 50 of hybrid +
+procedures.** Keep rule: alert->attack R@5 >= .80, none of the 13 lost, <= 3 s/alert. fp32 on 16
+threads: one alert took minutes and the laptop shut down from heat. int8 on 4 threads, inputs cut
+to 800 chars: **47 s, 59 s, 139 s** for the first three alerts (script stops past 60 s). Failed on
+latency by 15-45x before quality could be judged (2 alerts: day2-006 rank 2 -> 1, day2-014 2 -> 3).
+A 568M cross-encoder over 50 long pairs is not a CPU option for us. Not kept.
+
+**Tool name -> technique from ATT&CK Software objects (checked before building, no model calls).**
+Idea: an alert names a tool, ATT&CK lists the techniques that tool `uses`, boost those. Dead on
+the data: Mimikatz has 17 techniques, not T1210 (113/151 run `lsadump::zerologon`); Rubeus has 5
+(T1558.x, T1482), not T1550.003 (145 runs `asktgt /ptt`). The boost can't reach any of the three
+and would lift wrong techniques. Not built.
+
+**Stopping retrieval work here.** What's left needs sub-command knowledge (`zerologon` -> T1210,
+`/ptt` -> T1550.003) that ATT&CK doesn't hold. Writing that map while looking at the three dev
+alerts it fixes would overfit dev. Dev technique ceiling stays 13/20 exact, 17/20 with perfect
+retrieval.
+
+## 2026-11-24: tools eval v2 (B01/B03 case fix, one rag-tools run)
+
+**Why.** In v1 the bitsadmin pairs' clean twins (B01-clean Chrome, B03-clean Firefox) were called
+TP in all three runs with no lookup: the context both twins share (`cmd.exe /c
+C:\ProgramData\AppUpdate\update.cmd`, output under `C:\ProgramData\AppUpdate\Packages\`) looked
+malicious on its own, so the lookup couldn't decide anything. The PowerShell pairs (B02/B04,
+parent `C:\Scripts\Deploy\Sync-Packages.ps1`) didn't have the problem.
+
+**Change.** All four bitsadmin alerts (tools-005/015/021/026) moved to the same admin-tooling
+context: parent `C:\Scripts\Deploy\Update-Packages.cmd`, output `C:\ProgramData\Deploy\cache\`.
+Twins still differ only in the URL; labels, cache and URLs unchanged. `check`: 0 problems.
+
+**Result (rag-tools, one run, `results/tools-v2/tools/`).** Pairs **11/12** (v1: 9/12, 10/12).
+Group B **4/4** (was 2/4): both clean twins now benign. Clean -> TP after a lookup: 0. Refused
+calls: 0. Only miss: A06-bad (tools-002), looked up, ThreatFox lists the IP as AsyncRAT C2, but
+the model called it Microsoft Azure space and said benign: it ignored the lookup (A06 was right in
+v1, so this is run-to-run variance, not a case bug). The fix touched only the shared context, so
+the B gain is the case design, not the tools changing.

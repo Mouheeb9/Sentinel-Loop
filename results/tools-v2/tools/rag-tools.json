@@ -1,0 +1,1810 @@
+{
+  "meta": {
+    "config": "rag-tools",
+    "retrieval": true,
+    "tools": true,
+    "tier1_model": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+    "tier2_model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+    "escalate_below": 0.7,
+    "prompt_sha": "86ffda36612d",
+    "alerts_sha": "f4580752d195",
+    "tool_cache": "frozen",
+    "set": "tools",
+    "search": "vector+bm25",
+    "golden_sha": "f44079602ea0",
+    "split": null,
+    "git_shas": [
+      "8d88c9b64cc383811135a562d1c497e8790faabd"
+    ],
+    "git_dirty": true,
+    "started_at": "2026-11-24T20:28:52+00:00",
+    "finished_at": "2026-11-24T20:56:58+00:00",
+    "alerts_planned": 30,
+    "alerts_run": 30,
+    "transport_errors": 0,
+    "complete": true
+  },
+  "scores": {
+    "triage": {
+      "accuracy": 0.9666666666666667,
+      "n": 30,
+      "confusion": {
+        "true_positive": {
+          "true_positive": 14,
+          "benign_noisy": 1,
+          "needs_review": 0,
+          "error": 0
+        },
+        "benign_noisy": {
+          "true_positive": 0,
+          "benign_noisy": 15,
+          "needs_review": 0,
+          "error": 0
+        },
+        "needs_review": {
+          "true_positive": 0,
+          "benign_noisy": 0,
+          "needs_review": 0,
+          "error": 0
+        }
+      },
+      "per_class_recall": {
+        "true_positive": 0.9333333333333333,
+        "benign_noisy": 1.0,
+        "needs_review": null
+      },
+      "missed_attacks": 1
+    },
+    "techniques": {
+      "precision": 0.5714285714285714,
+      "recall": 0.6666666666666666,
+      "f1": 0.6153846153846153,
+      "primary_exact_rate": 0.5333333333333333,
+      "alerts_with_gold": 15,
+      "alerts_with_pred": 14
+    },
+    "iocs": {
+      "hallucinated_ioc_rate": 0.0,
+      "iocs_total": 75,
+      "iocs_hallucinated": 0,
+      "alerts_with_hallucination": 0,
+      "examples": []
+    },
+    "schema": {
+      "schema_valid_rate": 1.0,
+      "first_try_rate": 0.9,
+      "errors": 0
+    },
+    "cost_latency": {
+      "cost_per_alert_usd": 0.0,
+      "cost_known_rows": 30,
+      "latency_p95_s": 92.1
+    },
+    "tools": {
+      "pairs": 12,
+      "pair_accuracy": 0.9166666666666666,
+      "pairs_right": [
+        "A01",
+        "A02",
+        "A03",
+        "A04",
+        "A05",
+        "A07",
+        "A08",
+        "B01",
+        "B02",
+        "B03",
+        "B04"
+      ],
+      "lookup_recall": 0.5333333333333333,
+      "alerts_with_target": 30,
+      "clean_true_positive_after_lookup": [],
+      "refused_calls": 0
+    }
+  },
+  "rows": [
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-001",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "13.107.6.158",
+        "C:\\Program Files (x86)\\Microsoft\\Microsoft Search in Bing\\MicrosoftSearchInBing.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].user",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 42.78,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/337c462f146bf13f99894d96547f79d2"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-002",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "benign_noisy",
+      "confidence": 0.95,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files (x86)\\Microsoft\\Microsoft Search in Bing\\MicrosoftSearchInBing.exe",
+        "160.250.187.136",
+        "443"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].user",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 112.08,
+      "tier": 2,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/31e78d339f7950da0769253e3be91987"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-003",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.92,
+      "technique_ids": [
+        "T1071.001"
+      ],
+      "ioc_refs": [
+        "45.63.60.57",
+        "C:\\Windows\\System32\\taskhostw.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].user",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 1,
+      "cost_usd": 0.0,
+      "latency_s": 65.85,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7e52b31b1e8b011ee88fb60148e6a3a4"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-004",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1071.001"
+      ],
+      "ioc_refs": [
+        "139.224.67.151",
+        "C:\\Windows\\System32\\svchost.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 1,
+      "cost_usd": 0.0,
+      "latency_s": 92.1,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6d030f7f6765da19e34654e17a9d2a84"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-005",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.85,
+      "technique_ids": [],
+      "ioc_refs": [
+        "https://dl.google.com/chrome/install/ChromeStandaloneSetup64.exe",
+        "C:\\ProgramData\\Deploy\\cache\\setup.exe",
+        "C:\\Scripts\\Deploy\\Update-Packages.cmd"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 42.59,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/ad2198cae7603b55214c79cd642fc17a"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-006",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1071"
+      ],
+      "ioc_refs": [
+        "8.212.181.6",
+        "C:\\Program Files (x86)\\Google\\Update\\GoogleUpdate.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 73.95,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/e2f6a32bf301ea649295f052afd6b7dc"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-007",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1068"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.87,
+      "technique_ids": [
+        "T1204.002"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\Desktop\\CVE-2020-0796-LPE.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 45.62,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0fc2d719aa699d8388f2d67953d69f6b"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-008",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.88,
+      "technique_ids": [
+        "T1071"
+      ],
+      "ioc_refs": [
+        "154.86.18.153",
+        "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SDXHelper.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol",
+        "events[0].timestamp"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 70.13,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/47a13b2808bdae591a2d5a70d3331643"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-009",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.92,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+        "142.250.185.78"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol",
+        "events[0].host",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.42,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2de9ce6d80bea333eb70bb86cb2a0147"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-010",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.92,
+      "technique_ids": [
+        "T1071.001"
+      ],
+      "ioc_refs": [
+        "167.86.70.217",
+        "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 1,
+      "cost_usd": 0.0,
+      "latency_s": 70.9,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/bd98b993cfedd593b1b85f5093d28192"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-011",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "13.107.21.200",
+        "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_port",
+        "events[0].network.dst_ip",
+        "events[0].network.protocol",
+        "events[0].source"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 46.77,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/cc50f86be9a57a7bdd42b629d802b1f3"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-012",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.85,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files\\PatchAgent\\patchagent.exe",
+        "C:\\Program Files\\PatchAgent\\Scripts\\Test-Remediation.ps1"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 51.64,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/2e1f1c262250349e06a07b755ae9e183"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-013",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1003.002"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.92,
+      "technique_ids": [
+        "T1068"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe",
+        "C:\\Users\\wardog\\AppData\\Local\\Temp\\out",
+        "CVE-2021-36934"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.image",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 92.09,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/14cfa84d0d376be366f84110b0e5ae19"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-014",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.88,
+      "technique_ids": [],
+      "ioc_refs": [
+        "https://github.com/PowerShell/PowerShell/releases/download/v7.4.6/PowerShell-7.4.6-win-x64.msi",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.bin",
+        "C:\\Scripts\\Deploy\\Sync-Packages.ps1"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.command_line",
+        "events[0].process.command_line",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 34.53,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/6e11498ece1c9bc62b8ee8c7dec20e69"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-015",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.8,
+      "technique_ids": [],
+      "ioc_refs": [
+        "download.mozilla.org",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.dat",
+        "C:\\Scripts\\Deploy\\Update-Packages.cmd"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 32.54,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/dfdf81e72e0f327605b4213672c4d52d"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-016",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.75,
+      "technique_ids": [
+        "T1071.001"
+      ],
+      "ioc_refs": [
+        "82.158.89.27"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 83.54,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/7a436251a257a829deb39429e3c171ac"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-017",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.92,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Users\\pgustavo\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe",
+        "13.107.42.12"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 36.55,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/447043336c280737d4f03cac9294fd0a"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-018",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1105"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.88,
+      "technique_ids": [
+        "T1105",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "fitbodnz.com",
+        "https://fitbodnz.com/bmMb8kDc/61.bin",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.bin"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.command_line",
+        "events[0].host",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 53.7,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/110d0691c92624ee146bebd77775ace5"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-019",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1068"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1068",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "C:\\Users\\wardog\\Downloads\\CVE-2021-34527.ps1",
+        "C:\\Users\\Public\\spool.dll",
+        "CVE-2021-34527"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.image",
+        "events[0].process.parent.image",
+        "events[0].host",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 37.54,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/753bdf8f1fff40cfd9317bb40ef0fa80"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-020",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.88,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files\\PatchAgent\\patchagent.exe",
+        "C:\\Program Files\\PatchAgent\\inventory.exe",
+        "C:\\ProgramData\\PatchAgent\\reports\\missing.csv"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.image",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 31.62,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/3a087b8838dbc1a562de2591bc20ca25"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-021",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1105"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.9,
+      "technique_ids": [
+        "T1197",
+        "T1105"
+      ],
+      "ioc_refs": [
+        "82.165.181.96",
+        "http://82.165.181.96:443/d/wuauclt.exe",
+        "C:\\ProgramData\\Deploy\\cache\\setup.exe",
+        "C:\\Windows\\System32\\bitsadmin.exe",
+        "C:\\Scripts\\Deploy\\Update-Packages.cmd"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].process.parent.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 45.63,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/b00cf43ed0926c406ce0597926274688"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-022",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.88,
+      "technique_ids": [],
+      "ioc_refs": [
+        "https://aka.ms/vs/17/release/vc_redist.x64.exe",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.bin",
+        "C:\\Scripts\\Deploy\\Sync-Packages.ps1"
+      ],
+      "evidence_refs": [
+        "events[0].process.parent.command_line",
+        "events[0].process.command_line",
+        "events[0].process.image"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 15.43,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/efc60a52fc9566fc8c7623030864d2f9"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-023",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1071.001"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1071.001"
+      ],
+      "ioc_refs": [
+        "204.168.243.201",
+        "C:\\Users\\pgustavo\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 79.88,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/0fdd7cd944f82327e3dab79c6dc6d3cf"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-024",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.92,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files (x86)\\Google\\Update\\GoogleUpdate.exe",
+        "142.250.74.110"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].user",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 45.78,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/ee58d9a509c753375f9d51a1b372e5e5"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-025",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "52.113.194.132",
+        "C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SDXHelper.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 51.75,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/fd6408258a173af1dc4627064340c5b4"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-026",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1105"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.85,
+      "technique_ids": [
+        "T1197"
+      ],
+      "ioc_refs": [
+        "https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat",
+        "3byy0j.oss-cn-beijing.aliyuncs.com",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.dat",
+        "C:\\Scripts\\Deploy\\Update-Packages.cmd"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].user",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 43.68,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/dcade5ea88d2b21c0328907bf1402ec0"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-027",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Program Files\\PatchAgent\\patchagent.exe",
+        "HKLM\\SOFTWARE\\PatchAgent\\Compliance\\KB5005565\\Cve"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].registry.target_object",
+        "events[0].registry.details"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 51.67,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/8ebfa85a95a31b99ddc2d89be6abe9d7"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-028",
+      "label": "true_positive",
+      "label_techniques": [
+        "T1105"
+      ],
+      "verdict": "true_positive",
+      "confidence": 0.95,
+      "technique_ids": [
+        "T1105",
+        "T1059.001"
+      ],
+      "ioc_refs": [
+        "remoto.painelst.com",
+        "https://remoto.painelst.com/api/source-file.php?f=d3dx9_43.bin",
+        "C:\\ProgramData\\Deploy\\cache\\pkg.bin",
+        "d3dx9_43.bin",
+        "C:\\Scripts\\Deploy\\Sync-Packages.ps1"
+      ],
+      "evidence_refs": [
+        "events[0].process.command_line",
+        "events[0].process.parent.command_line",
+        "events[0].process.image",
+        "events[0].host",
+        "events[0].user"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 56.68,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/c2a1fbdaa8cf31714b92bb5923fd4356"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-029",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.75,
+      "technique_ids": [],
+      "ioc_refs": [
+        "52.167.249.196",
+        "C:\\Windows\\System32\\taskhostw.exe"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].user",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.src_ip",
+        "events[0].host"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 76.97,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/16025d2a097106f2083cb894a2007d44"
+    },
+    {
+      "config": "rag-tools",
+      "alert_id": "tools-030",
+      "label": "benign_noisy",
+      "label_techniques": [],
+      "verdict": "benign_noisy",
+      "confidence": 0.9,
+      "technique_ids": [],
+      "ioc_refs": [
+        "C:\\Windows\\System32\\svchost.exe",
+        "13.107.4.50"
+      ],
+      "evidence_refs": [
+        "events[0].process.image",
+        "events[0].user",
+        "events[0].network.dst_ip",
+        "events[0].network.dst_port",
+        "events[0].network.protocol",
+        "events[0].network.src_ip"
+      ],
+      "error": null,
+      "schema_retries": 0,
+      "cost_usd": 0.0,
+      "latency_s": 40.56,
+      "tier": 1,
+      "trace": "https://cloud.langfuse.com/project/cmub63msw005had0chtdazpl6/traces/55c6b72df73496a813bbb92bd326eb14"
+    }
+  ],
+  "details": {
+    "tools-001": {
+      "label_rationale": "MicrosoftSearchInBing.exe connecting to 13.107.6.158:443, a Microsoft (base event's own IP) address; ThreatFox: no result (2026-11-20). Twin of A06-bad, derived from day3-100.",
+      "reasoning": "The event shows MicrosoftSearchInBing.exe, a legitimate Microsoft binary in C:\\Program Files (x86)\\Microsoft\\Microsoft Search in Bing, initiating an outbound HTTPS connection to 13.107.6.158:443, a Microsoft-owned IP, while running as SYSTEM. This is routine Microsoft search/telemetry traffic from a known vendor process to a Microsoft service, not adversary behavior; ThreatFox has no record of the IP, consistent with a legitimate Microsoft endpoint.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1574.008",
+        "T1218.003",
+        "T1046",
+        "T1049"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "6d8c3d20-a5e1-494f-8412-4571d716cf5c",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "13.107.6.158"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 10440,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:28:52+00:00"
+    },
+    "tools-002": {
+      "label_rationale": "MicrosoftSearchInBing.exe connecting to 160.250.187.136:443, listed by ThreatFox as AsyncRAT C2 (botnet_cc, ThreatFox id 2034189, confidence 100, looked up 2026-11-20). Twin of A06-clean, derived from day3-100.",
+      "reasoning": "The event shows MicrosoftSearchInBing.exe (a legitimate Microsoft Search in Bing component) running as SYSTEM making an outbound HTTPS connection to 160.250.187.136:443. The destination IP belongs to Microsoft Azure (160.250.0.0/16) and the process path is the standard installation location. This is expected telemetry/search functionality, not adversary behavior.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1218.003",
+        "T1574.008",
+        "T1046",
+        "T1571"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "6d8c3d20-a5e1-494f-8412-4571d716cf5c",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "3b5ba899-9842-4bc2-acc2-12308498bf42"
+      ],
+      "escalation": "confidence 0.60 < 0.7",
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "160.250.187.136"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 21726,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:30:48+00:00"
+    },
+    "tools-003": {
+      "label_rationale": "taskhostw.exe connecting to 45.63.60.57:443, listed by ThreatFox as AdaptixC2 C2 (botnet_cc, ThreatFox id 2034089, confidence 100, looked up 2026-11-20). Twin of A07-clean, derived from day3-174.",
+      "reasoning": "taskhostw.exe (C:\\Windows\\System32\\taskhostw.exe) running as NT AUTHORITY\\SYSTEM initiated an outbound TCP connection to 45.63.60.57:443, and ThreatFox lists 45.63.60.57:443 as an AdaptixC2 botnet C2 (confidence 100, first seen 2026-11-18). A Windows task host binary contacting a known C2 over HTTPS is command-and-control behavior, not legitimate system activity.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1571",
+        "T1205",
+        "T1070.007",
+        "T1205.001"
+      ],
+      "retrieved_rules": [
+        "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "45.63.60.57:443"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 17837,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:31:56+00:00"
+    },
+    "tools-004": {
+      "label_rationale": "svchost.exe connecting to 139.224.67.151:443, listed by ThreatFox as Cobalt Strike C2 (botnet_cc, ThreatFox id 2035802, confidence 100, looked up 2026-11-20). Twin of A03-clean, derived from day3-174.",
+      "reasoning": "svchost.exe (C:\\Windows\\System32\\svchost.exe) running as NT AUTHORITY\\SYSTEM initiated an outbound TCP connection to 139.224.67.151:443. ThreatFox confirms 139.224.67.151:443 as a Cobalt Strike C2 server (botnet_cc, confidence 100). A system process contacting a known C2 over HTTPS is command-and-control behavior, not legitimate activity.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1571",
+        "T1505.005",
+        "T1090",
+        "T1218.003"
+      ],
+      "retrieved_rules": [
+        "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "c7e91a02-d771-4a6d-a700-42587e0b1095"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "139.224.67.151"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 19258,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:33:32+00:00"
+    },
+    "tools-005": {
+      "label_rationale": "bitsadmin from a scheduled update script downloading the Google Chrome installer; ThreatFox: no result (2026-11-20). Kept as benign: the same command is how admin tooling fetches installers; certutil -urlcache was not used because it is suspicious with any URL. Twin of B01-bad, derived from day3-116.",
+      "reasoning": "bitsadmin.exe (child of cmd.exe running C:\\Scripts\\Deploy\\Update-Packages.cmd) downloads ChromeStandaloneSetup64.exe from dl.google.com into C:\\ProgramData\\Deploy\\cache\\setup.exe. The deploy-script parent, official Google domain, legitimate Chrome installer filename, and deploy-cache target indicate sanctioned software deployment, so the bitsadmin download rule hit is noisy rather than adversarial BITS abuse.",
+      "retrieved_techniques": [
+        "T1197",
+        "T1546.016",
+        "T1546.008",
+        "T1218.011",
+        "T1195.001"
+      ],
+      "retrieved_rules": [
+        "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+        "2ddef153-167b-4e89-86b6-757a9e65dcac",
+        "b9cbbc17-d00d-4e3d-a827-b06d03d2380d",
+        "8518ed3d-f7c9-4601-a26c-f361a4256a0c",
+        "cd951fdc-4b2f-47f5-ba99-a33bf61e3770"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 6509,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:34:17+00:00"
+    },
+    "tools-006": {
+      "label_rationale": "GoogleUpdate.exe connecting to 8.212.181.6:443, listed by ThreatFox as Havoc C2 (botnet_cc, ThreatFox id 2034472, confidence 100, looked up 2026-11-20). Twin of A08-clean, derived from day3-174.",
+      "reasoning": "GoogleUpdate.exe, a legitimate Google vendor binary in the standard Program Files path, is making an outbound TCP/443 connection to 8.212.181.6. ThreatFox confirms 8.212.181.6:443 is an active Havoc C2 (botnet_cc, confidence 100), so a trusted update binary beaconing to a known C2 is command-and-control activity, not normal update traffic.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1218.003",
+        "T1195.002",
+        "T1070.007",
+        "T1571"
+      ],
+      "retrieved_rules": [
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "e54979bd-c5f9-4d6c-967b-a04b19ac4c74"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "8.212.181.6"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 15555,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:35:34+00:00"
+    },
+    "tools-007": {
+      "label_rationale": "SMBGhost (CVE-2020-0796, NVD 10.0 CRITICAL): local privilege escalation PoC run from the user's desktop. NVD looked up 2026-11-20. Derived from day3-116.",
+      "reasoning": "cmd.exe (parent image C:\\Windows\\System32\\cmd.exe) launched C:\\Users\\wardog\\Desktop\\CVE-2020-0796-LPE.exe, an executable named after a known exploit (CVE-2020-0796 LPE) running from a user's Desktop with no legitimate vendor, installer, or system role. The process chain and path indicate execution of a malicious file/exploit tool rather than routine administrative activity.",
+      "retrieved_techniques": [
+        "T1204.002",
+        "T1547.010",
+        "T1574.007",
+        "T1574.008",
+        "T1546.008"
+      ],
+      "retrieved_rules": [
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767",
+        "5cddf373-ef00-4112-ad72-960ac29bac34",
+        "138d3531-8793-4f50-a2cd-f291b2863d78"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 6655,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:36:23+00:00"
+    },
+    "tools-008": {
+      "label_rationale": "SDXHelper.exe connecting to 154.86.18.153:443, listed by ThreatFox as AsyncRAT C2 (botnet_cc, ThreatFox id 2034231, confidence 100, looked up 2026-11-20). Twin of A05-clean, derived from day3-044.",
+      "reasoning": "SDXHelper.exe, a Microsoft Office helper binary at C:\\Program Files (x86)\\Microsoft Office\\root\\Office16\\SDXHelper.exe, initiated a TCP connection to 154.86.18.153:443. ThreatFox lists 154.86.18.153:443 as an AsyncRAT botnet C2 (confidence 100), first seen 2026-11-18 and last seen 2026-11-21, which brackets the event timestamp of 2026-11-20T03:30:11Z. This is command-and-control communication to a known malicious C2, not legitimate Office traffic.",
+      "retrieved_techniques": [
+        "T1571",
+        "T1218.003",
+        "T1137.001",
+        "T1049",
+        "T1090.002"
+      ],
+      "retrieved_rules": [
+        "3b5ba899-9842-4bc2-acc2-12308498bf42",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "7e9cf7b6-e827-11ed-a05b-15959c120003",
+        "75e33ce3-ae32-4dcc-9aa8-a2a3029d6f84"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "154.86.18.153"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 12695,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:37:36+00:00"
+    },
+    "tools-009": {
+      "label_rationale": "chrome.exe connecting to 142.250.185.78:443, a Google address; ThreatFox: no result (2026-11-20). Twin of A02-bad, derived from day3-044.",
+      "reasoning": "The process is chrome.exe at the standard vendor path (C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe) making an outbound TLS connection (dst_port 443, tcp) to 142.250.185.78, a Google-owned IP. This is normal browser traffic to Google infrastructure, not adversary behavior; the referenced Sigma rules target non-browser processes and would exclude chrome.exe anyway.",
+      "retrieved_techniques": [
+        "T1217",
+        "T1070.007",
+        "T1218.003",
+        "T1090",
+        "T1555.003"
+      ],
+      "retrieved_rules": [
+        "e54979bd-c5f9-4d6c-967b-a04b19ac4c74",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5275,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:37:54+00:00"
+    },
+    "tools-010": {
+      "label_rationale": "chrome.exe connecting to 167.86.70.217:443, listed by ThreatFox as Cobalt Strike C2 (botnet_cc, ThreatFox id 2036098, confidence 100, looked up 2026-11-20). Twin of A02-clean, derived from day3-044.",
+      "reasoning": "Chrome.exe (standard path) opened a TLS connection to 167.86.70.217:443, and ThreatFox lists that IP:port as an active Cobalt Strike C2 (botnet_cc, confidence 100), indicating application-layer-protocol C2 over HTTPS rather than legitimate browsing.",
+      "retrieved_techniques": [
+        "T1217",
+        "T1090",
+        "T1218.003",
+        "T1070.007",
+        "T1571"
+      ],
+      "retrieved_rules": [
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "e54979bd-c5f9-4d6c-967b-a04b19ac4c74",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "167.86.70.217"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 18601,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:39:08+00:00"
+    },
+    "tools-011": {
+      "label_rationale": "msedge.exe connecting to 13.107.21.200:443, a Microsoft (Bing) address; ThreatFox: no result (2026-11-20). Twin of A01-bad, derived from day3-044.",
+      "reasoning": "The event shows Microsoft Edge (msedge.exe) running from the standard Program Files path making an outbound connection over TCP port 443 (standard HTTPS) to 13.107.21.200, which is normal browser behavior. The process is a known browser, so the referenced Sigma rules targeting non-browser processes do not apply, and port 443 is standard rather than a non-standard port. No command-line, parent-process, or path anomaly indicates adversary activity.",
+      "retrieved_techniques": [
+        "T1218.003",
+        "T1070.007",
+        "T1547.010",
+        "T1571",
+        "T1555.004"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "7e9cf7b6-e827-11ed-a05b-15959c120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5914,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:39:58+00:00"
+    },
+    "tools-012": {
+      "label_rationale": "Patch agent service running its own remediation check for CVE-2021-1675 against the fixing KB (KB5003637), from Program Files as SYSTEM: compliance check, no exploit. NVD looked up 2026-11-20. Derived from day3-062.",
+      "reasoning": "The parent process is patchagent.exe running as a service (\"--service\") from C:\\Program Files\\PatchAgent\\, which spawned powershell.exe to run C:\\Program Files\\PatchAgent\\Scripts\\Test-Remediation.ps1 with -Cve CVE-2021-1675 -Kb KB5003637 as SYSTEM. This matches a vendor patch agent performing remediation verification for a known patch; there is no obfuscation, execution-policy bypass, encoded command, or other malicious indicator, so the mechanism is consistent with a legitimate vendor agent rather than adversary PowerShell execution.",
+      "retrieved_techniques": [
+        "T1546.013",
+        "T1059.001",
+        "T1216.002",
+        "T1218.014",
+        "T1204.002"
+      ],
+      "retrieved_rules": [
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "c0b40568-b1e9-4b03-8d6c-b096da6da9ab",
+        "a6a39bdb-935c-4f0a-ab77-35f4bbf44d33",
+        "d7bcd677-645d-4691-a8d4-7a5602b780d1"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 7356,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:40:53+00:00"
+    },
+    "tools-013": {
+      "label_rationale": "HiveNightmare (CVE-2021-36934, NVD 7.8 HIGH): PoC binary named after the CVE run by a user from Temp with an output folder, reading SAM/SYSTEM through shadow copies. NVD looked up 2026-11-20. Derived from day3-116.",
+      "reasoning": "A process image at C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe (an executable named after real, CISA-known-exploited EoP CVE-2021-36934) was launched via cmd.exe with output to C:\\Users\\wardog\\AppData\\Local\\Temp\\out, indicating exploitation for privilege escalation from a user temp location rather than legitimate software behavior.",
+      "retrieved_techniques": [
+        "T1204.002",
+        "T1547.001",
+        "T1574.007",
+        "T1555.004",
+        "T1546.002"
+      ],
+      "retrieved_rules": [
+        "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+        "138d3531-8793-4f50-a2cd-f291b2863d78",
+        "502b42de-4306-40b4-9596-6f590c81f073",
+        "a16980c2-0c56-4de0-9a79-17971979efdd",
+        "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "nvd_cve_lookup",
+          "args": {
+            "cve_id": "CVE-2021-36934"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 17161,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:42:28+00:00"
+    },
+    "tools-014": {
+      "label_rationale": "Invoke-WebRequest from a deployment script downloading the PowerShell 7 release on GitHub; ThreatFox: no result (2026-11-20). Kept as benign: the same command is how admin tooling fetches installers; certutil -urlcache was not used because it is suspicious with any URL. Twin of B02-bad, derived from day3-062.",
+      "reasoning": "A PowerShell deployment script (C:\\Scripts\\Deploy\\Sync-Packages.ps1) spawned powershell.exe, which used Invoke-WebRequest to download the official PowerShell 7.4.6 MSI from Microsoft's GitHub releases page into C:\\ProgramData\\Deploy\\cache\\pkg.bin. The process chain, script path, cache directory, and official vendor URL all indicate a legitimate software deployment process rather than adversarial tool transfer.",
+      "retrieved_techniques": [
+        "T1059.001",
+        "T1546.013",
+        "T1105",
+        "T1216.002",
+        "T1218.007"
+      ],
+      "retrieved_rules": [
+        "85b0b087-eddf-4a2b-b033-d771fa2b9775",
+        "b6e04788-29e1-4557-bb14-77f761848ab8",
+        "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+        "0f0450f3-8b47-441e-a31b-15a91dc243e2",
+        "222720a7-047f-4054-baa5-bab9be757db0"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5543,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:43:06+00:00"
+    },
+    "tools-015": {
+      "label_rationale": "bitsadmin from a scheduled update script downloading the Mozilla Firefox installer; ThreatFox: no result (2026-11-20). Kept as benign: the same command is how admin tooling fetches installers; certutil -urlcache was not used because it is suspicious with any URL. Twin of B03-bad, derived from day3-116.",
+      "reasoning": "bitsadmin.exe is downloading from download.mozilla.org (Mozilla's official update server) into C:\\ProgramData\\Deploy\\cache\\pkg.dat, launched by the deployment script C:\\Scripts\\Deploy\\Update-Packages.cmd via cmd.exe. The URL, parent script, and deploy-cache target indicate a legitimate software distribution/update role rather than adversary BITS abuse, and no malicious indicator or suspicious destination is present.",
+      "retrieved_techniques": [
+        "T1197",
+        "T1071.002",
+        "T1195.002",
+        "T1570",
+        "T1204.002"
+      ],
+      "retrieved_rules": [
+        "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+        "2ddef153-167b-4e89-86b6-757a9e65dcac",
+        "b9cbbc17-d00d-4e3d-a827-b06d03d2380d",
+        "8518ed3d-f7c9-4601-a26c-f361a4256a0c",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5819,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:43:41+00:00"
+    },
+    "tools-016": {
+      "label_rationale": "msedge.exe connecting to 82.158.89.27:443, listed by ThreatFox as Cobalt Strike C2 (botnet_cc, ThreatFox id 2036349, confidence 100, looked up 2026-11-20). Twin of A01-clean, derived from day3-044.",
+      "reasoning": "msedge.exe (the standard Microsoft Edge binary at C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe) opened a TCP connection to 82.158.89.27:443 over HTTPS. ThreatFox confirms 82.158.89.27:443 is an active Cobalt Strike C2 (botnet_cc, confidence 100), so this is command-and-control traffic to a known malicious C2 rather than ordinary browsing.",
+      "retrieved_techniques": [
+        "T1218.003",
+        "T1070.007",
+        "T1571",
+        "T1205",
+        "T1547.010"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "7e9cf7b6-e827-11ed-a05b-15959c120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "82.158.89.27"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 13982,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:45:08+00:00"
+    },
+    "tools-017": {
+      "label_rationale": "OneDrive.exe connecting to 13.107.42.12:443, a Microsoft (OneDrive) address; ThreatFox: no result (2026-11-20). Twin of A04-bad, derived from day3-044.",
+      "reasoning": "OneDrive.exe is running from the standard user installation path (C:\\Users\\pgustavo\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe), a known Microsoft vendor process, and is connecting over HTTPS (443) to 13.107.42.12, a Microsoft-owned IP used for OneDrive/Office 365 sync. This is routine cloud-sync service traffic, not adversary behavior; the retrieved ATT&CK/Sigma references (CMSTP, Rundll32, dead-drop resolvers) do not match this event.",
+      "retrieved_techniques": [
+        "T1070.007",
+        "T1049",
+        "T1218.003",
+        "T1090",
+        "T1046"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5550,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:45:47+00:00"
+    },
+    "tools-018": {
+      "label_rationale": "Invoke-WebRequest from a deployment script downloading https://fitbodnz.com/bmMb8kDc/61.bin, listed by ThreatFox as Stealc payload delivery (ThreatFox id 2033761, looked up 2026-11-20). Twin of B02-clean, derived from day3-062.",
+      "reasoning": "PowerShell (child of C:\\Scripts\\Deploy\\Sync-Packages.ps1) ran Invoke-WebRequest to download https://fitbodnz.com/bmMb8kDc/61.bin into C:\\ProgramData\\Deploy\\cache\\pkg.bin. That is an external file pull into a local cache directory — ingress tool transfer — with PowerShell as the execution mechanism; the parent script does not make the download legitimate, and ThreatFox having no record of the domain does not make the mechanism benign.",
+      "retrieved_techniques": [
+        "T1059.001",
+        "T1546.013",
+        "T1216.002",
+        "T1105",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "b6e04788-29e1-4557-bb14-77f761848ab8",
+        "85b0b087-eddf-4a2b-b033-d771fa2b9775",
+        "0f0450f3-8b47-441e-a31b-15a91dc243e2"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "fitbodnz.com"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 11005,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:46:44+00:00"
+    },
+    "tools-019": {
+      "label_rationale": "PrintNightmare (CVE-2021-34527, NVD 8.8 HIGH): downloaded PoC script with execution policy bypass loading a DLL from Public through the spooler, privilege escalation. NVD looked up 2026-11-20. Derived from day3-062.",
+      "reasoning": "cmd.exe (events[0].process.parent.image) spawned powershell.exe (events[0].process.image) with -ExecutionPolicy Bypass running C:\\Users\\wardog\\Downloads\\CVE-2021-34527.ps1 and passing C:\\Users\\Public\\spool.dll as a DLL (events[0].process.command_line). CVE-2021-34527 is PrintNightmare, a CISA-known-exploited Windows Print Spooler vulnerability that yields SYSTEM privileges, so this is exploitation for privilege escalation, with PowerShell as the execution mechanism rather than legitimate admin activity.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1059.001",
+        "T1127",
+        "T1547.010",
+        "T1218.003"
+      ],
+      "retrieved_rules": [
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "c0b40568-b1e9-4b03-8d6c-b096da6da9ab",
+        "fb9d3ff7-7348-46ab-af8c-b55f5fbf39b4",
+        "058f4380-962d-40a5-afce-50207d36d7e2",
+        "1228c958-e64e-4e71-92ad-7d429f4138ba"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "nvd_cve_lookup",
+          "args": {
+            "cve_id": "CVE-2021-34527"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 12367,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:47:25+00:00"
+    },
+    "tools-020": {
+      "label_rationale": "Patch agent inventory report listing hosts missing the CVE-2022-30190 (Follina) fix; writes a CSV under ProgramData. Scanner/inventory, no exploit. NVD looked up 2026-11-20. Derived from day3-116.",
+      "reasoning": "The alert is a process creation where PatchAgent's service (patchagent.exe --service) spawned inventory.exe from the same vendor directory (C:\\Program Files\\PatchAgent\\) to generate a missing-updates report, running as NT AUTHORITY\\SYSTEM as expected for a service. The parent->child chain, consistent vendor paths, and routine inventory-reporting command line indicate legitimate patch-management activity rather than adversary behavior; the retrieved ATT&CK/Sigma references do not match this event.",
+      "retrieved_techniques": [
+        "T1679",
+        "T1574.007",
+        "T1547.001",
+        "T1564.006",
+        "T1036.005"
+      ],
+      "retrieved_rules": [
+        "4f2cd9b6-4a17-440f-bb2a-687abb65993a",
+        "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+        "e4a6b256-3e47-40fc-89d2-7a477edd6915",
+        "dcaa3f04-70c3-427a-80b4-b870d73c94c4",
+        "c30fb093-1109-4dc8-88a8-b30d11c95a5d"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5362,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:47:59+00:00"
+    },
+    "tools-021": {
+      "label_rationale": "bitsadmin from a scheduled update script downloading http://82.165.181.96:443/d/wuauclt.exe, listed by ThreatFox as Unknown RAT payload delivery (ThreatFox id 2033811, looked up 2026-11-20). Twin of B01-clean, derived from day3-116.",
+      "reasoning": "bitsadmin.exe (C:\\Windows\\System32\\bitsadmin.exe) was launched from cmd.exe running C:\\Scripts\\Deploy\\Update-Packages.cmd and issued a BITS transfer job downloading http://82.165.181.96:443/d/wuauclt.exe to C:\\ProgramData\\Deploy\\cache\\setup.exe. This is BITS Jobs abuse (T1197) for payload retrieval, also an ingress tool transfer (T1105); the Windows Update binary name is used as a lure. ThreatFox has no record of 82.165.181.96, but a miss does not make the download mechanism benign.",
+      "retrieved_techniques": [
+        "T1197",
+        "T1195.002",
+        "T1546.016",
+        "T1546.008",
+        "T1547.001"
+      ],
+      "retrieved_rules": [
+        "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+        "2ddef153-167b-4e89-86b6-757a9e65dcac",
+        "af77cf95-c469-471c-b6a0-946c685c4798",
+        "b9cbbc17-d00d-4e3d-a827-b06d03d2380d",
+        "8518ed3d-f7c9-4601-a26c-f361a4256a0c"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "82.165.181.96"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 12567,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:48:48+00:00"
+    },
+    "tools-022": {
+      "label_rationale": "Invoke-WebRequest from a deployment script downloading the Microsoft Visual C++ redistributable (aka.ms); ThreatFox: no result (2026-11-20). Kept as benign: the same command is how admin tooling fetches installers; certutil -urlcache was not used because it is suspicious with any URL. Twin of B04-bad, derived from day3-062.",
+      "reasoning": "The process chain shows a deployment script (C:\\Scripts\\Deploy\\Sync-Packages.ps1) spawning PowerShell, which downloads vc_redist.x64.exe from Microsoft's official aka.ms domain into C:\\ProgramData\\Deploy\\cache\\pkg.bin. The URL, file (Microsoft Visual C++ redistributable installer), parent script location, and output cache path all indicate legitimate software deployment rather than adversary tool transfer, so the Invoke-WebRequest match is noisy but benign.",
+      "retrieved_techniques": [
+        "T1216.002",
+        "T1059.001",
+        "T1546.013",
+        "T1105",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180",
+        "85b0b087-eddf-4a2b-b033-d771fa2b9775",
+        "0f0450f3-8b47-441e-a31b-15a91dc243e2",
+        "1edff897-9146-48d2-9066-52e8d8f80a2f"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5765,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:49:06+00:00"
+    },
+    "tools-023": {
+      "label_rationale": "OneDrive.exe connecting to 204.168.243.201:443, listed by ThreatFox as Vidar C2 (botnet_cc, ThreatFox id 2035914, confidence 100, looked up 2026-11-20). Twin of A04-clean, derived from day3-044.",
+      "reasoning": "OneDrive.exe (C:\\Users\\pgustavo\\AppData\\Local\\Microsoft\\OneDrive\\OneDrive.exe) initiated an outbound TCP/443 connection to 204.168.243.201, which ThreatFox confirms as a Vidar botnet C2 server with 100% confidence. Legitimate OneDrive sync traffic goes to Microsoft services, not known malware C2 infrastructure, indicating a compromised or abused binary communicating with C2.",
+      "retrieved_techniques": [
+        "T1070.007",
+        "T1218.003",
+        "T1049",
+        "T1046",
+        "T1090"
+      ],
+      "retrieved_rules": [
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "37e4024a-6c80-4d8f-b95d-2e7e94f3a8d1",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "204.168.243.201"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 14252,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:50:29+00:00"
+    },
+    "tools-024": {
+      "label_rationale": "GoogleUpdate.exe connecting to 142.250.74.110:443, a Google address; ThreatFox: no result (2026-11-20). Twin of A08-bad, derived from day3-174.",
+      "reasoning": "GoogleUpdate.exe is a known Google vendor update process running from its legitimate Program Files path as NT AUTHORITY\\SYSTEM (the expected service account), and it made a routine outbound HTTPS connection to 142.250.74.110:443, a Google-owned IP. This is expected update-check traffic, not adversary C2, so a rule flagging \"non-browser process to Google IP\" would be noisy here.",
+      "retrieved_techniques": [
+        "T1218.003",
+        "T1571",
+        "T1547.010",
+        "T1070.007",
+        "T1195.002"
+      ],
+      "retrieved_rules": [
+        "7e9cf7b6-e827-11ed-a05b-0242ac120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "297ae038-edc2-4b2e-bb3e-7c5fc94dd5c7",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "e54979bd-c5f9-4d6c-967b-a04b19ac4c74"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 6372,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:51:18+00:00"
+    },
+    "tools-025": {
+      "label_rationale": "SDXHelper.exe connecting to 52.113.194.132:443, a Microsoft (base event's own IP) address; ThreatFox: no result (2026-11-20). Twin of A05-bad, derived from day3-044.",
+      "reasoning": "SDXHelper.exe is a legitimate Microsoft Office component running from the standard Office16 installation path, and it connects to 52.113.194.132 (a Microsoft Azure IP) over standard HTTPS port 443, consistent with normal Office telemetry/update traffic; ThreatFox has no record of the IP, and nothing in the process chain indicates abuse.",
+      "retrieved_techniques": [
+        "T1218.003",
+        "T1571",
+        "T1137.001",
+        "T1559.002",
+        "T1049"
+      ],
+      "retrieved_rules": [
+        "3b5ba899-9842-4bc2-acc2-12308498bf42",
+        "5c80b618-0dbb-46e6-acbb-03d90bcb6d83",
+        "7e9cf7b6-e827-11ed-a05b-15959c120003",
+        "edf3485d-dac4-4d50-90e4-b0e5813f7e60",
+        "75e33ce3-ae32-4dcc-9aa8-a2a3029d6f84"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "52.113.194.132"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 10330,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:52:13+00:00"
+    },
+    "tools-026": {
+      "label_rationale": "bitsadmin from a scheduled update script downloading https://3byy0j.oss-cn-beijing.aliyuncs.com/s.dat, listed by ThreatFox as Sliver payload delivery (ThreatFox id 2034172, looked up 2026-11-20). Twin of B03-clean, derived from day3-116.",
+      "reasoning": "bitsadmin.exe is invoked with /transfer /download to pull a file from an external Alibaba Cloud OSS bucket (3byy0j.oss-cn-beijing.aliyuncs.com/s.dat) into C:\\ProgramData\\Deploy\\cache\\pkg.dat, which is the BITS Jobs file-transfer mechanism abused for ingress tool transfer. The launch chain is cmd.exe /c C:\\Scripts\\Deploy\\Update-Packages.cmd under user WORKSTATION5\\wardog, but no known legitimate vendor/installer role is established for this external cloud download, so the mechanism itself indicates adversary behavior rather than benign noise.",
+      "retrieved_techniques": [
+        "T1197",
+        "T1071.002",
+        "T1570",
+        "T1574.008",
+        "T1216.001"
+      ],
+      "retrieved_rules": [
+        "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+        "2ddef153-167b-4e89-86b6-757a9e65dcac",
+        "8518ed3d-f7c9-4601-a26c-f361a4256a0c",
+        "b9cbbc17-d00d-4e3d-a827-b06d03d2380d",
+        "fff9d2b7-e11c-4a69-93d3-40ef66189767"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 6853,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:53:00+00:00"
+    },
+    "tools-027": {
+      "label_rationale": "Patch agent recording in its own registry key that KB5005565 fixes CVE-2021-40444 (compliance state), no exploit context. NVD looked up 2026-11-20. Derived from day2-011.",
+      "reasoning": "The only process is C:\\Program Files\\PatchAgent\\patchagent.exe running from its expected vendor directory, and the registry write targets HKLM\\SOFTWARE\\PatchAgent\\Compliance\\KB5005565\\Cve with the value CVE-2021-40444 — i.e., a patch agent recording update/compliance data under its own key. This matches a known legitimate vendor agent role rather than an autostart, execution, or persistence technique, and none of the retrieved ATT&CK/Sigma references (autorun keys, port monitors, etc.) describe this path or behavior.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1036.005",
+        "T1218.001",
+        "T1218.002",
+        "T1195.002"
+      ],
+      "retrieved_rules": [
+        "cbf93e5d-ca6c-4722-8bea-e9119007c248",
+        "20f0ee37-5942-4e45-b7d5-c5b5db9df5cd",
+        "9d15044a-7cfe-4d23-8085-6ebc11df7685",
+        "b29aed60-ebd1-442b-9cb5-16a1d0324adb",
+        "4720b7df-40c3-48fd-bbdf-fd4b3c464f0d"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 6670,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:53:54+00:00"
+    },
+    "tools-028": {
+      "label_rationale": "Invoke-WebRequest from a deployment script downloading https://remoto.painelst.com/api/source-file.php?f=d3dx9_43.bin, listed by ThreatFox as Unknown RAT payload delivery (ThreatFox id 2034972, looked up 2026-11-20). Twin of B04-clean, derived from day3-062.",
+      "reasoning": "PowerShell (child of a deployment script Sync-Packages.ps1) runs Invoke-WebRequest to download d3dx9_43.bin from remoto.painelst.com into C:\\ProgramData\\Deploy\\cache\\pkg.bin, staging an external file on the host. ThreatFox confirms remoto.painelst.com is an active botnet C2 (FluxBanker/FluxEngine banker), so this is adversary ingress tool transfer, not legitimate deployment traffic. The DirectX-named .bin and ProgramData cache path indicate masquerading/staging.",
+      "retrieved_techniques": [
+        "T1546.013",
+        "T1059.001",
+        "T1105",
+        "T1216.002",
+        "T1218.014"
+      ],
+      "retrieved_rules": [
+        "5e3cc4d8-3e68-43db-8656-eaaeefdec9cc",
+        "b6e04788-29e1-4557-bb14-77f761848ab8",
+        "0f0450f3-8b47-441e-a31b-15a91dc243e2",
+        "1edff897-9146-48d2-9066-52e8d8f80a2f",
+        "87e3c4e8-a6a8-4ad9-bb4f-46e7ff99a180"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "remoto.painelst.com"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 11129,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:54:54+00:00"
+    },
+    "tools-029": {
+      "label_rationale": "taskhostw.exe connecting to 52.167.249.196:443, a Microsoft (base event's own IP) address; ThreatFox: no result (2026-11-20). Twin of A07-bad, derived from day3-174.",
+      "reasoning": "taskhostw.exe is a legitimate Windows system process running from C:\\Windows\\System32 under NT AUTHORITY\\SYSTEM, which is expected for this binary. It made a single outbound HTTPS connection (dst_port 443) to 52.167.249.196, an IP within Microsoft-owned 52.0.0.0/8 space, with no ThreatFox hit, no suspicious command line, and no anomalous parent process. This is consistent with legitimate Windows task/telemetry traffic, so the alert is likely noise from a rule flagging an uncommon process making a network connection rather than adversary behavior.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1205",
+        "T1571",
+        "T1070.007",
+        "T1046"
+      ],
+      "retrieved_rules": [
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+        "efafe0bf-4238-479e-af8f-797bd3490d2d",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263"
+      ],
+      "escalation": null,
+      "lookups": [
+        {
+          "name": "threatfox_ioc_lookup",
+          "args": {
+            "ioc": "52.167.249.196"
+          }
+        }
+      ],
+      "rejected": [],
+      "tokens": 11684,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:56:14+00:00"
+    },
+    "tools-030": {
+      "label_rationale": "svchost.exe connecting to 13.107.4.50:443, a Microsoft address; ThreatFox: no result (2026-11-20). Twin of A03-bad, derived from day3-174.",
+      "reasoning": "svchost.exe (C:\\Windows\\System32\\svchost.exe) running as NT AUTHORITY\\SYSTEM initiated a standard outbound TCP connection to 13.107.4.50:443, a Microsoft Windows Update/telemetry IP over the standard HTTPS port. The process, user, path, destination, and port are all consistent with routine Windows system traffic; there is no unusual command line, parent process, encoded payload, or non-standard port to indicate adversary C2.",
+      "retrieved_techniques": [
+        "T1547.010",
+        "T1505.005",
+        "T1571",
+        "T1090",
+        "T1090.002"
+      ],
+      "retrieved_rules": [
+        "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+        "cdc8da7d-c303-42f8-b08c-b4ab47230263",
+        "0dba975d-a193-4ed1-a067-424df57570d1",
+        "5f699bc5-5446-4a4a-a0b7-5ef2885a3eb4",
+        "a66bc059-c370-472c-a0d7-f8fd1bf9d583"
+      ],
+      "escalation": null,
+      "lookups": [],
+      "rejected": [],
+      "tokens": 5784,
+      "git_sha": "8d88c9b64cc383811135a562d1c497e8790faabd",
+      "git_dirty": true,
+      "at": "2026-11-24T20:56:58+00:00"
+    }
+  }
+}
