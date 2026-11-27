@@ -24,6 +24,7 @@ events it fired on (see agents/repair.py for what is shown and why missed attack
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 
 from langchain_core.language_models import BaseChatModel
@@ -44,6 +45,7 @@ from sentinel.agents.triage import TRANSPORT_BACKOFF, TRANSPORT_RETRIES, build_u
 from sentinel.retrieval.search import Hit
 from sentinel.schemas import Alert, Event, TriageVerdict
 from sentinel.validation.matcher import match
+from sentinel.validation.validate import SLASH_PATH
 
 ANSWER_TOOL = RuleDraft.__name__
 
@@ -69,6 +71,14 @@ Write a detection, not a fingerprint of this one event:
   In CommandLine, prefer keywords without backslashes (e.g. "comsvcs.dll", "MiniDump").
 - Copy values exactly as they appear in the event: the rule is checked against it and rejected
   if it does not fire on it.
+- Detect ONE layer of the attack: the PRIMARY technique (the first ID in the triage verdict).
+  An alert often shows a chain, e.g. a launcher (MSBuild, regsvr32, WmiPrvSE, services.exe)
+  starting a payload (encoded PowerShell, cmd running a command). If the primary technique is the
+  payload, match the payload whatever started it; if it is the launcher, match what the launcher
+  starts whatever the payload is. Each test you add from the other layer ties the rule to this one
+  chain and misses the same attack started another way.
+- Keep the selection small: 2 or 3 field tests that the technique always shows. Every extra test
+  is one more thing a repeat of the attack can differ in.
 - Use a filter only for a known legitimate case you can name.
 - category must be the log source of the event: {", ".join(ALLOWED_FIELDS)}. Allowed fields:
 {chr(10).join(f"  {c}: {', '.join(sorted(f))}" for c, f in ALLOWED_FIELDS.items())}
@@ -101,6 +111,8 @@ class RepairContext:
     report: str  # the validator's feedback: counts, alert ids, rule fields, never event values
     # (sample id, {field: value}) for benign events the previous rule fired on
     benign_hits: tuple[tuple[str, dict[str, str]], ...] = ()
+    # (version, detection YAML, score) for every version so far; empty with only one version
+    history: tuple[tuple[int, str, str], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -217,22 +229,47 @@ def repair_section(repair: RepairContext, bid: str) -> str:
             repair.report.strip() or "(no report)",
             "### Benign events the previous rule fired on (it must NOT fire on these)",
             *(hits or ["(none)"]),
+            *(history_section(repair, bid) if repair.history else []),
             "### What to change",
-            "- Fired on benign events: tighten. Add a field test the attack has and these events "
-            "lack, or require several keywords with all=true. Do not filter by the benign "
-            "process name: an attacker can run under the same name.",
-            "- Missed held-out attacks (you are not shown them): the rule is too narrow. Drop "
-            "details specific to this one event (tool or file names, user paths) and match the "
-            "behavior that every repetition of the attack shares.",
+            "- Fired on benign events but caught the repeats: tighten as little as possible. "
+            "Keep the selection as it is and add a filter matching what these benign events "
+            "have and the alert lacks (a CommandLine or ParentCommandLine keyword, a "
+            "CurrentDirectory, an IntegrityLevel). A new required test in the selection also "
+            "cuts off repeats of the attack that differ from this alert. Do not filter by the "
+            "benign process name: an attacker can run under the same name.",
+            "- Missed held-out attacks (you are not shown them): the rule is too narrow. Remove "
+            "field tests, do not add them: first a test on the other layer of the chain (the "
+            "launcher when the primary technique is the payload, or the reverse), then details "
+            "specific to this one event (tool or file names, user paths, one command's keywords). "
+            "Keep what every repetition of the technique shares.",
+            "- A version that caught the repeats but fired on benign events is the closest to a "
+            "pass: start from it and add ONE narrow test, rather than starting over.",
             "- The new rule must still fire on the alert above.",
         ]
     )
+
+
+def history_section(repair: RepairContext, bid: str) -> list[str]:
+    """Every earlier version's detection and score. The detections hold event values (quoted as
+    untrusted); the scores are counts from our validator."""
+    out = ["### Every version so far and how it scored"]
+    for version, detection, grade in repair.history:
+        out += [
+            f"Version {version}: {grade}",
+            block(UNTRUSTED, bid, escape(detection.strip()), path=f"version_{version}"),
+        ]
+    return out
 
 
 def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event], bid: str) -> str:
     """Empty when the rule fires on at least one of the alert's own events; otherwise why not,
     in terms the model can act on. Event values are attacker-written, so they are quoted inside
     an UNTRUSTED block with the prompt's block id."""
+    if debris := _list_debris(draft, events):
+        return (
+            f"value {debris[:80]!r} holds several values written as one string: put each in its "
+            "own entry of the values list"
+        )
     try:
         if match(rule_yaml, events):
             return ""
@@ -257,6 +294,22 @@ def self_check(draft: RuleDraft, rule_yaml: str, events: list[Event], bid: str) 
     return "the rule does not fire on the alert it was written for. " + " | ".join(misses)
 
 
+# A piece of a list the model wrote as one string ("Invoke-Expression', 'IEX', ...]}"):
+# gold-v2-base day2-008, where it gave dead values. Only when the event doesn't hold that text:
+# attacker-written command lines may look like anything.
+LIST_DEBRIS = re.compile(r"""['"]\s*,\s*['"]|\]\s*\}""")
+
+
+def _list_debris(draft: RuleDraft, events: list[Event]) -> str:
+    seen = [str(v).lower() for e in events for v in e.raw.values() if isinstance(v, str)]
+    for sel in [*draft.selections, *draft.filters]:
+        for m in sel.items:
+            for v in m.values:
+                if LIST_DEBRIS.search(v) and not any(v.lower() in f for f in seen):
+                    return v
+    return ""
+
+
 def fix_slashes(draft: RuleDraft, events: list[Event]) -> RuleDraft:
     """'/' turned into a backslash in the values of non-path fields (CommandLine) where that is
     what the alert's own event holds: the prompt teaches '/' for path fields, and the model
@@ -274,6 +327,10 @@ def fix_slashes(draft: RuleDraft, events: list[Event]) -> RuleDraft:
                 if "/" in v[1:] and _value_matches(m, fixed, events):
                     if not _value_matches(m, v, events):
                         v, changed = fixed, True
+                elif SLASH_PATH.search(v) and "://" not in v:
+                    # a '/'-separated Windows path ("AppData/Roaming/"): Sysmon writes '', so
+                    # as written it never matches (validator lint "dead values", gold-v2-base)
+                    v, changed = fixed, True
                 values.append(v)
             m.values = values
     return draft.model_copy(deep=True) if changed else draft

@@ -61,13 +61,13 @@ def _failed(fp: int = 1, missed: int = 1) -> ValidationResult:
     )
 
 
-EVENTS = {f"golden:b{i}/e": _event(f"b{i}", f"rundll32 benign {i}") for i in range(5)}
+EVENTS = {f"golden:b{i}/e": _event(f"b{i}", f"rundll32 benign {i}") for i in range(6)}
 EVENTS["golden:m0/e"] = _event("m0", "rundll32 SECRET-ATTACK-VALUE")
 
 
 def test_context_shows_benign_values_but_never_missed_attacks():
-    ctx = build_repair_context(RULE, _failed(fp=5, missed=1), 2, 3, EVENTS.get)
-    assert [sid for sid, _ in ctx.benign_hits] == ["b0", "b1", "b2"][:MAX_BENIGN_SHOWN]
+    ctx = build_repair_context(RULE, _failed(fp=6, missed=1), 2, 3, EVENTS.get)
+    assert [sid for sid, _ in ctx.benign_hits] == [f"b{i}" for i in range(MAX_BENIGN_SHOWN)]
     assert set(ctx.benign_hits[0][1]) == {"Image", "CommandLine"}  # rule fields only
     assert "SECRET-ATTACK-VALUE" not in str(ctx)  # graded on it next: never shown
     assert ctx.report.startswith("benign:") and (ctx.attempt, ctx.max_attempts) == (2, 3)

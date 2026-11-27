@@ -83,6 +83,20 @@ cut invented IOCs but added 2 false positives (keyword matches on benign events)
 the 5 our search returns (`uv run python -m evals.coverage`, run with Mouadh's matcher). A lower
 bound, since rules outside the top 5 are not tried. The other 54 are what rule generation is for.
 
+**Rule generation** (gold-v2, 27 attacks the validator can grade, the golden technique given so
+failures are rule generation's own, one run each). A rule passes when it compiles, fires on no
+benign event and catches repeats of the attack it never saw:
+
+| | passed (>= 2 repeats to test) | passed (all 27) | first version passed |
+|---|---|---|---|
+| before | 5/14 | 15/27 | 9/27 |
+| after | **8/14** | **20/27** | 15/27 |
+
+The fixes: detect one layer of the attack chain (the stager, not "stager AND this launcher"),
+repair sees every earlier version's score and tightens a near-miss with a filter instead of
+starting over, and code rejects junk values. Left: 6 of the 14 fail, and 7 of the 20 passes
+match a tool name, which a rename evades. Details: [`docs/experiments.md`](docs/experiments.md).
+
 **Prompt injection (Week 4).** The same 40 payloads, planted in attacker-writable fields of real
 attacks, before and after hardening, same models (nemotron 3.5 super -> ultra):
 

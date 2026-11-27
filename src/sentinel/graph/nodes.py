@@ -204,6 +204,8 @@ def repair_live(state: SentinelState, config: RunnableConfig) -> dict:
         attempt,
         state.get("max_attempts", MAX_ATTEMPTS),
         lookup,
+        state.get("rule_versions"),
+        state["validations"],
     )
     try:
         r = generate_rule(

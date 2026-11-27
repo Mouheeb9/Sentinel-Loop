@@ -38,7 +38,8 @@ Summary (results/rulegen-v0.json):
     outcomes                                count per pipeline outcome
 
 Resumable like evals/run.py: rows go to results/rulegen-v0.rows.jsonl as they finish; a re-run
-skips finished alerts and retries transport errors; it stops on the provider's daily quota.
+skips finished alerts and retries transport errors. On a daily quota or dead key it switches to the
+next OPENROUTER_API_KEY_<name> (evals.run.next_key) and stops when every key is spent.
 """
 
 from __future__ import annotations
@@ -55,7 +56,7 @@ from typing import Any
 import yaml
 from dotenv import load_dotenv
 
-from evals.run import DAILY_QUOTA_MARKERS
+from evals.run import DAILY_QUOTA_MARKERS, DEAD_KEY_MARKERS, next_key
 from evals.split import load_split
 from evals.triage_smoke import load_golden
 from sentinel.agents.enrich import search_plan
@@ -178,6 +179,7 @@ def run_one(
         "attempt_recalls": [rule_recall(v) for v in validations],
         "attempt_fps": [v.false_positives for v in validations],
         "repairs": f.get("repairs", []),
+        "rule_versions": f.get("rule_versions", []),  # every version, oldest first
         "trace": res.trace_url,
     }
 
@@ -280,10 +282,16 @@ def main(argv: list[str] | None = None) -> None:
                 configurable["oracle_verdict"] = oracle_verdict(lab)
             if aid in counts:
                 row["held_out_repeats"] = counts[aid]
-            row |= run_one(alerts[aid], not args.no_trace, name, configurable) | {
-                "at": datetime.now(UTC).isoformat(timespec="seconds")
-            }
-            err = str(row.get("error", ""))
+            while True:
+                out = run_one(alerts[aid], not args.no_trace, name, configurable)
+                err = str(out.get("error", ""))
+                spent = err.startswith("transport") and any(
+                    m in err for m in DAILY_QUOTA_MARKERS + DEAD_KEY_MARKERS
+                )
+                if not spent or not (key := next_key()):
+                    break
+                print(f"[{name}] quota or dead key: switched to {key}, retrying {aid}")
+            row |= out | {"at": datetime.now(UTC).isoformat(timespec="seconds")}
             title = (row.get("rulegen") or {}).get("title", "-")
             print(f"[{name}] {aid:10} {row.get('outcome', 'ERR'):18} {title[:60]}")
             if err:
@@ -293,7 +301,7 @@ def main(argv: list[str] | None = None) -> None:
             with rows_path.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(row, ensure_ascii=False) + "\n")
             if any(m in err for m in DAILY_QUOTA_MARKERS):
-                print(f"[{name}] daily quota hit: re-run tomorrow to resume")
+                print(f"[{name}] every key hit its daily quota: re-run tomorrow to resume")
                 break
 
     rows = [done[a] for a in ids if a in done]

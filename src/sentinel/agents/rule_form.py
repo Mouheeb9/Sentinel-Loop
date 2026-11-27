@@ -165,6 +165,19 @@ class RuleDraft(BaseModel):
         return ids
 
     @model_validator(mode="after")
+    def _no_duplicate_selections(self) -> RuleDraft:
+        """The same selection written twice (or three times, day2-008) changes nothing: keep one."""
+        for name in ("selections", "filters"):
+            seen, kept = set(), []
+            for sel in getattr(self, name):
+                key = sel.model_dump_json()
+                if key not in seen:
+                    seen.add(key)
+                    kept.append(sel)
+            setattr(self, name, kept)
+        return self
+
+    @model_validator(mode="after")
     def _fields_allowed(self) -> RuleDraft:
         allowed = ALLOWED_FIELDS[self.category]
         used = {m.field for s in [*self.selections, *self.filters] for m in s.items}

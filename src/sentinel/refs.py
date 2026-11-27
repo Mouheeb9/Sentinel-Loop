@@ -18,9 +18,15 @@ ALERT_FIELDS = frozenset({"alert_id", "detection_name", "severity"})
 _EVENT_PATH = re.compile(r"^events\[(\d+)\]\.([a-z_]+(?:\.[a-z_]+)*)$")
 
 
+_SEPARATORS = re.compile(r"/{2,}")
+
+
 def normalize(text: str) -> str:
-    """Lowercase and forward slashes: the model writes C:/Users/... for C:\\Users\\..."""
-    return text.lower().replace("\\", "/")
+    """Lowercase and forward slashes: the model writes C:/Users/... for C:\\Users\\... Runs of
+    separators collapse to one: a log can hold a path typed with a doubled backslash
+    ("C:\\\\programdata\\calc.xll", day3-157) and the model writes it with one, which failed
+    triage twice on 2026-11-27."""
+    return _SEPARATORS.sub("/", text.lower().replace("\\", "/"))
 
 
 def strings(value: Any) -> Iterable[str]:

@@ -930,3 +930,57 @@ calls: 0. Only miss: A06-bad (tools-002), looked up, ThreatFox lists the IP as A
 the model called it Microsoft Azure space and said benign: it ignored the lookup (A06 was right in
 v1, so this is run-to-run variance, not a case bug). The fix touched only the shared context, so
 the B gain is the case design, not the tools changing.
+
+## 2026-11-27: rule generation v2 (gold-v2: baseline, fix1, fix2 on the 27 gradable attacks)
+
+**Set.** `evals.rulegen --set testable --min-positives 1 --gold-technique`: every non-test
+golden attack with at least one held-out repeat (results/testable.json): 27 alerts, 14 with >= 2
+repeats (the ones a pass means something on), 13 with 1 (`evidence: low`). Golden label in place
+of triage, so failures are rule generation's own. One run per config, N=1: read +-2 as noise.
+
+**Model.** Rule gen on Nemotron Super (`SENTINEL_RULEGEN_MODEL=...nemotron-3.5-super-vl:free`):
+the free Ultra endpoint answered nothing in 60-90 s on every key today. Same model for all three
+runs. Runs were split in 4 shards (`--ids`, one key each); `evals.rulegen` now switches keys on
+quota or a dead key like `evals.run`.
+
+| | baseline | fix1 | **fix2** |
+|---|---|---|---|
+| passed, 14 with >= 2 repeats | 5/14 | 6/14 | **8/14** |
+| passed, 13 with 1 repeat | 10/13 | 13/13 | 12/13 |
+| passed, all 27 | 15/27 | 19/27 | **20/27** |
+| passed on the first version | 9/27 | 15/27 | 15/27 |
+| repair calls | 32 | 21 | 23 |
+| Empire encoded stager (6 repeats each) | 2/5 | 5/5 | 5/5 |
+
+**Baseline failures, three causes.**
+1. Two layers ANDed (101, 108, 169, 068): "PowerShell `-enc` AND parent MSBuild" for the Empire
+   stager, which runs under 6 launchers; "WmiPrvSE AND PowerShell `-enc`" for "any WmiPrvSE
+   child". Every test from the other layer ties the rule to this one chain.
+2. Repair over-corrects (087, 164, 050, day2-008): a version catching every repeat with a few
+   benign hits was tightened into one catching none, and the next repair started from that one.
+3. Junk values: list fragments as one value (`"Invoke-Expression', 'FromBase64String', ...]}"`),
+   the same selection 3 times, `/`-separated Windows paths in CommandLine (lint "dead values").
+
+**fix1.** Prompt: detect the primary technique's layer only, 2-3 field tests. Repair sees every
+earlier version and its score (counts only; missed attacks still never shown, RG-7) and is told
+to start from the near-miss. Code: list debris not in the event -> retry; duplicate selections
+dropped; dead `/` paths in non-path fields converted.
+
+**fix2.** Repair, when the rule caught the repeats but hit benign events: keep the selection and
+add a filter for what the benign events have and the alert lacks (not the process name, RG-3);
+5 benign hits shown instead of 3. That turned 157 (4/4 + 10 FP -> 4/4, 0 FP) and 125 into
+passes. Left: 050, 061, 087, 164, 169, 176 (068 failed in fix2 after passing in fix1: noise).
+
+**Review of the passes.** 7/20 match a tool name (GruntHTTP, MoveExcel, Herpaderping,
+mimikatz): the repeats share the name, so they pass, but a rename evades them. 125 (any WmiPrvSE
+child except installer switches) is SigmaHQ-shaped but broad; the benign set still lacks
+SCCM/WMI admin activity, so 0 FP there proves little (same gap as e2e-v1-ultra).
+
+**Triage bug found while recording the demo.** day3-157's log has `C:\programdata\calc.xll` as
+typed (doubled backslash); the model cites it with one, so `missing_iocs` rejected a correct IOC
+and triage failed twice. `refs.normalize` now collapses separator runs.
+
+**Demo.** `results/demo/1-full-loop.json` is day3-157 through the real pipeline (real triage):
+v1 `cmd /c` + `MoveExcelXLL.exe` 0/4 -> repair: `cmd /c` whose parent sits in a Desktop folder,
+4/4, 0 FP, no tool name. The run before it (8-repair-near-miss) ended 4/4 with 1 benign hit
+(gpupdate).
