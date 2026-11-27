@@ -1,0 +1,561 @@
+{
+ "meta": {
+  "name": "6-cve",
+  "alert": {
+   "alert_id": "tools-013",
+   "detection_name": "Atomic capture — manual review",
+   "severity": "medium",
+   "events": [
+    {
+     "event_id": "sysmon-a43da90991a19275",
+     "timestamp": "2026-11-20T06:36:43.542000Z",
+     "source": "windows_sysmon",
+     "host": "WORKSTATION5",
+     "user": "WORKSTATION5\\wardog",
+     "process": {
+      "pid": 9260,
+      "image": "C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe",
+      "command_line": "CVE-2021-36934.exe -o C:\\Users\\wardog\\AppData\\Local\\Temp\\out",
+      "parent": {
+       "pid": null,
+       "image": "C:\\Windows\\System32\\cmd.exe",
+       "command_line": "\"C:\\windows\\system32\\cmd.exe\" ",
+       "parent": null
+      }
+     },
+     "network": null,
+     "registry": null,
+     "raw": {
+      "Keywords": "0x8000000000000000",
+      "Task": "1",
+      "Description": "?",
+      "CommandLine": "CVE-2021-36934.exe -o C:\\Users\\wardog\\AppData\\Local\\Temp\\out",
+      "TimeCreated": "2026-11-20T02:36:43.547Z",
+      "Product": "?",
+      "Company": "?",
+      "OriginalFileName": "?",
+      "User": "WORKSTATION5\\wardog",
+      "ParentProcessId": "10044",
+      "SourceName": "Microsoft-Windows-Sysmon",
+      "IntegrityLevel": "High",
+      "ProcessGuid": "{39e4a257-79fb-5f92-7117-000000000700}",
+      "CurrentDirectory": "C:\\Users\\wardog\\",
+      "UtcTime": "2026-11-20 06:36:43.542",
+      "ParentCommandLine": "\"C:\\windows\\system32\\cmd.exe\" ",
+      "TerminalSessionId": "2",
+      "ProcessId": "9260",
+      "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+      "FileVersion": "?",
+      "ParentProcessGuid": "{39e4a257-79ed-5f92-6e17-000000000700}",
+      "@timestamp": "2026-11-20T02:36:43.547Z",
+      "LogonGuid": "{39e4a257-f1ac-5f8b-d961-0c0000000000}",
+      "Image": "C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe",
+      "Hostname": "WORKSTATION5",
+      "LogonId": "0xc61d9",
+      "Level": "4",
+      "EventID": 1,
+      "ProviderGuid": "{5770385f-c22a-43e0-bf4c-06f5698ffbd9}",
+      "RuleName": "-",
+      "Message": "Process Create:\r\nRuleName: -\r\nUtcTime: 2026-11-20 06:36:43.542\r\nProcessGuid: {39e4a257-79fb-5f92-7117-000000000700}\r\nProcessId: 9260\r\nImage: C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe\r\nFileVersion: ?\r\nDescription: ?\r\nProduct: ?\r\nCompany: ?\r\nOriginalFileName: ?\r\nCommandLine: CVE-2021-36934.exe -o C:\\Users\\wardog\\AppData\\Local\\Temp\\out\r\nCurrentDirectory: C:\\Users\\wardog\\\r\nUser: WORKSTATION5\\wardog\r\nLogonGuid: {39e4a257-f1ac-5f8b-d961-0c0000000000}\r\nLogonId: 0xC61D9\r\nTerminalSessionId: 2\r\nIntegrityLevel: High\r\nParentProcessGuid: {39e4a257-79ed-5f92-6e17-000000000700}\r\nParentProcessId: 10044\r\nParentImage: C:\\Windows\\System32\\cmd.exe\r\nParentCommandLine: \"C:\\windows\\system32\\cmd.exe\" ",
+      "Channel": "Microsoft-Windows-Sysmon/Operational"
+     },
+     "untrusted_fields": [
+      "process.command_line",
+      "process.image",
+      "process.parent.command_line"
+     ]
+    }
+   ]
+  },
+  "models": "openrouter:nvidia/nemotron-3.5-super-vl:free -> openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+  "recorded_at": "2026-11-24T22:45:06+00:00",
+  "path": [
+   "ingest",
+   "enrich",
+   "triage",
+   "route",
+   "rule_gen",
+   "validate",
+   "repair",
+   "validate",
+   "repair",
+   "validate",
+   "output"
+  ],
+  "outcome": "rule_failed"
+ },
+ "events": [
+  {
+   "node": "ingest",
+   "start": 0.0,
+   "end": 0.001,
+   "update": null
+  },
+  {
+   "node": "enrich",
+   "start": 0.001,
+   "end": 0.165,
+   "update": {
+    "techniques": [
+     {
+      "id": "T1204.002",
+      "kind": "technique",
+      "title": "Malicious File",
+      "text": "T1204.002 Malicious File\nTactics: execution\nPlatforms: Linux, macOS, Windows\nDescription: An adversary may rely upon a user opening a malicious file in order to gain execution. Users may be subjected to social engineering to get them to open a file that will lead to code execution. This user action will typically be observed as follow-on behavior from Spearphishing Attachment. Adversaries may use several types of files that require a user to execute them, including .doc, .pdf, .xls, .rtf, .scr, .exe, .lnk, .pif, .cpl, .reg, and .iso.\n\nAdversaries may employ various forms of Masquerading and Obfuscated Files or Information to increase the likelihood that a user will open and successfully execute a malicious file. These methods may include using a familiar naming convention and/or password protecting the file and supplying instructions to a user on how to open it. \n\nWhile Malicious File frequently occurs shortly after Initial Access it may occur at other phases of an intrusion, such as when an adversary places a file in a shared directory or on a user's desktop hoping that a user will click on it. This activity may also be seen shortly after Internal Spearphishing.\nData sources: WinEventLog:Sysmon, macos:unifiedlog, macos:endpointsecurity, auditd:SYSCALL\nDetection guidance:\n- User opens a file delivered by email, web, chat, or share. The handler application (Word/PDF reader/archiver) creates a file in user-controlled paths (Downloads, Temp, Desktop) and then spawns a new or unusual child process (e.g., powershell.exe, wscript.exe, cmd.exe, regsvr32.exe, rundll32.exe, msiexec.exe). Optional precursors include FileStreamCreated (URL/UNC) and Office → system32 batch writes.\n- User opens a downloaded document/installer leading to EndpointSecurity file create in ~/Downloads or ~/Library paths then an exec of a suspicious utility (osascript, bash/zsh, curl, chmod, open with -a Terminal). Correlates File Creation with subsequent process exec and, optionally, quarantine/LSQuarantine events.\n- User or desktop application writes a new file to ~/Downloads, /tmp, or mounted removable media followed by execve of a risky interpreter/loader (bash, sh, python, perl, php, node, curl|wget piping to sh, ld.so, rdesktop, xdg-open - with unusual args). Uses auditd PATH+SYSCALL (open/creat/write/rename) with execve event linking.",
+      "platforms": [
+       "linux",
+       "macos",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1204.002"
+      ],
+      "score": 0.03149801587301587,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1547.001",
+      "kind": "technique",
+      "title": "Registry Run Keys / Startup Folder",
+      "text": "T1547.001 Registry Run Keys / Startup Folder\nTactics: persistence, privilege-escalation\nPlatforms: Windows\nDescription: Adversaries may achieve persistence by adding a program to a startup folder or referencing it with a Registry run key. Adding an entry to the \"run keys\" in the Registry or startup folder will cause the program referenced to be executed when a user logs in. These programs will be executed under the context of the user and will have the account's associated permissions level.\n\nThe following run keys are created by default on Windows systems:\n\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\n* HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\n* HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnce\n\nRun keys may exist under multiple hives. The HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunOnceEx is also available but is not created by default on Windows Vista and newer. Registry run key entries can reference programs directly or list them as a dependency. For example, it is possible to load a DLL at logon using a \"Depend\" key with RunOnceEx: reg add HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\RunOnceEx\\0001\\Depend /v 1 /d \"C:\\temp\\evil[.]dll\" \n\nPlacing a program within a startup folder will also cause that program to execute when a user logs in. There is a startup folder location for individual user accounts as well as a system-wide startup folder that will be checked regardless of which user account logs in. The startup folder path for the current user is C:\\Users\\\\[Username]\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\Startup. The startup folder path for all users is C:\\ProgramData\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp.\n\nThe following Registry keys can be used to set startup folder items for persistence:\n\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\n* HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\Shell Folders\n* HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Explorer\\User Shell Folders\n\nThe following Registry keys can control automatic startup of services during boot:\n\n* HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServicesOnce\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServicesOnce\n* HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServices\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\RunServices\n\nUsing policy settings to specify startup programs creates corresponding values in either of two Registry keys:\n\n* HKEY_LOCAL_MACHINE\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Windows\\CurrentVersion\\Policies\\Explorer\\Run\n\nPrograms listed in the load value of the registry key HKEY_CURRENT_USER\\Software\\Microsoft\\Windows NT\\CurrentVersion\\Windows run automatically for the currently logged-on user.\n\nBy default, the multistring BootExecute value of the registry key HKEY_LOCAL_MACHINE\\System\\CurrentControlSet\\Control\\Session Manager is set to autocheck autochk *. This value causes Windows, at startup, to check the file-system integrity of the hard disks if the system has been shut down abnormally. Adversaries can add other programs or processes to this registry value which will automatically launch at boot.\n\nAdversaries can use these configuration locations to execute malware, such as remote access tools, to maintain persistence through system reboots. Adversaries may also use Masquerading to make the Registry entries look as if they are associated with legitimate programs.\nData sources: WinEventLog:Sysmon, WinEventLog:Microsoft-Windows-Shell-Core\nDetection guidance:\n- Correlation of Registry key creation/modification events under known Run/Startup keys with new or unusual binary paths or script-based payloads. Multi-event detection includes registry modification followed by process execution from non-standard directories or abnormal parent-child process relationships.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1547.001"
+      ],
+      "score": 0.028594771241830064,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1574.007",
+      "kind": "technique",
+      "title": "Path Interception by PATH Environment Variable",
+      "text": "T1574.007 Path Interception by PATH Environment Variable\nTactics: stealth, execution\nPlatforms: Linux, macOS, Windows\nDescription: Adversaries may execute their own malicious payloads by hijacking environment variables used to load libraries. The PATH environment variable contains a list of directories (User and System) that the OS searches sequentially through in search of the binary that was called from a script or the command line. \n\nAdversaries can place a malicious program in an earlier entry in the list of directories stored in the PATH environment variable, resulting in the operating system executing the malicious binary rather than the legitimate binary when it searches sequentially through that PATH listing.\n\nFor example, on Windows if an adversary places a malicious program named \"net.exe\" in `C:\\example path`, which by default precedes `C:\\Windows\\system32\\net.exe` in the PATH environment variable, when \"net\" is executed from the command-line the `C:\\example path` will be called instead of the system's legitimate executable at `C:\\Windows\\system32\\net.exe`. Some methods of executing a program rely on the PATH environment variable to determine the locations that are searched when the path for the program is not given, such as executing programs from a Command and Scripting Interpreter.\n\nAdversaries may also directly modify the $PATH variable specifying the directories to be searched.  An adversary can modify the `$PATH` variable to point to a directory they have write access. When a program using the $PATH variable is called, the OS searches the specified directory and executes the malicious binary. On macOS, this can also be performed through modifying the $HOME variable. These variables can be modified using the command-line, launchctl, Unix Shell Configuration Modification, or modifying the `/etc/paths.d` folder contents.\nData sources: WinEventLog:Security, WinEventLog:Sysmon, auditd:SYSCALL, linux:osquery, macos:unifiedlog\nDetection guidance:\n- Abnormal modification of the PATH environment variable or registry keys controlling system paths, combined with execution of binaries named after legitimate system tools from user-writable directories. Defender correlates registry modifications, file creation of suspicious binaries, and process execution paths inconsistent with baseline system directories.\n- User modification of the $PATH environment variable in shell configuration files or direct runtime PATH changes, followed by execution of binaries from user-controlled directories. Defender observes file edits to ~/.bashrc, ~/.profile, or /etc/paths.d and process execution resolving to unexpected binary locations.\n- Modification of PATH or HOME environment variables through shell config files, launchctl, or /etc/paths.d entries, combined with process execution from attacker-controlled directories. Defender correlates file changes in /etc/paths.d with process execution resolving to malicious binaries.",
+      "platforms": [
+       "linux",
+       "macos",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1574.007"
+      ],
+      "score": 0.027972027972027972,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1555.004",
+      "kind": "technique",
+      "title": "Windows Credential Manager",
+      "text": "T1555.004 Windows Credential Manager\nTactics: credential-access\nPlatforms: Windows\nDescription: Adversaries may acquire credentials from the Windows Credential Manager. The Credential Manager stores credentials for signing into websites, applications, and/or devices that request authentication through NTLM or Kerberos in Credential Lockers (previously known as Windows Vaults).\n\nThe Windows Credential Manager separates website credentials from application or network credentials in two lockers. As part of Credentials from Web Browsers, Internet Explorer and Microsoft Edge website credentials are managed by the Credential Manager and are stored in the Web Credentials locker. Application and network credentials are stored in the Windows Credentials locker.\n\nCredential Lockers store credentials in encrypted `.vcrd` files, located under `%Systemdrive%\\Users\\\\[Username]\\AppData\\Local\\Microsoft\\\\[Vault/Credentials]\\`. The encryption key can be found in a file named Policy.vpol, typically located in the same folder as the credentials.\n\nAdversaries may list credentials managed by the Windows Credential Manager through several mechanisms. vaultcmd.exe is a native Windows executable that can be used to enumerate credentials stored in the Credential Locker through a command-line interface. Adversaries may also gather credentials by directly reading files located inside of the Credential Lockers. Windows APIs, such as CredEnumerateA, may also be absued to list credentials managed by the Credential Manager.\n\nAdversaries may also obtain credentials from credential backups. Credential backups and restorations may be performed by running rundll32.exe keymgr.dll KRShowKeyMgr then selecting the “Back up...” button on the “Stored User Names and Passwords” GUI.\n\nPassword recovery tools may also obtain plain text passwords from the Credential Manager.\nData sources: WinEventLog:Security, WinEventLog:Sysmon\nDetection guidance:\n- Detects unauthorized access to Windows Credential Manager through anomalous process execution (vaultcmd.exe, rundll32.exe keymgr.dll), suspicious API calls (CredEnumerateA), or direct file access to Credential Locker files. Correlates process creation with subsequent file reads of .vcrd/.vpol files under user Credential Locker directories.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1555.004"
+      ],
+      "score": 0.026881720430107527,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1546.002",
+      "kind": "technique",
+      "title": "Screensaver",
+      "text": "T1546.002 Screensaver\nTactics: privilege-escalation, persistence\nPlatforms: Windows\nDescription: Adversaries may establish persistence by executing malicious content triggered by user inactivity. Screensavers are programs that execute after a configurable time of user inactivity and consist of Portable Executable (PE) files with a .scr file extension. The Windows screensaver application scrnsave.scr is located in C:\\Windows\\System32\\, and C:\\Windows\\sysWOW64\\  on 64-bit Windows systems, along with screensavers included with base Windows installations.\n\nThe following screensaver settings are stored in the Registry (HKCU\\Control Panel\\Desktop\\) and could be manipulated to achieve persistence:\n\n* SCRNSAVE.exe - set to malicious PE path\n* ScreenSaveActive - set to '1' to enable the screensaver\n* ScreenSaverIsSecure - set to '0' to not require a password to unlock\n* ScreenSaveTimeout - sets user inactivity timeout before screensaver is executed\n\nAdversaries can use screensaver settings to maintain persistence by setting the screensaver to run malware after a certain timeframe of user inactivity.\nData sources: WinEventLog:Security, WinEventLog:Sysmon\nDetection guidance:\n- Unusual screensaver (.scr) executions correlated with recent registry modifications to HKCU\\Control Panel\\Desktop values such as SCRNSAVE.exe, ScreenSaveTimeout, and ScreenSaveActive. Detection focuses on PE image paths not consistent with known legitimate screensavers and triggered after user inactivity timeout.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1546.002"
+      ],
+      "score": 0.0261986301369863,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ],
+    "sigma_rules": [
+     {
+      "id": "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+      "kind": "sigma_rule",
+      "title": "Suspicious Process Created Via Wmic.EXE",
+      "text": "Suspicious Process Created Via Wmic.EXE\nLogsource: process_creation/windows\nTags: attack.execution, attack.t1047\nLevel: high\nDescription: Detects WMIC executing \"process call create\" with suspicious calls to processes such as \"rundll32\", \"regsrv32\", etc.\nDetection:\nselection:\n  CommandLine|contains|all:\n  - 'process '\n  - 'call '\n  - 'create '\n  CommandLine|contains:\n  - rundll32\n  - bitsadmin\n  - regsvr32\n  - 'cmd.exe /c '\n  - 'cmd.exe /k '\n  - 'cmd.exe /r '\n  - 'cmd /c '\n  - 'cmd /k '\n  - 'cmd /r '\n  - powershell\n  - pwsh\n  - certutil\n  - cscript\n  - wscript\n  - mshta\n  - \\Users\\Public\\\n  - \\Windows\\Temp\\\n  - \\AppData\\Local\\\n  - '%temp%'\n  - '%tmp%'\n  - '%ProgramData%'\n  - '%appdata%'\n  - '%comspec%'\n  - '%localappdata%'\ncondition: selection\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1047"
+      ],
+      "score": 0.03009207275993712,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "138d3531-8793-4f50-a2cd-f291b2863d78",
+      "kind": "sigma_rule",
+      "title": "Suspicious Service Path Modification",
+      "text": "Suspicious Service Path Modification\nLogsource: process_creation/windows\nTags: attack.persistence, attack.privilege-escalation, attack.t1543.003\nLevel: high\nDescription: Detects service path modification via the \"sc\" binary to a suspicious command or path\nDetection:\nselection:\n  Image|endswith: \\sc.exe\n  CommandLine|contains|all:\n  - config\n  - binPath\n  CommandLine|contains:\n  - powershell\n  - 'cmd '\n  - mshta\n  - wscript\n  - cscript\n  - rundll32\n  - svchost\n  - dllhost\n  - cmd.exe /c\n  - cmd.exe /k\n  - cmd.exe /r\n  - cmd /c\n  - cmd /k\n  - cmd /r\n  - C:\\Users\\Public\n  - \\Downloads\\\n  - \\Desktop\\\n  - \\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\\n  - C:\\Windows\\TEMP\\\n  - \\AppData\\Local\\Temp\ncondition: selection\nFalse positives: Unlikely",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1543.003"
+      ],
+      "score": 0.027623285131627734,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "502b42de-4306-40b4-9596-6f590c81f073",
+      "kind": "sigma_rule",
+      "title": "Local Accounts Discovery",
+      "text": "Local Accounts Discovery\nLogsource: process_creation/windows\nTags: attack.discovery, attack.t1033, attack.t1087.001\nLevel: low\nDescription: Local accounts, System Owner/User discovery using operating systems utilities\nDetection:\nselection_other_img:\n- Image|endswith:\n  - \\whoami.exe\n  - \\quser.exe\n  - \\qwinsta.exe\n- OriginalFileName:\n  - whoami.exe\n  - quser.exe\n  - qwinsta.exe\nselection_other_wmi:\n  Image|endswith: \\wmic.exe\n  CommandLine|contains|all:\n  - useraccount\n  - get\nselection_other_cmdkey:\n  Image|endswith: \\cmdkey.exe\n  CommandLine|contains: ' /l'\nselection_cmd:\n  Image|endswith: \\cmd.exe\n  CommandLine|contains|all:\n  - ' /c'\n  - 'dir '\n  - \\Users\\\nfilter_cmd:\n  CommandLine|contains: ' rmdir '\nselection_net:\n  Image|endswith:\n  - \\net.exe\n  - \\net1.exe\n  CommandLine|contains: user\nfilter_net:\n  CommandLine|contains:\n  - /domain\n  - /add\n  - /delete\n  - /active\n  - /expires\n  - /passwordreq\n  - /scriptpath\n  - /times\n  - /workstations\ncondition: (selection_cmd and not filter_cmd) or (selection_net and not filter_net)\n  or 1 of selection_other_*\nFalse positives: Legitimate administrator or user enumerates local users for legitimate reason",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1033",
+       "T1087.001"
+      ],
+      "score": 0.025932953826691967,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "a16980c2-0c56-4de0-9a79-17971979efdd",
+      "kind": "sigma_rule",
+      "title": "Cmd.EXE Missing Space Characters Execution Anomaly",
+      "text": "Cmd.EXE Missing Space Characters Execution Anomaly\nLogsource: process_creation/windows\nTags: attack.execution, attack.t1059.001\nLevel: high\nDescription: Detects Windows command lines that miss a space before or after the /c flag when running a command using the cmd.exe.\nThis could be a sign of obfuscation of a fat finger problem (typo by the developer).\nDetection:\nselection1:\n  CommandLine|contains:\n  - cmd.exe/c\n  - \\cmd/c\n  - '\"cmd/c'\n  - cmd.exe/k\n  - \\cmd/k\n  - '\"cmd/k'\n  - cmd.exe/r\n  - \\cmd/r\n  - '\"cmd/r'\nselection2:\n  CommandLine|contains:\n  - /cwhoami\n  - /cpowershell\n  - /cschtasks\n  - /cbitsadmin\n  - /ccertutil\n  - /kwhoami\n  - /kpowershell\n  - /kschtasks\n  - /kbitsadmin\n  - /kcertutil\nselection3:\n  CommandLine|contains:\n  - cmd.exe /c\n  - cmd /c\n  - cmd.exe /k\n  - cmd /k\n  - cmd.exe /r\n  - cmd /r\nfilter_generic:\n  CommandLine|contains:\n  - 'cmd.exe /c '\n  - 'cmd /c '\n  - 'cmd.exe /k '\n  - 'cmd /k '\n  - 'cmd.exe /r '\n  - 'cmd /r '\nfilter_fp:\n- CommandLine|contains: AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\node_modules\n- CommandLine|endswith: cmd.exe/c .\n- CommandLine: cmd.exe /c\n- CommandLine: cmd /c\ncondition: 1 of selection* and not 1 of filter_*\nFalse positives: Legitimate use of cmd.exe with no arguments e.g. via system(\"\") in C to enable ANSI escape codes",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1059.001"
+      ],
+      "score": 0.025816993464052286,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+      "kind": "sigma_rule",
+      "title": "Suspicious Modification Of Scheduled Tasks",
+      "text": "Suspicious Modification Of Scheduled Tasks\nLogsource: process_creation/windows\nTags: attack.privilege-escalation, attack.persistence, attack.execution, attack.t1053.005\nLevel: high\nDescription: Detects when an attacker tries to modify an already existing scheduled tasks to run from a suspicious location\nAttackers can create a simple looking task in order to avoid detection on creation as it's often the most focused on\nInstead they modify the task after creation to include their malicious payload\nDetection:\nselection_schtasks:\n  Image|endswith: \\schtasks.exe\n  CommandLine|contains|all:\n  - ' /Change '\n  - ' /TN '\nselection_susp_locations:\n  CommandLine|contains:\n  - \\AppData\\Local\\Temp\n  - \\AppData\\Roaming\\\n  - \\Users\\Public\\\n  - \\WINDOWS\\Temp\\\n  - \\Desktop\\\n  - \\Downloads\\\n  - \\Temporary Internet\n  - C:\\ProgramData\\\n  - C:\\Perflogs\\\n  - '%ProgramData%'\n  - '%appdata%'\n  - '%comspec%'\n  - '%localappdata%'\nselection_susp_images:\n  CommandLine|contains:\n  - regsvr32\n  - rundll32\n  - 'cmd /c '\n  - 'cmd /k '\n  - 'cmd /r '\n  - 'cmd.exe /c '\n  - 'cmd.exe /k '\n  - 'cmd.exe /r '\n  - powershell\n  - mshta\n  - wscript\n  - cscript\n  - certutil\n  - bitsadmin\n  - bash.exe\n  - 'bash '\n  - scrcons\n  - 'wmic '\n  - wmic.exe\n  - forfiles\n  - scriptrunner\n  - hh.exe\n  - 'hh '\ncondition: all of selection_*\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1053.005"
+      ],
+      "score": 0.025588697017268444,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "node": "triage",
+   "start": 0.165,
+   "end": 38.36,
+   "update": {
+    "verdict": {
+     "verdict": "true_positive",
+     "confidence": 0.9,
+     "technique_ids": [
+      "T1204.002"
+     ],
+     "reasoning": "Process image events[0].process.image = C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe launched by events[0].process.parent.image = C:\\Windows\\System32\\cmd.exe with command line events[0].process.command_line = \"CVE-2021-36934.exe -o C:\\Users\\wardog\\AppData\\Local\\Temp\\out\"; CVE-2021-36934 is a confirmed CISA-known-exploited Windows elevation-of-privilege vulnerability, and a CVE-named binary running from a user %TEMP% directory has no legitimate role, indicating execution of a malicious/exploit file.",
+     "evidence_refs": [
+      "events[0].process.image",
+      "events[0].process.command_line",
+      "events[0].process.parent.image",
+      "events[0].host",
+      "events[0].user"
+     ],
+     "ioc_refs": [
+      "C:\\Users\\wardog\\AppData\\Local\\Temp\\CVE-2021-36934.exe",
+      "CVE-2021-36934.exe",
+      "C:\\Users\\wardog\\AppData\\Local\\Temp\\out"
+     ]
+    },
+    "triage_schema_retries": 0,
+    "triage_tier": 1,
+    "triage_escalation": null,
+    "triage_runs": [
+     {
+      "tier": 1,
+      "model": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+      "ok": true,
+      "input_tokens": 10389,
+      "output_tokens": 2536,
+      "cost_usd": 0.0,
+      "llm_calls": 2,
+      "lookups": [
+       {
+        "name": "nvd_cve_lookup",
+        "args": {
+         "cve_id": "CVE-2021-36934"
+        },
+        "answer": {
+         "cwe": [],
+         "cvss": {
+          "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
+          "version": "3.1",
+          "severity": "HIGH",
+          "base_score": 7.8
+         },
+         "found": true,
+         "cve_id": "CVE-2021-36934",
+         "status": "Analyzed",
+         "published": "2021-07-22",
+         "cisa_added": "2022-02-10",
+         "description": "An elevation of privilege vulnerability exists because of overly permissive Access Control Lists (ACLs) on multiple system files, including the Security Accounts Manager (SAM) database. An attacker who successfully exploited this vulnerability could run arbitrary code with SYSTEM privileges. An attacker could then install programs; view, change, or delete data; or create new accounts with full user rights. An attacker must have the ability to execute code on a victim system to exploit this vulne",
+         "cisa_known_exploited": true
+        }
+       }
+      ],
+      "rejected": [],
+      "schema_retries": 0,
+      "error": null
+     }
+    ],
+    "triage_cost_usd": 0.0
+   }
+  },
+  {
+   "node": "route",
+   "start": 38.36,
+   "end": 38.595,
+   "update": {
+    "covering_rule_id": null,
+    "coverage": {
+     "covering_rule_id": null,
+     "checked": [
+      "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+      "138d3531-8793-4f50-a2cd-f291b2863d78",
+      "502b42de-4306-40b4-9596-6f590c81f073",
+      "a16980c2-0c56-4de0-9a79-17971979efdd",
+      "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b"
+     ],
+     "missing": [],
+     "broken": [],
+     "unavailable": null
+    }
+   }
+  },
+  {
+   "node": "rule_gen",
+   "start": 38.595,
+   "end": 54.838,
+   "update": {
+    "draft_rule": "title: 'T1204.002, T1068 process_creation: Image + CommandLine'\nid: 52737be4-e0af-58c6-9d40-61f1e61bf651\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, CommandLine.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - CVE-2021-36934.exe\n    Image|contains:\n    - AppData\\Local\\Temp\n    - Windows\\Temp\n    - Temp\\\\\n    CommandLine|contains:\n    - -o\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine\n  values; check against the local baseline before enabling\nlevel: high\n",
+    "rule_versions": [
+     "title: 'T1204.002, T1068 process_creation: Image + CommandLine'\nid: 52737be4-e0af-58c6-9d40-61f1e61bf651\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, CommandLine.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - CVE-2021-36934.exe\n    Image|contains:\n    - AppData\\Local\\Temp\n    - Windows\\Temp\n    - Temp\\\\\n    CommandLine|contains:\n    - -o\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine\n  values; check against the local baseline before enabling\nlevel: high\n"
+    ],
+    "attempts": 1,
+    "rulegen": {
+     "title": "CVE-2021-36934 Exploit Binary Execution From Temp Directory",
+     "technique_ids": [
+      "T1204.002",
+      "T1068"
+     ],
+     "schema_retries": 0,
+     "input_tokens": 4424,
+     "output_tokens": 767,
+     "llm_calls": 1,
+     "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+    }
+   }
+  },
+  {
+   "node": "validate",
+   "start": 54.838,
+   "end": 58.173,
+   "update": {
+    "validations": [
+     {
+      "rule_id": "52737be4-e0af-58c6-9d40-61f1e61bf651",
+      "compiled": true,
+      "compile_errors": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "fp_rate": 0.0,
+      "failed_samples": [
+       {
+        "sample_id": "day3-054",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-054/sysmon-6a4fd1b04d394bc2",
+        "note": "held-out T1204.002 attack, rule did not fire"
+       }
+      ],
+      "feedback": "TP: fires on 0/1 held-out T1068/T1204.002 attacks in process_creation; missed day3-054: compare their fields with the selection\nevidence: low (1 held-out positive): a pass here proves little, flag for human review\nbenign: fires on 0/62 benign_noisy events in process_creation\nnoise: 0/238 held-out pool events in process_creation fire",
+      "evidence": "low",
+      "procedure_recall": null,
+      "sibling_recall": null
+     }
+    ]
+   }
+  },
+  {
+   "node": "repair",
+   "start": 58.173,
+   "end": 102.429,
+   "update": {
+    "draft_rule": "title: 'T1204.002, T1068 process_creation: Image + CommandLine + ParentImage'\nid: d99ab938-bb06-542a-ac6e-080de79e3b5f\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, CommandLine, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|contains:\n    - \\AppData\\Local\\Temp\\\\\n    - \\Windows\\Temp\\\\\n    - \\Temp\\\\\n    CommandLine|contains:\n    - -o\n    - -out\n    - -output\n    - -p\n    - -pid\n    - -process\n    - -t\n    - -target\n    - -f\n    - -file\n    ParentImage|endswith:\n    - \\cmd.exe\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine,\n  ParentImage values; check against the local baseline before enabling\nlevel: high\n",
+    "rule_versions": [
+     "title: 'T1204.002, T1068 process_creation: Image + CommandLine + ParentImage'\nid: d99ab938-bb06-542a-ac6e-080de79e3b5f\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, CommandLine, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|contains:\n    - \\AppData\\Local\\Temp\\\\\n    - \\Windows\\Temp\\\\\n    - \\Temp\\\\\n    CommandLine|contains:\n    - -o\n    - -out\n    - -output\n    - -p\n    - -pid\n    - -process\n    - -t\n    - -target\n    - -f\n    - -file\n    ParentImage|endswith:\n    - \\cmd.exe\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine,\n  ParentImage values; check against the local baseline before enabling\nlevel: high\n"
+    ],
+    "attempts": 2,
+    "repairs": [
+     {
+      "attempt": 2,
+      "title": "Suspicious Executable from Temp Directory with Exploit-Like Arguments",
+      "technique_ids": [
+       "T1204.002",
+       "T1068"
+      ],
+      "schema_retries": 0,
+      "input_tokens": 5021,
+      "output_tokens": 2308,
+      "llm_calls": 1,
+      "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+     }
+    ],
+    "repair_failed": false
+   }
+  },
+  {
+   "node": "validate",
+   "start": 102.429,
+   "end": 102.461,
+   "update": {
+    "validations": [
+     {
+      "rule_id": "d99ab938-bb06-542a-ac6e-080de79e3b5f",
+      "compiled": true,
+      "compile_errors": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "fp_rate": 0.0,
+      "failed_samples": [
+       {
+        "sample_id": "day3-054",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-054/sysmon-6a4fd1b04d394bc2",
+        "note": "held-out T1204.002 attack, rule did not fire"
+       }
+      ],
+      "feedback": "TP: fires on 0/1 held-out T1068/T1204.002 attacks in process_creation; missed day3-054: compare their fields with the selection\nevidence: low (1 held-out positive): a pass here proves little, flag for human review\nbenign: fires on 0/62 benign_noisy events in process_creation\nnoise: 0/238 held-out pool events in process_creation fire",
+      "evidence": "low",
+      "procedure_recall": null,
+      "sibling_recall": null
+     }
+    ]
+   }
+  },
+  {
+   "node": "repair",
+   "start": 102.461,
+   "end": 144.578,
+   "update": {
+    "draft_rule": "title: 'T1204.002, T1068 process_creation: Image + ParentImage'\nid: 2c5a0899-ef37-5371-a78d-a5a9e7ee8407\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1_1:\n    Image|contains:\n    - \\CVE-\n    ParentImage|endswith:\n    - cmd.exe\n    - powershell.exe\n    - pwsh.exe\n  selection1_2:\n    Image|contains:\n    - \\Temp\\\\\n    - \\Windows\\Temp\\\\\n    - \\AppData\\Local\\Temp\\\\\n  condition: all of selection1_*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, ParentImage\n  values; check against the local baseline before enabling\nlevel: high\n",
+    "rule_versions": [
+     "title: 'T1204.002, T1068 process_creation: Image + ParentImage'\nid: 2c5a0899-ef37-5371-a78d-a5a9e7ee8407\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1_1:\n    Image|contains:\n    - \\CVE-\n    ParentImage|endswith:\n    - cmd.exe\n    - powershell.exe\n    - pwsh.exe\n  selection1_2:\n    Image|contains:\n    - \\Temp\\\\\n    - \\Windows\\Temp\\\\\n    - \\AppData\\Local\\Temp\\\\\n  condition: all of selection1_*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, ParentImage\n  values; check against the local baseline before enabling\nlevel: high\n"
+    ],
+    "attempts": 3,
+    "repairs": [
+     {
+      "attempt": 3,
+      "title": "CVE-Named Exploit Binary Execution from Temp Directory",
+      "technique_ids": [
+       "T1204.002",
+       "T1068"
+      ],
+      "schema_retries": 0,
+      "input_tokens": 5065,
+      "output_tokens": 2148,
+      "llm_calls": 1,
+      "model": "openrouter:nvidia/nemotron-3-ultra-550b-a55b:free"
+     }
+    ],
+    "repair_failed": false
+   }
+  },
+  {
+   "node": "validate",
+   "start": 144.578,
+   "end": 144.603,
+   "update": {
+    "validations": [
+     {
+      "rule_id": "2c5a0899-ef37-5371-a78d-a5a9e7ee8407",
+      "compiled": true,
+      "compile_errors": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "fp_rate": 0.0,
+      "failed_samples": [
+       {
+        "sample_id": "day3-054",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-054/sysmon-6a4fd1b04d394bc2",
+        "note": "held-out T1204.002 attack, rule did not fire"
+       }
+      ],
+      "feedback": "TP: fires on 0/1 held-out T1068/T1204.002 attacks in process_creation; missed day3-054: compare their fields with the selection\nevidence: low (1 held-out positive): a pass here proves little, flag for human review\nbenign: fires on 0/62 benign_noisy events in process_creation\nnoise: 0/238 held-out pool events in process_creation fire",
+      "evidence": "low",
+      "procedure_recall": null,
+      "sibling_recall": null
+     }
+    ]
+   }
+  },
+  {
+   "node": "output",
+   "start": 144.603,
+   "end": 144.603,
+   "update": {
+    "draft_rule": "title: 'T1204.002, T1068 process_creation: Image + ParentImage'\nid: 2c5a0899-ef37-5371-a78d-a5a9e7ee8407\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1204.002, T1068: fires\n  on process_creation events matching 1 selection on Image, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-24'\ntags:\n- attack.t1204.002\n- attack.t1068\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1_1:\n    Image|contains:\n    - \\CVE-\n    ParentImage|endswith:\n    - cmd.exe\n    - powershell.exe\n    - pwsh.exe\n  selection1_2:\n    Image|contains:\n    - \\Temp\\\\\n    - \\Windows\\Temp\\\\\n    - \\AppData\\Local\\Temp\\\\\n  condition: all of selection1_*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, ParentImage\n  values; check against the local baseline before enabling\nlevel: high\n",
+    "best_attempt": 3,
+    "outcome": "rule_failed"
+   }
+  }
+ ]
+}

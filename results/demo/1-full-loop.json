@@ -1,0 +1,510 @@
+{
+ "meta": {
+  "name": "1-full-loop",
+  "alert": {
+   "alert_id": "day3-157",
+   "detection_name": "Atomic capture — manual review",
+   "severity": "medium",
+   "events": [
+    {
+     "event_id": "sysmon-1247510",
+     "timestamp": "2020-09-18T19:00:21.133000Z",
+     "source": "windows_sysmon",
+     "host": "WORKSTATION5.theshire.local",
+     "user": "THESHIRE\\pgustavo",
+     "process": {
+      "pid": null,
+      "image": "C:\\Windows\\System32\\cmd.exe",
+      "command_line": "\"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcelXLL.exe 172.18.39.6 C:\\\\programdata\\calc.xll ",
+      "parent": {
+       "pid": null,
+       "image": "C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe",
+       "command_line": "\"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+       "parent": null
+      }
+     },
+     "network": null,
+     "registry": null,
+     "raw": {
+      "SeverityValue": 2,
+      "EventReceivedTime": "2020-09-18 15:00:21",
+      "EventID": 1,
+      "ProviderGuid": "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+      "ExecutionProcessID": 9848,
+      "Channel": "Microsoft-Windows-Sysmon/Operational",
+      "host": "wec.internal.cloudapp.net",
+      "AccountType": "User",
+      "ProcessGuid": "{b34bc01c-03c5-5f65-620c-000000000400}",
+      "ParentImage": "C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe",
+      "LogonGuid": "{b34bc01c-8288-5f63-cd78-2b0000000000}",
+      "Opcode": "Info",
+      "EventTime": "2020-09-18 15:00:21",
+      "SourceModuleType": "im_msvistalog",
+      "AccountName": "SYSTEM",
+      "CommandLine": "\"cmd.exe\" /c C:\\Users\\pgustavo\\Desktop\\MoveExcelXLL.exe 172.18.39.6 C:\\\\programdata\\calc.xll ",
+      "Domain": "NT AUTHORITY",
+      "@version": "1",
+      "OpcodeValue": 0,
+      "Severity": "INFO",
+      "User": "THESHIRE\\pgustavo",
+      "Hashes": "SHA1=8DCA9749CD48D286950E7A9FA1088C937CBCCAD4,MD5=D7AB69FAD18D4A643D84A271DFC0DBDF,SHA256=FF79D3C4A0B7EB191783C323AB8363EBD1FD10BE58D8BCC96B07067743CA81D5,IMPHASH=272245E2988E1E430500B852C4FB5E18",
+      "SourceName": "Microsoft-Windows-Sysmon",
+      "CurrentDirectory": "C:\\Users\\pgustavo\\Desktop\\",
+      "Description": "Windows Command Processor",
+      "Category": "Process Create (rule: ProcessCreate)",
+      "Company": "Microsoft Corporation",
+      "Keywords": -9223372036854775808,
+      "FileVersion": "10.0.18362.449 (WinBuild.160101.0800)",
+      "IntegrityLevel": "Medium",
+      "UserID": "S-1-5-18",
+      "TerminalSessionId": "2",
+      "ThreadID": 7976,
+      "EventType": "INFO",
+      "ParentProcessGuid": "{b34bc01c-0266-5f65-540c-000000000400}",
+      "@timestamp": "2020-09-18T19:00:21.635Z",
+      "port": 64545,
+      "ParentCommandLine": "\"C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe\" ",
+      "RecordNumber": 1247510,
+      "Task": 1,
+      "ParentProcessId": "5520",
+      "SourceModuleName": "eventlog",
+      "LogonId": "0x2b78cd",
+      "Version": 5,
+      "Product": "Microsoft® Windows® Operating System",
+      "Image": "C:\\Windows\\System32\\cmd.exe",
+      "OriginalFileName": "Cmd.Exe",
+      "UtcTime": "2020-09-18 19:00:21.133",
+      "Hostname": "WORKSTATION5.theshire.local",
+      "RuleName": "-",
+      "tags": [
+       "mordorDataset"
+      ]
+     },
+     "untrusted_fields": [
+      "process.command_line",
+      "process.image",
+      "process.parent.command_line"
+     ]
+    }
+   ]
+  },
+  "models": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+  "recorded_at": "2026-11-27T18:43:29+00:00",
+  "path": [
+   "ingest",
+   "enrich",
+   "triage",
+   "route",
+   "rule_gen",
+   "validate",
+   "repair",
+   "validate",
+   "output"
+  ],
+  "outcome": "rule_passed"
+ },
+ "events": [
+  {
+   "node": "ingest",
+   "start": 0.0,
+   "end": 0.003,
+   "update": null
+  },
+  {
+   "node": "enrich",
+   "start": 0.003,
+   "end": 5.875,
+   "update": {
+    "techniques": [
+     {
+      "id": "T1546.008",
+      "kind": "technique",
+      "title": "Accessibility Features",
+      "text": "T1546.008 Accessibility Features\nTactics: privilege-escalation, persistence\nPlatforms: Windows\nDescription: Adversaries may establish persistence and/or elevate privileges by executing malicious content triggered by accessibility features. Windows contains accessibility features that may be launched with a key combination before a user has logged in (ex: when the user is on the Windows logon screen). An adversary can modify the way these programs are launched to get a command prompt or backdoor without logging in to the system.\n\nTwo common accessibility programs are C:\\Windows\\System32\\sethc.exe, launched when the shift key is pressed five times and C:\\Windows\\System32\\utilman.exe, launched when the Windows + U key combination is pressed. The sethc.exe program is often referred to as \"sticky keys\", and has been used by adversaries for unauthenticated access through a remote desktop login screen. \n\nDepending on the version of Windows, an adversary may take advantage of these features in different ways. Common methods used by adversaries include replacing accessibility feature binaries or pointers/references to these binaries in the Registry. In newer versions of Windows, the replaced binary needs to be digitally signed for x64 systems, the binary must reside in %systemdir%\\, and it must be protected by Windows File or Resource Protection (WFP/WRP).  The Image File Execution Options Injection debugger method was likely discovered as a potential workaround because it does not require the corresponding accessibility feature binary to be replaced.\n\nFor simple binary replacement on Windows XP and later as well as and Windows Server 2003/R2 and later, for example, the program (e.g., C:\\Windows\\System32\\utilman.exe) may be replaced with \"cmd.exe\" (or another program that provides backdoor access). Subsequently, pressing the appropriate key combination at the login screen while sitting at the keyboard or when connected over Remote Desktop Protocol will cause the replaced file to be executed with SYSTEM privileges. \n\nOther accessibility features exist that may also be leveraged in a similar fashion: \n\n* On-Screen Keyboard: C:\\Windows\\System32\\osk.exe\n* Magnifier: C:\\Windows\\System32\\Magnify.exe\n* Narrator: C:\\Windows\\System32\\Narrator.exe\n* Display Switcher: C:\\Windows\\System32\\DisplaySwitch.exe\n* App Switcher: C:\\Windows\\System32\\AtBroker.exe\nData sources: WinEventLog:Sysmon\nDetection guidance:\n- Defenders can observe suspicious replacement or tampering of system accessibility binaries (e.g., utilman.exe, sethc.exe, osk.exe) and anomalous modifications to registry keys used to redirect accessibility programs (such as IFEO keys). Additionally, execution of cmd.exe or other suspicious binaries triggered from the login screen by SYSTEM can be correlated as part of a behavior chain.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1546.008"
+      ],
+      "score": 0.03028233151183971,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1204.002",
+      "kind": "technique",
+      "title": "Malicious File",
+      "text": "T1204.002 Malicious File\nTactics: execution\nPlatforms: Linux, macOS, Windows\nDescription: An adversary may rely upon a user opening a malicious file in order to gain execution. Users may be subjected to social engineering to get them to open a file that will lead to code execution. This user action will typically be observed as follow-on behavior from Spearphishing Attachment. Adversaries may use several types of files that require a user to execute them, including .doc, .pdf, .xls, .rtf, .scr, .exe, .lnk, .pif, .cpl, .reg, and .iso.\n\nAdversaries may employ various forms of Masquerading and Obfuscated Files or Information to increase the likelihood that a user will open and successfully execute a malicious file. These methods may include using a familiar naming convention and/or password protecting the file and supplying instructions to a user on how to open it. \n\nWhile Malicious File frequently occurs shortly after Initial Access it may occur at other phases of an intrusion, such as when an adversary places a file in a shared directory or on a user's desktop hoping that a user will click on it. This activity may also be seen shortly after Internal Spearphishing.\nData sources: WinEventLog:Sysmon, macos:unifiedlog, macos:endpointsecurity, auditd:SYSCALL\nDetection guidance:\n- User opens a file delivered by email, web, chat, or share. The handler application (Word/PDF reader/archiver) creates a file in user-controlled paths (Downloads, Temp, Desktop) and then spawns a new or unusual child process (e.g., powershell.exe, wscript.exe, cmd.exe, regsvr32.exe, rundll32.exe, msiexec.exe). Optional precursors include FileStreamCreated (URL/UNC) and Office → system32 batch writes.\n- User opens a downloaded document/installer leading to EndpointSecurity file create in ~/Downloads or ~/Library paths then an exec of a suspicious utility (osascript, bash/zsh, curl, chmod, open with -a Terminal). Correlates File Creation with subsequent process exec and, optionally, quarantine/LSQuarantine events.\n- User or desktop application writes a new file to ~/Downloads, /tmp, or mounted removable media followed by execve of a risky interpreter/loader (bash, sh, python, perl, php, node, curl|wget piping to sh, ld.so, rdesktop, xdg-open - with unusual args). Uses auditd PATH+SYSCALL (open/creat/write/rename) with execve event linking.",
+      "platforms": [
+       "linux",
+       "macos",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1204.002"
+      ],
+      "score": 0.030158730158730156,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1059.003",
+      "kind": "technique",
+      "title": "Windows Command Shell",
+      "text": "T1059.003 Windows Command Shell\nTactics: execution\nPlatforms: Windows\nDescription: Adversaries may abuse the Windows command shell for execution. The Windows command shell (cmd) is the primary command prompt on Windows systems. The Windows command prompt can be used to control almost any aspect of a system, with various permission levels required for different subsets of commands. The command prompt can be invoked remotely via Remote Services such as SSH.\n\nBatch files (ex: .bat or .cmd) also provide the shell with a list of sequential commands to run, as well as normal scripting operations such as conditionals and loops. Common uses of batch files include long or repetitive tasks, or the need to run the same set of commands on multiple systems.\n\nAdversaries may leverage cmd to execute various commands and payloads. Common uses include cmd to execute a single command, or abusing cmd interactively with input and output forwarded over a command and control channel.\nData sources: WinEventLog:Security, WinEventLog:Sysmon, EDR:scriptblock\nDetection guidance:\n- Detects interactive or scripted abuse of cmd.exe, batch files, or shell invocation chains. Focuses on parent-child relationships (e.g., cmd.exe launched from unusual parents), anomalous command-line parameters, and chaining with discovery, credential access, or lateral movement behaviors.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1059.003"
+      ],
+      "score": 0.029411764705882353,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1574.008",
+      "kind": "technique",
+      "title": "Path Interception by Search Order Hijacking",
+      "text": "T1574.008 Path Interception by Search Order Hijacking\nTactics: stealth, execution\nPlatforms: Windows\nDescription: Adversaries may execute their own malicious payloads by hijacking the search order used to load other programs. Because some programs do not call other programs using the full path, adversaries may place their own file in the directory where the calling program is located, causing the operating system to launch their malicious software at the request of the calling program.\n\nSearch order hijacking occurs when an adversary abuses the order in which Windows searches for programs that are not given a path. Unlike DLL search order hijacking, the search order differs depending on the method that is used to execute the program.    However, it is common for Windows to search in the directory of the initiating program before searching through the Windows system directory. An adversary who finds a program vulnerable to search order hijacking (i.e., a program that does not specify the path to an executable) may take advantage of this vulnerability by creating a program named after the improperly specified program and placing it within the initiating program's directory.\n\nFor example, \"example.exe\" runs \"cmd.exe\" with the command-line argument net user. An adversary may place a program called \"net.exe\" within the same directory as example.exe, \"net.exe\" will be run instead of the Windows system utility net. In addition, if an adversary places a program called \"net.com\" in the same directory as \"net.exe\", then cmd.exe /C net user will execute \"net.com\" instead of \"net.exe\" due to the order of executable extensions defined under PATHEXT. \n\nSearch order hijacking is also a common practice for hijacking DLL loads and is covered in DLL.\nData sources: WinEventLog:Sysmon\nDetection guidance:\n- Processes executing binaries named after legitimate system utilities (e.g., net.exe, findstr.exe, python.exe) from non-standard or application-specific directories, combined with file creation or modification events for such binaries. Defender correlates file writes in vulnerable directories, process execution paths inconsistent with baseline system paths, and abnormal parent-child relationships in process lineage.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1574.008"
+      ],
+      "score": 0.028438886647841874,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1218.004",
+      "kind": "technique",
+      "title": "InstallUtil",
+      "text": "T1218.004 InstallUtil\nTactics: stealth\nPlatforms: Windows\nDescription: Adversaries may use InstallUtil to proxy execution of code through a trusted Windows utility. InstallUtil is a command-line utility that allows for installation and uninstallation of resources by executing specific installer components specified in .NET binaries.  The InstallUtil binary may also be digitally signed by Microsoft and located in the .NET directories on a Windows system: C:\\Windows\\Microsoft.NET\\Framework\\v<version>\\InstallUtil.exe and C:\\Windows\\Microsoft.NET\\Framework64\\v<version>\\InstallUtil.exe.\n\nInstallUtil may also be used to bypass application control through use of attributes within the binary that execute the class decorated with the attribute [System.ComponentModel.RunInstaller(true)].\nData sources: WinEventLog:PowerShell, WinEventLog:Sysmon\nDetection guidance:\n- Execution of InstallUtil.exe from .NET framework directories with arguments specifying non-standard or attacker-supplied assemblies, especially when followed by suspicious child process creation or script execution. Detection also includes correlation of newly created binaries prior to InstallUtil invocation and anomalous command-line usage compared to historical baselines.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1218.004"
+      ],
+      "score": 0.02654569892473118,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ],
+    "sigma_rules": [
+     {
+      "id": "a16980c2-0c56-4de0-9a79-17971979efdd",
+      "kind": "sigma_rule",
+      "title": "Cmd.EXE Missing Space Characters Execution Anomaly",
+      "text": "Cmd.EXE Missing Space Characters Execution Anomaly\nLogsource: process_creation/windows\nTags: attack.execution, attack.t1059.001\nLevel: high\nDescription: Detects Windows command lines that miss a space before or after the /c flag when running a command using the cmd.exe.\nThis could be a sign of obfuscation of a fat finger problem (typo by the developer).\nDetection:\nselection1:\n  CommandLine|contains:\n  - cmd.exe/c\n  - \\cmd/c\n  - '\"cmd/c'\n  - cmd.exe/k\n  - \\cmd/k\n  - '\"cmd/k'\n  - cmd.exe/r\n  - \\cmd/r\n  - '\"cmd/r'\nselection2:\n  CommandLine|contains:\n  - /cwhoami\n  - /cpowershell\n  - /cschtasks\n  - /cbitsadmin\n  - /ccertutil\n  - /kwhoami\n  - /kpowershell\n  - /kschtasks\n  - /kbitsadmin\n  - /kcertutil\nselection3:\n  CommandLine|contains:\n  - cmd.exe /c\n  - cmd /c\n  - cmd.exe /k\n  - cmd /k\n  - cmd.exe /r\n  - cmd /r\nfilter_generic:\n  CommandLine|contains:\n  - 'cmd.exe /c '\n  - 'cmd /c '\n  - 'cmd.exe /k '\n  - 'cmd /k '\n  - 'cmd.exe /r '\n  - 'cmd /r '\nfilter_fp:\n- CommandLine|contains: AppData\\Local\\Programs\\Microsoft VS Code\\resources\\app\\node_modules\n- CommandLine|endswith: cmd.exe/c .\n- CommandLine: cmd.exe /c\n- CommandLine: cmd /c\ncondition: 1 of selection* and not 1 of filter_*\nFalse positives: Legitimate use of cmd.exe with no arguments e.g. via system(\"\") in C to enable ANSI escape codes",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1059.001"
+      ],
+      "score": 0.02877846790890269,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+      "kind": "sigma_rule",
+      "title": "Suspicious Modification Of Scheduled Tasks",
+      "text": "Suspicious Modification Of Scheduled Tasks\nLogsource: process_creation/windows\nTags: attack.privilege-escalation, attack.persistence, attack.execution, attack.t1053.005\nLevel: high\nDescription: Detects when an attacker tries to modify an already existing scheduled tasks to run from a suspicious location\nAttackers can create a simple looking task in order to avoid detection on creation as it's often the most focused on\nInstead they modify the task after creation to include their malicious payload\nDetection:\nselection_schtasks:\n  Image|endswith: \\schtasks.exe\n  CommandLine|contains|all:\n  - ' /Change '\n  - ' /TN '\nselection_susp_locations:\n  CommandLine|contains:\n  - \\AppData\\Local\\Temp\n  - \\AppData\\Roaming\\\n  - \\Users\\Public\\\n  - \\WINDOWS\\Temp\\\n  - \\Desktop\\\n  - \\Downloads\\\n  - \\Temporary Internet\n  - C:\\ProgramData\\\n  - C:\\Perflogs\\\n  - '%ProgramData%'\n  - '%appdata%'\n  - '%comspec%'\n  - '%localappdata%'\nselection_susp_images:\n  CommandLine|contains:\n  - regsvr32\n  - rundll32\n  - 'cmd /c '\n  - 'cmd /k '\n  - 'cmd /r '\n  - 'cmd.exe /c '\n  - 'cmd.exe /k '\n  - 'cmd.exe /r '\n  - powershell\n  - mshta\n  - wscript\n  - cscript\n  - certutil\n  - bitsadmin\n  - bash.exe\n  - 'bash '\n  - scrcons\n  - 'wmic '\n  - wmic.exe\n  - forfiles\n  - scriptrunner\n  - hh.exe\n  - 'hh '\ncondition: all of selection_*\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1053.005"
+      ],
+      "score": 0.025739237015474183,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+      "kind": "sigma_rule",
+      "title": "Csc.EXE Execution Form Potentially Suspicious Parent",
+      "text": "Csc.EXE Execution Form Potentially Suspicious Parent\nLogsource: process_creation/windows\nTags: attack.execution, attack.stealth, attack.t1059.005, attack.t1059.007, attack.t1218.005, attack.t1027.004\nLevel: high\nDescription: Detects a potentially suspicious parent of \"csc.exe\", which could be a sign of payload delivery.\nDetection:\nselection_img:\n- Image|endswith: \\csc.exe\n- OriginalFileName: csc.exe\nselection_parent_generic:\n  ParentImage|endswith:\n  - \\cscript.exe\n  - \\excel.exe\n  - \\mshta.exe\n  - \\onenote.exe\n  - \\outlook.exe\n  - \\powerpnt.exe\n  - \\winword.exe\n  - \\wscript.exe\nselection_parent_powershell:\n  ParentImage|endswith:\n  - \\powershell.exe\n  - \\pwsh.exe\n  ParentCommandLine|contains:\n  - '-Encoded '\n  - FromBase64String\nselection_parent_susp_location:\n- ParentCommandLine|re: (?:[Pp]rogram[Dd]ata|%(?:[Ll]ocal)?[Aa]pp[Dd]ata%|\\\\[Aa]pp[Dd]ata\\\\(?:[Ll]ocal(?:[Ll]ow)?|[Rr]oaming))\\\\[^\\\\]{1,256}$\n- ParentCommandLine|contains:\n  - :\\PerfLogs\\\n  - :\\Users\\Public\\\n  - :\\Windows\\Temp\\\n  - \\Temporary Internet\n- ParentCommandLine|contains|all:\n  - :\\Users\\\n  - \\Favorites\\\n- ParentCommandLine|contains|all:\n  - :\\Users\\\n  - \\Favourites\\\n- ParentCommandLine|contains|all:\n  - :\\Users\\\n  - \\Contacts\\\n- ParentCommandLine|contains|all:\n  - :\\Users\\\n  - \\Pictures\\\nfilter_main_programfiles:\n  ParentImage|startswith:\n  - C:\\Program Files (x86)\\\n  - C:\\Program Files\\\nfilter_main_sdiagnhost:\n  ParentImage: C:\\Windows\\System32\\sdiagnhost.exe\nfilter_main_w3p:\n  ParentImage: C:\\Windows\\System32\\inetsrv\\w3wp.exe\nfilter_optional_chocolatey:\n  ParentImage: C:\\ProgramData\\chocolatey\\choco.exe\nfilter_optional_defender:\n  ParentCommandLine|contains: \\ProgramData\\Microsoft\\Windows Defender Advanced Threat\n    Protection\nfilter_optional_ansible:\n  ParentCommandLine|contains:\n  - JwB7ACIAZgBhAGkAbABlAGQAIgA6AHQAcgB1AGUALAAiAG0AcwBnACIAOgAiAEEAbgBzAGkAYgBsAGUAIAByAGUAcQB1AGkAcgBlAHMAIABQAG8AdwBlAHIAUwBoAGUAbABsACAAdgAzAC4AMAAgAG8AcgAgAG4AZQB3AGUAcgAiAH0AJw\n  - cAewAiAGYAYQBpAGwAZQBkACIAOgB0AHIAdQBlACwAIgBtAHMAZwAiADoAIgBBAG4AcwBpAGIAbABlACAAcgBlAHEAdQBpAHIAZQBzACAAUABvAHcAZQByAFMAaABlAGwAbAAgAHYAMwAuADAAIABvAHIAIABuAGUAdwBlAHIAIgB9ACcA\n  - nAHsAIgBmAGEAaQBsAGUAZAAiADoAdAByAHUAZQAsACIAbQBzAGcAIgA6ACIAQQBuAHMAaQBiAGwAZQAgAHIAZQBxAHUAaQByAGUAcwAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB2ADMALgAwACAAbwByACAAbgBlAHcAZQByACIAfQAnA\ncon\n... (truncated)\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1059.005",
+       "T1059.007",
+       "T1218.005",
+       "T1027.004"
+      ],
+      "score": 0.02548562548562549,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "dcaa3f04-70c3-427a-80b4-b870d73c94c4",
+      "kind": "sigma_rule",
+      "title": "Dynamic .NET Compilation Via Csc.EXE",
+      "text": "Dynamic .NET Compilation Via Csc.EXE\nLogsource: process_creation/windows\nTags: attack.stealth, attack.t1027.004\nLevel: medium\nDescription: Detects execution of \"csc.exe\" to compile .NET code. Attackers often leverage this to compile code on the fly and use it in other stages.\nDetection:\nselection_img:\n  Image|endswith: \\csc.exe\nselection_susp_location_1:\n  CommandLine|contains:\n  - :\\Perflogs\\\n  - :\\Users\\Public\\\n  - \\AppData\\Local\\Temp\\\n  - \\Temporary Internet\n  - \\Windows\\Temp\\\nselection_susp_location_2:\n- CommandLine|contains|all:\n  - :\\Users\\\n  - \\Favorites\\\n- CommandLine|contains|all:\n  - :\\Users\\\n  - \\Favourites\\\n- CommandLine|contains|all:\n  - :\\Users\\\n  - \\Contacts\\\n- CommandLine|contains|all:\n  - :\\Users\\\n  - \\Pictures\\\nselection_susp_location_3:\n  CommandLine|re: (?:[Pp]rogram[Dd]ata|%(?:[Ll]ocal)?[Aa]pp[Dd]ata%|\\\\[Aa]pp[Dd]ata\\\\(?:[Ll]ocal(?:[Ll]ow)?|[Rr]oaming))\\\\[^\\\\]{1,256}$\nfilter_main_programfiles:\n  ParentImage|startswith:\n  - C:\\Program Files (x86)\\\n  - C:\\Program Files\\\nfilter_main_sdiagnhost:\n  ParentImage: C:\\Windows\\System32\\sdiagnhost.exe\nfilter_main_w3p:\n  ParentImage: C:\\Windows\\System32\\inetsrv\\w3wp.exe\nfilter_optional_chocolatey:\n  ParentImage:\n  - C:\\ProgramData\\chocolatey\\choco.exe\n  - C:\\ProgramData\\chocolatey\\tools\\shimgen.exe\nfilter_optional_defender:\n  ParentCommandLine|contains: \\ProgramData\\Microsoft\\Windows Defender Advanced Threat\n    Protection\nfilter_optional_ansible:\n  ParentCommandLine|contains:\n  - JwB7ACIAZgBhAGkAbABlAGQAIgA6AHQAcgB1AGUALAAiAG0AcwBnACIAOgAiAEEAbgBzAGkAYgBsAGUAIAByAGUAcQB1AGkAcgBlAHMAIABQAG8AdwBlAHIAUwBoAGUAbABsACAAdgAzAC4AMAAgAG8AcgAgAG4AZQB3AGUAcgAiAH0AJw\n  - cAewAiAGYAYQBpAGwAZQBkACIAOgB0AHIAdQBlACwAIgBtAHMAZwAiADoAIgBBAG4AcwBpAGIAbABlACAAcgBlAHEAdQBpAHIAZQBzACAAUABvAHcAZQByAFMAaABlAGwAbAAgAHYAMwAuADAAIABvAHIAIABuAGUAdwBlAHIAIgB9ACcA\n  - nAHsAIgBmAGEAaQBsAGUAZAAiADoAdAByAHUAZQAsACIAbQBzAGcAIgA6ACIAQQBuAHMAaQBiAGwAZQAgAHIAZQBxAHUAaQByAGUAcwAgAFAAbwB3AGUAcgBTAGgAZQBsAGwAIAB2ADMALgAwACAAbwByACAAbgBlAHcAZQByACIAfQAnA\ncondition: selection_img and 1 of selection_susp_location_* and not 1 of filter_main_*\n  and not 1 of filter_optional_*\nFalse positives: Legitimate software from program files - https://twitter.com/gN3mes1s/status/1206874118282448897; Legitimate Microsoft software - https://twitter.com/gabriele_pippi/status/1206907900268072962; Ansible",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1027.004"
+      ],
+      "score": 0.024269005847953218,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d",
+      "kind": "sigma_rule",
+      "title": "Cmd Launched with Hidden Start Flags to Suspicious Targets",
+      "text": "Cmd Launched with Hidden Start Flags to Suspicious Targets\nLogsource: process_creation/windows\nTags: attack.stealth, attack.t1564.003\nLevel: medium\nDescription: Detects cmd.exe executing commands with the \"start\" utility using \"/b\" (no window) or \"/min\" (minimized) flags.\nTo reduce false positives from standard background tasks, detection is restricted to scenarios where the target is a known script extension or located in suspicious temporary/public directories.\nThis technique was observed in Chaos, DarkSide, and Emotet malware campaigns.\nDetection:\nselection_cmd_img:\n- Image|endswith: \\cmd.exe\n- OriginalFileName: Cmd.Exe\nselection_cmd_hidden_start_1:\n  CommandLine|contains|windash:\n  - 'start '\n  - start/b\n  - start/min\nselection_cmd_hidden_start_2:\n  CommandLine|contains|windash:\n  - '/b '\n  - /b\"\n  - '/min '\n  - /min\"\nselection_cli_uncommon_location:\n  CommandLine|contains:\n  - :\\Perflogs\\\n  - :\\Temp\\\n  - :\\Users\\Default\\\n  - :\\Windows\\Temp\\\n  - \\AppData\\Roaming\\\n  - \\Contacts\\\n  - \\Documents\\\n  - \\Downloads\\\n  - \\Favorites\\\n  - \\Favourites\\\n  - \\inetpub\\\n  - \\Music\\\n  - \\Photos\\\n  - \\Temporary Internet\\\n  - \\Users\\Public\\\n  - \\Videos\\\nselection_cli_susp_extension:\n  CommandLine|contains:\n  - .bat\n  - .cmd\n  - .cpl\n  - .hta\n  - .js\n  - .ps1\n  - .scr\n  - .vbe\n  - .vbs\nselection_cli_susp_pattern:\n  CommandLine|contains:\n  - ' -nop '\n  - ' -sta '\n  - .downloadfile(\n  - .downloadstring(\n  - '-noni '\n  - '-w hidden '\ncondition: all of selection_cmd_* and 1 of selection_cli_*\nFalse positives: Legitimate administrative scripts running from temporary folders.; Niche software updaters utilizing hidden batch files in ProgramData.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "process_creation/windows",
+      "technique_ids": [
+       "T1564.003"
+      ],
+      "score": 0.02280088094312735,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "node": "triage",
+   "start": 5.875,
+   "end": 23.311,
+   "update": {
+    "verdict": {
+     "verdict": "true_positive",
+     "confidence": 0.88,
+     "technique_ids": [
+      "T1059.003"
+     ],
+     "reasoning": "GruntHTTP.exe running from the user's Desktop spawned cmd.exe, which executed MoveExcelXLL.exe with an IP target (172.18.39.6) and a C:\\programdata\\calc.xll argument. This process chain (suspicious Desktop executable -> command shell -> payload with network target) is consistent with a C2 implant issuing command-shell execution, not legitimate administrative activity.",
+     "evidence_refs": [
+      "events[0].process.parent.image",
+      "events[0].process.parent.command_line",
+      "events[0].process.image",
+      "events[0].process.command_line"
+     ],
+     "ioc_refs": [
+      "C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe",
+      "C:\\Users\\pgustavo\\Desktop\\MoveExcelXLL.exe",
+      "172.18.39.6",
+      "C:\\programdata\\calc.xll"
+     ]
+    },
+    "triage_schema_retries": 0,
+    "triage_tier": 1,
+    "triage_escalation": null,
+    "triage_runs": [
+     {
+      "tier": 1,
+      "model": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+      "ok": true,
+      "input_tokens": 4298,
+      "output_tokens": 1991,
+      "cost_usd": 0.0,
+      "llm_calls": 1,
+      "lookups": [],
+      "rejected": [],
+      "schema_retries": 0,
+      "error": null
+     }
+    ],
+    "triage_cost_usd": 0.0
+   }
+  },
+  {
+   "node": "route",
+   "start": 23.311,
+   "end": 24.286,
+   "update": {
+    "covering_rule_id": null,
+    "coverage": {
+     "covering_rule_id": null,
+     "checked": [
+      "a16980c2-0c56-4de0-9a79-17971979efdd",
+      "1c0e41cd-21bb-4433-9acc-4a2cd6367b9b",
+      "b730a276-6b63-41b8-bcf8-55930c8fc6ee",
+      "dcaa3f04-70c3-427a-80b4-b870d73c94c4",
+      "5a6b7c8d-9e0f-1a2b-3c4d-5e6f7a8b9c0d"
+     ],
+     "missing": [],
+     "broken": [],
+     "unavailable": null
+    }
+   }
+  },
+  {
+   "node": "rule_gen",
+   "start": 24.286,
+   "end": 43.631,
+   "update": {
+    "draft_rule": "title: 'T1059.003 process_creation: Image + CommandLine'\nid: 294537a0-c9d1-5ce8-b96a-b74cbee3d65a\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1059.003: fires on process_creation\n  events matching 1 selection on Image, CommandLine.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-27'\ntags:\n- attack.t1059.003\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - \\cmd.exe\n    CommandLine|contains|all:\n    - /c\n    - MoveExcelXLL.exe\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine\n  values; check against the local baseline before enabling\nlevel: high\n",
+    "rule_versions": [
+     "title: 'T1059.003 process_creation: Image + CommandLine'\nid: 294537a0-c9d1-5ce8-b96a-b74cbee3d65a\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1059.003: fires on process_creation\n  events matching 1 selection on Image, CommandLine.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-27'\ntags:\n- attack.t1059.003\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - \\cmd.exe\n    CommandLine|contains|all:\n    - /c\n    - MoveExcelXLL.exe\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine\n  values; check against the local baseline before enabling\nlevel: high\n"
+    ],
+    "attempts": 1,
+    "rulegen": {
+     "title": "Cmd.exe Execution of MoveExcelXLL via /c",
+     "technique_ids": [
+      "T1059.003"
+     ],
+     "schema_retries": 0,
+     "input_tokens": 4514,
+     "output_tokens": 2580,
+     "llm_calls": 1,
+     "model": "openrouter:nvidia/nemotron-3.5-super-vl:free"
+    }
+   }
+  },
+  {
+   "node": "validate",
+   "start": 43.631,
+   "end": 50.063,
+   "update": {
+    "validations": [
+     {
+      "rule_id": "294537a0-c9d1-5ce8-b96a-b74cbee3d65a",
+      "compiled": true,
+      "compile_errors": [],
+      "true_positives": 0,
+      "false_positives": 0,
+      "fp_rate": 0.0,
+      "failed_samples": [
+       {
+        "sample_id": "day3-050",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-050/sysmon-539807",
+        "note": "held-out T1059.003/T1007 attack, rule did not fire"
+       },
+       {
+        "sample_id": "day3-070",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-070/sysmon-639822",
+        "note": "held-out T1059.003 attack, rule did not fire"
+       },
+       {
+        "sample_id": "day3-154",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-154/sysmon-1818951",
+        "note": "held-out T1059.003 attack, rule did not fire"
+       },
+       {
+        "sample_id": "day3-164",
+        "should_fire": true,
+        "did_fire": false,
+        "event_ref": "golden:day3-164/sysmon-599544",
+        "note": "held-out T1059.003/T1047 attack, rule did not fire"
+       }
+      ],
+      "feedback": "TP: fires on 0/4 held-out T1059.003/c2-implant-spawns-cmd (procedure) attacks in process_creation; missed day3-050, day3-070, day3-154, day3-164: compare their fields with the selection\nbenign: fires on 0/62 benign_noisy events in process_creation\nsiblings (info, not graded): fires on 0/13 attacks of another procedure or sub-technique\nnoise: 0/238 held-out pool events in process_creation fire",
+      "evidence": "ok",
+      "procedure_recall": 0.0,
+      "sibling_recall": 0.0
+     }
+    ]
+   }
+  },
+  {
+   "node": "repair",
+   "start": 50.063,
+   "end": 118.084,
+   "update": {
+    "draft_rule": "title: 'T1059.003 process_creation: Image + CommandLine + ParentImage'\nid: ddea517b-eb2f-5dd1-b5d2-9f344a9148a9\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1059.003: fires on process_creation\n  events matching 1 selection on Image, CommandLine, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-27'\ntags:\n- attack.t1059.003\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - \\cmd.exe\n    CommandLine|contains:\n    - /c\n    ParentImage|contains:\n    - \\Desktop\\\\\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine,\n  ParentImage values; check against the local baseline before enabling\nlevel: high\n",
+    "rule_versions": [
+     "title: 'T1059.003 process_creation: Image + CommandLine + ParentImage'\nid: ddea517b-eb2f-5dd1-b5d2-9f344a9148a9\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1059.003: fires on process_creation\n  events matching 1 selection on Image, CommandLine, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-27'\ntags:\n- attack.t1059.003\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - \\cmd.exe\n    CommandLine|contains:\n    - /c\n    ParentImage|contains:\n    - \\Desktop\\\\\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine,\n  ParentImage values; check against the local baseline before enabling\nlevel: high\n"
+    ],
+    "attempts": 2,
+    "repairs": [
+     {
+      "attempt": 2,
+      "title": "Suspicious Command Shell Spawned from Desktop Executable",
+      "technique_ids": [
+       "T1059.003"
+      ],
+      "schema_retries": 0,
+      "input_tokens": 5218,
+      "output_tokens": 9852,
+      "llm_calls": 1,
+      "model": "openrouter:nvidia/nemotron-3.5-super-vl:free"
+     }
+    ],
+    "repair_failed": false
+   }
+  },
+  {
+   "node": "validate",
+   "start": 118.084,
+   "end": 118.126,
+   "update": {
+    "validations": [
+     {
+      "rule_id": "ddea517b-eb2f-5dd1-b5d2-9f344a9148a9",
+      "compiled": true,
+      "compile_errors": [],
+      "true_positives": 4,
+      "false_positives": 0,
+      "fp_rate": 0.0,
+      "failed_samples": [],
+      "feedback": "TP: fires on 4/4 held-out T1059.003/c2-implant-spawns-cmd (procedure) attacks in process_creation\nbenign: fires on 0/62 benign_noisy events in process_creation\nsiblings (info, not graded): fires on 0/13 attacks of another procedure or sub-technique\nnoise: 0/238 held-out pool events in process_creation fire",
+      "evidence": "ok",
+      "procedure_recall": 1.0,
+      "sibling_recall": 0.0
+     }
+    ]
+   }
+  },
+  {
+   "node": "output",
+   "start": 118.126,
+   "end": 118.126,
+   "update": {
+    "draft_rule": "title: 'T1059.003 process_creation: Image + CommandLine + ParentImage'\nid: ddea517b-eb2f-5dd1-b5d2-9f344a9148a9\nstatus: experimental\ndescription: 'Generated by Sentinel Loop rule_gen for ATT&CK T1059.003: fires on process_creation\n  events matching 1 selection on Image, CommandLine, ParentImage.'\nauthor: Sentinel Loop rule_gen v0\ndate: '2026-11-27'\ntags:\n- attack.t1059.003\nlogsource:\n  category: process_creation\n  product: windows\ndetection:\n  selection1:\n    Image|endswith:\n    - \\cmd.exe\n    CommandLine|contains:\n    - /c\n    ParentImage|contains:\n    - \\Desktop\\\\\n  condition: 1 of selection*\nfalsepositives:\n- Legitimate administrative or software activity with the same Image, CommandLine,\n  ParentImage values; check against the local baseline before enabling\nlevel: high\n",
+    "best_attempt": 2,
+    "outcome": "rule_passed"
+   }
+  }
+ ]
+}

@@ -1,0 +1,383 @@
+{
+ "meta": {
+  "name": "5-ip-clean",
+  "alert": {
+   "alert_id": "tools-029",
+   "detection_name": "Atomic capture — manual review",
+   "severity": "medium",
+   "events": [
+    {
+     "event_id": "sysmon-704115",
+     "timestamp": "2026-11-20T04:01:23.002000Z",
+     "source": "windows_sysmon",
+     "host": "WORKSTATION6.mordor.local",
+     "user": "NT AUTHORITY\\SYSTEM",
+     "process": {
+      "pid": 4368,
+      "image": "C:\\Windows\\System32\\taskhostw.exe",
+      "command_line": null,
+      "parent": null
+     },
+     "network": {
+      "src_ip": "172.18.39.6",
+      "dst_ip": "52.167.249.196",
+      "dst_port": 443,
+      "protocol": "tcp"
+     },
+     "registry": null,
+     "raw": {
+      "DestinationPort": "443",
+      "EventReceivedTime": "2026-11-20 00:01:26",
+      "SourceIp": "172.18.39.6",
+      "SourceHostname": "-",
+      "port": 55069,
+      "SeverityValue": 2,
+      "RuleName": "-",
+      "Keywords": -9223372036854775808,
+      "ProviderGuid": "{5770385F-C22A-43E0-BF4C-06F5698FFBD9}",
+      "Version": 5,
+      "SourceIsIpv6": "false",
+      "ProcessGuid": "{03255e25-9975-5f14-5d00-000000000400}",
+      "ProcessId": "4368",
+      "Channel": "Microsoft-Windows-Sysmon/Operational",
+      "Message": "Network connection detected:\r\nRuleName: -\r\nUtcTime: 2026-11-20 04:01:23.002\r\nProcessGuid: {03255e25-9975-5f14-5d00-000000000400}\r\nProcessId: 4368\r\nImage: C:\\Windows\\System32\\taskhostw.exe\r\nUser: NT AUTHORITY\\SYSTEM\r\nProtocol: tcp\r\nInitiated: true\r\nSourceIsIpv6: false\r\nSourceIp: 172.18.39.6\r\nSourceHostname: -\r\nSourcePort: 57119\r\nSourcePortName: -\r\nDestinationIsIpv6: false\r\nDestinationIp: 52.167.249.196\r\nDestinationHostname: -\r\nDestinationPort: 443\r\nDestinationPortName: -",
+      "@timestamp": "2026-11-20T04:01:26.144Z",
+      "DestinationPortName": "-",
+      "AccountType": "User",
+      "AccountName": "SYSTEM",
+      "ThreadID": 3952,
+      "Task": 3,
+      "RecordNumber": 704115,
+      "Initiated": "true",
+      "DestinationIp": "52.167.249.196",
+      "@version": "1",
+      "SourceModuleType": "im_msvistalog",
+      "tags": [
+       "mordorDataset"
+      ],
+      "Domain": "NT AUTHORITY",
+      "DestinationHostname": "-",
+      "SourceName": "Microsoft-Windows-Sysmon",
+      "UserID": "S-1-5-18",
+      "Protocol": "tcp",
+      "SourceModuleName": "eventlog",
+      "Image": "C:\\Windows\\System32\\taskhostw.exe",
+      "UtcTime": "2026-11-20 04:01:23.002",
+      "Hostname": "WORKSTATION6.mordor.local",
+      "SourcePortName": "-",
+      "DestinationIsIpv6": "false",
+      "host": "wec.internal.cloudapp.net",
+      "ExecutionProcessID": 7856,
+      "EventType": "INFO",
+      "OpcodeValue": 0,
+      "EventTime": "2026-11-20 00:01:24",
+      "Severity": "INFO",
+      "EventID": 3,
+      "User": "NT AUTHORITY\\SYSTEM",
+      "SourcePort": "57119"
+     },
+     "untrusted_fields": [
+      "process.image"
+     ]
+    }
+   ]
+  },
+  "models": "openrouter:nvidia/nemotron-3.5-super-vl:free -> openrouter:nvidia/nemotron-3-ultra-550b-a55b:free",
+  "recorded_at": "2026-11-24T22:41:32+00:00",
+  "path": [
+   "ingest",
+   "enrich",
+   "triage",
+   "route",
+   "output"
+  ],
+  "outcome": "benign"
+ },
+ "events": [
+  {
+   "node": "ingest",
+   "start": 0.0,
+   "end": 0.001,
+   "update": null
+  },
+  {
+   "node": "enrich",
+   "start": 0.001,
+   "end": 0.085,
+   "update": {
+    "techniques": [
+     {
+      "id": "T1547.010",
+      "kind": "technique",
+      "title": "Port Monitors",
+      "text": "T1547.010 Port Monitors\nTactics: persistence, privilege-escalation\nPlatforms: Windows\nDescription: Adversaries may use port monitors to run an adversary supplied DLL during system boot for persistence or privilege escalation. A port monitor can be set through the AddMonitor API call to set a DLL to be loaded at startup. This DLL can be located in C:\\Windows\\System32 and will be loaded and run by the print spooler service, `spoolsv.exe`, under SYSTEM level permissions on boot. \n\nAlternatively, an arbitrary DLL can be loaded if permissions allow writing a fully-qualified pathname for that DLL to the `Driver` value of an existing or new arbitrarily named subkey of HKLM\\SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors. The Registry key contains entries for the following:\n\n* Local Port\n* Standard TCP/IP Port\n* USB Monitor\n* WSD Port\nData sources: WinEventLog:Sysmon, WinEventLog:Application\nDetection guidance:\n- Detects suspicious registry modifications under `HKLM\\SYSTEM\\CurrentControlSet\\Control\\Print\\Monitors\\*\\Driver`, DLL loads by `spoolsv.exe` of non-standard or unsigned modules, and abnormal usage of the `AddMonitor` API by non-installation processes. This pattern often indicates an attempt to persist a malicious DLL via the print monitor mechanism, particularly when correlated with creation of files in `C:\\Windows\\System32` not tied to known patches or installations.",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1547.010"
+      ],
+      "score": 0.031544957774465976,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1205",
+      "kind": "technique",
+      "title": "Traffic Signaling",
+      "text": "T1205 Traffic Signaling\nTactics: stealth, persistence, command-and-control\nPlatforms: Linux, macOS, Network Devices, Windows\nDescription: Adversaries may use traffic signaling to hide open ports or other malicious functionality used for persistence or command and control. Traffic signaling involves the use of a magic value or sequence that must be sent to a system to trigger a special response, such as opening a closed port or executing a malicious task. This may take the form of sending a series of packets with certain characteristics before a port will be opened that the adversary can use for command and control. Usually this series of packets consists of attempted connections to a predefined sequence of closed ports (i.e. Port Knocking), but can involve unusual flags, specific strings, or other unique characteristics. After the sequence is completed, opening a port may be accomplished by the host-based firewall, but could also be implemented by custom software.\n\nAdversaries may also communicate with an already open port, but the service listening on that port will only respond to commands or trigger other malicious functionality if passed the appropriate magic value(s).\n\nThe observation of the signal packets to trigger the communication can be conducted through different methods. One means, originally implemented by Cd00r , is to use the libpcap libraries to sniff for the packets in question. Another method leverages raw sockets, which enables the malware to use ports that are already open for use by other programs.\n\nOn network devices, adversaries may use crafted packets to enable Network Device Authentication for standard services offered by the device such as telnet.  Such signaling may also be used to open a closed service port such as telnet, or to trigger module modification of malware implants on the device, adding, removing, or changing malicious capabilities.  Adversaries may use crafted packets to attempt to connect to one or more (open or closed) ports, but may also attempt to connect to a router interface, broadcast, and network address IP on the same port in order to achieve their goals and objectives.  To enable this traffic signaling on embedded devices, adversaries must first achieve and leverage Patch System Image due to the monolithic nature of the architecture.\n\nAdversaries may also use the Wake-on-LAN feature to turn on powered off systems. Wake-on-LAN is a hardware feature that allows a powered down system to be powered on, or woken up, by sending a magic packet to it. Once the system is powered on, it may become a target for lateral movement.\nData sources: WinEventLog:Sysmon, WinEventLog:Microsoft-Windows-Windows Firewall With Advanced Security/Firewall, WinEventLog:PowerShell, auditd:SYSCALL, NSM:Flow, macos:unifiedlog, networkdevice:syslog\nDetection guidance:\n- A remote host sends a short sequence of failed connection attempts (RST/ICMP unreachable) to a set of closed ports. Within a brief window the endpoint (a) adds/enables a firewall rule or (b) a sniffer-backed process begins listening or opens a new socket, after which a successful connection occurs. Also detects Wake-on-LAN magic packets seen on local segment.\n- Closed-port knock sequence from a remote IP followed by on-host firewall change (iptables/nftables) or daemon starts listening (socket open) and a successful TCP/UDP connect. Optional detection of libpcap/raw-socket sniffers spawning to watch for secret values.\n- Remote knock sequence followed by PF/socketfilterfw rule update or a background process listening on a new port; then a successful TCP session. Also flags WoL magic packets on local segment.\n- Crafted ‘synful knock’ patterns toward routers/switches (same src hits interface/broadcast/network address on same port in short order) followed by ACL/telnet/SSH enablement or module change. Detect device image/ACL updates then a new mgmt session.",
+      "platforms": [
+       "linux",
+       "macos",
+       "network devices",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1205"
+      ],
+      "score": 0.029910714285714284,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1571",
+      "kind": "technique",
+      "title": "Non-Standard Port",
+      "text": "T1571 Non-Standard Port\nTactics: command-and-control\nPlatforms: ESXi, Linux, macOS, Windows\nDescription: Adversaries may communicate using a protocol and port pairing that are typically not associated. For example, HTTPS over port 8088 or port 587 as opposed to the traditional port 443. Adversaries may make changes to the standard port used by a protocol to bypass filtering or muddle analysis/parsing of network data.\n\nAdversaries may also make changes to victim systems to abuse non-standard ports. For example, Registry keys and other configuration settings can be used to modify protocol and port pairings.\nData sources: WinEventLog:Security, WinEventLog:Sysmon, auditd:SYSCALL, linux:syslog, linux:osquery, macos:unifiedlog, esxi:vpxd, esxcli:network\nDetection guidance:\n- Processes initiating outbound connections on uncommon ports or using protocols inconsistent with the assigned port. Correlating process creation with subsequent network connections reveals anomalies such as svchost.exe or Office applications using high, atypical ports.\n- Unusual daemons or user processes binding/listening on ports outside of standard ranges, or initiating client connections using mismatched protocol/port pairings.\n- Applications making outbound connections on non-standard ports or launchd services bound to ports inconsistent with system baselines.\n- VM services or management daemons communicating on ports not defined by VMware defaults, such as vpxa or hostd processes initiating traffic over high-numbered or unexpected ports.",
+      "platforms": [
+       "esxi",
+       "linux",
+       "macos",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1571"
+      ],
+      "score": 0.02976190476190476,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1070.007",
+      "kind": "technique",
+      "title": "Clear Network Connection History and Configurations",
+      "text": "T1070.007 Clear Network Connection History and Configurations\nTactics: stealth\nPlatforms: Linux, macOS, Windows, Network Devices\nDescription: Adversaries may clear or remove evidence of malicious network connections in order to clean up traces of their operations. Configuration settings as well as various artifacts that highlight connection history may be created on a system and/or in application logs from behaviors that require network connections, such as Remote Services or External Remote Services. Defenders may use these artifacts to monitor or otherwise analyze network connections created by adversaries.\n\nNetwork connection history may be stored in various locations. For example, RDP connection history may be stored in Windows Registry values under :\n\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Terminal Server Client\\Default\n* HKEY_CURRENT_USER\\Software\\Microsoft\\Terminal Server Client\\Servers\n\nWindows may also store information about recent RDP connections in files such as C:\\Users\\\\%username%\\Documents\\Default.rdp and `C:\\Users\\%username%\\AppData\\Local\\Microsoft\\Terminal\nServer Client\\Cache\\`. Similarly, macOS and Linux hosts may store information highlighting connection history in system logs (such as those stored in `/Library/Logs` and/or `/var/log/`).\n\nMalicious network connections may also require changes to third-party applications or network configuration settings, such as Disable or Modify System Firewall or tampering to enable Proxy. Adversaries may delete or modify this data to conceal indicators and/or impede defensive analysis.\nData sources: WinEventLog:Security, WinEventLog:Sysmon, EDR:cli, auditd:SYSCALL, macos:unifiedlog, macos:osquery, networkdevice:syslog, NSM:Flow\nDetection guidance:\n- Detects attempts to clear RDP/network history and modify network configuration artifacts through command execution, registry key deletion, firewall rule changes, and suspicious file deletions (e.g., Default.rdp, registry edits to Terminal Server Client keys).\n- Detects deletion or overwriting of logs/configs that store SSH or proxy activity, such as /var/log/auth.log or custom .bash_history clearing tied to SSH sessions or firewall rule changes.\n- Detects removal of Remote Login or Screen Sharing logs in Unified Logging, deletion of `com.apple.UTun`, or suspicious Terminal use of `rm`, `sudo pfctl -F all` to clear network state/config history.\n- Detects firewall rule modifications or reset of logs/connection tables (e.g., `clear logging`, `erase startup-config`, `write erase`) following remote access activity on routers, switches, or VPN appliances.",
+      "platforms": [
+       "linux",
+       "macos",
+       "windows",
+       "network devices"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1070.007"
+      ],
+      "score": 0.028531243721117136,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "T1046",
+      "kind": "technique",
+      "title": "Network Service Discovery",
+      "text": "T1046 Network Service Discovery\nTactics: discovery\nPlatforms: Containers, IaaS, Linux, macOS, Network Devices, Windows\nDescription: Adversaries may attempt to get a listing of services running on remote hosts and local network infrastructure devices, including those that may be vulnerable to remote software exploitation. Common methods to acquire this information include port, vulnerability, and/or wordlist scans using tools that are brought onto a system.   \n\nWithin cloud environments, adversaries may attempt to discover services running on other cloud hosts. Additionally, if the cloud environment is connected to a on-premises environment, adversaries may be able to identify services running on non-cloud systems as well.\n\nWithin macOS environments, adversaries may use the native Bonjour application to discover services running on other macOS hosts within a network. The Bonjour mDNSResponder daemon automatically registers and advertises a host’s registered services on the network. For example, adversaries can use a mDNS query (such as dns-sd -B _ssh._tcp .) to find other systems broadcasting the ssh service.\nData sources: WinEventLog:Sysmon, auditd:SYSCALL, NSM:Flow, macos:unifiedlog, macos:osquery, ebpf:syscalls, containerd:runtime\nDetection guidance:\n- Detects processes performing network enumeration (e.g., port scans, service probing) by correlating process creation, socket connections, and sequential destination IP probing within a time window.\n- Detects use of network scanning utilities or scripts performing rapid connections to multiple services or hosts using auditd and netflow/pcap telemetry.\n- Detects Bonjour-based mDNS enumeration or use of system tools (e.g., dns-sd, nmap) to find active services via multicast probing or targeted scans.\n- Detects lateral discovery or container breakout attempts using netcat, curl, or custom binaries probing other services within the same namespace or VPC subnet.",
+      "platforms": [
+       "containers",
+       "iaas",
+       "linux",
+       "macos",
+       "network devices",
+       "windows"
+      ],
+      "logsource": null,
+      "technique_ids": [
+       "T1046"
+      ],
+      "score": 0.02797067901234568,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ],
+    "sigma_rules": [
+     {
+      "id": "0dba975d-a193-4ed1-a067-424df57570d1",
+      "kind": "sigma_rule",
+      "title": "Uncommon Network Connection Initiated By Certutil.EXE",
+      "text": "Uncommon Network Connection Initiated By Certutil.EXE\nLogsource: network_connection/windows\nTags: attack.command-and-control, attack.t1105\nLevel: high\nDescription: Detects a network connection initiated by the certutil.exe utility.\nAttackers can abuse the utility in order to download malware or additional payloads.\nDetection:\nselection:\n  Image|endswith: \\certutil.exe\n  Initiated: 'true'\n  DestinationPort:\n  - 80\n  - 135\n  - 443\n  - 445\ncondition: selection\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "network_connection/windows",
+      "technique_ids": [
+       "T1105"
+      ],
+      "score": 0.0315136476426799,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "b1e5da3b-ca8e-4adf-915c-9921f3d85481",
+      "kind": "sigma_rule",
+      "title": "RDP to HTTP or HTTPS Target Ports",
+      "text": "RDP to HTTP or HTTPS Target Ports\nLogsource: network_connection/windows\nTags: attack.command-and-control, attack.t1572, attack.lateral-movement, attack.t1021.001, car.2013-07-002\nLevel: high\nDescription: Detects svchost hosting RDP termsvcs communicating to target systems on TCP port 80 or 443\nDetection:\nselection:\n  Image|endswith: \\svchost.exe\n  Initiated: 'true'\n  SourcePort: 3389\n  DestinationPort:\n  - 80\n  - 443\ncondition: selection\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "network_connection/windows",
+      "technique_ids": [
+       "T1572",
+       "T1021.001"
+      ],
+      "score": 0.03131881575727918,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "efafe0bf-4238-479e-af8f-797bd3490d2d",
+      "kind": "sigma_rule",
+      "title": "Outbound Network Connection Initiated By Cmstp.EXE",
+      "text": "Outbound Network Connection Initiated By Cmstp.EXE\nLogsource: network_connection/windows\nTags: attack.stealth, attack.t1218.003\nLevel: high\nDescription: Detects a network connection initiated by Cmstp.EXE\nIts uncommon for \"cmstp.exe\" to initiate an outbound network connection. Investigate the source of such requests to determine if they are malicious.\nDetection:\nselection:\n  Image|endswith: \\cmstp.exe\n  Initiated: 'true'\nfilter_main_local_ranges:\n  DestinationIp|cidr:\n  - 127.0.0.0/8\n  - 10.0.0.0/8\n  - 172.16.0.0/12\n  - 192.168.0.0/16\n  - 169.254.0.0/16\n  - ::1/128\n  - fe80::/10\n  - fc00::/7\ncondition: selection and not 1 of filter_main_*\nFalse positives: Unknown",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "network_connection/windows",
+      "technique_ids": [
+       "T1218.003"
+      ],
+      "score": 0.02921395544346364,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "a66bc059-c370-472c-a0d7-f8fd1bf9d583",
+      "kind": "sigma_rule",
+      "title": "Network Connection Initiated By Eqnedt32.EXE",
+      "text": "Network Connection Initiated By Eqnedt32.EXE\nLogsource: network_connection/windows\nTags: attack.execution, attack.t1203\nLevel: high\nDescription: Detects network connections from the Equation Editor process \"eqnedt32.exe\".\nDetection:\nselection:\n  Image|endswith: \\eqnedt32.exe\ncondition: selection\nFalse positives: Unlikely",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "network_connection/windows",
+      "technique_ids": [
+       "T1203"
+      ],
+      "score": 0.029206349206349208,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     },
+     {
+      "id": "cdc8da7d-c303-42f8-b08c-b4ab47230263",
+      "kind": "sigma_rule",
+      "title": "Rundll32 Internet Connection",
+      "text": "Rundll32 Internet Connection\nLogsource: network_connection/windows\nTags: attack.stealth, attack.t1218.011, attack.execution\nLevel: medium\nDescription: Detects a rundll32 that communicates with public IP addresses\nDetection:\nselection:\n  Image|endswith: \\rundll32.exe\n  Initiated: 'true'\nfilter_main_local_ranges:\n  DestinationIp|cidr:\n  - 127.0.0.0/8\n  - 10.0.0.0/8\n  - 172.16.0.0/12\n  - 192.168.0.0/16\n  - 169.254.0.0/16\n  - ::1/128\n  - fe80::/10\n  - fc00::/7\nfilter_main_ms_ranges:\n  DestinationIp|cidr:\n  - 20.0.0.0/8\n  - 51.103.0.0/16\n  - 51.104.0.0/16\n  - 51.105.0.0/16\nfilter_main_app_sdb:\n  CommandLine|endswith: \\system32\\PcaSvc.dll,PcaPatchSdbTask\nfilter_main_azure_managed:\n  SourceHostname|endswith: .internal.cloudapp.net\nfilter_main_svchost_update_processes:\n  ParentImage: C:\\Windows\\System32\\svchost.exe\n  DestinationPort: 443\ncondition: selection and not 1 of filter_main_*\nFalse positives: Communication to other corporate systems that use IP addresses from public address spaces",
+      "platforms": [
+       "windows"
+      ],
+      "logsource": "network_connection/windows",
+      "technique_ids": [
+       "T1218.011"
+      ],
+      "score": 0.028484848484848488,
+      "matched_by": [
+       "vector",
+       "bm25"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "node": "triage",
+   "start": 0.085,
+   "end": 31.696,
+   "update": {
+    "verdict": {
+     "verdict": "benign_noisy",
+     "confidence": 0.78,
+     "technique_ids": [],
+     "reasoning": "taskhostw.exe is a legitimate, Microsoft-signed Windows Task Host Engine binary at C:\\Windows\\System32\\taskhostw.exe, running as SYSTEM. It made a single outbound HTTPS (TCP/443) connection to 52.167.249.196, which is in Microsoft Azure IP space and is not listed in ThreatFox. With no suspicious command line, parent process, DLL-loading, or other adversary indicators, this is consistent with routine Windows telemetry/update traffic flagged only because an uncommon process initiated a network connection.",
+     "evidence_refs": [
+      "events[0].process.image",
+      "events[0].network.dst_ip",
+      "events[0].network.dst_port",
+      "events[0].user",
+      "events[0].process.pid"
+     ],
+     "ioc_refs": [
+      "52.167.249.196",
+      "C:\\Windows\\System32\\taskhostw.exe"
+     ]
+    },
+    "triage_schema_retries": 0,
+    "triage_tier": 1,
+    "triage_escalation": null,
+    "triage_runs": [
+     {
+      "tier": 1,
+      "model": "openrouter:nvidia/nemotron-3.5-super-vl:free",
+      "ok": true,
+      "input_tokens": 9602,
+      "output_tokens": 1935,
+      "cost_usd": 0.0,
+      "llm_calls": 2,
+      "lookups": [
+       {
+        "name": "threatfox_ioc_lookup",
+        "args": {
+         "ioc": "52.167.249.196"
+        },
+        "answer": {
+         "ioc": "52.167.249.196",
+         "kind": "ip",
+         "found": false,
+         "matches": 0,
+         "results": []
+        }
+       }
+      ],
+      "rejected": [],
+      "schema_retries": 0,
+      "error": null
+     }
+    ],
+    "triage_cost_usd": 0.0
+   }
+  },
+  {
+   "node": "route",
+   "start": 31.696,
+   "end": 31.708,
+   "update": {
+    "covering_rule_id": null
+   }
+  },
+  {
+   "node": "output",
+   "start": 31.708,
+   "end": 31.708,
+   "update": {
+    "outcome": "benign"
+   }
+  }
+ ]
+}

@@ -15,6 +15,8 @@ import argparse
 import json
 import os
 import subprocess
+import time
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -65,8 +67,11 @@ def run_alert(
     trace: bool = True,
     pipeline: PipelineOptions | None = None,
     configurable: dict | None = None,
+    on_event: Callable[[dict], None] | None = None,
 ) -> RunResult:
-    """`configurable`: extra graph settings, for evals (e.g. oracle_verdict, ignore_coverage)."""
+    """`configurable`: extra graph settings, for evals (e.g. oracle_verdict, ignore_coverage).
+    `on_event`: called once per finished node with {node, start, end, update} (seconds since the
+    run started; `update` is what the node returned). The demo page draws and records from it."""
     graph = build_graph(live=live)
     path: list[str] = []
     final: dict = {}
@@ -81,12 +86,25 @@ def run_alert(
             "callbacks": tr.callbacks,
             "run_name": "sentinel-pipeline",
         }
+        t0 = last = time.perf_counter()
         try:
             for mode, chunk in graph.stream(
                 {"alert": alert}, config, stream_mode=["updates", "values"]
             ):
                 if mode == "updates":
                     path.extend(chunk)
+                    now = time.perf_counter()
+                    if on_event:
+                        for node, update in chunk.items():
+                            on_event(
+                                {
+                                    "node": node,
+                                    "start": round(last - t0, 3),
+                                    "end": round(now - t0, 3),
+                                    "update": update,
+                                }
+                            )
+                    last = now
                 else:
                     final = chunk
         finally:
